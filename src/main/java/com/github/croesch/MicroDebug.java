@@ -25,10 +25,7 @@ public final class MicroDebug {
    * @param args the arguments of the program
    */
   public static void main(final String[] args) {
-    for (int i = 0; i < args.length; ++i) {
-      System.out.println(args[i]);
-      System.out.println(Argument.of(args[i]));
-    }
+    // TODO define
   }
 
 }
