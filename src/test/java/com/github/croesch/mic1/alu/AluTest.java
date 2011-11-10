@@ -47,6 +47,111 @@ public class AluTest {
   }
 
   @Test
+  public void testAAdded() {
+    final Alu alu = new Alu();
+    alu.setF0(true).setF1(true).setEnA(true).setEnB(false).setInvA(false).setInC(false);
+    for (final int a : TEST_VALUES) {
+      for (final int b : TEST_VALUES) {
+        alu.setA(a).setB(b).calculate();
+        final int result = a;
+        assertThat(alu.getOut()).isEqualTo(result);
+        assertThat(alu.isN()).isEqualTo(result < 0);
+        assertThat(alu.isZ()).isEqualTo(result == 0);
+      }
+    }
+  }
+
+  @Test
+  public void testZeroAdded1() {
+    final Alu alu = new Alu();
+    alu.setF0(true).setF1(true).setEnA(false).setEnB(false).setInvA(true).setInC(true);
+    for (final int a : TEST_VALUES) {
+      for (final int b : TEST_VALUES) {
+        alu.setA(a).setB(b).calculate();
+        final int result = 0;
+        assertThat(alu.getOut()).isEqualTo(result);
+        assertThat(alu.isN()).isFalse();
+        assertThat(alu.isZ()).isTrue();
+      }
+    }
+  }
+
+  @Test
+  public void testZeroAdded2() {
+    final Alu alu = new Alu();
+    alu.setF0(true).setF1(true).setEnA(false).setEnB(false).setInvA(false).setInC(false);
+    for (final int a : TEST_VALUES) {
+      for (final int b : TEST_VALUES) {
+        alu.setA(a).setB(b).calculate();
+        final int result = 0;
+        assertThat(alu.getOut()).isEqualTo(result);
+        assertThat(alu.isN()).isFalse();
+        assertThat(alu.isZ()).isTrue();
+      }
+    }
+  }
+
+  @Test
+  public void testMinusOneAdded() {
+    final Alu alu = new Alu();
+    alu.setF0(true).setF1(true).setEnA(false).setEnB(false).setInvA(true).setInC(false);
+    for (final int a : TEST_VALUES) {
+      for (final int b : TEST_VALUES) {
+        alu.setA(a).setB(b).calculate();
+        final int result = -1;
+        assertThat(alu.getOut()).isEqualTo(result);
+        assertThat(alu.isN()).isTrue();
+        assertThat(alu.isZ()).isFalse();
+      }
+    }
+  }
+
+  @Test
+  public void testBAdded1() {
+    final Alu alu = new Alu();
+    alu.setF0(true).setF1(true).setEnA(false).setEnB(true).setInvA(true).setInC(true);
+    for (final int a : TEST_VALUES) {
+      for (final int b : TEST_VALUES) {
+        alu.setA(a).setB(b).calculate();
+        final int result = b;
+        assertThat(alu.getOut()).isEqualTo(result);
+        assertThat(alu.isN()).isEqualTo(result < 0);
+        assertThat(alu.isZ()).isEqualTo(result == 0);
+      }
+    }
+  }
+
+  @Test
+  public void testBAdded2() {
+    final Alu alu = new Alu();
+    alu.setF0(true).setF1(true).setEnA(false).setEnB(true).setInvA(false).setInC(false);
+    for (final int a : TEST_VALUES) {
+      for (final int b : TEST_VALUES) {
+        alu.setA(a).setB(b).calculate();
+        final int result = b;
+        assertThat(alu.getOut()).isEqualTo(result);
+        assertThat(alu.isN()).isEqualTo(result < 0);
+        assertThat(alu.isZ()).isEqualTo(result == 0);
+      }
+    }
+  }
+
+  @Test
+  public void testAPlusOne() {
+    final Alu alu = new Alu();
+    alu.setF0(true).setF1(true).setEnA(true).setEnB(false).setInvA(false).setInC(true);
+    for (final int a : TEST_VALUES) {
+      for (final int b : TEST_VALUES) {
+        alu.setA(a).setB(b).calculate();
+        final int result = a + 1;
+        assertThat(alu.getOut()).isEqualTo(result);
+        assertThat(alu.isN()).isEqualTo(result < 0);
+        assertThat(alu.isZ()).isEqualTo(result == 0);
+      }
+    }
+  }
+
+  @Test
   public void testB() {
     final Alu alu = new Alu();
     alu.setF0(false).setF1(true).setEnA(false).setEnB(true).setInvA(false);
@@ -177,6 +282,21 @@ public class AluTest {
   }
 
   @Test
+  public void testBMinusAMinusOne() {
+    final Alu alu = new Alu();
+    alu.setF0(true).setF1(true).setEnA(true).setEnB(true).setInvA(true).setInC(false);
+    for (final int a : TEST_VALUES) {
+      for (final int b : TEST_VALUES) {
+        alu.setA(a).setB(b).calculate();
+        final int result = b - a - 1;
+        assertThat(alu.getOut()).isEqualTo(result);
+        assertThat(alu.isN()).isEqualTo(result < 0);
+        assertThat(alu.isZ()).isEqualTo(result == 0);
+      }
+    }
+  }
+
+  @Test
   public void testBMinusOne() {
     final Alu alu = new Alu();
     alu.setF0(true).setF1(true).setEnA(false).setEnB(true).setInvA(true).setInC(false);
@@ -199,6 +319,21 @@ public class AluTest {
       for (final int b : TEST_VALUES) {
         alu.setA(a).setB(b).calculate();
         final int result = -a;
+        assertThat(alu.getOut()).isEqualTo(result);
+        assertThat(alu.isN()).isEqualTo(result < 0);
+        assertThat(alu.isZ()).isEqualTo(result == 0);
+      }
+    }
+  }
+
+  @Test
+  public void testMinusAMinusOne() {
+    final Alu alu = new Alu();
+    alu.setF0(true).setF1(true).setEnA(true).setEnB(false).setInvA(true).setInC(false);
+    for (final int a : TEST_VALUES) {
+      for (final int b : TEST_VALUES) {
+        alu.setA(a).setB(b).calculate();
+        final int result = -a - 1;
         assertThat(alu.getOut()).isEqualTo(result);
         assertThat(alu.isN()).isEqualTo(result < 0);
         assertThat(alu.isZ()).isEqualTo(result == 0);
