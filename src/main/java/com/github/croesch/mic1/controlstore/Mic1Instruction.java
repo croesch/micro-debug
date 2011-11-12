@@ -84,32 +84,8 @@ public final class Mic1Instruction {
   /** MIR[16] - INC bit that defines the first carry in in the ALU - so it increments the result of ALU by one */
   private final boolean increment;
 
-  /** MIR[15] - bit that is responsible for the value of C-Bus written into H register, if set */
-  private final boolean h;
-
-  /** MIR[14] - bit that is responsible for the value of C-Bus written into OPC register, if set */
-  private final boolean opc;
-
-  /** MIR[13] - bit that is responsible for the value of C-Bus written into TOS register, if set */
-  private final boolean tos;
-
-  /** MIR[12] - bit that is responsible for the value of C-Bus written into CPP register, if set */
-  private final boolean cpp;
-
-  /** MIR[11] - bit that is responsible for the value of C-Bus written into LV register, if set */
-  private final boolean lv;
-
-  /** MIR[10] - bit that is responsible for the value of C-Bus written into SP register, if set */
-  private final boolean sp;
-
-  /** MIR[9] - bit that is responsible for the value of C-Bus written into PC register, if set */
-  private final boolean pc;
-
-  /** MIR[8] - bit that is responsible for the value of C-Bus written into MDR register, if set */
-  private final boolean mdr;
-
-  /** MIR[7] - bit that is responsible for the value of C-Bus written into MAR register, if set */
-  private final boolean mar;
+  /** MIR[15:7]: set of bits that are responsible for the registers that are filled with the C-Bus value */
+  private final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
 
   /** MIR[6:4]: set of bits that are responsible for communication with external memory (main memory and program memory) */
   private final Mic1MemorySignalSet mem = new Mic1MemorySignalSet();
@@ -144,15 +120,15 @@ public final class Mic1Instruction {
     this.enableB = bits.get(i++); // fetch bit number 8 from the BitSet
     this.invertA = bits.get(i++); // fetch bit number 9 from the BitSet
     this.increment = bits.get(i++); // fetch bit number 10 from the BitSet
-    this.h = bits.get(i++); // fetch bit number 11 from the BitSet
-    this.opc = bits.get(i++); // fetch bit number 12 from the BitSet
-    this.tos = bits.get(i++); // fetch bit number 13 from the BitSet
-    this.cpp = bits.get(i++); // fetch bit number 14 from the BitSet
-    this.lv = bits.get(i++); // fetch bit number 15 from the BitSet
-    this.sp = bits.get(i++); // fetch bit number 16 from the BitSet
-    this.pc = bits.get(i++); // fetch bit number 17 from the BitSet
-    this.mdr = bits.get(i++); // fetch bit number 18 from the BitSet
-    this.mar = bits.get(i++); // fetch bit number 19 from the BitSet
+    this.cBusSet.setH(bits.get(i++)); // fetch bit number 11 from the BitSet
+    this.cBusSet.setOpc(bits.get(i++)); // fetch bit number 12 from the BitSet
+    this.cBusSet.setTos(bits.get(i++)); // fetch bit number 13 from the BitSet
+    this.cBusSet.setCpp(bits.get(i++)); // fetch bit number 14 from the BitSet
+    this.cBusSet.setLv(bits.get(i++)); // fetch bit number 15 from the BitSet
+    this.cBusSet.setSp(bits.get(i++)); // fetch bit number 16 from the BitSet
+    this.cBusSet.setPc(bits.get(i++)); // fetch bit number 17 from the BitSet
+    this.cBusSet.setMdr(bits.get(i++)); // fetch bit number 18 from the BitSet
+    this.cBusSet.setMar(bits.get(i++)); // fetch bit number 19 from the BitSet
     this.mem.setWrite(bits.get(i++)); // fetch bit number 20 from the BitSet
     this.mem.setRead(bits.get(i++)); // fetch bit number 21 from the BitSet
     this.mem.setFetch(bits.get(i++)); // fetch bit number 22 from the BitSet
@@ -457,31 +433,31 @@ public final class Mic1Instruction {
    */
   void decodeCBusBits(final StringBuilder s) {
     // decode the C-bus bits
-    if (this.h) {
+    if (this.cBusSet.isH()) {
       s.append("H=");
     }
-    if (this.opc) {
+    if (this.cBusSet.isOpc()) {
       s.append("OPC=");
     }
-    if (this.tos) {
+    if (this.cBusSet.isTos()) {
       s.append("TOS=");
     }
-    if (this.cpp) {
+    if (this.cBusSet.isCpp()) {
       s.append("CPP=");
     }
-    if (this.lv) {
+    if (this.cBusSet.isLv()) {
       s.append("LV=");
     }
-    if (this.sp) {
+    if (this.cBusSet.isSp()) {
       s.append("SP=");
     }
-    if (this.pc) {
+    if (this.cBusSet.isPc()) {
       s.append("PC=");
     }
-    if (this.mdr) {
+    if (this.cBusSet.isMdr()) {
       s.append("MDR=");
     }
-    if (this.mar) {
+    if (this.cBusSet.isMar()) {
       s.append("MAR=");
     }
   }
@@ -494,27 +470,19 @@ public final class Mic1Instruction {
     if (this.bBusSelect != null) {
       result += this.bBusSelect.hashCode();
     }
-    result = prime * result + Boolean.valueOf(this.cpp).hashCode();
     result = prime * result + Boolean.valueOf(this.enableA).hashCode();
     result = prime * result + Boolean.valueOf(this.enableB).hashCode();
     result = prime * result + Boolean.valueOf(this.f0).hashCode();
     result = prime * result + Boolean.valueOf(this.f1).hashCode();
-    result = prime * result + Boolean.valueOf(this.h).hashCode();
     result = prime * result + Boolean.valueOf(this.increment).hashCode();
     result = prime * result + Boolean.valueOf(this.invertA).hashCode();
     result = prime * result + Boolean.valueOf(this.jmpC).hashCode();
     result = prime * result + Boolean.valueOf(this.jmpN).hashCode();
     result = prime * result + Boolean.valueOf(this.jmpZ).hashCode();
-    result = prime * result + Boolean.valueOf(this.lv).hashCode();
-    result = prime * result + Boolean.valueOf(this.mar).hashCode();
-    result = prime * result + Boolean.valueOf(this.mdr).hashCode();
     result = prime * result + this.nextAddress;
-    result = prime * result + Boolean.valueOf(this.opc).hashCode();
-    result = prime * result + Boolean.valueOf(this.pc).hashCode();
     result = prime * result + Boolean.valueOf(this.sll8).hashCode();
-    result = prime * result + Boolean.valueOf(this.sp).hashCode();
     result = prime * result + Boolean.valueOf(this.sra1).hashCode();
-    result = prime * result + Boolean.valueOf(this.tos).hashCode();
+    result = prime * result + this.cBusSet.hashCode();
     result = prime * result + this.mem.hashCode();
     return result;
   }
@@ -534,9 +502,6 @@ public final class Mic1Instruction {
     if (this.bBusSelect != other.bBusSelect) {
       return false;
     }
-    if (this.cpp != other.cpp) {
-      return false;
-    }
     if (this.enableA != other.enableA) {
       return false;
     }
@@ -547,9 +512,6 @@ public final class Mic1Instruction {
       return false;
     }
     if (this.f1 != other.f1) {
-      return false;
-    }
-    if (this.h != other.h) {
       return false;
     }
     if (this.increment != other.increment) {
@@ -567,34 +529,16 @@ public final class Mic1Instruction {
     if (this.jmpZ != other.jmpZ) {
       return false;
     }
-    if (this.lv != other.lv) {
-      return false;
-    }
-    if (this.mar != other.mar) {
-      return false;
-    }
-    if (this.mdr != other.mdr) {
-      return false;
-    }
     if (this.nextAddress != other.nextAddress) {
-      return false;
-    }
-    if (this.opc != other.opc) {
-      return false;
-    }
-    if (this.pc != other.pc) {
       return false;
     }
     if (this.sll8 != other.sll8) {
       return false;
     }
-    if (this.sp != other.sp) {
-      return false;
-    }
     if (this.sra1 != other.sra1) {
       return false;
     }
-    if (this.tos != other.tos) {
+    if (!this.cBusSet.equals(other.cBusSet)) {
       return false;
     }
     return this.mem.equals(other.mem);
