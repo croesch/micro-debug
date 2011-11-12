@@ -39,6 +39,9 @@ import java.util.BitSet;
  */
 public final class Mic1Instruction {
 
+  /** contains a bit mask to define the highest bit in the nine-bit-value of address - 2 to the 8th */
+  private static final int HIGHEST_BIT_OF_ADDRESS = 256;
+
   /** the text to represent negotiation of a value */
   private static final String TXT_NOT = "NOT";
 
@@ -197,15 +200,24 @@ public final class Mic1Instruction {
     decodeMemoryBits(s);
     decodeJMPAndAddress(s);
 
-    if (s.toString().equals("0")) {
-      s = new StringBuilder("nop");
-    } else if (s.toString().startsWith("0;")) {
+    // TODO decide when to write 'nop'
+    //    if (s.toString().equals("0")) {
+    //      s = new StringBuilder("nop");
+    //    } else 
+    if (s.toString().startsWith("0;")) {
       s = new StringBuilder(s.toString().substring(2));
     }
 
     return s.toString();
   }
 
+  /**
+   * Decodes signals of the instruction that belong to calculation of next MPC: JMPN, JMPC, JMPZ (and address). It
+   * genereates the text and appends it to the given {@link StringBuilder}.
+   * 
+   * @since Date: Nov 12, 2011
+   * @param s the {@link StringBuilder} to append the text to.
+   */
   void decodeJMPAndAddress(final StringBuilder s) {
     // decode the JMP bits/addr
     if (this.jmpN || this.jmpZ) {
@@ -217,7 +229,7 @@ public final class Mic1Instruction {
       }
       s.insert(0, c + "=");
       s.append(";if (").append(c).append(") goto 0x");
-      s.append(convertIntToHex(this.nextAddress | 256)).append("; else goto 0x");
+      s.append(convertIntToHex(this.nextAddress | HIGHEST_BIT_OF_ADDRESS)).append("; else goto 0x");
       s.append(convertIntToHex(this.nextAddress));
     } else if (this.jmpC) {
       if (this.nextAddress == 0) {
