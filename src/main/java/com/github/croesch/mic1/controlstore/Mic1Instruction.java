@@ -51,14 +51,8 @@ public final class Mic1Instruction {
   /** MIR[35:27] - bits that are responsible for calculation of next MPC */
   private final int nextAddress;
 
-  /** MIR[26] - bit that is responsible for manipulation of the next MPC value */
-  private final boolean jmpC;
-
-  /** MIR[25] - bit that is responsible for manipulation of the next MPC value, if ALU result is < 0 */
-  private final boolean jmpN;
-
-  /** MIR[24] - bit that is responsible for manipulation of the next MPC value, if ALU result is zero */
-  private final boolean jmpZ;
+  /** MIR[26:24]: set of bits that are basic for calculation of next MPC */
+  private final Mic1JMPSignalSet jmpSignals = new Mic1JMPSignalSet();
 
   /** MIR[23:16]: set of bits that are responsible for the behavior of the ALU and the shifter */
   private final Mic1ALUSignalSet aluSignals = new Mic1ALUSignalSet();
@@ -88,9 +82,9 @@ public final class Mic1Instruction {
     this.bBusSelect = b;
 
     int i = 0;
-    this.jmpC = bits.get(i++); // fetch bit number 0 from the BitSet
-    this.jmpN = bits.get(i++); // fetch bit number 1 from the BitSet
-    this.jmpZ = bits.get(i++); // fetch bit number 2 from the BitSet
+    this.jmpSignals.setJmpC(bits.get(i++)); // fetch bit number 0 from the BitSet
+    this.jmpSignals.setJmpN(bits.get(i++)); // fetch bit number 1 from the BitSet
+    this.jmpSignals.setJmpZ(bits.get(i++)); // fetch bit number 2 from the BitSet
     this.aluSignals.setSll8(bits.get(i++)); // fetch bit number 3 from the BitSet
     this.aluSignals.setSra1(bits.get(i++)); // fetch bit number 4 from the BitSet
     this.aluSignals.setF0(bits.get(i++)); // fetch bit number 5 from the BitSet
@@ -145,9 +139,9 @@ public final class Mic1Instruction {
    */
   void decodeJMPAndAddress(final StringBuilder s) {
     // decode the JMP bits/addr
-    if (this.jmpN || this.jmpZ) {
+    if (this.jmpSignals.isJmpN() || this.jmpSignals.isJmpZ()) {
       final char c;
-      if (this.jmpN) {
+      if (this.jmpSignals.isJmpN()) {
         c = 'N';
       } else {
         c = 'Z';
@@ -156,7 +150,7 @@ public final class Mic1Instruction {
       s.append(";if (").append(c).append(") goto 0x");
       s.append(convertIntToHex(this.nextAddress | HIGHEST_BIT_OF_ADDRESS)).append("; else goto 0x");
       s.append(convertIntToHex(this.nextAddress));
-    } else if (this.jmpC) {
+    } else if (this.jmpSignals.isJmpC()) {
       if (this.nextAddress == 0) {
         s.append(";goto (MBR)");
       } else {
@@ -449,11 +443,9 @@ public final class Mic1Instruction {
     if (this.bBusSelect != null) {
       result += this.bBusSelect.hashCode();
     }
-    result = prime * result + Boolean.valueOf(this.jmpC).hashCode();
-    result = prime * result + Boolean.valueOf(this.jmpN).hashCode();
-    result = prime * result + Boolean.valueOf(this.jmpZ).hashCode();
     result = prime * result + this.nextAddress;
     result = prime * result + this.aluSignals.hashCode();
+    result = prime * result + this.jmpSignals.hashCode();
     result = prime * result + this.cBusSignals.hashCode();
     result = prime * result + this.memorySignals.hashCode();
     return result;
@@ -474,16 +466,10 @@ public final class Mic1Instruction {
     if (this.bBusSelect != other.bBusSelect) {
       return false;
     }
-    if (this.jmpC != other.jmpC) {
-      return false;
-    }
-    if (this.jmpN != other.jmpN) {
-      return false;
-    }
-    if (this.jmpZ != other.jmpZ) {
-      return false;
-    }
     if (this.nextAddress != other.nextAddress) {
+      return false;
+    }
+    if (!this.jmpSignals.equals(other.jmpSignals)) {
       return false;
     }
     if (!this.aluSignals.equals(other.aluSignals)) {
