@@ -13,7 +13,7 @@ public class Mic1ALUSignalSetTest extends Mic1SignalSetTestUtil {
   @Test
   public void testSetIsSignal() throws Exception {
     final Mic1ALUSignalSet set = new Mic1ALUSignalSet();
-    testIsSetSignals(set, new String[] { "Sll8", "Sra1", "F0", "F1", "EnA", "EnB", "InvA", "Inc" });
+    testIsSetSignals(set, new String[] { "SLL8", "SRA1", "F0", "F1", "EnA", "EnB", "InvA", "Inc" });
   }
 
   @Test
@@ -21,6 +21,6 @@ public class Mic1ALUSignalSetTest extends Mic1SignalSetTestUtil {
     final Mic1ALUSignalSet set = new Mic1ALUSignalSet();
     final Mic1ALUSignalSet other = new Mic1ALUSignalSet();
 
-    testEquals(set, other, new String[] { "Sll8", "Sra1", "F0", "F1", "EnA", "EnB", "InvA", "Inc" });
+    testEquals(set, other, new String[] { "SLL8", "SRA1", "F0", "F1", "EnA", "EnB", "InvA", "Inc" });
   }
 }

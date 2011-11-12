@@ -54,7 +54,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @since Date: Nov 12, 2011
    * @param value the new value for the signal <code>SLL8</code>.
    */
-  public void setSll8(final boolean value) {
+  public void setSLL8(final boolean value) {
     set(SIGNAL_NUMBER_OF_SLL8, value);
   }
 
@@ -64,7 +64,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @since Date: Nov 12, 2011
    * @return <code>true</code>, if the signal <code>SLL8</code> is set.
    */
-  public boolean isSll8() {
+  public boolean isSLL8() {
     return is(SIGNAL_NUMBER_OF_SLL8);
   }
 
@@ -74,7 +74,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @since Date: Nov 12, 2011
    * @param value the new value for the signal <code>SRA1</code>.
    */
-  public void setSra1(final boolean value) {
+  public void setSRA1(final boolean value) {
     set(SIGNAL_NUMBER_OF_SRA1, value);
   }
 
@@ -84,7 +84,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @since Date: Nov 12, 2011
    * @return <code>true</code>, if the signal <code>SRA1</code> is set.
    */
-  public boolean isSra1() {
+  public boolean isSRA1() {
     return is(SIGNAL_NUMBER_OF_SRA1);
   }
 

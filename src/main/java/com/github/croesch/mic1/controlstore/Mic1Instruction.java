@@ -30,6 +30,7 @@
 package com.github.croesch.mic1.controlstore;
 
 import java.util.BitSet;
+import java.util.Locale;
 
 /**
  * Mic1Instruction This class represents an instruction which might appear in the Mic-1 control store. To Do We should
@@ -85,8 +86,8 @@ public final class Mic1Instruction {
     this.jmpSignals.setJmpC(bits.get(i++)); // fetch bit number 0 from the BitSet
     this.jmpSignals.setJmpN(bits.get(i++)); // fetch bit number 1 from the BitSet
     this.jmpSignals.setJmpZ(bits.get(i++)); // fetch bit number 2 from the BitSet
-    this.aluSignals.setSll8(bits.get(i++)); // fetch bit number 3 from the BitSet
-    this.aluSignals.setSra1(bits.get(i++)); // fetch bit number 4 from the BitSet
+    this.aluSignals.setSLL8(bits.get(i++)); // fetch bit number 3 from the BitSet
+    this.aluSignals.setSRA1(bits.get(i++)); // fetch bit number 4 from the BitSet
     this.aluSignals.setF0(bits.get(i++)); // fetch bit number 5 from the BitSet
     this.aluSignals.setF1(bits.get(i++)); // fetch bit number 6 from the BitSet
     this.aluSignals.setEnA(bits.get(i++)); // fetch bit number 7 from the BitSet
@@ -170,7 +171,7 @@ public final class Mic1Instruction {
    * @see Integer#toHexString(int)
    */
   static String convertIntToHex(final int i) {
-    return Integer.toHexString(i).toUpperCase();
+    return Integer.toHexString(i).toUpperCase(Locale.getDefault());
   }
 
   /**
@@ -202,10 +203,10 @@ public final class Mic1Instruction {
    */
   void decodeShifterOperation(final StringBuilder s) {
     // decode the shifter operation
-    if (this.aluSignals.isSra1()) {
+    if (this.aluSignals.isSRA1()) {
       s.append(">>1");
     }
-    if (this.aluSignals.isSll8()) {
+    if (this.aluSignals.isSLL8()) {
       s.append("<<8");
     }
   }
@@ -243,40 +244,67 @@ public final class Mic1Instruction {
    */
   void decodeALUPlus(final StringBuilder s, final String a, final String b) {
     if (this.aluSignals.isEnA()) {
-      if (this.aluSignals.isInvA()) {
-        if (this.aluSignals.isEnB()) {
-          s.append(b);
-        }
-        s.append("-").append(a);
-        if (!this.aluSignals.isInc()) {
-          s.append("-1");
-        }
-      } else {
-        s.append(a);
-        if (this.aluSignals.isEnB()) {
-          s.append("+").append(b);
-        }
-        if (this.aluSignals.isInc()) {
-          s.append("+1");
-        }
+      decodeALUPlusAEnabled(s, a, b);
+    } else {
+      decodeALUPlusADisabled(s, b);
+    }
+  }
+
+  /**
+   * Decodes the signals of the ALU if other signals say it should add two values. The signals are: ENB, INVA and INC.
+   * It appends the generated text to the given {@link StringBuilder}. The signal ENA mustn't be set if this method is
+   * called.
+   * 
+   * @since Date: Nov 13, 2011
+   * @param s the {@link StringBuilder} to append the text to.
+   * @param b the decoded text that describes the value written in the input B of the ALU
+   */
+  private void decodeALUPlusADisabled(final StringBuilder s, final String b) {
+    if (this.aluSignals.isInvA() && !this.aluSignals.isInc()) {
+      if (this.aluSignals.isEnB()) {
+        s.append(b);
       }
-    } else { // a not enabled
-      if (this.aluSignals.isInvA() && !this.aluSignals.isInc()) {
-        if (this.aluSignals.isEnB()) {
-          s.append(b);
-        }
-        s.append("-1");
-      } else if (!this.aluSignals.isInvA() && this.aluSignals.isInc()) {
-        if (this.aluSignals.isEnB()) {
-          s.append(b).append("+");
-        }
-        s.append("1");
+      s.append("-1");
+    } else if (!this.aluSignals.isInvA() && this.aluSignals.isInc()) {
+      if (this.aluSignals.isEnB()) {
+        s.append(b).append("+");
+      }
+      s.append("1");
+    } else {
+      if (this.aluSignals.isEnB()) {
+        s.append(b);
       } else {
-        if (this.aluSignals.isEnB()) {
-          s.append(b);
-        } else {
-          s.append("0");
-        }
+        s.append("0");
+      }
+    }
+  }
+
+  /**
+   * Decodes the signals of the ALU if other signals say it should add two values. The signals are: ENB, INVA and INC.
+   * It appends the generated text to the given {@link StringBuilder}. The signal ENA must be set if this method is
+   * called.
+   * 
+   * @since Date: Nov 13, 2011
+   * @param s the {@link StringBuilder} to append the text to.
+   * @param a the decoded text that describes the value written in the input A of the ALU
+   * @param b the decoded text that describes the value written in the input B of the ALU
+   */
+  private void decodeALUPlusAEnabled(final StringBuilder s, final String a, final String b) {
+    if (this.aluSignals.isInvA()) {
+      if (this.aluSignals.isEnB()) {
+        s.append(b);
+      }
+      s.append("-").append(a);
+      if (!this.aluSignals.isInc()) {
+        s.append("-1");
+      }
+    } else {
+      s.append(a);
+      if (this.aluSignals.isEnB()) {
+        s.append("+").append(b);
+      }
+      if (this.aluSignals.isInc()) {
+        s.append("+1");
       }
     }
   }
@@ -373,28 +401,7 @@ public final class Mic1Instruction {
     if (this.bBusSelect == null) {
       return unknown;
     }
-    switch (this.bBusSelect) {
-      case MDR:
-        return "MDR";
-      case PC:
-        return "PC";
-      case MBR:
-        return "MBR";
-      case MBRU:
-        return "MBRU";
-      case SP:
-        return "SP";
-      case LV:
-        return "LV";
-      case CPP:
-        return "CPP";
-      case TOS:
-        return "TOS";
-      case OPC:
-        return "OPC";
-      default:
-        return unknown;
-    }
+    return this.bBusSelect.toString();
   }
 
   /**

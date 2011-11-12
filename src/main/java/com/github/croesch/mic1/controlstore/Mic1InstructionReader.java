@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.BitSet;
 
-
 /**
  * Is able to read bytes from {@link InputStream}s and to construct {@link Mic1Instruction}s with the given values.
  * 
@@ -98,7 +97,7 @@ public final class Mic1InstructionReader {
     final int b4 = in.read();
 
     // we have reached the end of data, so return null
-    if (b0 == -1 || b1 == -1 || b2 == -1 || b3 == -1 || b4 == -1) {
+    if (isOneByteMinusOne(b0, b1, b2, b3, b4)) {
       return null;
     }
 
@@ -160,6 +159,34 @@ public final class Mic1InstructionReader {
     bs.set(i++, fetch); // 22
 
     return new Mic1Instruction(nextAddress, bs, decodeBBusBits(b));
+  }
+
+  /**
+   * Returns whether one of the given bytes is <code>-1</code>.
+   * 
+   * @since Date: Nov 13, 2011
+   * @param b0 byte to check if it's <code>-1</code>.
+   * @param b1 byte to check if it's <code>-1</code>.
+   * @param b2 byte to check if it's <code>-1</code>.
+   * @param b3 byte to check if it's <code>-1</code>.
+   * @param b4 byte to check if it's <code>-1</code>.
+   * @return <code>true</code>, if one of the given bytes is <code>-1</code>.
+   */
+  private static boolean isOneByteMinusOne(final int b0, final int b1, final int b2, final int b3, final int b4) {
+    final int problematicValue = -1;
+    if (b0 == problematicValue) {
+      return true;
+    }
+    if (b1 == problematicValue) {
+      return true;
+    }
+    if (b2 == problematicValue) {
+      return true;
+    }
+    if (b3 == problematicValue) {
+      return true;
+    }
+    return b4 == problematicValue;
   }
 
   /**

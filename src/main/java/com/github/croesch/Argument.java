@@ -1,6 +1,7 @@
 package com.github.croesch;
 
 import java.util.EnumMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -60,8 +61,8 @@ enum Argument {
    * @see #Argument()
    */
   private Argument(final int nop) {
-    this.args[0] = "--" + this.name().toLowerCase().replaceAll("_", "-");
-    this.args[1] = "-" + this.name().substring(0, 1).toLowerCase();
+    this.args[0] = "--" + this.name().toLowerCase(Locale.getDefault()).replaceAll("_", "-");
+    this.args[1] = "-" + this.name().substring(0, 1).toLowerCase(Locale.getDefault());
     this.numOfParams = nop;
   }
 
@@ -74,7 +75,7 @@ enum Argument {
    *         <code>true</code> for the argument <code>ARGUMENT</code>.
    */
   private boolean matches(final String m) {
-    return m != null && (m.equals(args[0]) || m.equals(args[1]));
+    return m != null && (m.equals(this.args[0]) || m.equals(this.args[1]));
   }
 
   /**
