@@ -9,6 +9,7 @@ import java.util.BitSet;
 
 import org.junit.Test;
 
+
 /**
  * Provides test cases for {@link Mic1InstructionReader}. Basically tests that it produces the expected output from
  * given sample input.
@@ -32,7 +33,7 @@ public class Mic1InstructionReaderTest {
     bits.set(6);
     bits.set(7);
     bits.set(11, 20);
-    final Mic1Instruction expected = new Mic1Instruction(0x1cf, bits, 0x8);
+    final Mic1Instruction expected = new Mic1Instruction(0x1cf, bits, Mic1BBusRegister.OPC);
 
     assertThat(value).isEqualTo(expected);
   }
@@ -47,7 +48,7 @@ public class Mic1InstructionReaderTest {
     final Mic1Instruction value = Mic1InstructionReader.read(in);
     final BitSet bits = new BitSet();
     bits.set(0, 24);
-    final Mic1Instruction expected = new Mic1Instruction(0x1ff, bits, 0xf);
+    final Mic1Instruction expected = new Mic1Instruction(0x1ff, bits, null);
 
     assertThat(value).isEqualTo(expected);
   }

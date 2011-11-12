@@ -7,6 +7,7 @@ import java.util.BitSet;
 import org.junit.Before;
 import org.junit.Test;
 
+
 /**
  * TODO Comment here ...
  * 
@@ -23,7 +24,7 @@ public class Mic1InstructionTest {
 
   @Before
   public void setUp() {
-    this.instruction = new Mic1Instruction(0, new BitSet(), 0);
+    this.instruction = new Mic1Instruction(0, new BitSet(), null);
     this.stringBuilder = new StringBuilder();
   }
 
@@ -33,7 +34,7 @@ public class Mic1InstructionTest {
 
     final BitSet bits = new BitSet();
 
-    this.instruction = new Mic1Instruction(0, bits, 0);
+    this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
     assertThat(this.instruction.toString()).isEqualTo("goto 0x0");
 
     bits.set(2);
@@ -44,7 +45,7 @@ public class Mic1InstructionTest {
     bits.set(12);
     bits.set(14);
     bits.set(16);
-    this.instruction = new Mic1Instruction(47, bits, 5);
+    this.instruction = new Mic1Instruction(47, bits, Mic1BBusRegister.LV);
     assertThat(this.instruction.toString()).isEqualTo("Z=OPC=CPP=SP=LV>>1;if (Z) goto 0x12F; else goto 0x2F");
 
     printEndOfMethod();
@@ -60,7 +61,7 @@ public class Mic1InstructionTest {
     bits.set(0, false); //JMPC
     bits.set(1, false); //JMPN
     bits.set(2, false); // JMPZ
-    this.instruction = new Mic1Instruction(47, bits, 0);
+    this.instruction = new Mic1Instruction(47, bits, Mic1BBusRegister.MDR);
     String start = this.stringBuilder.toString();
     // call decoding
     this.instruction.decodeJMPAndAddress(this.stringBuilder);
@@ -70,7 +71,7 @@ public class Mic1InstructionTest {
     bits.set(0, true); //JMPC
     bits.set(1, false); //JMPN
     bits.set(2, false); // JMPZ
-    this.instruction = new Mic1Instruction(47, bits, 0);
+    this.instruction = new Mic1Instruction(47, bits, Mic1BBusRegister.MDR);
     start = this.stringBuilder.toString();
     // call decoding
     this.instruction.decodeJMPAndAddress(this.stringBuilder);
@@ -80,7 +81,7 @@ public class Mic1InstructionTest {
     bits.set(0, true); //JMPC
     bits.set(1, false); //JMPN
     bits.set(2, false); // JMPZ
-    this.instruction = new Mic1Instruction(0, bits, 0);
+    this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
     start = this.stringBuilder.toString();
     // call decoding
     this.instruction.decodeJMPAndAddress(this.stringBuilder);
@@ -90,7 +91,7 @@ public class Mic1InstructionTest {
     bits.set(0, false); //JMPC
     bits.set(1, true); //JMPN
     bits.set(2, false); // JMPZ
-    this.instruction = new Mic1Instruction(47, bits, 0);
+    this.instruction = new Mic1Instruction(47, bits, Mic1BBusRegister.MDR);
     start = this.stringBuilder.toString();
     // call decoding
     this.instruction.decodeJMPAndAddress(this.stringBuilder);
@@ -100,7 +101,7 @@ public class Mic1InstructionTest {
     bits.set(0, false); //JMPC
     bits.set(1, false); //JMPN
     bits.set(2, true); // JMPZ
-    this.instruction = new Mic1Instruction(47, bits, 0);
+    this.instruction = new Mic1Instruction(47, bits, Mic1BBusRegister.MDR);
     start = this.stringBuilder.toString();
     // call decoding
     this.instruction.decodeJMPAndAddress(this.stringBuilder);
@@ -110,7 +111,7 @@ public class Mic1InstructionTest {
     bits.set(0, false); //JMPC
     bits.set(1, true); //JMPN
     bits.set(2, false); // JMPZ
-    this.instruction = new Mic1Instruction(447, bits, 0);
+    this.instruction = new Mic1Instruction(447, bits, Mic1BBusRegister.MDR);
     start = this.stringBuilder.toString();
     // call decoding
     this.instruction.decodeJMPAndAddress(this.stringBuilder);
@@ -120,7 +121,7 @@ public class Mic1InstructionTest {
     bits.set(0, false); //JMPC
     bits.set(1, false); //JMPN
     bits.set(2, true); // JMPZ
-    this.instruction = new Mic1Instruction(447, bits, 0);
+    this.instruction = new Mic1Instruction(447, bits, Mic1BBusRegister.MDR);
     start = this.stringBuilder.toString();
     // call decoding
     this.instruction.decodeJMPAndAddress(this.stringBuilder);
@@ -181,7 +182,7 @@ public class Mic1InstructionTest {
           bits.set(21, read);
           bits.set(22, fetch);
           // create Mic1Instruction
-          this.instruction = new Mic1Instruction(0, bits, 0);
+          this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
 
           // ensure the method appends generated text
           final String start = this.stringBuilder.toString();
@@ -216,7 +217,7 @@ public class Mic1InstructionTest {
         bits.set(3, sll8);
         bits.set(4, sra1);
         // create Mic1Instruction
-        this.instruction = new Mic1Instruction(0, bits, 0);
+        this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
 
         final String start = this.stringBuilder.toString();
         // call decoding
@@ -250,7 +251,7 @@ public class Mic1InstructionTest {
 
     bits.set(5);
     bits.set(6);
-    this.instruction = new Mic1Instruction(0, bits, 0);
+    this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
     String start = this.stringBuilder.toString();
     // call decoding
     this.instruction.decodeALUOperation(this.stringBuilder, "A", "B");
@@ -259,7 +260,7 @@ public class Mic1InstructionTest {
 
     bits.set(5, false);
     bits.set(6);
-    this.instruction = new Mic1Instruction(0, bits, 0);
+    this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
     start = this.stringBuilder.toString();
     // call decoding
     this.instruction.decodeALUOperation(this.stringBuilder, "A", "B");
@@ -268,7 +269,7 @@ public class Mic1InstructionTest {
 
     bits.set(5);
     bits.set(6, false);
-    this.instruction = new Mic1Instruction(0, bits, 0);
+    this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
     start = this.stringBuilder.toString();
     // call decoding
     this.instruction.decodeALUOperation(this.stringBuilder, "A", "B");
@@ -277,7 +278,7 @@ public class Mic1InstructionTest {
 
     bits.set(5, false);
     bits.set(6, false);
-    this.instruction = new Mic1Instruction(0, bits, 0);
+    this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
     start = this.stringBuilder.toString();
     // call decoding
     this.instruction.decodeALUOperation(this.stringBuilder, "A", "B");
@@ -305,7 +306,7 @@ public class Mic1InstructionTest {
             bits.set(9, invertA);
             bits.set(10, increment);
             // create Mic1Instruction
-            this.instruction = new Mic1Instruction(0, bits, 0);
+            this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
 
             final String start = this.stringBuilder.toString();
             // call decoding
@@ -369,7 +370,7 @@ public class Mic1InstructionTest {
       bits.clear();
       bits.set(8, enableB);
       // create Mic1Instruction
-      this.instruction = new Mic1Instruction(0, bits, 0);
+      this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
 
       final String start = this.stringBuilder.toString();
       // call decoding
@@ -401,7 +402,7 @@ public class Mic1InstructionTest {
           bits.set(8, enableB);
           bits.set(9, invertA);
           // create Mic1Instruction
-          this.instruction = new Mic1Instruction(0, bits, 0);
+          this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
 
           final String start = this.stringBuilder.toString();
           // call decoding
@@ -450,7 +451,7 @@ public class Mic1InstructionTest {
           bits.set(8, enableB);
           bits.set(9, invertA);
           // create Mic1Instruction
-          this.instruction = new Mic1Instruction(0, bits, 0);
+          this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
 
           final String start = this.stringBuilder.toString();
           // call decoding
@@ -486,24 +487,24 @@ public class Mic1InstructionTest {
   @Test
   public void testDecodeBBusBits() {
     printMethodName();
-    checkDecodingOfBBusBits("MDR", 0);
-    checkDecodingOfBBusBits("PC", 1);
-    checkDecodingOfBBusBits("MBR", 2);
-    checkDecodingOfBBusBits("MBRU", 3);
-    checkDecodingOfBBusBits("SP", 4);
-    checkDecodingOfBBusBits("LV", 5);
-    checkDecodingOfBBusBits("CPP", 6);
-    checkDecodingOfBBusBits("TOS", 7);
-    checkDecodingOfBBusBits("OPC", 8);
+    checkDecodingOfBBusBits("MDR", Mic1BBusRegister.MDR);
+    checkDecodingOfBBusBits("PC", Mic1BBusRegister.PC);
+    checkDecodingOfBBusBits("MBR", Mic1BBusRegister.MBR);
+    checkDecodingOfBBusBits("MBRU", Mic1BBusRegister.MBRU);
+    checkDecodingOfBBusBits("SP", Mic1BBusRegister.SP);
+    checkDecodingOfBBusBits("LV", Mic1BBusRegister.LV);
+    checkDecodingOfBBusBits("CPP", Mic1BBusRegister.CPP);
+    checkDecodingOfBBusBits("TOS", Mic1BBusRegister.TOS);
+    checkDecodingOfBBusBits("OPC", Mic1BBusRegister.OPC);
 
     for (int i = 9; i < 16; ++i) {
-      checkDecodingOfBBusBits("???", i);
+      checkDecodingOfBBusBits("???", null);
       printStep();
     }
     printEndOfMethod();
   }
 
-  private void checkDecodingOfBBusBits(final String s, final int i) {
+  private void checkDecodingOfBBusBits(final String s, final Mic1BBusRegister i) {
     this.instruction = new Mic1Instruction(0, new BitSet(), i);
     // check it multiple times
     assertThat(this.instruction.decodeBBusBits()).isEqualTo(s);
@@ -541,7 +542,7 @@ public class Mic1InstructionTest {
                       bits.set(18, mdr);
                       bits.set(19, mar);
                       // create Mic1Instruction
-                      this.instruction = new Mic1Instruction(0, bits, 0);
+                      this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
 
                       final String start = this.stringBuilder.toString();
                       // call decoding
@@ -592,14 +593,14 @@ public class Mic1InstructionTest {
     assertThat(this.instruction.hashCode()).isEqualTo(this.instruction.hashCode());
 
     int addr = 0;
-    int b = 0;
+    Mic1BBusRegister b = null;
     final BitSet bs = new BitSet();
 
     Mic1Instruction other = new Mic1Instruction(addr, bs, b);
     assertThat(this.instruction).isEqualTo(other);
     assertThat(this.instruction.hashCode()).isEqualTo(this.instruction.hashCode());
 
-    b = 1;
+    b = Mic1BBusRegister.OPC;
     this.instruction = new Mic1Instruction(addr, bs, b);
     assertThat(this.instruction).isNotEqualTo(other);
     assertThat(this.instruction.hashCode()).isNotEqualTo(other.hashCode());
@@ -613,10 +614,10 @@ public class Mic1InstructionTest {
 
     for (int i = 0; i < 23; ++i) {
       bs.set(i);
-      this.instruction = new Mic1Instruction(addr, bs, 1);
+      this.instruction = new Mic1Instruction(addr, bs, b);
       assertThat(this.instruction).isNotEqualTo(other);
       assertThat(this.instruction.hashCode()).isNotEqualTo(other.hashCode());
-      other = new Mic1Instruction(addr, bs, 1); // make object equal to instruction
+      other = new Mic1Instruction(addr, bs, b); // make object equal to instruction
       printStep();
     }
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.BitSet;
 
+
 /**
  * Is able to read bytes from {@link InputStream}s and to construct {@link Mic1Instruction}s with the given values.
  * 
@@ -11,6 +12,33 @@ import java.util.BitSet;
  * @since Date: Nov 7, 2011
  */
 public final class Mic1InstructionReader {
+
+  /** constant to define the value of the least four bits of MIC that results in MDR being written on the B-Bus */
+  private static final int B_BUS_MDR = 0;
+
+  /** constant to define the value of the least four bits of MIC that results in PC being written on the B-Bus */
+  private static final int B_BUS_PC = 1;
+
+  /** constant to define the value of the least four bits of MIC that results in MBR being written on the B-Bus */
+  private static final int B_BUS_MBR = 2;
+
+  /** constant to define the value of the least four bits of MIC that results in MBRU being written on the B-Bus */
+  private static final int B_BUS_MBRU = 3;
+
+  /** constant to define the value of the least four bits of MIC that results in SP being written on the B-Bus */
+  private static final int B_BUS_SP = 4;
+
+  /** constant to define the value of the least four bits of MIC that results in LV being written on the B-Bus */
+  private static final int B_BUS_LV = 5;
+
+  /** constant to define the value of the least four bits of MIC that results in CPP being written on the B-Bus */
+  private static final int B_BUS_CPP = 6;
+
+  /** constant to define the value of the least four bits of MIC that results in TOS being written on the B-Bus */
+  private static final int B_BUS_TOS = 7;
+
+  /** constant to define the value of the least four bits of MIC that results in OPC being written on the B-Bus */
+  private static final int B_BUS_OPC = 8;
 
   /** mask for the last four bits: 0000 1111 */
   private static final int BIT5678 = 0x0F;
@@ -131,6 +159,38 @@ public final class Mic1InstructionReader {
     bs.set(i++, read); // 21
     bs.set(i++, fetch); // 22
 
-    return new Mic1Instruction(nextAddress, bs, b);
+    return new Mic1Instruction(nextAddress, bs, decodeBBusBits(b));
+  }
+
+  /**
+   * Decodes the value of b into the register that should be written on the B-Bus.
+   * 
+   * @since Date: Nov 12, 2011
+   * @param b the four-bit-value to decode
+   * @return the {@link Mic1BBusRegister} that should be written on the B-Bus.
+   */
+  private static Mic1BBusRegister decodeBBusBits(final int b) {
+    switch (b) {
+      case B_BUS_MDR:
+        return Mic1BBusRegister.MDR;
+      case B_BUS_PC:
+        return Mic1BBusRegister.PC;
+      case B_BUS_MBR:
+        return Mic1BBusRegister.MBR;
+      case B_BUS_MBRU:
+        return Mic1BBusRegister.MBRU;
+      case B_BUS_SP:
+        return Mic1BBusRegister.SP;
+      case B_BUS_LV:
+        return Mic1BBusRegister.LV;
+      case B_BUS_CPP:
+        return Mic1BBusRegister.CPP;
+      case B_BUS_TOS:
+        return Mic1BBusRegister.TOS;
+      case B_BUS_OPC:
+        return Mic1BBusRegister.OPC;
+      default:
+        return null;
+    }
   }
 }

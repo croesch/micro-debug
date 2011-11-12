@@ -39,38 +39,14 @@ import java.util.BitSet;
  */
 public final class Mic1Instruction {
 
+  /** bit mask for the value of address */
+  private static final int ADDRESS_MASK = 0x1ff;
+
   /** contains a bit mask to define the highest bit in the nine-bit-value of address - 2 to the 8th */
   private static final int HIGHEST_BIT_OF_ADDRESS = 256;
 
   /** the text to represent negotiation of a value */
   private static final String TXT_NOT = "NOT";
-
-  /** value of the least significant four bits that result in MDR being written on the B-Bus */
-  private static final int B_MDR = 0;
-
-  /** value of the least significant four bits that result in PC being written on the B-Bus */
-  private static final int B_PC = 1;
-
-  /** value of the least significant four bits that result in MBR being written on the B-Bus */
-  private static final int B_MBR = 2;
-
-  /** value of the least significant four bits that result in MBRU being written on the B-Bus */
-  private static final int B_MBRU = 3;
-
-  /** value of the least significant four bits that result in SP being written on the B-Bus */
-  private static final int B_SP = 4;
-
-  /** value of the least significant four bits that result in LV being written on the B-Bus */
-  private static final int B_LV = 5;
-
-  /** value of the least significant four bits that result in CPP being written on the B-Bus */
-  private static final int B_CPP = 6;
-
-  /** value of the least significant four bits that result in TOS being written on the B-Bus */
-  private static final int B_TOS = 7;
-
-  /** value of the least significant four bits that result in OPC being written on the B-Bus */
-  private static final int B_OPC = 8;
 
   /** MIR[35:27] - bits that are responsible for calculation of next MPC */
   private final int nextAddress;
@@ -144,8 +120,8 @@ public final class Mic1Instruction {
   /** MIR[4] - bit that is responsible for filling the MBR with the value of memory at the PC-address */
   private final boolean fetch;
 
-  /** MIR[3:0] - bits that are responsible which register's value is written on the B-Bus */
-  private final int bBusSelect;
+  /** responsible which register's value is written on the B-Bus */
+  private final Mic1BBusRegister bBusSelect;
 
   /**
    * Constructs a single mic1-instruction.
@@ -158,9 +134,9 @@ public final class Mic1Instruction {
    * @param b contains the MIR[3:0]. Only the lowest four bits are fetched, it contains the bits that are used to define
    *        which register's value is written to the B-Bus.
    */
-  public Mic1Instruction(final int addr, final BitSet bits, final int b) {
-    this.nextAddress = addr & 0x1ff;
-    this.bBusSelect = b & 0xf;
+  public Mic1Instruction(final int addr, final BitSet bits, final Mic1BBusRegister b) {
+    this.nextAddress = addr & ADDRESS_MASK;
+    this.bBusSelect = b;
 
     int i = 0;
     this.jmpC = bits.get(i++); // fetch bit number 0 from the BitSet
@@ -450,29 +426,31 @@ public final class Mic1Instruction {
    * @return the generated text
    */
   String decodeBBusBits() {
-    // decode the b-bus bits
+    final String unknown = "???";
+    if (this.bBusSelect == null) {
+      return unknown;
+    }
     switch (this.bBusSelect) {
-      case B_MDR:
+      case MDR:
         return "MDR";
-      case B_PC:
+      case PC:
         return "PC";
-      case B_MBR:
+      case MBR:
         return "MBR";
-      case B_MBRU:
+      case MBRU:
         return "MBRU";
-      case B_SP:
+      case SP:
         return "SP";
-      case B_LV:
+      case LV:
         return "LV";
-      case B_CPP:
+      case CPP:
         return "CPP";
-      case B_TOS:
+      case TOS:
         return "TOS";
-      case B_OPC:
+      case OPC:
         return "OPC";
-        // are the rest of these really no-ops?
       default:
-        return "???";
+        return unknown;
     }
   }
 
@@ -518,7 +496,10 @@ public final class Mic1Instruction {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + this.bBusSelect;
+    result *= prime;
+    if (this.bBusSelect != null) {
+      result += this.bBusSelect.hashCode();
+    }
     result = prime * result + Boolean.valueOf(this.cpp).hashCode();
     result = prime * result + Boolean.valueOf(this.enableA).hashCode();
     result = prime * result + Boolean.valueOf(this.enableB).hashCode();
