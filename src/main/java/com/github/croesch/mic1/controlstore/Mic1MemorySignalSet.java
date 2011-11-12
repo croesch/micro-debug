@@ -14,6 +14,9 @@ package com.github.croesch.mic1.controlstore;
  */
 public final class Mic1MemorySignalSet extends Mic1SignalSet {
 
+  /** the number of signals this set contains */
+  private static final int SIZE_OF_SET = 3;
+
   /**
    * Constructs a new signal set. Containing the signals <code>write</code>, <code>read</code> and <code>fetch</code>.
    * All signals are not set after creation.
@@ -21,7 +24,7 @@ public final class Mic1MemorySignalSet extends Mic1SignalSet {
    * @since Date: Nov 12, 2011
    */
   Mic1MemorySignalSet() {
-    super(3);
+    super(SIZE_OF_SET);
   }
 
   /**
