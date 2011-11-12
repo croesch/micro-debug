@@ -38,76 +38,123 @@ import java.util.BitSet;
  * 1998.09.01 Created
  */
 public final class Mic1Instruction {
+
+  /** the text to represent negotiation of a value */
   private static final String TXT_NOT = "NOT";
 
+  /** value of the least significant four bits that result in MDR being written on the B-Bus */
   private static final int B_MDR = 0;
 
+  /** value of the least significant four bits that result in PC being written on the B-Bus */
   private static final int B_PC = 1;
 
+  /** value of the least significant four bits that result in MBR being written on the B-Bus */
   private static final int B_MBR = 2;
 
+  /** value of the least significant four bits that result in MBRU being written on the B-Bus */
   private static final int B_MBRU = 3;
 
+  /** value of the least significant four bits that result in SP being written on the B-Bus */
   private static final int B_SP = 4;
 
+  /** value of the least significant four bits that result in LV being written on the B-Bus */
   private static final int B_LV = 5;
 
+  /** value of the least significant four bits that result in CPP being written on the B-Bus */
   private static final int B_CPP = 6;
 
+  /** value of the least significant four bits that result in TOS being written on the B-Bus */
   private static final int B_TOS = 7;
 
+  /** value of the least significant four bits that result in OPC being written on the B-Bus */
   private static final int B_OPC = 8;
 
+  /** MIR[35:27] - bits that are responsible for calculation of next MPC */
   private final int nextAddress;
 
+  /** MIR[26] - bit that is responsible for manipulation of the next MPC value */
   private final boolean jmpC;
 
+  /** MIR[25] - bit that is responsible for manipulation of the next MPC value, if ALU result is < 0 */
   private final boolean jmpN;
 
+  /** MIR[24] - bit that is responsible for manipulation of the next MPC value, if ALU result is zero */
   private final boolean jmpZ;
 
+  /** MIR[23] - bit that makes the shifter shift the result of the ALU eight bits to the left */
   private final boolean sll8;
 
+  /** MIR[22] - bit that makes the shifter shift the result of the ALU arithmetically one bit to the right */
   private final boolean sra1;
 
+  /** MIR[21] - one of two bits that are responsible for what calculation the ALU does */
   private final boolean f0;
 
+  /** MIR[22] - one of two bits that are responsible for what calculation the ALU does */
   private final boolean f1;
 
+  /** MIR[19] - ENA bit that enables the value of A in the ALU, if set - basically A AND ENA is calculated */
   private final boolean enableA;
 
+  /** MIR[18] - ENB bit that enables the value of B in the ALU, if set - basically B AND ENB is calculated */
   private final boolean enableB;
 
+  /** MIR[17] - INVA bit that inverts the value of A in the ALU, if set - basically (A AND ENA) XOR INVA is calculated */
   private final boolean invertA;
 
+  /** MIR[16] - INC bit that defines the first carry in in the ALU - so it increments the result of ALU by one */
   private final boolean increment;
 
+  /** MIR[15] - bit that is responsible for the value of C-Bus written into H register, if set */
   private final boolean h;
 
+  /** MIR[14] - bit that is responsible for the value of C-Bus written into OPC register, if set */
   private final boolean opc;
 
+  /** MIR[13] - bit that is responsible for the value of C-Bus written into TOS register, if set */
   private final boolean tos;
 
+  /** MIR[12] - bit that is responsible for the value of C-Bus written into CPP register, if set */
   private final boolean cpp;
 
+  /** MIR[11] - bit that is responsible for the value of C-Bus written into LV register, if set */
   private final boolean lv;
 
+  /** MIR[10] - bit that is responsible for the value of C-Bus written into SP register, if set */
   private final boolean sp;
 
+  /** MIR[9] - bit that is responsible for the value of C-Bus written into PC register, if set */
   private final boolean pc;
 
+  /** MIR[8] - bit that is responsible for the value of C-Bus written into MDR register, if set */
   private final boolean mdr;
 
+  /** MIR[7] - bit that is responsible for the value of C-Bus written into MAR register, if set */
   private final boolean mar;
 
+  /** MIR[6] - bit that is responsible for writing the value of MDR to the MAR-address in the memory */
   private final boolean write;
 
+  /** MIR[5] - bit that is responsible for filling the MDR with the value of memory at the MAR-address */
   private final boolean read;
 
+  /** MIR[4] - bit that is responsible for filling the MBR with the value of memory at the PC-address */
   private final boolean fetch;
 
+  /** MIR[3:0] - bits that are responsible which register's value is written on the B-Bus */
   private final int bBusSelect;
 
+  /**
+   * Constructs a single mic1-instruction.
+   * 
+   * @since Date: Nov 12, 2011
+   * @param addr contains the MIR[35:27]. Only the lowest nine bits are fetched, it contains the value that is used to
+   *        calculate next value of MPC.
+   * @param bits contains the MIR[26:4]. Contains several signals that control the processor in some ways. For further
+   *        details see the comments of the fields or the script of Karl Stroetmann.
+   * @param b contains the MIR[3:0]. Only the lowest four bits are fetched, it contains the bits that are used to define
+   *        which register's value is written to the B-Bus.
+   */
   public Mic1Instruction(final int addr, final BitSet bits, final int b) {
     this.nextAddress = addr & 0x1ff;
     this.bBusSelect = b & 0xf;
@@ -232,6 +279,15 @@ public final class Mic1Instruction {
     }
   }
 
+  /**
+   * Decodes the signals of the ALU. Will generate text that explains what the ALU is calculating, based on the signals
+   * values. It appends the generated text to the given {@link StringBuilder}.
+   * 
+   * @since Date: Nov 11, 2011
+   * @param s the {@link StringBuilder} to append the text to.
+   * @param a the decoded text that describes the value written in the input A of the ALU
+   * @param b the decoded text that describes the value written in the input B of the ALU
+   */
   void decodeALUOperation(final StringBuilder s, final String a, final String b) {
     // decode the ALU operation
     if (!this.f0 && !this.f1) { // a AND b
@@ -310,6 +366,15 @@ public final class Mic1Instruction {
     }
   }
 
+  /**
+   * Decodes the signals of the ALU if other signals say it should calculate A or B. The signals are: ENA, ENB and INVA.
+   * It appends the generated text to the given {@link StringBuilder}.
+   * 
+   * @since Date: Nov 11, 2011
+   * @param s the {@link StringBuilder} to append the text to.
+   * @param a the decoded text that describes the value written in the input A of the ALU
+   * @param b the decoded text that describes the value written in the input B of the ALU
+   */
   void decodeALUOr(final StringBuilder s, final String a, final String b) {
     if (this.enableA) {
       if (this.enableB) {
@@ -338,6 +403,15 @@ public final class Mic1Instruction {
     }
   }
 
+  /**
+   * Decodes the signals of the ALU if other signals say it should calculate A and B. The signals are: ENA, ENB and
+   * INVA. It appends the generated text to the given {@link StringBuilder}.
+   * 
+   * @since Date: Nov 11, 2011
+   * @param s the {@link StringBuilder} to append the text to.
+   * @param a the decoded text that describes the value written in the input A of the ALU
+   * @param b the decoded text that describes the value written in the input B of the ALU
+   */
   void decodeALUAnd(final StringBuilder s, final String a, final String b) {
     if (this.enableB) {
       if (this.enableA) {
@@ -357,6 +431,12 @@ public final class Mic1Instruction {
     }
   }
 
+  /**
+   * Decodes the signal that determines which register should be written to the BBus. It returns the generated text.
+   * 
+   * @since Date: Nov 11, 2011
+   * @return the generated text
+   */
   String decodeBBusBits() {
     // decode the b-bus bits
     switch (this.bBusSelect) {
@@ -384,6 +464,13 @@ public final class Mic1Instruction {
     }
   }
 
+  /**
+   * Decodes the signals that determines which register should be written with the value of the CBus. It appends the
+   * generated text to the given {@link StringBuilder}.
+   * 
+   * @since Date: Nov 11, 2011
+   * @param s the {@link StringBuilder} to append the text to.
+   */
   void decodeCBusBits(final StringBuilder s) {
     // decode the C-bus bits
     if (this.h) {
