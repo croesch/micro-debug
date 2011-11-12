@@ -60,35 +60,14 @@ public final class Mic1Instruction {
   /** MIR[24] - bit that is responsible for manipulation of the next MPC value, if ALU result is zero */
   private final boolean jmpZ;
 
-  /** MIR[23] - bit that makes the shifter shift the result of the ALU eight bits to the left */
-  private final boolean sll8;
-
-  /** MIR[22] - bit that makes the shifter shift the result of the ALU arithmetically one bit to the right */
-  private final boolean sra1;
-
-  /** MIR[21] - one of two bits that are responsible for what calculation the ALU does */
-  private final boolean f0;
-
-  /** MIR[22] - one of two bits that are responsible for what calculation the ALU does */
-  private final boolean f1;
-
-  /** MIR[19] - ENA bit that enables the value of A in the ALU, if set - basically A AND ENA is calculated */
-  private final boolean enableA;
-
-  /** MIR[18] - ENB bit that enables the value of B in the ALU, if set - basically B AND ENB is calculated */
-  private final boolean enableB;
-
-  /** MIR[17] - INVA bit that inverts the value of A in the ALU, if set - basically (A AND ENA) XOR INVA is calculated */
-  private final boolean invertA;
-
-  /** MIR[16] - INC bit that defines the first carry in in the ALU - so it increments the result of ALU by one */
-  private final boolean increment;
+  /** MIR[23:16]: set of bits that are responsible for the behavior of the ALU and the shifter */
+  private final Mic1ALUSignalSet aluSignals = new Mic1ALUSignalSet();
 
   /** MIR[15:7]: set of bits that are responsible for the registers that are filled with the C-Bus value */
-  private final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
+  private final Mic1CBusSignalSet cBusSignals = new Mic1CBusSignalSet();
 
   /** MIR[6:4]: set of bits that are responsible for communication with external memory (main memory and program memory) */
-  private final Mic1MemorySignalSet mem = new Mic1MemorySignalSet();
+  private final Mic1MemorySignalSet memorySignals = new Mic1MemorySignalSet();
 
   /** responsible which register's value is written on the B-Bus */
   private final Mic1BBusRegister bBusSelect;
@@ -112,26 +91,26 @@ public final class Mic1Instruction {
     this.jmpC = bits.get(i++); // fetch bit number 0 from the BitSet
     this.jmpN = bits.get(i++); // fetch bit number 1 from the BitSet
     this.jmpZ = bits.get(i++); // fetch bit number 2 from the BitSet
-    this.sll8 = bits.get(i++); // fetch bit number 3 from the BitSet
-    this.sra1 = bits.get(i++); // fetch bit number 4 from the BitSet
-    this.f0 = bits.get(i++); // fetch bit number 5 from the BitSet
-    this.f1 = bits.get(i++); // fetch bit number 6 from the BitSet
-    this.enableA = bits.get(i++); // fetch bit number 7 from the BitSet
-    this.enableB = bits.get(i++); // fetch bit number 8 from the BitSet
-    this.invertA = bits.get(i++); // fetch bit number 9 from the BitSet
-    this.increment = bits.get(i++); // fetch bit number 10 from the BitSet
-    this.cBusSet.setH(bits.get(i++)); // fetch bit number 11 from the BitSet
-    this.cBusSet.setOpc(bits.get(i++)); // fetch bit number 12 from the BitSet
-    this.cBusSet.setTos(bits.get(i++)); // fetch bit number 13 from the BitSet
-    this.cBusSet.setCpp(bits.get(i++)); // fetch bit number 14 from the BitSet
-    this.cBusSet.setLv(bits.get(i++)); // fetch bit number 15 from the BitSet
-    this.cBusSet.setSp(bits.get(i++)); // fetch bit number 16 from the BitSet
-    this.cBusSet.setPc(bits.get(i++)); // fetch bit number 17 from the BitSet
-    this.cBusSet.setMdr(bits.get(i++)); // fetch bit number 18 from the BitSet
-    this.cBusSet.setMar(bits.get(i++)); // fetch bit number 19 from the BitSet
-    this.mem.setWrite(bits.get(i++)); // fetch bit number 20 from the BitSet
-    this.mem.setRead(bits.get(i++)); // fetch bit number 21 from the BitSet
-    this.mem.setFetch(bits.get(i++)); // fetch bit number 22 from the BitSet
+    this.aluSignals.setSll8(bits.get(i++)); // fetch bit number 3 from the BitSet
+    this.aluSignals.setSra1(bits.get(i++)); // fetch bit number 4 from the BitSet
+    this.aluSignals.setF0(bits.get(i++)); // fetch bit number 5 from the BitSet
+    this.aluSignals.setF1(bits.get(i++)); // fetch bit number 6 from the BitSet
+    this.aluSignals.setEnA(bits.get(i++)); // fetch bit number 7 from the BitSet
+    this.aluSignals.setEnB(bits.get(i++)); // fetch bit number 8 from the BitSet
+    this.aluSignals.setInvA(bits.get(i++)); // fetch bit number 9 from the BitSet
+    this.aluSignals.setInc(bits.get(i++)); // fetch bit number 10 from the BitSet
+    this.cBusSignals.setH(bits.get(i++)); // fetch bit number 11 from the BitSet
+    this.cBusSignals.setOpc(bits.get(i++)); // fetch bit number 12 from the BitSet
+    this.cBusSignals.setTos(bits.get(i++)); // fetch bit number 13 from the BitSet
+    this.cBusSignals.setCpp(bits.get(i++)); // fetch bit number 14 from the BitSet
+    this.cBusSignals.setLv(bits.get(i++)); // fetch bit number 15 from the BitSet
+    this.cBusSignals.setSp(bits.get(i++)); // fetch bit number 16 from the BitSet
+    this.cBusSignals.setPc(bits.get(i++)); // fetch bit number 17 from the BitSet
+    this.cBusSignals.setMdr(bits.get(i++)); // fetch bit number 18 from the BitSet
+    this.cBusSignals.setMar(bits.get(i++)); // fetch bit number 19 from the BitSet
+    this.memorySignals.setWrite(bits.get(i++)); // fetch bit number 20 from the BitSet
+    this.memorySignals.setRead(bits.get(i++)); // fetch bit number 21 from the BitSet
+    this.memorySignals.setFetch(bits.get(i++)); // fetch bit number 22 from the BitSet
   }
 
   @Override
@@ -208,14 +187,14 @@ public final class Mic1Instruction {
    * @param s the {@link StringBuilder} to append the text to.
    */
   void decodeMemoryBits(final StringBuilder s) {
-    // decode the mem bits
-    if (this.mem.isWrite()) {
+    // decode the memorySignals bits
+    if (this.memorySignals.isWrite()) {
       s.append(";wr");
     }
-    if (this.mem.isRead()) {
+    if (this.memorySignals.isRead()) {
       s.append(";rd");
     }
-    if (this.mem.isFetch()) {
+    if (this.memorySignals.isFetch()) {
       s.append(";fetch");
     }
   }
@@ -229,10 +208,10 @@ public final class Mic1Instruction {
    */
   void decodeShifterOperation(final StringBuilder s) {
     // decode the shifter operation
-    if (this.sra1) {
+    if (this.aluSignals.isSra1()) {
       s.append(">>1");
     }
-    if (this.sll8) {
+    if (this.aluSignals.isSll8()) {
       s.append("<<8");
     }
   }
@@ -248,13 +227,13 @@ public final class Mic1Instruction {
    */
   void decodeALUOperation(final StringBuilder s, final String a, final String b) {
     // decode the ALU operation
-    if (!this.f0 && !this.f1) { // a AND b
+    if (!this.aluSignals.isF0() && !this.aluSignals.isF1()) { // a AND b
       decodeALUAnd(s, a, b);
-    } else if (!this.f0 && this.f1) { // a OR b
+    } else if (!this.aluSignals.isF0() && this.aluSignals.isF1()) { // a OR b
       decodeALUOr(s, a, b);
-    } else if (this.f0 && !this.f1) { // NOT b
+    } else if (this.aluSignals.isF0() && !this.aluSignals.isF1()) { // NOT b
       decodeALUNotB(s, b);
-    } else if (this.f0 && this.f1) { // a + b
+    } else if (this.aluSignals.isF0() && this.aluSignals.isF1()) { // a + b
       decodeALUPlus(s, a, b);
     }
   }
@@ -269,37 +248,37 @@ public final class Mic1Instruction {
    * @param b the decoded text that describes the value written in the input B of the ALU
    */
   void decodeALUPlus(final StringBuilder s, final String a, final String b) {
-    if (this.enableA) {
-      if (this.invertA) {
-        if (this.enableB) {
+    if (this.aluSignals.isEnA()) {
+      if (this.aluSignals.isInvA()) {
+        if (this.aluSignals.isEnB()) {
           s.append(b);
         }
         s.append("-").append(a);
-        if (!this.increment) {
+        if (!this.aluSignals.isInc()) {
           s.append("-1");
         }
       } else {
         s.append(a);
-        if (this.enableB) {
+        if (this.aluSignals.isEnB()) {
           s.append("+").append(b);
         }
-        if (this.increment) {
+        if (this.aluSignals.isInc()) {
           s.append("+1");
         }
       }
     } else { // a not enabled
-      if (this.invertA && !this.increment) {
-        if (this.enableB) {
+      if (this.aluSignals.isInvA() && !this.aluSignals.isInc()) {
+        if (this.aluSignals.isEnB()) {
           s.append(b);
         }
         s.append("-1");
-      } else if (!this.invertA && this.increment) {
-        if (this.enableB) {
+      } else if (!this.aluSignals.isInvA() && this.aluSignals.isInc()) {
+        if (this.aluSignals.isEnB()) {
           s.append(b).append("+");
         }
         s.append("1");
       } else {
-        if (this.enableB) {
+        if (this.aluSignals.isEnB()) {
           s.append(b);
         } else {
           s.append("0");
@@ -317,7 +296,7 @@ public final class Mic1Instruction {
    * @param b the decoded text that describes the value written in the input B of the ALU
    */
   void decodeALUNotB(final StringBuilder s, final String b) {
-    if (this.enableB) {
+    if (this.aluSignals.isEnB()) {
       s.append(TXT_NOT).append(' ').append(b);
     } else {
       s.append("0");
@@ -334,25 +313,25 @@ public final class Mic1Instruction {
    * @param b the decoded text that describes the value written in the input B of the ALU
    */
   void decodeALUOr(final StringBuilder s, final String a, final String b) {
-    if (this.enableA) {
-      if (this.enableB) {
-        if (this.invertA) {
+    if (this.aluSignals.isEnA()) {
+      if (this.aluSignals.isEnB()) {
+        if (this.aluSignals.isInvA()) {
           s.append("(" + TXT_NOT + " ").append(a).append(") OR ").append(b);
         } else {
           s.append(a).append(" OR ").append(b);
         }
       } else {
-        if (this.invertA) {
+        if (this.aluSignals.isInvA()) {
           s.append(TXT_NOT + " ").append(a);
         } else {
           s.append(a);
         }
       }
     } else { // a is not enabled
-      if (this.invertA) {
+      if (this.aluSignals.isInvA()) {
         s.append("-1");
       } else {
-        if (this.enableB) {
+        if (this.aluSignals.isEnB()) {
           s.append(b);
         } else {
           s.append("0");
@@ -371,15 +350,15 @@ public final class Mic1Instruction {
    * @param b the decoded text that describes the value written in the input B of the ALU
    */
   void decodeALUAnd(final StringBuilder s, final String a, final String b) {
-    if (this.enableB) {
-      if (this.enableA) {
-        if (this.invertA) {
+    if (this.aluSignals.isEnB()) {
+      if (this.aluSignals.isEnA()) {
+        if (this.aluSignals.isInvA()) {
           s.append("(" + TXT_NOT + " ").append(a).append(")");
         } else {
           s.append(a);
         }
         s.append(" AND ").append(b);
-      } else if (this.invertA) {
+      } else if (this.aluSignals.isInvA()) {
         s.append(b);
       } else {
         s.append("0");
@@ -433,31 +412,31 @@ public final class Mic1Instruction {
    */
   void decodeCBusBits(final StringBuilder s) {
     // decode the C-bus bits
-    if (this.cBusSet.isH()) {
+    if (this.cBusSignals.isH()) {
       s.append("H=");
     }
-    if (this.cBusSet.isOpc()) {
+    if (this.cBusSignals.isOpc()) {
       s.append("OPC=");
     }
-    if (this.cBusSet.isTos()) {
+    if (this.cBusSignals.isTos()) {
       s.append("TOS=");
     }
-    if (this.cBusSet.isCpp()) {
+    if (this.cBusSignals.isCpp()) {
       s.append("CPP=");
     }
-    if (this.cBusSet.isLv()) {
+    if (this.cBusSignals.isLv()) {
       s.append("LV=");
     }
-    if (this.cBusSet.isSp()) {
+    if (this.cBusSignals.isSp()) {
       s.append("SP=");
     }
-    if (this.cBusSet.isPc()) {
+    if (this.cBusSignals.isPc()) {
       s.append("PC=");
     }
-    if (this.cBusSet.isMdr()) {
+    if (this.cBusSignals.isMdr()) {
       s.append("MDR=");
     }
-    if (this.cBusSet.isMar()) {
+    if (this.cBusSignals.isMar()) {
       s.append("MAR=");
     }
   }
@@ -470,20 +449,13 @@ public final class Mic1Instruction {
     if (this.bBusSelect != null) {
       result += this.bBusSelect.hashCode();
     }
-    result = prime * result + Boolean.valueOf(this.enableA).hashCode();
-    result = prime * result + Boolean.valueOf(this.enableB).hashCode();
-    result = prime * result + Boolean.valueOf(this.f0).hashCode();
-    result = prime * result + Boolean.valueOf(this.f1).hashCode();
-    result = prime * result + Boolean.valueOf(this.increment).hashCode();
-    result = prime * result + Boolean.valueOf(this.invertA).hashCode();
     result = prime * result + Boolean.valueOf(this.jmpC).hashCode();
     result = prime * result + Boolean.valueOf(this.jmpN).hashCode();
     result = prime * result + Boolean.valueOf(this.jmpZ).hashCode();
     result = prime * result + this.nextAddress;
-    result = prime * result + Boolean.valueOf(this.sll8).hashCode();
-    result = prime * result + Boolean.valueOf(this.sra1).hashCode();
-    result = prime * result + this.cBusSet.hashCode();
-    result = prime * result + this.mem.hashCode();
+    result = prime * result + this.aluSignals.hashCode();
+    result = prime * result + this.cBusSignals.hashCode();
+    result = prime * result + this.memorySignals.hashCode();
     return result;
   }
 
@@ -502,24 +474,6 @@ public final class Mic1Instruction {
     if (this.bBusSelect != other.bBusSelect) {
       return false;
     }
-    if (this.enableA != other.enableA) {
-      return false;
-    }
-    if (this.enableB != other.enableB) {
-      return false;
-    }
-    if (this.f0 != other.f0) {
-      return false;
-    }
-    if (this.f1 != other.f1) {
-      return false;
-    }
-    if (this.increment != other.increment) {
-      return false;
-    }
-    if (this.invertA != other.invertA) {
-      return false;
-    }
     if (this.jmpC != other.jmpC) {
       return false;
     }
@@ -532,16 +486,13 @@ public final class Mic1Instruction {
     if (this.nextAddress != other.nextAddress) {
       return false;
     }
-    if (this.sll8 != other.sll8) {
+    if (!this.aluSignals.equals(other.aluSignals)) {
       return false;
     }
-    if (this.sra1 != other.sra1) {
+    if (!this.cBusSignals.equals(other.cBusSignals)) {
       return false;
     }
-    if (!this.cBusSet.equals(other.cBusSet)) {
-      return false;
-    }
-    return this.mem.equals(other.mem);
+    return this.memorySignals.equals(other.memorySignals);
   }
 
 }
