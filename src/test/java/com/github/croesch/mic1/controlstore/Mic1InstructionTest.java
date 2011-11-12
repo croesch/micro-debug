@@ -7,9 +7,10 @@ import java.util.BitSet;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.croesch.TestUtil;
 
 /**
- * TODO Comment here ...
+ * Provides test cases for {@link Mic1Instruction}.
  * 
  * @author croesch
  * @since Date: Nov 10, 2011
@@ -637,7 +638,6 @@ public class Mic1InstructionTest {
   }
 
   private void printMethodName() {
-    System.out.print(this.getClass().getSimpleName() + "#");
-    System.out.print(Thread.currentThread().getStackTrace()[2].getMethodName() + " ");
+    TestUtil.printMethodName(1);
   }
 }
