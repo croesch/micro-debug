@@ -111,14 +111,8 @@ public final class Mic1Instruction {
   /** MIR[7] - bit that is responsible for the value of C-Bus written into MAR register, if set */
   private final boolean mar;
 
-  /** MIR[6] - bit that is responsible for writing the value of MDR to the MAR-address in the memory */
-  private final boolean write;
-
-  /** MIR[5] - bit that is responsible for filling the MDR with the value of memory at the MAR-address */
-  private final boolean read;
-
-  /** MIR[4] - bit that is responsible for filling the MBR with the value of memory at the PC-address */
-  private final boolean fetch;
+  /** MIR[6:4]: set of bits that are responsible for communication with external memory (main memory and program memory) */
+  private final Mic1MemorySignalSet mem = new Mic1MemorySignalSet();
 
   /** responsible which register's value is written on the B-Bus */
   private final Mic1BBusRegister bBusSelect;
@@ -159,9 +153,9 @@ public final class Mic1Instruction {
     this.pc = bits.get(i++); // fetch bit number 17 from the BitSet
     this.mdr = bits.get(i++); // fetch bit number 18 from the BitSet
     this.mar = bits.get(i++); // fetch bit number 19 from the BitSet
-    this.write = bits.get(i++); // fetch bit number 20 from the BitSet
-    this.read = bits.get(i++); // fetch bit number 21 from the BitSet
-    this.fetch = bits.get(i++); // fetch bit number 22 from the BitSet
+    this.mem.setWrite(bits.get(i++)); // fetch bit number 20 from the BitSet
+    this.mem.setRead(bits.get(i++)); // fetch bit number 21 from the BitSet
+    this.mem.setFetch(bits.get(i++)); // fetch bit number 22 from the BitSet
   }
 
   @Override
@@ -239,13 +233,13 @@ public final class Mic1Instruction {
    */
   void decodeMemoryBits(final StringBuilder s) {
     // decode the mem bits
-    if (this.write) {
+    if (this.mem.isWrite()) {
       s.append(";wr");
     }
-    if (this.read) {
+    if (this.mem.isRead()) {
       s.append(";rd");
     }
-    if (this.fetch) {
+    if (this.mem.isFetch()) {
       s.append(";fetch");
     }
   }
@@ -505,7 +499,6 @@ public final class Mic1Instruction {
     result = prime * result + Boolean.valueOf(this.enableB).hashCode();
     result = prime * result + Boolean.valueOf(this.f0).hashCode();
     result = prime * result + Boolean.valueOf(this.f1).hashCode();
-    result = prime * result + Boolean.valueOf(this.fetch).hashCode();
     result = prime * result + Boolean.valueOf(this.h).hashCode();
     result = prime * result + Boolean.valueOf(this.increment).hashCode();
     result = prime * result + Boolean.valueOf(this.invertA).hashCode();
@@ -518,12 +511,11 @@ public final class Mic1Instruction {
     result = prime * result + this.nextAddress;
     result = prime * result + Boolean.valueOf(this.opc).hashCode();
     result = prime * result + Boolean.valueOf(this.pc).hashCode();
-    result = prime * result + Boolean.valueOf(this.read).hashCode();
     result = prime * result + Boolean.valueOf(this.sll8).hashCode();
     result = prime * result + Boolean.valueOf(this.sp).hashCode();
     result = prime * result + Boolean.valueOf(this.sra1).hashCode();
     result = prime * result + Boolean.valueOf(this.tos).hashCode();
-    result = prime * result + Boolean.valueOf(this.write).hashCode();
+    result = prime * result + this.mem.hashCode();
     return result;
   }
 
@@ -555,9 +547,6 @@ public final class Mic1Instruction {
       return false;
     }
     if (this.f1 != other.f1) {
-      return false;
-    }
-    if (this.fetch != other.fetch) {
       return false;
     }
     if (this.h != other.h) {
@@ -596,9 +585,6 @@ public final class Mic1Instruction {
     if (this.pc != other.pc) {
       return false;
     }
-    if (this.read != other.read) {
-      return false;
-    }
     if (this.sll8 != other.sll8) {
       return false;
     }
@@ -611,10 +597,7 @@ public final class Mic1Instruction {
     if (this.tos != other.tos) {
       return false;
     }
-    if (this.write != other.write) {
-      return false;
-    }
-    return true;
+    return this.mem.equals(other.mem);
   }
 
 }
