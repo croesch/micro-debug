@@ -29,8 +29,6 @@
  */
 package com.github.croesch.mic1.controlstore;
 
-import java.util.Locale;
-
 /**
  * Mic1Instruction This class represents an instruction which might appear in the Mic-1 control store. To Do We should
  * probably create a separate class for Mic1Reader and move the read method from here to the Mic1Reader class.
@@ -41,12 +39,6 @@ public final class Mic1Instruction {
 
   /** bit mask for the value of address */
   private static final int ADDRESS_MASK = 0x1ff;
-
-  /** contains a bit mask to define the highest bit in the nine-bit-value of address - 2 to the 8th */
-  private static final int HIGHEST_BIT_OF_ADDRESS = 256;
-
-  /** the text to represent negotiation of a value */
-  private static final String TXT_NOT = "NOT";
 
   /** MIR[35:27] - bits that used for calculation of next MPC - basic address */
   private final int nextAddress;
@@ -96,340 +88,6 @@ public final class Mic1Instruction {
   }
 
   @Override
-  public String toString() {
-    StringBuilder s = new StringBuilder();
-    final String a = "H";
-    final String b = decodeBBusBits();
-
-    decodeCBusBits(s);
-    decodeALUOperation(s, a, b);
-    decodeShifterOperation(s);
-    decodeMemoryBits(s);
-    decodeJMPAndAddress(s);
-
-    // TODO decide when to write 'nop'
-    //    if (s.toString().equals("0")) {
-    //      s = new StringBuilder("nop");
-    //    } else 
-    if (s.toString().startsWith("0;")) {
-      s = new StringBuilder(s.toString().substring(2));
-    }
-
-    return s.toString();
-  }
-
-  /**
-   * Decodes signals of the instruction that belong to calculation of next MPC: JMPN, JMPC, JMPZ (and address). It
-   * genereates the text and appends it to the given {@link StringBuilder}.
-   * 
-   * @since Date: Nov 12, 2011
-   * @param s the {@link StringBuilder} to append the text to.
-   */
-  void decodeJMPAndAddress(final StringBuilder s) {
-    // decode the JMP bits/addr
-    if (this.jmpSignals.isJmpN() || this.jmpSignals.isJmpZ()) {
-      final char c;
-      if (this.jmpSignals.isJmpN()) {
-        c = 'N';
-      } else {
-        c = 'Z';
-      }
-      s.insert(0, c + "=");
-      s.append(";if (").append(c).append(") goto 0x");
-      s.append(convertIntToHex(this.nextAddress | HIGHEST_BIT_OF_ADDRESS)).append("; else goto 0x");
-      s.append(convertIntToHex(this.nextAddress));
-    } else if (this.jmpSignals.isJmpC()) {
-      if (this.nextAddress == 0) {
-        s.append(";goto (MBR)");
-      } else {
-        s.append(";goto (MBR OR 0x").append(convertIntToHex(this.nextAddress)).append(")");
-      }
-    } else {
-      s.append(";goto 0x").append(convertIntToHex(this.nextAddress));
-    }
-  }
-
-  /**
-   * Converts the given number to a hexadecimal string and then converts the result to upper case letters.
-   * 
-   * @since Date: Nov 10, 2011
-   * @param i the number to convert to hexadecimal
-   * @return a {@link String} representing the value of i in hexadecimal
-   * @see Integer#toHexString(int)
-   */
-  static String convertIntToHex(final int i) {
-    return Integer.toHexString(i).toUpperCase(Locale.getDefault());
-  }
-
-  /**
-   * Decodes the signals that belong to the memory: write, read and fetch. It appends a text to the given
-   * {@link StringBuilder}.
-   * 
-   * @since Date: Nov 10, 2011
-   * @param s the {@link StringBuilder} to append the text to.
-   */
-  void decodeMemoryBits(final StringBuilder s) {
-    // decode the memorySignals bits
-    if (this.memorySignals.isWrite()) {
-      s.append(";wr");
-    }
-    if (this.memorySignals.isRead()) {
-      s.append(";rd");
-    }
-    if (this.memorySignals.isFetch()) {
-      s.append(";fetch");
-    }
-  }
-
-  /**
-   * Decodes the signals that belong to the shifter: SRA1 and SLL8. It appends the generated text to the given
-   * {@link StringBuilder}.
-   * 
-   * @since Date: Nov 10, 2011
-   * @param s the {@link StringBuilder} to append the text to.
-   */
-  void decodeShifterOperation(final StringBuilder s) {
-    // decode the shifter operation
-    if (this.aluSignals.isSRA1()) {
-      s.append(">>1");
-    }
-    if (this.aluSignals.isSLL8()) {
-      s.append("<<8");
-    }
-  }
-
-  /**
-   * Decodes the signals of the ALU. Will generate text that explains what the ALU is calculating, based on the signals
-   * values. It appends the generated text to the given {@link StringBuilder}.
-   * 
-   * @since Date: Nov 11, 2011
-   * @param s the {@link StringBuilder} to append the text to.
-   * @param a the decoded text that describes the value written in the input A of the ALU
-   * @param b the decoded text that describes the value written in the input B of the ALU
-   */
-  void decodeALUOperation(final StringBuilder s, final String a, final String b) {
-    // decode the ALU operation
-    if (!this.aluSignals.isF0() && !this.aluSignals.isF1()) { // a AND b
-      decodeALUAnd(s, a, b);
-    } else if (!this.aluSignals.isF0() && this.aluSignals.isF1()) { // a OR b
-      decodeALUOr(s, a, b);
-    } else if (this.aluSignals.isF0() && !this.aluSignals.isF1()) { // NOT b
-      decodeALUNotB(s, b);
-    } else if (this.aluSignals.isF0() && this.aluSignals.isF1()) { // a + b
-      decodeALUPlus(s, a, b);
-    }
-  }
-
-  /**
-   * Decodes the signals of the ALU if other signals say it should add two values. The signals are: ENA, ENB, INVA and
-   * INC. It appends the generated text to the given {@link StringBuilder}.
-   * 
-   * @since Date: Nov 10, 2011
-   * @param s the {@link StringBuilder} to append the text to.
-   * @param a the decoded text that describes the value written in the input A of the ALU
-   * @param b the decoded text that describes the value written in the input B of the ALU
-   */
-  void decodeALUPlus(final StringBuilder s, final String a, final String b) {
-    if (this.aluSignals.isEnA()) {
-      decodeALUPlusAEnabled(s, a, b);
-    } else {
-      decodeALUPlusADisabled(s, b);
-    }
-  }
-
-  /**
-   * Decodes the signals of the ALU if other signals say it should add two values. The signals are: ENB, INVA and INC.
-   * It appends the generated text to the given {@link StringBuilder}. The signal ENA mustn't be set if this method is
-   * called.
-   * 
-   * @since Date: Nov 13, 2011
-   * @param s the {@link StringBuilder} to append the text to.
-   * @param b the decoded text that describes the value written in the input B of the ALU
-   */
-  private void decodeALUPlusADisabled(final StringBuilder s, final String b) {
-    if (this.aluSignals.isInvA() && !this.aluSignals.isInc()) {
-      if (this.aluSignals.isEnB()) {
-        s.append(b);
-      }
-      s.append("-1");
-    } else if (!this.aluSignals.isInvA() && this.aluSignals.isInc()) {
-      if (this.aluSignals.isEnB()) {
-        s.append(b).append("+");
-      }
-      s.append("1");
-    } else {
-      if (this.aluSignals.isEnB()) {
-        s.append(b);
-      } else {
-        s.append("0");
-      }
-    }
-  }
-
-  /**
-   * Decodes the signals of the ALU if other signals say it should add two values. The signals are: ENB, INVA and INC.
-   * It appends the generated text to the given {@link StringBuilder}. The signal ENA must be set if this method is
-   * called.
-   * 
-   * @since Date: Nov 13, 2011
-   * @param s the {@link StringBuilder} to append the text to.
-   * @param a the decoded text that describes the value written in the input A of the ALU
-   * @param b the decoded text that describes the value written in the input B of the ALU
-   */
-  private void decodeALUPlusAEnabled(final StringBuilder s, final String a, final String b) {
-    if (this.aluSignals.isInvA()) {
-      if (this.aluSignals.isEnB()) {
-        s.append(b);
-      }
-      s.append("-").append(a);
-      if (!this.aluSignals.isInc()) {
-        s.append("-1");
-      }
-    } else {
-      s.append(a);
-      if (this.aluSignals.isEnB()) {
-        s.append("+").append(b);
-      }
-      if (this.aluSignals.isInc()) {
-        s.append("+1");
-      }
-    }
-  }
-
-  /**
-   * Decodes ENB signal of the ALU if other signals say it should negate B. It appends the generated text to the given
-   * {@link StringBuilder}.
-   * 
-   * @since Date: Nov 10, 2011
-   * @param s the {@link StringBuilder} to append the text to.
-   * @param b the decoded text that describes the value written in the input B of the ALU
-   */
-  void decodeALUNotB(final StringBuilder s, final String b) {
-    if (this.aluSignals.isEnB()) {
-      s.append(TXT_NOT).append(' ').append(b);
-    } else {
-      s.append("0");
-    }
-  }
-
-  /**
-   * Decodes the signals of the ALU if other signals say it should calculate A or B. The signals are: ENA, ENB and INVA.
-   * It appends the generated text to the given {@link StringBuilder}.
-   * 
-   * @since Date: Nov 11, 2011
-   * @param s the {@link StringBuilder} to append the text to.
-   * @param a the decoded text that describes the value written in the input A of the ALU
-   * @param b the decoded text that describes the value written in the input B of the ALU
-   */
-  void decodeALUOr(final StringBuilder s, final String a, final String b) {
-    if (this.aluSignals.isEnA()) {
-      if (this.aluSignals.isEnB()) {
-        if (this.aluSignals.isInvA()) {
-          s.append("(" + TXT_NOT + " ").append(a).append(") OR ").append(b);
-        } else {
-          s.append(a).append(" OR ").append(b);
-        }
-      } else {
-        if (this.aluSignals.isInvA()) {
-          s.append(TXT_NOT + " ").append(a);
-        } else {
-          s.append(a);
-        }
-      }
-    } else { // a is not enabled
-      if (this.aluSignals.isInvA()) {
-        s.append("-1");
-      } else {
-        if (this.aluSignals.isEnB()) {
-          s.append(b);
-        } else {
-          s.append("0");
-        }
-      }
-    }
-  }
-
-  /**
-   * Decodes the signals of the ALU if other signals say it should calculate A and B. The signals are: ENA, ENB and
-   * INVA. It appends the generated text to the given {@link StringBuilder}.
-   * 
-   * @since Date: Nov 11, 2011
-   * @param s the {@link StringBuilder} to append the text to.
-   * @param a the decoded text that describes the value written in the input A of the ALU
-   * @param b the decoded text that describes the value written in the input B of the ALU
-   */
-  void decodeALUAnd(final StringBuilder s, final String a, final String b) {
-    if (this.aluSignals.isEnB()) {
-      if (this.aluSignals.isEnA()) {
-        if (this.aluSignals.isInvA()) {
-          s.append("(" + TXT_NOT + " ").append(a).append(")");
-        } else {
-          s.append(a);
-        }
-        s.append(" AND ").append(b);
-      } else if (this.aluSignals.isInvA()) {
-        s.append(b);
-      } else {
-        s.append("0");
-      }
-    } else {
-      s.append("0");
-    }
-  }
-
-  /**
-   * Decodes the signal that determines which register should be written to the BBus. It returns the generated text.
-   * 
-   * @since Date: Nov 11, 2011
-   * @return the generated text
-   */
-  String decodeBBusBits() {
-    final String unknown = "???";
-    if (this.bBusSelect == null) {
-      return unknown;
-    }
-    return this.bBusSelect.toString();
-  }
-
-  /**
-   * Decodes the signals that determines which register should be written with the value of the CBus. It appends the
-   * generated text to the given {@link StringBuilder}.
-   * 
-   * @since Date: Nov 11, 2011
-   * @param s the {@link StringBuilder} to append the text to.
-   */
-  void decodeCBusBits(final StringBuilder s) {
-    // decode the C-bus bits
-    if (this.cBusSignals.isH()) {
-      s.append("H=");
-    }
-    if (this.cBusSignals.isOpc()) {
-      s.append("OPC=");
-    }
-    if (this.cBusSignals.isTos()) {
-      s.append("TOS=");
-    }
-    if (this.cBusSignals.isCpp()) {
-      s.append("CPP=");
-    }
-    if (this.cBusSignals.isLv()) {
-      s.append("LV=");
-    }
-    if (this.cBusSignals.isSp()) {
-      s.append("SP=");
-    }
-    if (this.cBusSignals.isPc()) {
-      s.append("PC=");
-    }
-    if (this.cBusSignals.isMdr()) {
-      s.append("MDR=");
-    }
-    if (this.cBusSignals.isMar()) {
-      s.append("MAR=");
-    }
-  }
-
-  @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
@@ -475,4 +133,71 @@ public final class Mic1Instruction {
     return this.memorySignals.equals(other.memorySignals);
   }
 
+  /**
+   * Returns the {@link Mic1JMPSignalSet} of this instruction.
+   * 
+   * @since Date: Nov 13, 2011
+   * @return a copy of the {@link Mic1JMPSignalSet} of this instruction.
+   */
+  public Mic1JMPSignalSet getJmpSignals() {
+    final Mic1JMPSignalSet set = new Mic1JMPSignalSet();
+    set.copyOf(this.jmpSignals);
+    return set;
+  }
+
+  /**
+   * Returns the {@link Mic1ALUSignalSet} of this instruction.
+   * 
+   * @since Date: Nov 13, 2011
+   * @return a copy of the {@link Mic1ALUSignalSet} of this instruction.
+   */
+  public Mic1ALUSignalSet getAluSignals() {
+    final Mic1ALUSignalSet set = new Mic1ALUSignalSet();
+    set.copyOf(this.aluSignals);
+    return set;
+  }
+
+  /**
+   * Returns the {@link Mic1CBusSignalSet} of this instruction.
+   * 
+   * @since Date: Nov 13, 2011
+   * @return a copy of the {@link Mic1CBusSignalSet} of this instruction.
+   */
+  public Mic1CBusSignalSet getCBusSignals() {
+    final Mic1CBusSignalSet set = new Mic1CBusSignalSet();
+    set.copyOf(this.cBusSignals);
+    return set;
+  }
+
+  /**
+   * Returns the {@link Mic1MemorySignalSet} of this instruction.
+   * 
+   * @since Date: Nov 13, 2011
+   * @return a copy of the {@link Mic1MemorySignalSet} of this instruction.
+   */
+  public Mic1MemorySignalSet getMemorySignals() {
+    final Mic1MemorySignalSet set = new Mic1MemorySignalSet();
+    set.copyOf(this.memorySignals);
+    return set;
+  }
+
+  /**
+   * Returns the next address of this instruction.
+   * 
+   * @since Date: Nov 13, 2011
+   * @return the address that is basic for calculation of next MPC address.
+   */
+  public int getNextAddress() {
+    return this.nextAddress;
+  }
+
+  /**
+   * Returns the value that defines the register that'll be written on the B-Bus.
+   * 
+   * @since Date: Nov 13, 2011
+   * @return the {@link Mic1BBusRegister} that defines the register being written on the B-Bus.
+   */
+  public Mic1BBusRegister getbBusSelect() {
+    return this.bBusSelect;
+  }
 }
