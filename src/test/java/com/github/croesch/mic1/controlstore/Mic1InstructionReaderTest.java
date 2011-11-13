@@ -5,10 +5,8 @@ import static org.fest.assertions.Assertions.assertThat;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.BitSet;
 
 import org.junit.Test;
-
 
 /**
  * Provides test cases for {@link Mic1InstructionReader}. Basically tests that it produces the expected output from
@@ -27,13 +25,31 @@ public class Mic1InstructionReaderTest {
     final byte[] buf = new byte[] { (byte) 0xe7, (byte) 0x99, (byte) 0x8f, (byte) 0xf8, (byte) 0x8f };
     final InputStream in = new ByteArrayInputStream(buf);
     final Mic1Instruction value = Mic1InstructionReader.read(in);
-    final BitSet bits = new BitSet();
-    bits.set(2);
-    bits.set(3);
-    bits.set(6);
-    bits.set(7);
-    bits.set(11, 20);
-    final Mic1Instruction expected = new Mic1Instruction(0x1cf, bits, Mic1BBusRegister.OPC);
+
+    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
+
+    jmpSet.setJmpZ(true); // 2
+    aluSet.setSLL8(true); // 3
+    aluSet.setF1(true); // 6
+    aluSet.setEnA(true); // 7
+    cBusSet.setH(true); //11
+    cBusSet.setOpc(true); //12
+    cBusSet.setTos(true); //13
+    cBusSet.setCpp(true); //14
+    cBusSet.setLv(true); //15
+    cBusSet.setSp(true); //16
+    cBusSet.setPc(true); //17
+    cBusSet.setMdr(true); //18
+    cBusSet.setMar(true); //19
+
+    final Mic1Instruction expected = new Mic1Instruction(0x1cf,
+                                                         jmpSet,
+                                                         aluSet,
+                                                         cBusSet,
+                                                         new Mic1MemorySignalSet(),
+                                                         Mic1BBusRegister.OPC);
 
     assertThat(value).isEqualTo(expected);
   }
@@ -46,9 +62,37 @@ public class Mic1InstructionReaderTest {
     final byte[] buf = new byte[] { (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xf0 };
     final InputStream in = new ByteArrayInputStream(buf);
     final Mic1Instruction value = Mic1InstructionReader.read(in);
-    final BitSet bits = new BitSet();
-    bits.set(0, 24);
-    final Mic1Instruction expected = new Mic1Instruction(0x1ff, bits, null);
+
+    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
+    final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
+
+    jmpSet.setJmpC(true); // 0
+    jmpSet.setJmpN(true); // 1
+    jmpSet.setJmpZ(true); // 2
+    aluSet.setSLL8(true); // 3
+    aluSet.setSRA1(true); // 4
+    aluSet.setF0(true); // 5
+    aluSet.setF1(true); // 6
+    aluSet.setEnA(true); // 7
+    aluSet.setEnB(true); // 8
+    aluSet.setInvA(true); // 9
+    aluSet.setInc(true); // 10
+    cBusSet.setH(true); // 11
+    cBusSet.setOpc(true); // 12
+    cBusSet.setTos(true); // 13
+    cBusSet.setCpp(true); // 14
+    cBusSet.setLv(true); // 15
+    cBusSet.setSp(true); // 16
+    cBusSet.setPc(true); // 17
+    cBusSet.setMdr(true); // 18
+    cBusSet.setMar(true); // 19
+    memSet.setWrite(true); // 20
+    memSet.setRead(true); // 21
+    memSet.setFetch(true); // 22
+
+    final Mic1Instruction expected = new Mic1Instruction(0x1ff, jmpSet, aluSet, cBusSet, memSet, null);
 
     assertThat(value).isEqualTo(expected);
   }

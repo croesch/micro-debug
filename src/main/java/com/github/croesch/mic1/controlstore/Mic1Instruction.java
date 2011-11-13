@@ -29,7 +29,6 @@
  */
 package com.github.croesch.mic1.controlstore;
 
-import java.util.BitSet;
 import java.util.Locale;
 
 /**
@@ -49,7 +48,7 @@ public final class Mic1Instruction {
   /** the text to represent negotiation of a value */
   private static final String TXT_NOT = "NOT";
 
-  /** MIR[35:27] - bits that are responsible for calculation of next MPC */
+  /** MIR[35:27] - bits that used for calculation of next MPC - basic address */
   private final int nextAddress;
 
   /** MIR[26:24]: set of bits that are basic for calculation of next MPC */
@@ -70,42 +69,30 @@ public final class Mic1Instruction {
   /**
    * Constructs a single mic1-instruction.
    * 
-   * @since Date: Nov 12, 2011
+   * @since Date: Nov 13, 2011
    * @param addr contains the MIR[35:27]. Only the lowest nine bits are fetched, it contains the value that is used to
    *        calculate next value of MPC.
-   * @param bits contains the MIR[26:4]. Contains several signals that control the processor in some ways. For further
-   *        details see the comments of the fields or the script of Karl Stroetmann.
+   * @param jmpSet MIR[26:24]: set of bits that are basic for calculation of next MPC
+   * @param aluSet MIR[23:16]: set of bits that are responsible for the behavior of the ALU and the shifter
+   * @param cBusSet MIR[15:7]: set of bits that are responsible for the registers that are filled with the C-Bus value
+   * @param memSet MIR[6:4]: set of bits that are responsible for communication with external memory (main memory and
+   *        program memory) details see the comments of the fields or the script of Karl Stroetmann.
    * @param b contains the MIR[3:0]. Only the lowest four bits are fetched, it contains the bits that are used to define
    *        which register's value is written to the B-Bus.
    */
-  public Mic1Instruction(final int addr, final BitSet bits, final Mic1BBusRegister b) {
+  public Mic1Instruction(final int addr,
+                         final Mic1JMPSignalSet jmpSet,
+                         final Mic1ALUSignalSet aluSet,
+                         final Mic1CBusSignalSet cBusSet,
+                         final Mic1MemorySignalSet memSet,
+                         final Mic1BBusRegister b) {
     this.nextAddress = addr & ADDRESS_MASK;
     this.bBusSelect = b;
 
-    int i = 0;
-    this.jmpSignals.setJmpC(bits.get(i++)); // fetch bit number 0 from the BitSet
-    this.jmpSignals.setJmpN(bits.get(i++)); // fetch bit number 1 from the BitSet
-    this.jmpSignals.setJmpZ(bits.get(i++)); // fetch bit number 2 from the BitSet
-    this.aluSignals.setSLL8(bits.get(i++)); // fetch bit number 3 from the BitSet
-    this.aluSignals.setSRA1(bits.get(i++)); // fetch bit number 4 from the BitSet
-    this.aluSignals.setF0(bits.get(i++)); // fetch bit number 5 from the BitSet
-    this.aluSignals.setF1(bits.get(i++)); // fetch bit number 6 from the BitSet
-    this.aluSignals.setEnA(bits.get(i++)); // fetch bit number 7 from the BitSet
-    this.aluSignals.setEnB(bits.get(i++)); // fetch bit number 8 from the BitSet
-    this.aluSignals.setInvA(bits.get(i++)); // fetch bit number 9 from the BitSet
-    this.aluSignals.setInc(bits.get(i++)); // fetch bit number 10 from the BitSet
-    this.cBusSignals.setH(bits.get(i++)); // fetch bit number 11 from the BitSet
-    this.cBusSignals.setOpc(bits.get(i++)); // fetch bit number 12 from the BitSet
-    this.cBusSignals.setTos(bits.get(i++)); // fetch bit number 13 from the BitSet
-    this.cBusSignals.setCpp(bits.get(i++)); // fetch bit number 14 from the BitSet
-    this.cBusSignals.setLv(bits.get(i++)); // fetch bit number 15 from the BitSet
-    this.cBusSignals.setSp(bits.get(i++)); // fetch bit number 16 from the BitSet
-    this.cBusSignals.setPc(bits.get(i++)); // fetch bit number 17 from the BitSet
-    this.cBusSignals.setMdr(bits.get(i++)); // fetch bit number 18 from the BitSet
-    this.cBusSignals.setMar(bits.get(i++)); // fetch bit number 19 from the BitSet
-    this.memorySignals.setWrite(bits.get(i++)); // fetch bit number 20 from the BitSet
-    this.memorySignals.setRead(bits.get(i++)); // fetch bit number 21 from the BitSet
-    this.memorySignals.setFetch(bits.get(i++)); // fetch bit number 22 from the BitSet
+    this.jmpSignals.copyOf(jmpSet);
+    this.aluSignals.copyOf(aluSet);
+    this.cBusSignals.copyOf(cBusSet);
+    this.memorySignals.copyOf(memSet);
   }
 
   @Override

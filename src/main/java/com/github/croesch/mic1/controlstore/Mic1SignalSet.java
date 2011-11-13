@@ -43,6 +43,21 @@ class Mic1SignalSet {
     this.signals[i] = value;
   }
 
+  /**
+   * Copies all signals from the given set to this set. If the given set is <code>null</code> or the number of signals
+   * are different to the signals in this object, nothing is done.
+   * 
+   * @since Date: Nov 13, 2011
+   * @param set the set to fetch the signals from
+   */
+  public void copyOf(final Mic1SignalSet set) {
+    if (set != null && this.signals.length == set.signals.length) {
+      for (int i = 0; i < this.signals.length; ++i) {
+        this.signals[i] = set.signals[i];
+      }
+    }
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;

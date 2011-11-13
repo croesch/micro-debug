@@ -2,8 +2,6 @@ package com.github.croesch.mic1.controlstore;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import java.util.BitSet;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +23,12 @@ public class Mic1InstructionTest {
 
   @Before
   public void setUp() {
-    this.instruction = new Mic1Instruction(0, new BitSet(), null);
+    this.instruction = new Mic1Instruction(0,
+                                           new Mic1JMPSignalSet(),
+                                           new Mic1ALUSignalSet(),
+                                           new Mic1CBusSignalSet(),
+                                           new Mic1MemorySignalSet(),
+                                           null);
     this.stringBuilder = new StringBuilder();
   }
 
@@ -33,20 +36,27 @@ public class Mic1InstructionTest {
   public void testToString() {
     printMethodName();
 
-    final BitSet bits = new BitSet();
-
-    this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
+    this.instruction = new Mic1Instruction(0,
+                                           new Mic1JMPSignalSet(),
+                                           new Mic1ALUSignalSet(),
+                                           new Mic1CBusSignalSet(),
+                                           new Mic1MemorySignalSet(),
+                                           Mic1BBusRegister.MDR);
     assertThat(this.instruction.toString()).isEqualTo("goto 0x0");
 
-    bits.set(2);
-    bits.set(4);
-    bits.set(6);
-    bits.set(8);
-    bits.set(10);
-    bits.set(12);
-    bits.set(14);
-    bits.set(16);
-    this.instruction = new Mic1Instruction(47, bits, Mic1BBusRegister.LV);
+    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
+    final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
+    jmpSet.setJmpZ(true);
+    aluSet.setSRA1(true);
+    aluSet.setF1(true);
+    aluSet.setEnB(true);
+    aluSet.setInc(true);
+    cBusSet.setOpc(true);
+    cBusSet.setCpp(true);
+    cBusSet.setSp(true);
+    this.instruction = new Mic1Instruction(47, jmpSet, aluSet, cBusSet, memSet, Mic1BBusRegister.LV);
     assertThat(this.instruction.toString()).isEqualTo("Z=OPC=CPP=SP=LV>>1;if (Z) goto 0x12F; else goto 0x2F");
 
     printEndOfMethod();
@@ -57,72 +67,107 @@ public class Mic1InstructionTest {
     printMethodName();
     // reset the content of the string builder
     this.stringBuilder = new StringBuilder("[...]");
-    final BitSet bits = new BitSet();
 
-    bits.set(0, false); //JMPC
-    bits.set(1, false); //JMPN
-    bits.set(2, false); // JMPZ
-    this.instruction = new Mic1Instruction(47, bits, Mic1BBusRegister.MDR);
+    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    jmpSet.setJmpC(false);
+    jmpSet.setJmpN(false);
+    jmpSet.setJmpZ(false);
+    this.instruction = new Mic1Instruction(47,
+                                           jmpSet,
+                                           new Mic1ALUSignalSet(),
+                                           new Mic1CBusSignalSet(),
+                                           new Mic1MemorySignalSet(),
+                                           Mic1BBusRegister.MDR);
     String start = this.stringBuilder.toString();
     // call decoding
     this.instruction.decodeJMPAndAddress(this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo(start + ";goto 0x2F");
 
-    bits.set(0, true); //JMPC
-    bits.set(1, false); //JMPN
-    bits.set(2, false); // JMPZ
-    this.instruction = new Mic1Instruction(47, bits, Mic1BBusRegister.MDR);
+    jmpSet.setJmpC(true);
+    jmpSet.setJmpN(false);
+    jmpSet.setJmpZ(false);
+    this.instruction = new Mic1Instruction(47,
+                                           jmpSet,
+                                           new Mic1ALUSignalSet(),
+                                           new Mic1CBusSignalSet(),
+                                           new Mic1MemorySignalSet(),
+                                           Mic1BBusRegister.MDR);
     start = this.stringBuilder.toString();
     // call decoding
     this.instruction.decodeJMPAndAddress(this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo(start + ";goto (MBR OR 0x2F)");
 
-    bits.set(0, true); //JMPC
-    bits.set(1, false); //JMPN
-    bits.set(2, false); // JMPZ
-    this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
+    jmpSet.setJmpC(true);
+    jmpSet.setJmpN(false);
+    jmpSet.setJmpZ(false);
+    this.instruction = new Mic1Instruction(0,
+                                           jmpSet,
+                                           new Mic1ALUSignalSet(),
+                                           new Mic1CBusSignalSet(),
+                                           new Mic1MemorySignalSet(),
+                                           Mic1BBusRegister.MDR);
     start = this.stringBuilder.toString();
     // call decoding
     this.instruction.decodeJMPAndAddress(this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo(start + ";goto (MBR)");
 
-    bits.set(0, false); //JMPC
-    bits.set(1, true); //JMPN
-    bits.set(2, false); // JMPZ
-    this.instruction = new Mic1Instruction(47, bits, Mic1BBusRegister.MDR);
+    jmpSet.setJmpC(false);
+    jmpSet.setJmpN(true);
+    jmpSet.setJmpZ(false);
+    this.instruction = new Mic1Instruction(47,
+                                           jmpSet,
+                                           new Mic1ALUSignalSet(),
+                                           new Mic1CBusSignalSet(),
+                                           new Mic1MemorySignalSet(),
+                                           Mic1BBusRegister.MDR);
     start = this.stringBuilder.toString();
     // call decoding
     this.instruction.decodeJMPAndAddress(this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo("N=" + start + ";if (N) goto 0x12F; else goto 0x2F");
 
-    bits.set(0, false); //JMPC
-    bits.set(1, false); //JMPN
-    bits.set(2, true); // JMPZ
-    this.instruction = new Mic1Instruction(47, bits, Mic1BBusRegister.MDR);
+    jmpSet.setJmpC(false);
+    jmpSet.setJmpN(false);
+    jmpSet.setJmpZ(true);
+    this.instruction = new Mic1Instruction(47,
+                                           jmpSet,
+                                           new Mic1ALUSignalSet(),
+                                           new Mic1CBusSignalSet(),
+                                           new Mic1MemorySignalSet(),
+                                           Mic1BBusRegister.MDR);
     start = this.stringBuilder.toString();
     // call decoding
     this.instruction.decodeJMPAndAddress(this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo("Z=" + start + ";if (Z) goto 0x12F; else goto 0x2F");
 
-    bits.set(0, false); //JMPC
-    bits.set(1, true); //JMPN
-    bits.set(2, false); // JMPZ
-    this.instruction = new Mic1Instruction(447, bits, Mic1BBusRegister.MDR);
+    jmpSet.setJmpC(false);
+    jmpSet.setJmpN(true);
+    jmpSet.setJmpZ(false);
+    this.instruction = new Mic1Instruction(447,
+                                           jmpSet,
+                                           new Mic1ALUSignalSet(),
+                                           new Mic1CBusSignalSet(),
+                                           new Mic1MemorySignalSet(),
+                                           Mic1BBusRegister.MDR);
     start = this.stringBuilder.toString();
     // call decoding
     this.instruction.decodeJMPAndAddress(this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo("N=" + start + ";if (N) goto 0x1BF; else goto 0x1BF");
 
-    bits.set(0, false); //JMPC
-    bits.set(1, false); //JMPN
-    bits.set(2, true); // JMPZ
-    this.instruction = new Mic1Instruction(447, bits, Mic1BBusRegister.MDR);
+    jmpSet.setJmpC(false);
+    jmpSet.setJmpN(false);
+    jmpSet.setJmpZ(true);
+    this.instruction = new Mic1Instruction(447,
+                                           jmpSet,
+                                           new Mic1ALUSignalSet(),
+                                           new Mic1CBusSignalSet(),
+                                           new Mic1MemorySignalSet(),
+                                           Mic1BBusRegister.MDR);
     start = this.stringBuilder.toString();
     // call decoding
     this.instruction.decodeJMPAndAddress(this.stringBuilder);
@@ -169,7 +214,8 @@ public class Mic1InstructionTest {
   @Test
   public void testDecodeMemoryBits() {
     printMethodName();
-    final BitSet bits = new BitSet();
+
+    final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
 
     // try all combinations of write, read and fetch
     for (final boolean write : BOOLEAN_POSSIBILITIES) {
@@ -177,13 +223,16 @@ public class Mic1InstructionTest {
         for (final boolean fetch : BOOLEAN_POSSIBILITIES) {
           // reset the content of the string builder
           this.stringBuilder = new StringBuilder("[...]");
-          // set the bits in the bit set
-          bits.clear();
-          bits.set(20, write);
-          bits.set(21, read);
-          bits.set(22, fetch);
-          // create Mic1Instruction
-          this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
+
+          memSet.setRead(read);
+          memSet.setWrite(write);
+          memSet.setFetch(fetch);
+          this.instruction = new Mic1Instruction(0,
+                                                 new Mic1JMPSignalSet(),
+                                                 new Mic1ALUSignalSet(),
+                                                 new Mic1CBusSignalSet(),
+                                                 memSet,
+                                                 Mic1BBusRegister.MDR);
 
           // ensure the method appends generated text
           final String start = this.stringBuilder.toString();
@@ -206,19 +255,22 @@ public class Mic1InstructionTest {
   @Test
   public void testDecodeShifterOperation() {
     printMethodName();
-    final BitSet bits = new BitSet();
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
 
     // try all combinations of sra1 and sll8
     for (final boolean sll8 : BOOLEAN_POSSIBILITIES) {
       for (final boolean sra1 : BOOLEAN_POSSIBILITIES) {
         // reset the content of the string builder
         this.stringBuilder = new StringBuilder("[...]");
-        // set the bits in the bit set
-        bits.clear();
-        bits.set(3, sll8);
-        bits.set(4, sra1);
-        // create Mic1Instruction
-        this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
+
+        aluSet.setSLL8(sll8);
+        aluSet.setSRA1(sra1);
+        this.instruction = new Mic1Instruction(0,
+                                               new Mic1JMPSignalSet(),
+                                               aluSet,
+                                               new Mic1CBusSignalSet(),
+                                               new Mic1MemorySignalSet(),
+                                               Mic1BBusRegister.MDR);
 
         final String start = this.stringBuilder.toString();
         // call decoding
@@ -240,59 +292,55 @@ public class Mic1InstructionTest {
     // reset the content of the string builder
     this.stringBuilder = new StringBuilder("[...]");
 
-    final BitSet bits = new BitSet();
-    bits.set(1);
-    bits.set(3);
-    bits.set(7); // enable a
-    bits.set(8); // enable b
-    bits.set(11);
-    bits.set(13);
-    bits.set(15);
-    bits.set(17);
+    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
+    final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
+    jmpSet.setJmpN(true);
+    aluSet.setSLL8(true);
+    aluSet.setEnA(true);
+    aluSet.setEnB(true);
+    cBusSet.setH(true);
+    cBusSet.setTos(true);
+    cBusSet.setLv(true);
+    cBusSet.setPc(true);
 
-    bits.set(5);
-    bits.set(6);
-    this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
-    String start = this.stringBuilder.toString();
-    // call decoding
-    this.instruction.decodeALUOperation(this.stringBuilder, "A", "B");
-    // check the created text
-    assertThat(this.stringBuilder.toString()).isEqualTo(start + "A+B");
+    aluSet.setF0(true);
+    aluSet.setF1(true);
+    testSingleDecodeALUOperation(jmpSet, aluSet, cBusSet, memSet, "A+B");
 
-    bits.set(5, false);
-    bits.set(6);
-    this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
-    start = this.stringBuilder.toString();
-    // call decoding
-    this.instruction.decodeALUOperation(this.stringBuilder, "A", "B");
-    // check the created text
-    assertThat(this.stringBuilder.toString()).isEqualTo(start + "A OR B");
+    aluSet.setF0(false);
+    aluSet.setF1(true);
+    testSingleDecodeALUOperation(jmpSet, aluSet, cBusSet, memSet, "A OR B");
 
-    bits.set(5);
-    bits.set(6, false);
-    this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
-    start = this.stringBuilder.toString();
-    // call decoding
-    this.instruction.decodeALUOperation(this.stringBuilder, "A", "B");
-    // check the created text
-    assertThat(this.stringBuilder.toString()).isEqualTo(start + "NOT B");
+    aluSet.setF0(true);
+    aluSet.setF1(false);
+    testSingleDecodeALUOperation(jmpSet, aluSet, cBusSet, memSet, "NOT B");
 
-    bits.set(5, false);
-    bits.set(6, false);
-    this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
-    start = this.stringBuilder.toString();
-    // call decoding
-    this.instruction.decodeALUOperation(this.stringBuilder, "A", "B");
-    // check the created text
-    assertThat(this.stringBuilder.toString()).isEqualTo(start + "A AND B");
+    aluSet.setF0(false);
+    aluSet.setF1(false);
+    testSingleDecodeALUOperation(jmpSet, aluSet, cBusSet, memSet, "A AND B");
 
     printEndOfMethod();
+  }
+
+  private void testSingleDecodeALUOperation(final Mic1JMPSignalSet jmpSet,
+                                            final Mic1ALUSignalSet aluSet,
+                                            final Mic1CBusSignalSet cBusSet,
+                                            final Mic1MemorySignalSet memSet,
+                                            final String expected) {
+    this.instruction = new Mic1Instruction(0, jmpSet, aluSet, cBusSet, memSet, Mic1BBusRegister.MDR);
+    final String start = this.stringBuilder.toString();
+    // call decoding
+    this.instruction.decodeALUOperation(this.stringBuilder, "A", "B");
+    // check the created text
+    assertThat(this.stringBuilder.toString()).isEqualTo(start + expected);
   }
 
   @Test
   public void testDecodeALUPlus() {
     printMethodName();
-    final BitSet bits = new BitSet();
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
 
     for (final boolean enableA : BOOLEAN_POSSIBILITIES) {
       for (final boolean enableB : BOOLEAN_POSSIBILITIES) {
@@ -300,14 +348,17 @@ public class Mic1InstructionTest {
           for (final boolean increment : BOOLEAN_POSSIBILITIES) {
             // reset the content of the string builder
             this.stringBuilder = new StringBuilder("[...]");
-            // set the bits in the bit set
-            bits.clear();
-            bits.set(7, enableA);
-            bits.set(8, enableB);
-            bits.set(9, invertA);
-            bits.set(10, increment);
-            // create Mic1Instruction
-            this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
+
+            aluSet.setEnA(enableA);
+            aluSet.setEnB(enableB);
+            aluSet.setInvA(invertA);
+            aluSet.setInc(increment);
+            this.instruction = new Mic1Instruction(0,
+                                                   new Mic1JMPSignalSet(),
+                                                   aluSet,
+                                                   new Mic1CBusSignalSet(),
+                                                   new Mic1MemorySignalSet(),
+                                                   Mic1BBusRegister.MDR);
 
             final String start = this.stringBuilder.toString();
             // call decoding
@@ -361,17 +412,20 @@ public class Mic1InstructionTest {
   @Test
   public void testDecodeALUNotB() {
     printMethodName();
-    final BitSet bits = new BitSet();
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
 
     // test ENB and !ENB
     for (final boolean enableB : BOOLEAN_POSSIBILITIES) {
       // reset the content of the string builder
       this.stringBuilder = new StringBuilder("[...]");
-      // set the bits in the bit set
-      bits.clear();
-      bits.set(8, enableB);
-      // create Mic1Instruction
-      this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
+
+      aluSet.setEnB(enableB);
+      this.instruction = new Mic1Instruction(0,
+                                             new Mic1JMPSignalSet(),
+                                             aluSet,
+                                             new Mic1CBusSignalSet(),
+                                             new Mic1MemorySignalSet(),
+                                             Mic1BBusRegister.MDR);
 
       final String start = this.stringBuilder.toString();
       // call decoding
@@ -390,20 +444,23 @@ public class Mic1InstructionTest {
   @Test
   public void testDecodeALUOr() {
     printMethodName();
-    final BitSet bits = new BitSet();
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
 
     for (final boolean enableA : BOOLEAN_POSSIBILITIES) {
       for (final boolean enableB : BOOLEAN_POSSIBILITIES) {
         for (final boolean invertA : BOOLEAN_POSSIBILITIES) {
           // reset the content of the string builder
           this.stringBuilder = new StringBuilder("[...]");
-          // set the bits in the bit set
-          bits.clear();
-          bits.set(7, enableA);
-          bits.set(8, enableB);
-          bits.set(9, invertA);
-          // create Mic1Instruction
-          this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
+
+          aluSet.setEnA(enableA);
+          aluSet.setEnB(enableB);
+          aluSet.setInvA(invertA);
+          this.instruction = new Mic1Instruction(0,
+                                                 new Mic1JMPSignalSet(),
+                                                 aluSet,
+                                                 new Mic1CBusSignalSet(),
+                                                 new Mic1MemorySignalSet(),
+                                                 Mic1BBusRegister.MDR);
 
           final String start = this.stringBuilder.toString();
           // call decoding
@@ -439,20 +496,23 @@ public class Mic1InstructionTest {
   @Test
   public void testDecodeALUAnd() {
     printMethodName();
-    final BitSet bits = new BitSet();
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
 
     for (final boolean enableA : BOOLEAN_POSSIBILITIES) {
       for (final boolean enableB : BOOLEAN_POSSIBILITIES) {
         for (final boolean invertA : BOOLEAN_POSSIBILITIES) {
           // reset the content of the string builder
           this.stringBuilder = new StringBuilder("[...]");
-          // set the bits in the bit set
-          bits.clear();
-          bits.set(7, enableA);
-          bits.set(8, enableB);
-          bits.set(9, invertA);
-          // create Mic1Instruction
-          this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
+
+          aluSet.setEnA(enableA);
+          aluSet.setEnB(enableB);
+          aluSet.setInvA(invertA);
+          this.instruction = new Mic1Instruction(0,
+                                                 new Mic1JMPSignalSet(),
+                                                 aluSet,
+                                                 new Mic1CBusSignalSet(),
+                                                 new Mic1MemorySignalSet(),
+                                                 Mic1BBusRegister.MDR);
 
           final String start = this.stringBuilder.toString();
           // call decoding
@@ -505,8 +565,13 @@ public class Mic1InstructionTest {
     printEndOfMethod();
   }
 
-  private void checkDecodingOfBBusBits(final String s, final Mic1BBusRegister i) {
-    this.instruction = new Mic1Instruction(0, new BitSet(), i);
+  private void checkDecodingOfBBusBits(final String s, final Mic1BBusRegister reg) {
+    this.instruction = new Mic1Instruction(0,
+                                           new Mic1JMPSignalSet(),
+                                           new Mic1ALUSignalSet(),
+                                           new Mic1CBusSignalSet(),
+                                           new Mic1MemorySignalSet(),
+                                           reg);
     // check it multiple times
     assertThat(this.instruction.decodeBBusBits()).isEqualTo(s);
     assertThat(this.instruction.decodeBBusBits()).isEqualTo(s);
@@ -518,7 +583,7 @@ public class Mic1InstructionTest {
   @Test
   public void testDecodeCBusBits() {
     printMethodName();
-    final BitSet bits = new BitSet();
+    final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
 
     for (final boolean h : BOOLEAN_POSSIBILITIES) {
       for (final boolean opc : BOOLEAN_POSSIBILITIES) {
@@ -531,19 +596,21 @@ public class Mic1InstructionTest {
                     for (final boolean sp : BOOLEAN_POSSIBILITIES) {
                       // reset the content of the string builder
                       this.stringBuilder = new StringBuilder("[...]");
-                      // set the bits in the bit set
-                      bits.clear();
-                      bits.set(11, h);
-                      bits.set(12, opc);
-                      bits.set(13, tos);
-                      bits.set(14, cpp);
-                      bits.set(15, lv);
-                      bits.set(16, sp);
-                      bits.set(17, pc);
-                      bits.set(18, mdr);
-                      bits.set(19, mar);
-                      // create Mic1Instruction
-                      this.instruction = new Mic1Instruction(0, bits, Mic1BBusRegister.MDR);
+                      cBusSet.setH(h);
+                      cBusSet.setOpc(opc);
+                      cBusSet.setTos(tos);
+                      cBusSet.setCpp(cpp);
+                      cBusSet.setLv(lv);
+                      cBusSet.setSp(sp);
+                      cBusSet.setPc(pc);
+                      cBusSet.setMdr(mdr);
+                      cBusSet.setMar(mar);
+                      this.instruction = new Mic1Instruction(0,
+                                                             new Mic1JMPSignalSet(),
+                                                             new Mic1ALUSignalSet(),
+                                                             cBusSet,
+                                                             new Mic1MemorySignalSet(),
+                                                             Mic1BBusRegister.MDR);
 
                       final String start = this.stringBuilder.toString();
                       // call decoding
@@ -595,34 +662,179 @@ public class Mic1InstructionTest {
 
     int addr = 0;
     Mic1BBusRegister b = null;
-    final BitSet bs = new BitSet();
 
-    Mic1Instruction other = new Mic1Instruction(addr, bs, b);
+    final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
+    final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    Mic1Instruction other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
     assertThat(this.instruction).isEqualTo(other);
     assertThat(this.instruction.hashCode()).isEqualTo(this.instruction.hashCode());
 
     b = Mic1BBusRegister.OPC;
-    this.instruction = new Mic1Instruction(addr, bs, b);
-    assertThat(this.instruction).isNotEqualTo(other);
-    assertThat(this.instruction.hashCode()).isNotEqualTo(other.hashCode());
-    other = new Mic1Instruction(addr, bs, b); // make object equal to instruction
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
 
     addr = 17;
-    this.instruction = new Mic1Instruction(addr, bs, b);
-    assertThat(this.instruction).isNotEqualTo(other);
-    assertThat(this.instruction.hashCode()).isNotEqualTo(other.hashCode());
-    other = new Mic1Instruction(addr, bs, b); // make object equal to instruction
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+  }
 
-    for (int i = 0; i < 23; ++i) {
-      bs.set(i);
-      this.instruction = new Mic1Instruction(addr, bs, b);
-      assertThat(this.instruction).isNotEqualTo(other);
-      assertThat(this.instruction.hashCode()).isNotEqualTo(other.hashCode());
-      other = new Mic1Instruction(addr, bs, b); // make object equal to instruction
-      printStep();
-    }
+  @Test
+  public void testHashCodeAndEqualsObject_Memory() {
+    final int addr = 0;
+    final Mic1BBusRegister b = null;
+    final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
+    final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    Mic1Instruction other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
+
+    memSet.setFetch(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    memSet.setRead(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    memSet.setWrite(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    memSet.setFetch(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    memSet.setRead(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    memSet.setWrite(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+  }
+
+  @Test
+  public void testHashCodeAndEqualsObject_JMP() {
+    final int addr = 0;
+    final Mic1BBusRegister b = null;
+    final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
+    final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    Mic1Instruction other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
+
+    jmpSet.setJmpC(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    jmpSet.setJmpN(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    jmpSet.setJmpZ(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+
+    jmpSet.setJmpC(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    jmpSet.setJmpN(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    jmpSet.setJmpZ(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+  }
+
+  @Test
+  public void testHashCodeAndEqualsObject_ALU() {
+    final int addr = 0;
+    final Mic1BBusRegister b = null;
+    final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
+    final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    Mic1Instruction other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
+
+    aluSet.setEnA(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    aluSet.setEnB(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    aluSet.setF0(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    aluSet.setF1(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    aluSet.setInc(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    aluSet.setInvA(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    aluSet.setSLL8(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    aluSet.setSRA1(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+
+    aluSet.setEnA(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    aluSet.setEnB(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    aluSet.setF0(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    aluSet.setF1(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    aluSet.setInc(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    aluSet.setInvA(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    aluSet.setSLL8(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    aluSet.setSRA1(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+  }
+
+  @Test
+  public void testHashCodeAndEqualsObject_CBus() {
+    final int addr = 0;
+    final Mic1BBusRegister b = null;
+    final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
+    final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    Mic1Instruction other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
+
+    cBusSet.setCpp(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    cBusSet.setH(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    cBusSet.setLv(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    cBusSet.setMar(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    cBusSet.setMdr(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    cBusSet.setOpc(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    cBusSet.setPc(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    cBusSet.setSp(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    cBusSet.setTos(true);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+
+    cBusSet.setCpp(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    cBusSet.setH(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    cBusSet.setLv(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    cBusSet.setMar(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    cBusSet.setMdr(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    cBusSet.setOpc(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    cBusSet.setPc(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    cBusSet.setSp(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+    cBusSet.setTos(false);
+    other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
 
     printEndOfMethod();
+  }
+
+  private Mic1Instruction compareInstructionToOther(final int addr,
+                                                    final Mic1BBusRegister b,
+                                                    final Mic1MemorySignalSet memSet,
+                                                    final Mic1CBusSignalSet cBusSet,
+                                                    final Mic1ALUSignalSet aluSet,
+                                                    final Mic1JMPSignalSet jmpSet,
+                                                    Mic1Instruction other) {
+    this.instruction = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
+    assertThat(this.instruction).isNotEqualTo(other);
+    assertThat(this.instruction.hashCode()).isNotEqualTo(other.hashCode());
+    other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b); // make object equal to instruction
+    return other;
   }
 
   private void printEndOfMethod() {

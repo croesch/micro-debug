@@ -2,7 +2,6 @@ package com.github.croesch.mic1.controlstore;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.BitSet;
 
 /**
  * Is able to read bytes from {@link InputStream}s and to construct {@link Mic1Instruction}s with the given values.
@@ -107,58 +106,40 @@ public final class Mic1InstructionReader {
     final int bitNumberOfSecondByte = 7;
     final int nextAddress = (b0 << 1) | ((b1 & BIT1) >> bitNumberOfSecondByte);
 
-    final boolean jmpC = (b1 & BIT2) > 0;
-    final boolean jmpN = (b1 & BIT3) > 0;
-    final boolean jmpZ = (b1 & BIT4) > 0;
-    final boolean sll8 = (b1 & BIT5) > 0;
-    final boolean sra1 = (b1 & BIT6) > 0;
-    final boolean f0 = (b1 & BIT7) > 0;
-    final boolean f1 = (b1 & BIT8) > 0;
-    final boolean enA = (b2 & BIT1) > 0;
-    final boolean enB = (b2 & BIT2) > 0;
-    final boolean invA = (b2 & BIT3) > 0;
-    final boolean inc = (b2 & BIT4) > 0;
-    final boolean h = (b2 & BIT5) > 0;
-    final boolean opc = (b2 & BIT6) > 0;
-    final boolean tos = (b2 & BIT7) > 0;
-    final boolean cpp = (b2 & BIT8) > 0;
-    final boolean lv = (b3 & BIT1) > 0;
-    final boolean sp = (b3 & BIT2) > 0;
-    final boolean pc = (b3 & BIT3) > 0;
-    final boolean mdr = (b3 & BIT4) > 0;
-    final boolean mar = (b3 & BIT5) > 0;
-    final boolean write = (b3 & BIT6) > 0;
-    final boolean read = (b3 & BIT7) > 0;
-    final boolean fetch = (b3 & BIT8) > 0;
+    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    jmpSet.setJmpC((b1 & BIT2) > 0);
+    jmpSet.setJmpN((b1 & BIT3) > 0);
+    jmpSet.setJmpZ((b1 & BIT4) > 0);
+
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    aluSet.setSLL8((b1 & BIT5) > 0);
+    aluSet.setSRA1((b1 & BIT6) > 0);
+    aluSet.setF0((b1 & BIT7) > 0);
+    aluSet.setF1((b1 & BIT8) > 0);
+    aluSet.setEnA((b2 & BIT1) > 0);
+    aluSet.setEnB((b2 & BIT2) > 0);
+    aluSet.setInvA((b2 & BIT3) > 0);
+    aluSet.setInc((b2 & BIT4) > 0);
+
+    final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
+    cBusSet.setH((b2 & BIT5) > 0);
+    cBusSet.setOpc((b2 & BIT6) > 0);
+    cBusSet.setTos((b2 & BIT7) > 0);
+    cBusSet.setCpp((b2 & BIT8) > 0);
+    cBusSet.setLv((b3 & BIT1) > 0);
+    cBusSet.setSp((b3 & BIT2) > 0);
+    cBusSet.setPc((b3 & BIT3) > 0);
+    cBusSet.setMdr((b3 & BIT4) > 0);
+    cBusSet.setMar((b3 & BIT5) > 0);
+
+    final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
+    memSet.setWrite((b3 & BIT6) > 0);
+    memSet.setRead((b3 & BIT7) > 0);
+    memSet.setFetch((b3 & BIT8) > 0);
+
     final int b = (b4 >> 4) & BIT5678;
 
-    final BitSet bs = new BitSet();
-    int i = 0;
-    bs.set(i++, jmpC); // 0
-    bs.set(i++, jmpN); // 1
-    bs.set(i++, jmpZ); // 2
-    bs.set(i++, sll8); // 3
-    bs.set(i++, sra1); // 4
-    bs.set(i++, f0); // 5
-    bs.set(i++, f1); // 6
-    bs.set(i++, enA); // 7
-    bs.set(i++, enB); // 8
-    bs.set(i++, invA); // 9
-    bs.set(i++, inc); // 10
-    bs.set(i++, h); // 11
-    bs.set(i++, opc); // 12
-    bs.set(i++, tos); // 13
-    bs.set(i++, cpp); // 14
-    bs.set(i++, lv); // 15
-    bs.set(i++, sp); // 16
-    bs.set(i++, pc); // 17
-    bs.set(i++, mdr); // 18
-    bs.set(i++, mar); // 19
-    bs.set(i++, write); // 20
-    bs.set(i++, read); // 21
-    bs.set(i++, fetch); // 22
-
-    return new Mic1Instruction(nextAddress, bs, decodeBBusBits(b));
+    return new Mic1Instruction(nextAddress, jmpSet, aluSet, cBusSet, memSet, decodeBBusBits(b));
   }
 
   /**
