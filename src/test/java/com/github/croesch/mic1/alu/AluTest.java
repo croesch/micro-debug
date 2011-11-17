@@ -221,6 +221,19 @@ public class AluTest {
     }
   }
 
+  @Test(timeout = 1000)
+  public void testAddAAndB_Performance() {
+    final Alu alu = new Alu();
+    alu.setF0(true).setF1(true).setEnA(true).setEnB(true).setInvA(false).setInC(false);
+    for (int i = 0; i < 1500000; ++i) {
+      alu.setA(i).setB(i).calculate();
+      final int result = 2 * i;
+      assertThat(alu.getOut()).isEqualTo(result);
+      assertThat(alu.isN()).isEqualTo(result < 0);
+      assertThat(alu.isZ()).isEqualTo(result == 0);
+    }
+  }
+
   @Test
   public void testAddAAndBAndOne() {
     final Alu alu = new Alu();
