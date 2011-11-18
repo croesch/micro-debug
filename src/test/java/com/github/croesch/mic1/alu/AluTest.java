@@ -221,11 +221,15 @@ public class AluTest {
     }
   }
 
+  /**
+   * Tests the performance of {@link Alu#calculate()}. Assuming that adding to numbers is the most intensive job.<br />
+   * Test should run on a NetBook and do at least 1000 calculations per second.
+   */
   @Test(timeout = 1000)
   public void testAddAAndB_Performance() {
     final Alu alu = new Alu();
     alu.setF0(true).setF1(true).setEnA(true).setEnB(true).setInvA(false).setInC(false);
-    for (int i = 0; i < 1500000; ++i) {
+    for (int i = 0; i < 200000; ++i) {
       alu.setA(i).setB(i).calculate();
       final int result = 2 * i;
       assertThat(alu.getOut()).isEqualTo(result);
