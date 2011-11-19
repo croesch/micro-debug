@@ -229,7 +229,8 @@ public class AluTest {
   public void testAddAAndB_Performance() {
     final Alu alu = new Alu();
     alu.setF0(true).setF1(true).setEnA(true).setEnB(true).setInvA(false).setInC(false);
-    for (int i = 0; i < 200000; ++i) {
+
+    for (int i = 0; i < 1000; ++i) {
       alu.setA(i).setB(i).calculate();
       final int result = 2 * i;
       assertThat(alu.getOut()).isEqualTo(result);
