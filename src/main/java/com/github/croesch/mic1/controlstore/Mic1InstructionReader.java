@@ -54,6 +54,9 @@ public final class Mic1InstructionReader {
   /** mask for the eighth bit: 0000 0001 */
   private static final int BIT8 = 0x01;
 
+  /** the magic number that is needed at the begin of a binary mic1-file */
+  public static final int MIC1_MAGIC_NUMBER = 0x12345678;
+
   // constructors
 
   /**
@@ -85,7 +88,7 @@ public final class Mic1InstructionReader {
     final int b4 = in.read();
 
     // we have reached the end of data, so return null
-    if (isOneByteMinusOne(b0, b1, b2, b3, b4)) {
+    if (isOneValueMinusOne(new int[] { b0, b1, b2, b3, b4 })) {
       return null;
     }
 
@@ -132,31 +135,20 @@ public final class Mic1InstructionReader {
   }
 
   /**
-   * Returns whether one of the given bytes is <code>-1</code>.
+   * Returns whether one of the given numbers is equal to <code>-1</code>.
    * 
    * @since Date: Nov 13, 2011
-   * @param b0 byte to check if it's <code>-1</code>.
-   * @param b1 byte to check if it's <code>-1</code>.
-   * @param b2 byte to check if it's <code>-1</code>.
-   * @param b3 byte to check if it's <code>-1</code>.
-   * @param b4 byte to check if it's <code>-1</code>.
-   * @return <code>true</code>, if one of the given bytes is <code>-1</code>.
+   * @param values the numbers to check if any is equal to <code>-1</code>.
+   * @return <code>true</code>, if at least one of the given values is equal to <code>-1</code>.
    */
-  private static boolean isOneByteMinusOne(final int b0, final int b1, final int b2, final int b3, final int b4) {
+  static boolean isOneValueMinusOne(final int[] values) {
     final int problematicValue = -1;
-    if (b0 == problematicValue) {
-      return true;
+    for (final int val : values) {
+      if (val == problematicValue) {
+        return true;
+      }
     }
-    if (b1 == problematicValue) {
-      return true;
-    }
-    if (b2 == problematicValue) {
-      return true;
-    }
-    if (b3 == problematicValue) {
-      return true;
-    }
-    return b4 == problematicValue;
+    return false;
   }
 
   /**
