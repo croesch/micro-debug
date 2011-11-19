@@ -8,6 +8,9 @@ import java.io.InputStream;
 
 import org.junit.Test;
 
+import com.github.croesch.TestUtil;
+import com.github.croesch.mic1.Register;
+
 /**
  * Provides test cases for {@link Mic1InstructionReader}. Basically tests that it produces the expected output from
  * given sample input.
@@ -49,9 +52,57 @@ public class Mic1InstructionReaderTest {
                                                          aluSet,
                                                          cBusSet,
                                                          new Mic1MemorySignalSet(),
-                                                         Mic1BBusRegister.OPC);
+                                                         Register.OPC);
 
     assertThat(value).isEqualTo(expected);
+  }
+
+  /**
+   * Tests that the reader does only return registers for B-Bus-select that can be written on the B-Bus.
+   */
+  @Test
+  public void testRead_BBus() throws IOException {
+    TestUtil.printMethodName();
+
+    // some bits to read
+    final byte[] buf = new byte[] { (byte) 0xe7, (byte) 0x99, (byte) 0x8f, (byte) 0xf8, (byte) 0x00 };
+
+    // test that the H and MAR cannot be read as b-bus-select
+    for (int b = 0; b < 9; ++b) {
+      final Register[] expected = new Register[] { Register.MDR,
+                                                  Register.PC,
+                                                  Register.MBR,
+                                                  Register.MBRU,
+                                                  Register.SP,
+                                                  Register.LV,
+                                                  Register.CPP,
+                                                  Register.TOS,
+                                                  Register.OPC };
+
+      buf[4] = (byte) (b << 4);
+      final InputStream in = new ByteArrayInputStream(buf);
+      final Register bBusSelect = Mic1InstructionReader.read(in).getbBusSelect();
+
+      assertThat(bBusSelect).isEqualTo(expected[b]);
+
+      in.close();
+      TestUtil.printStep();
+    }
+
+    TestUtil.printLoopEnd();
+
+    // test that all values greater or equal than 0x90 for the fifth bit of MIR result in null as B-Bus-select
+    for (int b = 9; b < 16; ++b) {
+      buf[4] = (byte) (b << 4);
+      final InputStream in = new ByteArrayInputStream(buf);
+
+      assertThat(Mic1InstructionReader.read(in).getbBusSelect()).isNull();
+
+      in.close();
+      TestUtil.printStep();
+    }
+
+    TestUtil.printEndOfMethod();
   }
 
   @Test

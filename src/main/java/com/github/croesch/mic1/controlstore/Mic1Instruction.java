@@ -29,6 +29,8 @@
  */
 package com.github.croesch.mic1.controlstore;
 
+import com.github.croesch.mic1.Register;
+
 /**
  * Mic1Instruction This class represents an instruction which might appear in the Mic-1 control store. To Do We should
  * probably create a separate class for Mic1Reader and move the read method from here to the Mic1Reader class.
@@ -56,7 +58,7 @@ public final class Mic1Instruction {
   private final Mic1MemorySignalSet memorySignals = new Mic1MemorySignalSet();
 
   /** responsible which register's value is written on the B-Bus */
-  private final Mic1BBusRegister bBusSelect;
+  private final Register bBusSelect;
 
   /**
    * Constructs a single mic1-instruction.
@@ -77,7 +79,7 @@ public final class Mic1Instruction {
                          final Mic1ALUSignalSet aluSet,
                          final Mic1CBusSignalSet cBusSet,
                          final Mic1MemorySignalSet memSet,
-                         final Mic1BBusRegister b) {
+                         final Register b) {
     this.nextAddress = addr & ADDRESS_MASK;
     this.bBusSelect = b;
 
@@ -197,7 +199,7 @@ public final class Mic1Instruction {
    * @since Date: Nov 13, 2011
    * @return the {@link Mic1BBusRegister} that defines the register being written on the B-Bus.
    */
-  public Mic1BBusRegister getbBusSelect() {
+  public Register getbBusSelect() {
     return this.bBusSelect;
   }
 }

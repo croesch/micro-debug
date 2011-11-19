@@ -5,6 +5,9 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.croesch.TestUtil;
+import com.github.croesch.mic1.Register;
+
 /**
  * Provides test cases for {@link Mic1Instruction}.
  * 
@@ -33,7 +36,7 @@ public class Mic1InstructionTest {
     assertThat(this.instruction.hashCode()).isEqualTo(this.instruction.hashCode());
 
     int addr = 0;
-    Mic1BBusRegister b = null;
+    Register b = null;
 
     final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
     final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
@@ -43,7 +46,7 @@ public class Mic1InstructionTest {
     assertThat(this.instruction).isEqualTo(other);
     assertThat(this.instruction.hashCode()).isEqualTo(this.instruction.hashCode());
 
-    b = Mic1BBusRegister.OPC;
+    b = Register.OPC;
     other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
 
     addr = 17;
@@ -51,9 +54,28 @@ public class Mic1InstructionTest {
   }
 
   @Test
+  public void testHashCodeAndEqualsObject_BBus() {
+    TestUtil.printMethodName();
+
+    final int addr = 0;
+    final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
+    final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    Mic1Instruction other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, null);
+
+    for (final Register b : Register.values()) {
+      other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
+      TestUtil.printStep();
+    }
+
+    TestUtil.printEndOfMethod();
+  }
+
+  @Test
   public void testHashCodeAndEqualsObject_Memory() {
     final int addr = 0;
-    final Mic1BBusRegister b = null;
+    final Register b = null;
     final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
     final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
     final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
@@ -77,7 +99,7 @@ public class Mic1InstructionTest {
   @Test
   public void testHashCodeAndEqualsObject_JMP() {
     final int addr = 0;
-    final Mic1BBusRegister b = null;
+    final Register b = null;
     final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
     final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
     final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
@@ -102,7 +124,7 @@ public class Mic1InstructionTest {
   @Test
   public void testHashCodeAndEqualsObject_ALU() {
     final int addr = 0;
-    final Mic1BBusRegister b = null;
+    final Register b = null;
     final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
     final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
     final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
@@ -147,7 +169,7 @@ public class Mic1InstructionTest {
   @Test
   public void testHashCodeAndEqualsObject_CBus() {
     final int addr = 0;
-    final Mic1BBusRegister b = null;
+    final Register b = null;
     final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
     final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
     final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
@@ -230,7 +252,7 @@ public class Mic1InstructionTest {
   }
 
   private Mic1Instruction compareInstructionToOther(final int addr,
-                                                    final Mic1BBusRegister b,
+                                                    final Register b,
                                                     final Mic1MemorySignalSet memSet,
                                                     final Mic1CBusSignalSet cBusSet,
                                                     final Mic1ALUSignalSet aluSet,

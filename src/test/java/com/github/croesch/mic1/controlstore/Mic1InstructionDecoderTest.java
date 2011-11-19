@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.github.croesch.TestUtil;
+import com.github.croesch.mic1.Register;
 
 /**
  * Provides test cases for {@link Mic1Instruction}.
@@ -41,7 +42,7 @@ public class Mic1InstructionDecoderTest {
                                            new Mic1ALUSignalSet(),
                                            new Mic1CBusSignalSet(),
                                            new Mic1MemorySignalSet(),
-                                           Mic1BBusRegister.MDR);
+                                           Register.MDR);
     assertThat(Mic1InstructionDecoder.decode(this.instruction)).isEqualTo("goto 0x0");
 
     final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
@@ -56,7 +57,7 @@ public class Mic1InstructionDecoderTest {
     cBusSet.setOpc(true);
     cBusSet.setCpp(true);
     cBusSet.setSp(true);
-    this.instruction = new Mic1Instruction(47, jmpSet, aluSet, cBusSet, memSet, Mic1BBusRegister.LV);
+    this.instruction = new Mic1Instruction(47, jmpSet, aluSet, cBusSet, memSet, Register.LV);
     assertThat(Mic1InstructionDecoder.decode(this.instruction))
       .isEqualTo("Z=OPC=CPP=SP=LV>>1;if (Z) goto 0x12F; else goto 0x2F");
 
@@ -196,11 +197,11 @@ public class Mic1InstructionDecoderTest {
           assertThat(this.stringBuilder.toString().contains(";wr")).isEqualTo(write);
           assertThat(this.stringBuilder.toString().contains(";rd")).isEqualTo(read);
           assertThat(this.stringBuilder.toString().contains(";fetch")).isEqualTo(fetch);
-          printStep();
+          TestUtil.printStep();
         }
-        printLoopEnd();
+        TestUtil.printLoopEnd();
       }
-      printLoopEnd();
+      TestUtil.printLoopEnd();
     }
     printEndOfMethod();
   }
@@ -226,9 +227,9 @@ public class Mic1InstructionDecoderTest {
         assertThat(this.stringBuilder.toString()).startsWith(start);
         assertThat(this.stringBuilder.toString().contains(">>1")).isEqualTo(sra1);
         assertThat(this.stringBuilder.toString().contains("<<8")).isEqualTo(sll8);
-        printStep();
+        TestUtil.printStep();
       }
-      printLoopEnd();
+      TestUtil.printLoopEnd();
     }
     printEndOfMethod();
   }
@@ -326,13 +327,13 @@ public class Mic1InstructionDecoderTest {
             } else if (!enableA && !enableB && !invertA && !increment) {
               assertThat(this.stringBuilder.toString()).isEqualTo(start + "0");
             }
-            printStep();
+            TestUtil.printStep();
           }
-          printLoopEnd();
+          TestUtil.printLoopEnd();
         }
-        printLoopEnd();
+        TestUtil.printLoopEnd();
       }
-      printLoopEnd();
+      TestUtil.printLoopEnd();
     }
     printEndOfMethod();
   }
@@ -358,7 +359,7 @@ public class Mic1InstructionDecoderTest {
       } else {
         assertThat(this.stringBuilder.toString()).isEqualTo(start + "0");
       }
-      printStep();
+      TestUtil.printStep();
     }
     printEndOfMethod();
   }
@@ -400,11 +401,11 @@ public class Mic1InstructionDecoderTest {
           } else if (!enableA && !enableB && !invertA) {
             assertThat(this.stringBuilder.toString()).isEqualTo(start + "0");
           }
-          printStep();
+          TestUtil.printStep();
         }
-        printLoopEnd();
+        TestUtil.printLoopEnd();
       }
-      printLoopEnd();
+      TestUtil.printLoopEnd();
     }
     printEndOfMethod();
   }
@@ -446,11 +447,11 @@ public class Mic1InstructionDecoderTest {
           } else if (!enableA && !enableB && !invertA) {
             assertThat(this.stringBuilder.toString()).isEqualTo(start + "0");
           }
-          printStep();
+          TestUtil.printStep();
         }
-        printLoopEnd();
+        TestUtil.printLoopEnd();
       }
-      printLoopEnd();
+      TestUtil.printLoopEnd();
     }
     printEndOfMethod();
   }
@@ -458,24 +459,23 @@ public class Mic1InstructionDecoderTest {
   @Test
   public void testDecodeBBusBits() {
     printMethodName();
-    checkDecodingOfBBusBits("MDR", Mic1BBusRegister.MDR);
-    checkDecodingOfBBusBits("PC", Mic1BBusRegister.PC);
-    checkDecodingOfBBusBits("MBR", Mic1BBusRegister.MBR);
-    checkDecodingOfBBusBits("MBRU", Mic1BBusRegister.MBRU);
-    checkDecodingOfBBusBits("SP", Mic1BBusRegister.SP);
-    checkDecodingOfBBusBits("LV", Mic1BBusRegister.LV);
-    checkDecodingOfBBusBits("CPP", Mic1BBusRegister.CPP);
-    checkDecodingOfBBusBits("TOS", Mic1BBusRegister.TOS);
-    checkDecodingOfBBusBits("OPC", Mic1BBusRegister.OPC);
+    checkDecodingOfBBusBits("MAR", Register.MAR);
+    checkDecodingOfBBusBits("MDR", Register.MDR);
+    checkDecodingOfBBusBits("PC", Register.PC);
+    checkDecodingOfBBusBits("MBR", Register.MBR);
+    checkDecodingOfBBusBits("MBRU", Register.MBRU);
+    checkDecodingOfBBusBits("SP", Register.SP);
+    checkDecodingOfBBusBits("LV", Register.LV);
+    checkDecodingOfBBusBits("CPP", Register.CPP);
+    checkDecodingOfBBusBits("TOS", Register.TOS);
+    checkDecodingOfBBusBits("OPC", Register.OPC);
+    checkDecodingOfBBusBits("H", Register.H);
+    checkDecodingOfBBusBits("???", null);
 
-    for (int i = 9; i < 16; ++i) {
-      checkDecodingOfBBusBits("???", null);
-      printStep();
-    }
     printEndOfMethod();
   }
 
-  private void checkDecodingOfBBusBits(final String s, final Mic1BBusRegister reg) {
+  private void checkDecodingOfBBusBits(final String s, final Register reg) {
     // check it multiple times
     assertThat(Mic1InstructionDecoder.decodeBBusBits(reg)).isEqualTo(s);
     assertThat(Mic1InstructionDecoder.decodeBBusBits(reg)).isEqualTo(s);
@@ -528,37 +528,29 @@ public class Mic1InstructionDecoderTest {
                                          || this.stringBuilder.toString().contains("=PC=")).isEqualTo(pc);
                       assertThat(this.stringBuilder.toString().contains("SP=")).isEqualTo(sp);
                       assertThat(this.stringBuilder.toString().contains("TOS=")).isEqualTo(tos);
-                      printStep();
+                      TestUtil.printStep();
                     }
-                    printLoopEnd();
+                    TestUtil.printLoopEnd();
                   }
-                  printLoopEnd();
+                  TestUtil.printLoopEnd();
                 }
-                printLoopEnd();
+                TestUtil.printLoopEnd();
               }
-              printLoopEnd();
+              TestUtil.printLoopEnd();
             }
-            printLoopEnd();
+            TestUtil.printLoopEnd();
           }
-          printLoopEnd();
+          TestUtil.printLoopEnd();
         }
-        printLoopEnd();
+        TestUtil.printLoopEnd();
       }
-      printLoopEnd();
+      TestUtil.printLoopEnd();
     }
     printEndOfMethod();
   }
 
   private void printEndOfMethod() {
-    System.out.println();
-  }
-
-  private void printLoopEnd() {
-    System.out.print(" ");
-  }
-
-  private void printStep() {
-    System.out.print(".");
+    TestUtil.printEndOfMethod();
   }
 
   private void printMethodName() {

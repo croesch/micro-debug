@@ -30,4 +30,15 @@ public class TestUtil {
     System.out.print(Thread.currentThread().getStackTrace()[2 + lvl].getMethodName() + " ");
   }
 
+  public static void printLoopEnd() {
+    System.out.print(" ");
+  }
+
+  public static void printStep() {
+    System.out.print(".");
+  }
+
+  public static void printEndOfMethod() {
+    System.out.println();
+  }
 }

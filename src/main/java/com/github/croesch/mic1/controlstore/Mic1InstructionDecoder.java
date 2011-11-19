@@ -31,6 +31,8 @@ package com.github.croesch.mic1.controlstore;
 
 import java.util.Locale;
 
+import com.github.croesch.mic1.Register;
+
 /**
  * Decoder for {@link Mic1Instruction}. Is able to construct a {@link String} representing a given instruction.
  * 
@@ -362,7 +364,7 @@ public final class Mic1InstructionDecoder {
    * @param bBusSelect the signal to decode
    * @return the generated text
    */
-  static String decodeBBusBits(final Mic1BBusRegister bBusSelect) {
+  static String decodeBBusBits(final Register bBusSelect) {
     final String unknown = "???";
     if (bBusSelect == null) {
       return unknown;

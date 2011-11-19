@@ -3,6 +3,8 @@ package com.github.croesch.mic1.controlstore;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.github.croesch.mic1.Register;
+
 /**
  * Is able to read bytes from {@link InputStream}s and to construct {@link Mic1Instruction}s with the given values.
  * 
@@ -11,32 +13,19 @@ import java.io.InputStream;
  */
 public final class Mic1InstructionReader {
 
-  /** constant to define the value of the least four bits of MIC that results in MDR being written on the B-Bus */
-  private static final int B_BUS_MDR = 0;
-
-  /** constant to define the value of the least four bits of MIC that results in PC being written on the B-Bus */
-  private static final int B_BUS_PC = 1;
-
-  /** constant to define the value of the least four bits of MIC that results in MBR being written on the B-Bus */
-  private static final int B_BUS_MBR = 2;
-
-  /** constant to define the value of the least four bits of MIC that results in MBRU being written on the B-Bus */
-  private static final int B_BUS_MBRU = 3;
-
-  /** constant to define the value of the least four bits of MIC that results in SP being written on the B-Bus */
-  private static final int B_BUS_SP = 4;
-
-  /** constant to define the value of the least four bits of MIC that results in LV being written on the B-Bus */
-  private static final int B_BUS_LV = 5;
-
-  /** constant to define the value of the least four bits of MIC that results in CPP being written on the B-Bus */
-  private static final int B_BUS_CPP = 6;
-
-  /** constant to define the value of the least four bits of MIC that results in TOS being written on the B-Bus */
-  private static final int B_BUS_TOS = 7;
-
-  /** constant to define the value of the least four bits of MIC that results in OPC being written on the B-Bus */
-  private static final int B_BUS_OPC = 8;
+  /**
+   * the list of registers that can be written on the B-bus. The last four bits of a instruction generate the index in
+   * this array. For example if the last four bits are 0010, then {@link Register#MBR} is returned.
+   */
+  private static final Register[] B_BUS_REGISTER = new Register[] { Register.MDR,
+                                                                   Register.PC,
+                                                                   Register.MBR,
+                                                                   Register.MBRU,
+                                                                   Register.SP,
+                                                                   Register.LV,
+                                                                   Register.CPP,
+                                                                   Register.TOS,
+                                                                   Register.OPC };
 
   /** mask for the last four bits: 0000 1111 */
   private static final int BIT5678 = 0x0F;
@@ -177,28 +166,10 @@ public final class Mic1InstructionReader {
    * @param b the four-bit-value to decode
    * @return the {@link Mic1BBusRegister} that should be written on the B-Bus.
    */
-  private static Mic1BBusRegister decodeBBusBits(final int b) {
-    switch (b) {
-      case B_BUS_MDR:
-        return Mic1BBusRegister.MDR;
-      case B_BUS_PC:
-        return Mic1BBusRegister.PC;
-      case B_BUS_MBR:
-        return Mic1BBusRegister.MBR;
-      case B_BUS_MBRU:
-        return Mic1BBusRegister.MBRU;
-      case B_BUS_SP:
-        return Mic1BBusRegister.SP;
-      case B_BUS_LV:
-        return Mic1BBusRegister.LV;
-      case B_BUS_CPP:
-        return Mic1BBusRegister.CPP;
-      case B_BUS_TOS:
-        return Mic1BBusRegister.TOS;
-      case B_BUS_OPC:
-        return Mic1BBusRegister.OPC;
-      default:
-        return null;
+  private static Register decodeBBusBits(final int b) {
+    if (b < 0 || b >= B_BUS_REGISTER.length) {
+      return null;
     }
+    return B_BUS_REGISTER[b];
   }
 }
