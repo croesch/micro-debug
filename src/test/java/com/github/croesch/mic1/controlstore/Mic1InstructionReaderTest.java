@@ -33,19 +33,10 @@ public class Mic1InstructionReaderTest {
     final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
     final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
 
-    jmpSet.setJmpZ(true); // 2
-    aluSet.setSLL8(true); // 3
-    aluSet.setF1(true); // 6
-    aluSet.setEnA(true); // 7
-    cBusSet.setH(true); //11
-    cBusSet.setOpc(true); //12
-    cBusSet.setTos(true); //13
-    cBusSet.setCpp(true); //14
-    cBusSet.setLv(true); //15
-    cBusSet.setSp(true); //16
-    cBusSet.setPc(true); //17
-    cBusSet.setMdr(true); //18
-    cBusSet.setMar(true); //19
+    jmpSet.setJmpZ(true);
+    aluSet.setSLL8(true).setF1(true).setEnA(true);
+    cBusSet.setH(true).setOpc(true).setTos(true).setCpp(true);
+    cBusSet.setLv(true).setSp(true).setPc(true).setMdr(true).setMar(true);
 
     final Mic1Instruction expected = new Mic1Instruction(0x1cf,
                                                          jmpSet,
@@ -119,29 +110,12 @@ public class Mic1InstructionReaderTest {
     final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
     final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
 
-    jmpSet.setJmpC(true); // 0
-    jmpSet.setJmpN(true); // 1
-    jmpSet.setJmpZ(true); // 2
-    aluSet.setSLL8(true); // 3
-    aluSet.setSRA1(true); // 4
-    aluSet.setF0(true); // 5
-    aluSet.setF1(true); // 6
-    aluSet.setEnA(true); // 7
-    aluSet.setEnB(true); // 8
-    aluSet.setInvA(true); // 9
-    aluSet.setInc(true); // 10
-    cBusSet.setH(true); // 11
-    cBusSet.setOpc(true); // 12
-    cBusSet.setTos(true); // 13
-    cBusSet.setCpp(true); // 14
-    cBusSet.setLv(true); // 15
-    cBusSet.setSp(true); // 16
-    cBusSet.setPc(true); // 17
-    cBusSet.setMdr(true); // 18
-    cBusSet.setMar(true); // 19
-    memSet.setWrite(true); // 20
-    memSet.setRead(true); // 21
-    memSet.setFetch(true); // 22
+    jmpSet.setJmpC(true).setJmpN(true).setJmpZ(true);
+    aluSet.setSLL8(true).setSRA1(true).setF0(true).setF1(true);
+    aluSet.setEnA(true).setEnB(true).setInvA(true).setInc(true);
+    cBusSet.setH(true).setOpc(true).setTos(true).setCpp(true).setLv(true);
+    cBusSet.setSp(true).setPc(true).setMdr(true).setMar(true);
+    memSet.setWrite(true).setRead(true).setFetch(true);
 
     final Mic1Instruction expected = new Mic1Instruction(0x1ff, jmpSet, aluSet, cBusSet, memSet, null);
 

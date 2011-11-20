@@ -50,13 +50,8 @@ public class Mic1InstructionDecoderTest {
     final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
     final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
     jmpSet.setJmpZ(true);
-    aluSet.setSRA1(true);
-    aluSet.setF1(true);
-    aluSet.setEnB(true);
-    aluSet.setInc(true);
-    cBusSet.setOpc(true);
-    cBusSet.setCpp(true);
-    cBusSet.setSp(true);
+    aluSet.setSRA1(true).setF1(true).setEnB(true).setInc(true);
+    cBusSet.setOpc(true).setCpp(true).setSp(true);
     this.instruction = new Mic1Instruction(47, jmpSet, aluSet, cBusSet, memSet, Register.LV);
     assertThat(Mic1InstructionDecoder.decode(this.instruction))
       .isEqualTo("Z=OPC=CPP=SP=LV>>1;if (Z) goto 0x12F; else goto 0x2F");
@@ -71,63 +66,49 @@ public class Mic1InstructionDecoderTest {
     this.stringBuilder = new StringBuilder("[...]");
 
     final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
-    jmpSet.setJmpC(false);
-    jmpSet.setJmpN(false);
-    jmpSet.setJmpZ(false);
+    jmpSet.setJmpC(false).setJmpN(false).setJmpZ(false);
     String start = this.stringBuilder.toString();
     // call decoding
     Mic1InstructionDecoder.decodeJMPAndAddress(jmpSet, 47, this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo(start + ";goto 0x2F");
 
-    jmpSet.setJmpC(true);
-    jmpSet.setJmpN(false);
-    jmpSet.setJmpZ(false);
+    jmpSet.setJmpC(true).setJmpN(false).setJmpZ(false);
     start = this.stringBuilder.toString();
     // call decoding
     Mic1InstructionDecoder.decodeJMPAndAddress(jmpSet, 47, this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo(start + ";goto (MBR OR 0x2F)");
 
-    jmpSet.setJmpC(true);
-    jmpSet.setJmpN(false);
-    jmpSet.setJmpZ(false);
+    jmpSet.setJmpC(true).setJmpN(false).setJmpZ(false);
     start = this.stringBuilder.toString();
     // call decoding
     Mic1InstructionDecoder.decodeJMPAndAddress(jmpSet, 0, this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo(start + ";goto (MBR)");
 
-    jmpSet.setJmpC(false);
-    jmpSet.setJmpN(true);
-    jmpSet.setJmpZ(false);
+    jmpSet.setJmpC(false).setJmpN(true).setJmpZ(false);
     start = this.stringBuilder.toString();
     // call decoding
     Mic1InstructionDecoder.decodeJMPAndAddress(jmpSet, 47, this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo("N=" + start + ";if (N) goto 0x12F; else goto 0x2F");
 
-    jmpSet.setJmpC(false);
-    jmpSet.setJmpN(false);
-    jmpSet.setJmpZ(true);
+    jmpSet.setJmpC(false).setJmpN(false).setJmpZ(true);
     start = this.stringBuilder.toString();
     // call decoding
     Mic1InstructionDecoder.decodeJMPAndAddress(jmpSet, 47, this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo("Z=" + start + ";if (Z) goto 0x12F; else goto 0x2F");
 
-    jmpSet.setJmpC(false);
-    jmpSet.setJmpN(true);
-    jmpSet.setJmpZ(false);
+    jmpSet.setJmpC(false).setJmpN(true).setJmpZ(false);
     start = this.stringBuilder.toString();
     // call decoding
     Mic1InstructionDecoder.decodeJMPAndAddress(jmpSet, 447, this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo("N=" + start + ";if (N) goto 0x1BF; else goto 0x1BF");
 
-    jmpSet.setJmpC(false);
-    jmpSet.setJmpN(false);
-    jmpSet.setJmpZ(true);
+    jmpSet.setJmpC(false).setJmpN(false).setJmpZ(true);
     start = this.stringBuilder.toString();
     // call decoding
     Mic1InstructionDecoder.decodeJMPAndAddress(jmpSet, 447, this.stringBuilder);
@@ -184,9 +165,7 @@ public class Mic1InstructionDecoderTest {
           // reset the content of the string builder
           this.stringBuilder = new StringBuilder("[...]");
 
-          memSet.setRead(read);
-          memSet.setWrite(write);
-          memSet.setFetch(fetch);
+          memSet.setRead(read).setWrite(write).setFetch(fetch);
 
           // ensure the method appends generated text
           final String start = this.stringBuilder.toString();
@@ -217,8 +196,7 @@ public class Mic1InstructionDecoderTest {
         // reset the content of the string builder
         this.stringBuilder = new StringBuilder("[...]");
 
-        aluSet.setSLL8(sll8);
-        aluSet.setSRA1(sra1);
+        aluSet.setSLL8(sll8).setSRA1(sra1);
 
         final String start = this.stringBuilder.toString();
         // call decoding
@@ -241,24 +219,18 @@ public class Mic1InstructionDecoderTest {
     this.stringBuilder = new StringBuilder("[...]");
 
     final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
-    aluSet.setSLL8(true);
-    aluSet.setEnA(true);
-    aluSet.setEnB(true);
+    aluSet.setSLL8(true).setEnA(true).setEnB(true);
 
-    aluSet.setF0(true);
-    aluSet.setF1(true);
+    aluSet.setF0(true).setF1(true);
     testSingleDecodeALUOperation(aluSet, "A+B");
 
-    aluSet.setF0(false);
-    aluSet.setF1(true);
+    aluSet.setF0(false).setF1(true);
     testSingleDecodeALUOperation(aluSet, "A OR B");
 
-    aluSet.setF0(true);
-    aluSet.setF1(false);
+    aluSet.setF0(true).setF1(false);
     testSingleDecodeALUOperation(aluSet, "NOT B");
 
-    aluSet.setF0(false);
-    aluSet.setF1(false);
+    aluSet.setF0(false).setF1(false);
     testSingleDecodeALUOperation(aluSet, "A AND B");
 
     printEndOfMethod();
@@ -284,10 +256,7 @@ public class Mic1InstructionDecoderTest {
             // reset the content of the string builder
             this.stringBuilder = new StringBuilder("[...]");
 
-            aluSet.setEnA(enableA);
-            aluSet.setEnB(enableB);
-            aluSet.setInvA(invertA);
-            aluSet.setInc(increment);
+            aluSet.setEnA(enableA).setEnB(enableB).setInvA(invertA).setInc(increment);
 
             final String start = this.stringBuilder.toString();
             // call decoding
@@ -375,9 +344,7 @@ public class Mic1InstructionDecoderTest {
           // reset the content of the string builder
           this.stringBuilder = new StringBuilder("[...]");
 
-          aluSet.setEnA(enableA);
-          aluSet.setEnB(enableB);
-          aluSet.setInvA(invertA);
+          aluSet.setEnA(enableA).setEnB(enableB).setInvA(invertA);
 
           final String start = this.stringBuilder.toString();
           // call decoding
@@ -421,9 +388,7 @@ public class Mic1InstructionDecoderTest {
           // reset the content of the string builder
           this.stringBuilder = new StringBuilder("[...]");
 
-          aluSet.setEnA(enableA);
-          aluSet.setEnB(enableB);
-          aluSet.setInvA(invertA);
+          aluSet.setEnA(enableA).setEnB(enableB).setInvA(invertA);
 
           final String start = this.stringBuilder.toString();
           // call decoding
@@ -500,15 +465,8 @@ public class Mic1InstructionDecoderTest {
                     for (final boolean sp : BOOLEAN_POSSIBILITIES) {
                       // reset the content of the string builder
                       this.stringBuilder = new StringBuilder("[...]");
-                      cBusSet.setH(h);
-                      cBusSet.setOpc(opc);
-                      cBusSet.setTos(tos);
-                      cBusSet.setCpp(cpp);
-                      cBusSet.setLv(lv);
-                      cBusSet.setSp(sp);
-                      cBusSet.setPc(pc);
-                      cBusSet.setMdr(mdr);
-                      cBusSet.setMar(mar);
+                      cBusSet.setH(h).setOpc(opc).setTos(tos).setCpp(cpp).setLv(lv);
+                      cBusSet.setSp(sp).setPc(pc).setMdr(mdr).setMar(mar);
 
                       final String start = this.stringBuilder.toString();
                       // call decoding
