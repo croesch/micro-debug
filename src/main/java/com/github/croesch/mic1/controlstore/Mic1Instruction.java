@@ -90,6 +90,12 @@ public final class Mic1Instruction {
   }
 
   @Override
+  public String toString() {
+    return Integer.toBinaryString(this.nextAddress) + "_" + this.jmpSignals + "_" + this.aluSignals + "_"
+           + this.cBusSignals + "_" + this.memorySignals + "_" + this.bBusSelect;
+  }
+
+  @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;

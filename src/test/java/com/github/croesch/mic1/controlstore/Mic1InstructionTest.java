@@ -264,4 +264,25 @@ public class Mic1InstructionTest {
     other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b); // make object equal to instruction
     return other;
   }
+
+  @Test
+  public void testToString() {
+    assertThat(this.instruction.toString()).isEqualTo("0_000_00000000_000000000_000_null");
+
+    // set all bits..
+    final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
+    memSet.setFetch(true).setRead(true).setWrite(true);
+    final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
+    cBusSet.setCpp(true).setH(true).setLv(true).setMar(true).setMdr(true);
+    cBusSet.setOpc(true).setPc(true).setSp(true).setTos(true);
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    aluSet.setEnA(true).setEnB(true).setF0(true).setF1(true);
+    aluSet.setInc(true).setInvA(true).setSLL8(true).setSRA1(true);
+    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    jmpSet.setJmpC(true).setJmpN(true).setJmpZ(true);
+
+    this.instruction = new Mic1Instruction(42, jmpSet, aluSet, cBusSet, memSet, Register.MBR);
+
+    assertThat(this.instruction.toString()).isEqualTo("101010_111_11111111_111111111_111_MBR");
+  }
 }

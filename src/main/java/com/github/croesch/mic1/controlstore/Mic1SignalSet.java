@@ -90,4 +90,17 @@ class Mic1SignalSet {
     }
     return true;
   }
+
+  @Override
+  public String toString() {
+    final StringBuilder s = new StringBuilder();
+    for (final boolean b : this.signals) {
+      if (b) {
+        s.append(1);
+      } else {
+        s.append(0);
+      }
+    }
+    return s.toString();
+  }
 }
