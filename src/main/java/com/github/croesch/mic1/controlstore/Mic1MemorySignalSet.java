@@ -12,7 +12,7 @@ package com.github.croesch.mic1.controlstore;
  * @author croesch
  * @since Date: Nov 12, 2011
  */
-public final class Mic1MemorySignalSet extends Mic1SignalSet {
+final class Mic1MemorySignalSet extends Mic1SignalSet {
 
   /** the number of signals this set contains */
   private static final int SIZE_OF_SET = 3;

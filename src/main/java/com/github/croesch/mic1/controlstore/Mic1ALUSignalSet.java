@@ -8,7 +8,7 @@ package com.github.croesch.mic1.controlstore;
  * @author croesch
  * @since Date: Nov 12, 2011
  */
-public final class Mic1ALUSignalSet extends Mic1SignalSet {
+final class Mic1ALUSignalSet extends Mic1SignalSet {
 
   /** the number of the signal SLL8 */
   private static final int SIGNAL_NUMBER_OF_SLL8 = 0;
