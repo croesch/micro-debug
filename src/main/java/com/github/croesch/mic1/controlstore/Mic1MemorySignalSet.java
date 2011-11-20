@@ -42,9 +42,11 @@ final class Mic1MemorySignalSet extends Mic1SignalSet {
    * 
    * @since Date: Nov 12, 2011
    * @param write the new value for the signal <code>write</code>.
+   * @return instance of this object for fluent API.
    */
-  public void setWrite(final boolean write) {
+  public Mic1MemorySignalSet setWrite(final boolean write) {
     set(0, write);
+    return this;
   }
 
   /**
@@ -62,9 +64,11 @@ final class Mic1MemorySignalSet extends Mic1SignalSet {
    * 
    * @since Date: Nov 12, 2011
    * @param read the new value for the signal <code>read</code>.
+   * @return instance of this object for fluent API.
    */
-  public void setRead(final boolean read) {
+  public Mic1MemorySignalSet setRead(final boolean read) {
     set(1, read);
+    return this;
   }
 
   /**
@@ -82,8 +86,10 @@ final class Mic1MemorySignalSet extends Mic1SignalSet {
    * 
    * @since Date: Nov 12, 2011
    * @param fetch the new value for the signal <code>fetch</code>.
+   * @return instance of this object for fluent API.
    */
-  public void setFetch(final boolean fetch) {
+  public Mic1MemorySignalSet setFetch(final boolean fetch) {
     set(2, fetch);
+    return this;
   }
 }

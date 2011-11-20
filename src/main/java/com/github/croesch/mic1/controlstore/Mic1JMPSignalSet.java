@@ -36,9 +36,11 @@ final class Mic1JMPSignalSet extends Mic1SignalSet {
    * 
    * @since Date: Nov 13, 2011
    * @param value the new value for the signal <code>JMPC</code>.
+   * @return instance of this object for fluent API.
    */
-  public void setJmpC(final boolean value) {
+  public Mic1JMPSignalSet setJmpC(final boolean value) {
     set(SIGNAL_NUMBER_OF_JMPC, value);
+    return this;
   }
 
   /**
@@ -56,9 +58,11 @@ final class Mic1JMPSignalSet extends Mic1SignalSet {
    * 
    * @since Date: Nov 13, 2011
    * @param value the new value for the signal <code>JMPN</code>.
+   * @return instance of this object for fluent API.
    */
-  public void setJmpN(final boolean value) {
+  public Mic1JMPSignalSet setJmpN(final boolean value) {
     set(SIGNAL_NUMBER_OF_JMPN, value);
+    return this;
   }
 
   /**
@@ -76,9 +80,11 @@ final class Mic1JMPSignalSet extends Mic1SignalSet {
    * 
    * @since Date: Nov 13, 2011
    * @param value the new value for the signal <code>JMPZ</code>.
+   * @return instance of this object for fluent API.
    */
-  public void setJmpZ(final boolean value) {
+  public Mic1JMPSignalSet setJmpZ(final boolean value) {
     set(SIGNAL_NUMBER_OF_JMPZ, value);
+    return this;
   }
 
   /**
