@@ -3,7 +3,7 @@ package com.github.croesch.mic1.controlstore;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.github.croesch.mic1.FileFormatException;
+import com.github.croesch.error.FileFormatException;
 
 /**
  * The store for {@link Mic1Instruction}s.

@@ -1,4 +1,4 @@
-package com.github.croesch.mic1;
+package com.github.croesch.mic1.register;
 
 /**
  * This enumeration contains the registers of the processor. The registers are described in the script of Karl

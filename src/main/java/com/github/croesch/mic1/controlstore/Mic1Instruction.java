@@ -29,7 +29,7 @@
  */
 package com.github.croesch.mic1.controlstore;
 
-import com.github.croesch.mic1.Register;
+import com.github.croesch.mic1.register.Register;
 
 /**
  * Mic1Instruction This class represents an instruction which might appear in the Mic-1 control store. To Do We should

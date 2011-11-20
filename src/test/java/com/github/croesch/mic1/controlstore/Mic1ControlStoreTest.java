@@ -10,8 +10,8 @@ import java.io.InputStreamReader;
 
 import org.junit.Test;
 
-import com.github.croesch.mic1.FileFormatException;
-import com.github.croesch.mic1.Register;
+import com.github.croesch.error.FileFormatException;
+import com.github.croesch.mic1.register.Register;
 
 /**
  * Contains test cases for {@link Mic1ControlStore}.

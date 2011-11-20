@@ -9,7 +9,7 @@ import java.io.InputStream;
 import org.junit.Test;
 
 import com.github.croesch.TestUtil;
-import com.github.croesch.mic1.Register;
+import com.github.croesch.mic1.register.Register;
 
 /**
  * Provides test cases for {@link Mic1InstructionReader}. Basically tests that it produces the expected output from

@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.github.croesch.TestUtil;
-import com.github.croesch.mic1.Register;
+import com.github.croesch.mic1.register.Register;
 
 /**
  * Provides test cases for {@link Mic1Instruction}.

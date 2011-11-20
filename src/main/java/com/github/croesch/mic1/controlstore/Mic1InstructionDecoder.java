@@ -31,7 +31,7 @@ package com.github.croesch.mic1.controlstore;
 
 import java.util.Locale;
 
-import com.github.croesch.mic1.Register;
+import com.github.croesch.mic1.register.Register;
 
 /**
  * Decoder for {@link Mic1Instruction}. Is able to construct a {@link String} representing a given instruction.

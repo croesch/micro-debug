@@ -1,4 +1,4 @@
-package com.github.croesch.mic1;
+package com.github.croesch.error;
 
 import java.io.IOException;
 

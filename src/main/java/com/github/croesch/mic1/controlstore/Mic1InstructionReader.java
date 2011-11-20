@@ -3,7 +3,7 @@ package com.github.croesch.mic1.controlstore;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.github.croesch.mic1.Register;
+import com.github.croesch.mic1.register.Register;
 
 /**
  * Is able to read bytes from {@link InputStream}s and to construct {@link Mic1Instruction}s with the given values.
