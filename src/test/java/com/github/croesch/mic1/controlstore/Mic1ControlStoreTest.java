@@ -1,10 +1,17 @@
 package com.github.croesch.mic1.controlstore;
 
+import static org.fest.assertions.Assertions.assertThat;
+
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import org.junit.Test;
 
 import com.github.croesch.mic1.FileFormatException;
+import com.github.croesch.mic1.Register;
 
 /**
  * Contains test cases for {@link Mic1ControlStore}.
@@ -50,6 +57,23 @@ public class Mic1ControlStoreTest {
   }
 
   @Test(expected = FileFormatException.class)
+  public void testConstructor_IOException() throws FileFormatException {
+    new Mic1ControlStore(new InputStream() {
+      private final byte[] bytes = new byte[] { 0x12, 0x34, 0x56, 0x78 };
+
+      private int counter = 0;
+
+      @Override
+      public int read() throws IOException {
+        if (this.counter < this.bytes.length) {
+          return this.bytes[this.counter++];
+        }
+        throw new IOException();
+      }
+    });
+  }
+
+  @Test(expected = FileFormatException.class)
   public void testConstructor_TooBigFile() throws FileFormatException {
     // magic number + 512 * 5 byte + 5 byte to have the first instruction and the file is too big.
     final byte[] bs = new byte[4 + 513 * 5];
@@ -59,6 +83,51 @@ public class Mic1ControlStoreTest {
     bs[3] = 0x78;
 
     new Mic1ControlStore(new ByteArrayInputStream(bs));
+  }
+
+  @Test
+  public void testDecodingOfBinaryFile() throws IOException {
+    final Mic1ControlStore store = new Mic1ControlStore(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"));
+    final BufferedReader expectedFile = new BufferedReader(new InputStreamReader(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.txt")));
+
+    for (int i = 0; i < 512; ++i) {
+      assertThat(Mic1InstructionDecoder.decode(store.getInstruction(i))).isEqualTo(expectedFile.readLine());
+    }
+  }
+
+  @Test
+  public void testGetSingleInstruction() throws IOException {
+    final Mic1ControlStore store = new Mic1ControlStore(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"));
+
+    Mic1Instruction expected = new Mic1Instruction(2,
+                                                   new Mic1JMPSignalSet(),
+                                                   new Mic1ALUSignalSet(),
+                                                   new Mic1CBusSignalSet(),
+                                                   new Mic1MemorySignalSet(),
+                                                   Register.MDR);
+    assertThat(store.getInstruction(0)).isEqualTo(expected);
+
+    expected = new Mic1Instruction(0xFE,
+                                   new Mic1JMPSignalSet(),
+                                   new Mic1ALUSignalSet(),
+                                   new Mic1CBusSignalSet(),
+                                   new Mic1MemorySignalSet(),
+                                   Register.MDR);
+    assertThat(store.getInstruction(511)).isEqualTo(expected);
+
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    aluSet.setF1(true);
+    aluSet.setInvA(true);
+    final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
+    cBusSet.setH(true);
+    cBusSet.setOpc(true);
+    expected = new Mic1Instruction(0x62,
+                                   new Mic1JMPSignalSet(),
+                                   aluSet,
+                                   cBusSet,
+                                   new Mic1MemorySignalSet(),
+                                   Register.MDR);
+    assertThat(store.getInstruction(0xFE)).isEqualTo(expected);
   }
 
 }

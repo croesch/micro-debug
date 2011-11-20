@@ -11,7 +11,7 @@ import com.github.croesch.mic1.FileFormatException;
  * @author croesch
  * @since Date: Nov 19, 2011
  */
-public class Mic1ControlStore {
+public final class Mic1ControlStore {
 
   /** the number of micro code instructions that are stored in this store */
   private static final int INSTRUCTIONS_PER_STORE = 512;
@@ -112,5 +112,18 @@ public class Mic1ControlStore {
     } catch (final IOException e) {
       throw new FileFormatException(e);
     }
+  }
+
+  /**
+   * Returns the instruction from the store that is stored under the given mpc (address).
+   * 
+   * @since Date: Nov 20, 2011
+   * @param mpc the address of the instruction to fetch - only the least nine bits will be used.
+   * @return the {@link Mic1Instruction} that is stored at the given address, or <code>null</code> if there is no
+   *         instruction at the given address.
+   */
+  public Mic1Instruction getInstruction(final int mpc) {
+    final int nineBitMask = 0x1FF;
+    return this.store[mpc & nineBitMask];
   }
 }
