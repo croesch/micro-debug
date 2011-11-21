@@ -36,7 +36,7 @@ public class AluTest {
     for (final boolean inc : BOOL_VALUES) {
       for (final int a : TEST_VALUES) {
         for (final int b : TEST_VALUES) {
-          alu.setA(a).setB(b).setInC(inc).calculate();
+          alu.setA(a).setB(b).setInc(inc).calculate();
           final int result = a;
           assertThat(alu.getOut()).isEqualTo(result);
           assertThat(alu.isN()).isEqualTo(result < 0);
@@ -49,7 +49,7 @@ public class AluTest {
   @Test
   public void testAAdded() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(true).setEnB(false).setInvA(false).setInC(false);
+    alu.setF0(true).setF1(true).setEnA(true).setEnB(false).setInvA(false).setInc(false);
     for (final int a : TEST_VALUES) {
       for (final int b : TEST_VALUES) {
         alu.setA(a).setB(b).calculate();
@@ -64,7 +64,7 @@ public class AluTest {
   @Test
   public void testZeroAdded1() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(false).setEnB(false).setInvA(true).setInC(true);
+    alu.setF0(true).setF1(true).setEnA(false).setEnB(false).setInvA(true).setInc(true);
     for (final int a : TEST_VALUES) {
       for (final int b : TEST_VALUES) {
         alu.setA(a).setB(b).calculate();
@@ -79,7 +79,7 @@ public class AluTest {
   @Test
   public void testZeroAdded2() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(false).setEnB(false).setInvA(false).setInC(false);
+    alu.setF0(true).setF1(true).setEnA(false).setEnB(false).setInvA(false).setInc(false);
     for (final int a : TEST_VALUES) {
       for (final int b : TEST_VALUES) {
         alu.setA(a).setB(b).calculate();
@@ -94,7 +94,7 @@ public class AluTest {
   @Test
   public void testMinusOneAdded() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(false).setEnB(false).setInvA(true).setInC(false);
+    alu.setF0(true).setF1(true).setEnA(false).setEnB(false).setInvA(true).setInc(false);
     for (final int a : TEST_VALUES) {
       for (final int b : TEST_VALUES) {
         alu.setA(a).setB(b).calculate();
@@ -109,7 +109,7 @@ public class AluTest {
   @Test
   public void testBAdded1() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(false).setEnB(true).setInvA(true).setInC(true);
+    alu.setF0(true).setF1(true).setEnA(false).setEnB(true).setInvA(true).setInc(true);
     for (final int a : TEST_VALUES) {
       for (final int b : TEST_VALUES) {
         alu.setA(a).setB(b).calculate();
@@ -124,7 +124,7 @@ public class AluTest {
   @Test
   public void testBAdded2() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(false).setEnB(true).setInvA(false).setInC(false);
+    alu.setF0(true).setF1(true).setEnA(false).setEnB(true).setInvA(false).setInc(false);
     for (final int a : TEST_VALUES) {
       for (final int b : TEST_VALUES) {
         alu.setA(a).setB(b).calculate();
@@ -139,7 +139,7 @@ public class AluTest {
   @Test
   public void testAPlusOne() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(true).setEnB(false).setInvA(false).setInC(true);
+    alu.setF0(true).setF1(true).setEnA(true).setEnB(false).setInvA(false).setInc(true);
     for (final int a : TEST_VALUES) {
       for (final int b : TEST_VALUES) {
         alu.setA(a).setB(b).calculate();
@@ -158,7 +158,7 @@ public class AluTest {
     for (final boolean inc : BOOL_VALUES) {
       for (final int a : TEST_VALUES) {
         for (final int b : TEST_VALUES) {
-          alu.setA(a).setB(b).setInC(inc).calculate();
+          alu.setA(a).setB(b).setInc(inc).calculate();
           final int result = b;
           assertThat(alu.getOut()).isEqualTo(result);
           assertThat(alu.isN()).isEqualTo(result < 0);
@@ -175,7 +175,7 @@ public class AluTest {
     for (final boolean inc : BOOL_VALUES) {
       for (final int a : TEST_VALUES) {
         for (final int b : TEST_VALUES) {
-          alu.setA(a).setB(b).setInC(inc).calculate();
+          alu.setA(a).setB(b).setInc(inc).calculate();
           final int result = ~a;
           assertThat(alu.getOut()).isEqualTo(result);
           assertThat(alu.isN()).isEqualTo(result < 0);
@@ -194,7 +194,7 @@ public class AluTest {
         for (final boolean inva : BOOL_VALUES) {
           for (final int a : TEST_VALUES) {
             for (final int b : TEST_VALUES) {
-              alu.setA(a).setB(b).setInC(inc).setEnA(ena).setInvA(inva).calculate();
+              alu.setA(a).setB(b).setInc(inc).setEnA(ena).setInvA(inva).calculate();
               final int result = ~b;
               assertThat(alu.getOut()).isEqualTo(result);
               assertThat(alu.isN()).isEqualTo(result < 0);
@@ -209,7 +209,7 @@ public class AluTest {
   @Test
   public void testAddAAndB() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(true).setEnB(true).setInvA(false).setInC(false);
+    alu.setF0(true).setF1(true).setEnA(true).setEnB(true).setInvA(false).setInc(false);
     for (final int a : TEST_VALUES) {
       for (final int b : TEST_VALUES) {
         alu.setA(a).setB(b).calculate();
@@ -228,7 +228,7 @@ public class AluTest {
   @Test(timeout = 1000)
   public void testAddAAndB_Performance() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(true).setEnB(true).setInvA(false).setInC(false);
+    alu.setF0(true).setF1(true).setEnA(true).setEnB(true).setInvA(false).setInc(false);
 
     for (int i = 0; i < 1000; ++i) {
       alu.setA(i).setB(i).calculate();
@@ -242,7 +242,7 @@ public class AluTest {
   @Test
   public void testAddAAndBAndOne() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(true).setEnB(true).setInvA(false).setInC(true);
+    alu.setF0(true).setF1(true).setEnA(true).setEnB(true).setInvA(false).setInc(true);
     for (final int a : TEST_VALUES) {
       for (final int b : TEST_VALUES) {
         alu.setA(a).setB(b).calculate();
@@ -257,7 +257,7 @@ public class AluTest {
   @Test
   public void testAddAAndOne() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(true).setEnB(false).setInvA(false).setInC(true);
+    alu.setF0(true).setF1(true).setEnA(true).setEnB(false).setInvA(false).setInc(true);
     for (final int a : TEST_VALUES) {
       for (final int b : TEST_VALUES) {
         alu.setA(a).setB(b).calculate();
@@ -272,7 +272,7 @@ public class AluTest {
   @Test
   public void testAddBAndOne() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(false).setEnB(true).setInvA(false).setInC(true);
+    alu.setF0(true).setF1(true).setEnA(false).setEnB(true).setInvA(false).setInc(true);
     for (final int a : TEST_VALUES) {
       for (final int b : TEST_VALUES) {
         alu.setA(a).setB(b).calculate();
@@ -287,7 +287,7 @@ public class AluTest {
   @Test
   public void testBMinusA() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(true).setEnB(true).setInvA(true).setInC(true);
+    alu.setF0(true).setF1(true).setEnA(true).setEnB(true).setInvA(true).setInc(true);
     for (final int a : TEST_VALUES) {
       for (final int b : TEST_VALUES) {
         alu.setA(a).setB(b).calculate();
@@ -302,7 +302,7 @@ public class AluTest {
   @Test
   public void testBMinusAMinusOne() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(true).setEnB(true).setInvA(true).setInC(false);
+    alu.setF0(true).setF1(true).setEnA(true).setEnB(true).setInvA(true).setInc(false);
     for (final int a : TEST_VALUES) {
       for (final int b : TEST_VALUES) {
         alu.setA(a).setB(b).calculate();
@@ -317,7 +317,7 @@ public class AluTest {
   @Test
   public void testBMinusOne() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(false).setEnB(true).setInvA(true).setInC(false);
+    alu.setF0(true).setF1(true).setEnA(false).setEnB(true).setInvA(true).setInc(false);
     for (final int a : TEST_VALUES) {
       for (final int b : TEST_VALUES) {
         alu.setA(a).setB(b).calculate();
@@ -332,7 +332,7 @@ public class AluTest {
   @Test
   public void testMinusA() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(true).setEnB(false).setInvA(true).setInC(true);
+    alu.setF0(true).setF1(true).setEnA(true).setEnB(false).setInvA(true).setInc(true);
     for (final int a : TEST_VALUES) {
       for (final int b : TEST_VALUES) {
         alu.setA(a).setB(b).calculate();
@@ -347,7 +347,7 @@ public class AluTest {
   @Test
   public void testMinusAMinusOne() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(true).setEnB(false).setInvA(true).setInC(false);
+    alu.setF0(true).setF1(true).setEnA(true).setEnB(false).setInvA(true).setInc(false);
     for (final int a : TEST_VALUES) {
       for (final int b : TEST_VALUES) {
         alu.setA(a).setB(b).calculate();
@@ -366,7 +366,7 @@ public class AluTest {
     for (final boolean inc : BOOL_VALUES) {
       for (final int a : TEST_VALUES) {
         for (final int b : TEST_VALUES) {
-          alu.setA(a).setB(b).setInC(inc).calculate();
+          alu.setA(a).setB(b).setInc(inc).calculate();
           final int result = a & b;
           assertThat(alu.getOut()).isEqualTo(result);
           assertThat(alu.isN()).isEqualTo(result < 0);
@@ -383,7 +383,7 @@ public class AluTest {
     for (final boolean inc : BOOL_VALUES) {
       for (final int a : TEST_VALUES) {
         for (final int b : TEST_VALUES) {
-          alu.setA(a).setB(b).setInC(inc).calculate();
+          alu.setA(a).setB(b).setInc(inc).calculate();
           final int result = a | b;
           assertThat(alu.getOut()).isEqualTo(result);
           assertThat(alu.isN()).isEqualTo(result < 0);
@@ -402,7 +402,7 @@ public class AluTest {
         for (final boolean inva : BOOL_VALUES) {
           for (final int a : TEST_VALUES) {
             for (final int b : TEST_VALUES) {
-              alu.setA(a).setB(b).setInC(inc).setEnA(ena).setInvA(inva).calculate();
+              alu.setA(a).setB(b).setInc(inc).setEnA(ena).setInvA(inva).calculate();
               assertThat(alu.getOut()).isZero();
               assertThat(alu.isN()).isFalse();
               assertThat(alu.isZ()).isTrue();
@@ -416,7 +416,7 @@ public class AluTest {
   @Test
   public void testOne() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(false).setEnB(false).setInvA(false).setInC(true);
+    alu.setF0(true).setF1(true).setEnA(false).setEnB(false).setInvA(false).setInc(true);
     for (final int a : TEST_VALUES) {
       for (final int b : TEST_VALUES) {
         alu.setA(a).setB(b).calculate();
@@ -434,7 +434,7 @@ public class AluTest {
     for (final boolean inc : BOOL_VALUES) {
       for (final int a : TEST_VALUES) {
         for (final int b : TEST_VALUES) {
-          alu.setA(a).setB(b).setInC(inc).calculate();
+          alu.setA(a).setB(b).setInc(inc).calculate();
           assertThat(alu.getOut()).isEqualTo(-1);
           assertThat(alu.isN()).isTrue();
           assertThat(alu.isZ()).isFalse();

@@ -188,7 +188,7 @@ public final class Alu {
    * @param inC <code>true</code>, if the signal should be set, <code>false</code> otherwise.
    * @return instance of the {@link Alu} to allow a fluent API.
    */
-  public Alu setInC(final boolean inC) {
+  public Alu setInc(final boolean inC) {
     this.inCarry = inC;
     return this;
   }

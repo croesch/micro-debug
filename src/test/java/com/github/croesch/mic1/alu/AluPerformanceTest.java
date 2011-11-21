@@ -19,7 +19,7 @@ public class AluPerformanceTest {
   @Test(timeout = 1000)
   public void testAddAAndB_Performance() {
     final Alu alu = new Alu();
-    alu.setF0(true).setF1(true).setEnA(true).setEnB(true).setInvA(false).setInC(false);
+    alu.setF0(true).setF1(true).setEnA(true).setEnB(true).setInvA(false).setInc(false);
 
     // power of netbook is good enough to calculate 1500000 per second, netbook 200000 per second
     // execution with sonar and several analysis tools is only able to execute 10000 per second
