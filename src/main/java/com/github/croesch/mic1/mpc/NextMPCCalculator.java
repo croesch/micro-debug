@@ -1,7 +1,5 @@
 package com.github.croesch.mic1.mpc;
 
-import java.util.BitSet;
-
 /**
  * This class represents a calculator for the next micro-program-counter (MPC). It is based on the verilog code for
  * 'calculation of MPC' in the script of the lecture 'Rechnertechnik' of Karl Stroetmann.
@@ -11,14 +9,14 @@ import java.util.BitSet;
  */
 public final class NextMPCCalculator {
 
-  /** size of MBR in bits */
-  private static final int BITS_IN_MBR = 8;
+  /** mask to select lowest nine bits */
+  private static final int LOW_NINE_BITS = 0x1FF;
 
-  /** the highest bit of MPC */
-  private static final int HIGHEST_MPC_BIT = BITS_IN_MBR;
+  /** mask to select bit number eight */
+  private static final int BIT_EIGHT = 0x100;
 
-  /** the number of bits in the address */
-  private static final int MAX_SIZE_OF_ADDR = HIGHEST_MPC_BIT + 1;
+  /** mask to select lowest eight bits */
+  private static final int LOW_EIGHT_BITS = 0xFF;
 
   // input signals
 
@@ -26,7 +24,7 @@ public final class NextMPCCalculator {
   private byte mbr = 0;
 
   /** the value of the part in the MIR[Addr] */
-  private final BitSet addr = new BitSet(9);
+  private int addr = 0;
 
   /** whether the control line JMPC (MIR[26]) is set */
   private boolean jmpC;
@@ -46,7 +44,7 @@ public final class NextMPCCalculator {
   // input signals
 
   /** the calculated 9-bit-value for the value of the next MPC */
-  private final BitSet mpc = new BitSet(HIGHEST_MPC_BIT + 1);
+  private int mpc = 0;
 
   // methods
 
@@ -58,23 +56,17 @@ public final class NextMPCCalculator {
   public void calculate() {
     if (this.jmpC) {
       // MPC[7:0] = MBR | Addr[7:0];
-      for (int i = 0; i < BITS_IN_MBR; ++i) {
-        // check if bit number i is set in the value of MBR
-        final boolean isBitIOfMBRSet = (this.mbr & 1 << i) == 1 << i;
-        this.mpc.set(i, this.addr.get(i) || isBitIOfMBRSet);
-      }
+      this.mpc = (this.mbr | this.addr) & LOW_EIGHT_BITS;
     } else {
       // MPC[7:0] = Addr[7:0];
-      for (int i = 0; i < BITS_IN_MBR; ++i) {
-        this.mpc.set(i, this.addr.get(i));
-      }
+      this.mpc = this.addr & LOW_EIGHT_BITS;
     }
     if ((this.jmpN && this.n) || (this.jmpZ && this.z)) {
       // MPC[8] = 1;
-      this.mpc.set(HIGHEST_MPC_BIT);
+      this.mpc |= BIT_EIGHT;
     } else {
       // MPC[8] = Addr[8];
-      this.mpc.set(HIGHEST_MPC_BIT, this.addr.get(HIGHEST_MPC_BIT));
+      this.mpc |= this.addr & BIT_EIGHT;
     }
   }
 
@@ -84,7 +76,7 @@ public final class NextMPCCalculator {
    * @since Date: Nov 7, 2011
    * @return the 9-bit-value for the MPC
    */
-  public BitSet getMpc() {
+  public int getMpc() {
     return this.mpc;
   }
 
@@ -104,12 +96,8 @@ public final class NextMPCCalculator {
    * @since Date: Nov 7, 2011
    * @param newAddr the value of the Addr fetched from the current control word
    */
-  public void setAddr(final BitSet newAddr) {
-    if (newAddr.length() > MAX_SIZE_OF_ADDR) {
-      throw new IllegalArgumentException();
-    }
-    this.addr.clear();
-    this.addr.or(newAddr);
+  public void setAddr(final int newAddr) {
+    this.addr = newAddr & LOW_NINE_BITS;
   }
 
   /**

@@ -2,10 +2,10 @@ package com.github.croesch.mic1.mpc;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import java.util.BitSet;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import com.github.croesch.TestUtil;
 
 /**
  * Provides test cases for {@link NextMPCCalculator}. It first tests all variations for control lines JMPN, JMPZ, N and
@@ -31,21 +31,17 @@ public class NextMPCCalculatorTest {
     this.nMPCC.setN(false);
     this.nMPCC.setZ(false);
 
-    final BitSet addr = new BitSet(9);
+    int addr = 0;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be equal to adr[8] = false
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
+    assertThat(this.nMPCC.getMpc()).isZero();
 
-    addr.set(8); // adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
-    this.nMPCC.calculate();
-    // nothing should change, because we don't want to have a reference to our BitSet in the calculator
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
+    addr = 0x100;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be equal to adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
   }
 
   @Test
@@ -55,21 +51,17 @@ public class NextMPCCalculatorTest {
     this.nMPCC.setN(false);
     this.nMPCC.setZ(true);
 
-    final BitSet addr = new BitSet(9);
+    int addr = 0;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be equal to adr[8] = false
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
+    assertThat(this.nMPCC.getMpc()).isZero();
 
-    addr.set(8); // adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
-    this.nMPCC.calculate();
-    // nothing should change, because we don't want to have a reference to our BitSet in the calculator
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
+    addr = 0x100;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be equal to adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
   }
 
   @Test
@@ -79,21 +71,17 @@ public class NextMPCCalculatorTest {
     this.nMPCC.setN(true);
     this.nMPCC.setZ(false);
 
-    final BitSet addr = new BitSet(9);
+    int addr = 0x200; // 1->0<-_0000_0000
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be equal to adr[8] = false
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
+    assertThat(this.nMPCC.getMpc()).isZero();
 
-    addr.set(8); // adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
-    this.nMPCC.calculate();
-    // nothing should change, because we don't want to have a reference to our BitSet in the calculator
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
+    addr = 0x1FF;// ->1<-_1111_1111
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be equal to adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x1FF);
   }
 
   @Test
@@ -103,21 +91,17 @@ public class NextMPCCalculatorTest {
     this.nMPCC.setN(true);
     this.nMPCC.setZ(true);
 
-    final BitSet addr = new BitSet(9);
+    int addr = 0x6ab; // 11->0<-_0000_0000
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be equal to adr[8] = false
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0xab);
 
-    addr.set(8); // adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
-    this.nMPCC.calculate();
-    // nothing should change, because we don't want to have a reference to our BitSet in the calculator
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
+    addr = 0x7FF; // 11->1<-_1111_1111
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be equal to adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x1FF);
   }
 
   @Test
@@ -127,21 +111,17 @@ public class NextMPCCalculatorTest {
     this.nMPCC.setN(false);
     this.nMPCC.setZ(false);
 
-    final BitSet addr = new BitSet(9);
+    int addr = 0;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be equal to adr[8] = false
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
+    assertThat(this.nMPCC.getMpc()).isZero();
 
-    addr.set(8); // adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
-    this.nMPCC.calculate();
-    // nothing should change, because we don't want to have a reference to our BitSet in the calculator
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
+    addr = 0x100;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be equal to adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
   }
 
   @Test
@@ -151,21 +131,17 @@ public class NextMPCCalculatorTest {
     this.nMPCC.setN(false);
     this.nMPCC.setZ(true);
 
-    final BitSet addr = new BitSet(9);
+    int addr = 0;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be true, cause JMPZ and Z
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
 
-    addr.set(8); // adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
-    this.nMPCC.calculate();
-    // nothing should change, because we don't want to have a reference to our BitSet in the calculator
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    addr = 0x100;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be true, cause JMPZ and Z
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
   }
 
   @Test
@@ -175,21 +151,17 @@ public class NextMPCCalculatorTest {
     this.nMPCC.setN(true);
     this.nMPCC.setZ(false);
 
-    final BitSet addr = new BitSet(9);
+    int addr = 0;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be equal to adr[8] = false
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
+    assertThat(this.nMPCC.getMpc()).isZero();
 
-    addr.set(8); // adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
-    this.nMPCC.calculate();
-    // nothing should change, because we don't want to have a reference to our BitSet in the calculator
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
+    addr = 0x100;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be equal to adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
   }
 
   @Test
@@ -199,21 +171,17 @@ public class NextMPCCalculatorTest {
     this.nMPCC.setN(true);
     this.nMPCC.setZ(true);
 
-    final BitSet addr = new BitSet(9);
+    int addr = 0;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be true, cause JMPZ and Z
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
 
-    addr.set(8); // adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
-    this.nMPCC.calculate();
-    // nothing should change, because we don't want to have a reference to our BitSet in the calculator
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    addr = 0x100;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be true, cause JMPZ and Z
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
   }
 
   @Test
@@ -223,21 +191,17 @@ public class NextMPCCalculatorTest {
     this.nMPCC.setN(false);
     this.nMPCC.setZ(false);
 
-    final BitSet addr = new BitSet(9);
+    int addr = 0;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be equal to adr[8] = false
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
+    assertThat(this.nMPCC.getMpc()).isZero();
 
-    addr.set(8); // adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
-    this.nMPCC.calculate();
-    // nothing should change, because we don't want to have a reference to our BitSet in the calculator
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
+    addr = 0x100;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be equal to adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
   }
 
   @Test
@@ -247,21 +211,17 @@ public class NextMPCCalculatorTest {
     this.nMPCC.setN(false);
     this.nMPCC.setZ(true);
 
-    final BitSet addr = new BitSet(9);
+    int addr = 0;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be equal to adr[8] = false
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
+    assertThat(this.nMPCC.getMpc()).isZero();
 
-    addr.set(8); // adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
-    this.nMPCC.calculate();
-    // nothing should change, because we don't want to have a reference to our BitSet in the calculator
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
+    addr = 0x100;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be equal to adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
   }
 
   @Test
@@ -271,21 +231,17 @@ public class NextMPCCalculatorTest {
     this.nMPCC.setN(true);
     this.nMPCC.setZ(false);
 
-    final BitSet addr = new BitSet(9);
+    int addr = 0;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be true, cause JMPN and N
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
 
-    addr.set(8); // adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
-    this.nMPCC.calculate();
-    // nothing should change, because we don't want to have a reference to our BitSet in the calculator
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    addr = 0x100;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be true, cause JMPN and N
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
   }
 
   @Test
@@ -295,21 +251,17 @@ public class NextMPCCalculatorTest {
     this.nMPCC.setN(true);
     this.nMPCC.setZ(true);
 
-    final BitSet addr = new BitSet(9);
+    int addr = 0;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be true, cause JMPN and N
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
 
-    addr.set(8); // adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
-    this.nMPCC.calculate();
-    // nothing should change, because we don't want to have a reference to our BitSet in the calculator
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    addr = 0x100;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be true, cause JMPN and N
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
   }
 
   @Test
@@ -319,21 +271,17 @@ public class NextMPCCalculatorTest {
     this.nMPCC.setN(false);
     this.nMPCC.setZ(false);
 
-    final BitSet addr = new BitSet(9);
+    int addr = 0;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be equal to adr[8] = false
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
+    assertThat(this.nMPCC.getMpc()).isZero();
 
-    addr.set(8); // adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
-    this.nMPCC.calculate();
-    // nothing should change, because we don't want to have a reference to our BitSet in the calculator
-    assertThat(this.nMPCC.getMpc().get(8)).isFalse();
+    addr = 0x100;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be equal to adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
   }
 
   @Test
@@ -343,21 +291,17 @@ public class NextMPCCalculatorTest {
     this.nMPCC.setN(false);
     this.nMPCC.setZ(true);
 
-    final BitSet addr = new BitSet(9);
+    int addr = 0;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be true, cause JMPZ and Z
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
 
-    addr.set(8); // adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
-    this.nMPCC.calculate();
-    // nothing should change, because we don't want to have a reference to our BitSet in the calculator
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    addr = 0x100;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be true, cause JMPZ and Z
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
   }
 
   @Test
@@ -367,21 +311,17 @@ public class NextMPCCalculatorTest {
     this.nMPCC.setN(true);
     this.nMPCC.setZ(false);
 
-    final BitSet addr = new BitSet(9);
+    int addr = 0;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be true, cause JMPN and N
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
 
-    addr.set(8); // adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
-    this.nMPCC.calculate();
-    // nothing should change, because we don't want to have a reference to our BitSet in the calculator
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    addr = 0x100;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be true, cause JMPN and N
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
   }
 
   @Test
@@ -391,31 +331,25 @@ public class NextMPCCalculatorTest {
     this.nMPCC.setN(true);
     this.nMPCC.setZ(true);
 
-    final BitSet addr = new BitSet(9);
+    int addr = 0;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be true, cause JMPZ and Z (and JMPN and N)
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
 
-    addr.set(8); // adr[8] = true
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
-    this.nMPCC.calculate();
-    // nothing should change, because we don't want to have a reference to our BitSet in the calculator
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    addr = 0x100;
     this.nMPCC.setAddr(addr);
     this.nMPCC.calculate();
     // mpc[8] should be true, cause JMPZ and Z (and JMPN and N)
-    assertThat(this.nMPCC.getMpc().get(8)).isTrue();
+    assertThat(this.nMPCC.getMpc()).isEqualTo(0x100);
   }
 
   @Test
   public void testGetMpc_Bits0To7_JMPC() {
-    final BitSet addr = new BitSet(9); // [0]10101010
-    addr.set(1);
-    addr.set(3);
-    addr.set(5);
-    addr.set(7);
-    final byte mbr = 0x55; // 01010101
+    TestUtil.printMethodName();
+
+    final int addr = 0xAA; // [0]1010_1010
+    final byte mbr = 0x55; // 0101_0101
 
     this.nMPCC.setJmpC(true);
     this.nMPCC.setAddr(addr);
@@ -432,23 +366,29 @@ public class NextMPCCalculatorTest {
 
             this.nMPCC.calculate();
 
-            for (int m = 0; m < 8; ++m) {
-              assertThat(this.nMPCC.getMpc().get(m)).isTrue();
+            if (i == 0 && k == 0 || j == 0 && l == 0) {
+              // N && jmpN || Z && jmpZ
+              assertThat(this.nMPCC.getMpc()).isEqualTo(0x1FF);
+            } else {
+              assertThat(this.nMPCC.getMpc()).isEqualTo(0xFF);
             }
+            TestUtil.printStep();
           }
+          TestUtil.printLoopEnd();
         }
+        TestUtil.printLoopEnd();
       }
+      TestUtil.printLoopEnd();
     }
+    TestUtil.printEndOfMethod();
   }
 
   @Test
   public void testGetMpc_Bits0To7_NotJMPC() {
-    final BitSet addr = new BitSet(9); // [0]10101010
-    addr.set(1);
-    addr.set(3);
-    addr.set(5);
-    addr.set(7);
-    final byte mbr = 0x55; // 01010101
+    TestUtil.printMethodName();
+
+    final int addr = 0xAA; // [0]_1010_1010
+    final byte mbr = 0x55; // 0101_0101
 
     this.nMPCC.setJmpC(false);
     this.nMPCC.setAddr(addr);
@@ -465,33 +405,57 @@ public class NextMPCCalculatorTest {
 
             this.nMPCC.calculate();
 
-            for (int m = 0; m < 8; ++m) {
-              assertThat(this.nMPCC.getMpc().get(m)).isEqualTo(m % 2 != 0);
+            if (i == 0 && k == 0 || j == 0 && l == 0) {
+              // N && jmpN || Z && jmpZ
+              assertThat(this.nMPCC.getMpc()).isEqualTo(0x1AA);
+            } else {
+              assertThat(this.nMPCC.getMpc()).isEqualTo(0xAA);
             }
+            TestUtil.printStep();
           }
+          TestUtil.printLoopEnd();
         }
+        TestUtil.printLoopEnd();
       }
+      TestUtil.printLoopEnd();
     }
+    TestUtil.printEndOfMethod();
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testSetAddr_IAE1() {
-    final BitSet newAddr = new BitSet();
-    newAddr.set(9);
-    this.nMPCC.setAddr(newAddr);
-  }
+  @Test
+  public void testGetMpc_MaximumNineBits() {
+    TestUtil.printMethodName();
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testSetAddr_IAE2() {
-    final BitSet newAddr = new BitSet();
-    newAddr.set(10);
-    this.nMPCC.setAddr(newAddr);
-  }
+    final int addr = 0xFFFFFFFF; // [0]_1010_1010
+    final byte mbr = (byte) 0xFF; // 0101_0101
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testSetAddr_IAE3() {
-    final BitSet newAddr = new BitSet();
-    newAddr.set(100);
-    this.nMPCC.setAddr(newAddr);
+    this.nMPCC.setAddr(addr);
+    this.nMPCC.setMbr(mbr);
+
+    for (int h = 0; h < 2; ++h) {
+      for (int i = 0; i < 2; ++i) {
+        for (int j = 0; j < 2; ++j) {
+          for (int k = 0; k < 2; ++k) {
+            for (int l = 0; l < 2; ++l) {
+              this.nMPCC.setJmpC(h == 0);
+              this.nMPCC.setJmpN(i == 0);
+              this.nMPCC.setJmpZ(j == 0);
+              this.nMPCC.setN(k == 0);
+              this.nMPCC.setZ(l == 0);
+
+              this.nMPCC.calculate();
+
+              assertThat(this.nMPCC.getMpc() & 0xFFFFFE00).isZero();
+              TestUtil.printStep();
+            }
+            TestUtil.printLoopEnd();
+          }
+          TestUtil.printLoopEnd();
+        }
+        TestUtil.printLoopEnd();
+      }
+      TestUtil.printLoopEnd();
+    }
+    TestUtil.printEndOfMethod();
   }
 }
