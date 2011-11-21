@@ -7,7 +7,7 @@ package com.github.croesch.mic1.controlstore;
  * @author croesch
  * @since Date: Nov 13, 2011
  */
-final class Mic1JMPSignalSet extends Mic1SignalSet {
+public final class Mic1JMPSignalSet extends Mic1SignalSet {
 
   /** the number of the signal JMPC */
   private static final int SIGNAL_NUMBER_OF_JMPC = 0;
@@ -38,7 +38,7 @@ final class Mic1JMPSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>JMPC</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1JMPSignalSet setJmpC(final boolean value) {
+  Mic1JMPSignalSet setJmpC(final boolean value) {
     set(SIGNAL_NUMBER_OF_JMPC, value);
     return this;
   }
@@ -60,7 +60,7 @@ final class Mic1JMPSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>JMPN</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1JMPSignalSet setJmpN(final boolean value) {
+  Mic1JMPSignalSet setJmpN(final boolean value) {
     set(SIGNAL_NUMBER_OF_JMPN, value);
     return this;
   }
@@ -82,7 +82,7 @@ final class Mic1JMPSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>JMPZ</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1JMPSignalSet setJmpZ(final boolean value) {
+  Mic1JMPSignalSet setJmpZ(final boolean value) {
     set(SIGNAL_NUMBER_OF_JMPZ, value);
     return this;
   }

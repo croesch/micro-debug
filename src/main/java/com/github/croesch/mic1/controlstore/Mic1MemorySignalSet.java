@@ -12,7 +12,7 @@ package com.github.croesch.mic1.controlstore;
  * @author croesch
  * @since Date: Nov 12, 2011
  */
-final class Mic1MemorySignalSet extends Mic1SignalSet {
+public final class Mic1MemorySignalSet extends Mic1SignalSet {
 
   /** the number of signals this set contains */
   private static final int SIZE_OF_SET = 3;
@@ -44,7 +44,7 @@ final class Mic1MemorySignalSet extends Mic1SignalSet {
    * @param write the new value for the signal <code>write</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1MemorySignalSet setWrite(final boolean write) {
+  Mic1MemorySignalSet setWrite(final boolean write) {
     set(0, write);
     return this;
   }
@@ -66,7 +66,7 @@ final class Mic1MemorySignalSet extends Mic1SignalSet {
    * @param read the new value for the signal <code>read</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1MemorySignalSet setRead(final boolean read) {
+  Mic1MemorySignalSet setRead(final boolean read) {
     set(1, read);
     return this;
   }
@@ -88,7 +88,7 @@ final class Mic1MemorySignalSet extends Mic1SignalSet {
    * @param fetch the new value for the signal <code>fetch</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1MemorySignalSet setFetch(final boolean fetch) {
+  Mic1MemorySignalSet setFetch(final boolean fetch) {
     set(2, fetch);
     return this;
   }

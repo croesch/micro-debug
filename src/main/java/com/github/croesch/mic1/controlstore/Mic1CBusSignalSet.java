@@ -8,7 +8,7 @@ package com.github.croesch.mic1.controlstore;
  * @author croesch
  * @since Date: Nov 12, 2011
  */
-final class Mic1CBusSignalSet extends Mic1SignalSet {
+public final class Mic1CBusSignalSet extends Mic1SignalSet {
 
   /** the number of the signal H */
   private static final int SIGNAL_NUMBER_OF_H = 0;
@@ -58,7 +58,7 @@ final class Mic1CBusSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>H</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1CBusSignalSet setH(final boolean value) {
+  Mic1CBusSignalSet setH(final boolean value) {
     set(SIGNAL_NUMBER_OF_H, value);
     return this;
   }
@@ -80,7 +80,7 @@ final class Mic1CBusSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>OPC</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1CBusSignalSet setOpc(final boolean value) {
+  Mic1CBusSignalSet setOpc(final boolean value) {
     set(SIGNAL_NUMBER_OF_OPC, value);
     return this;
   }
@@ -102,7 +102,7 @@ final class Mic1CBusSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>TOS</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1CBusSignalSet setTos(final boolean value) {
+  Mic1CBusSignalSet setTos(final boolean value) {
     set(SIGNAL_NUMBER_OF_TOS, value);
     return this;
   }
@@ -124,7 +124,7 @@ final class Mic1CBusSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>CPP</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1CBusSignalSet setCpp(final boolean value) {
+  Mic1CBusSignalSet setCpp(final boolean value) {
     set(SIGNAL_NUMBER_OF_CPP, value);
     return this;
   }
@@ -146,7 +146,7 @@ final class Mic1CBusSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>LV</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1CBusSignalSet setLv(final boolean value) {
+  Mic1CBusSignalSet setLv(final boolean value) {
     set(SIGNAL_NUMBER_OF_LV, value);
     return this;
   }
@@ -168,7 +168,7 @@ final class Mic1CBusSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>SP</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1CBusSignalSet setSp(final boolean value) {
+  Mic1CBusSignalSet setSp(final boolean value) {
     set(SIGNAL_NUMBER_OF_SP, value);
     return this;
   }
@@ -190,7 +190,7 @@ final class Mic1CBusSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>PC</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1CBusSignalSet setPc(final boolean value) {
+  Mic1CBusSignalSet setPc(final boolean value) {
     set(SIGNAL_NUMBER_OF_PC, value);
     return this;
   }
@@ -212,7 +212,7 @@ final class Mic1CBusSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>MDR</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1CBusSignalSet setMdr(final boolean value) {
+  Mic1CBusSignalSet setMdr(final boolean value) {
     set(SIGNAL_NUMBER_OF_MDR, value);
     return this;
   }
@@ -234,7 +234,7 @@ final class Mic1CBusSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>MAR</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1CBusSignalSet setMar(final boolean value) {
+  Mic1CBusSignalSet setMar(final boolean value) {
     set(SIGNAL_NUMBER_OF_MAR, value);
     return this;
   }
