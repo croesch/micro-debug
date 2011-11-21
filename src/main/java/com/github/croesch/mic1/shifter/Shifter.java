@@ -26,6 +26,11 @@ public final class Shifter {
   /** the 32-bit value that is set to the shifter */
   private int input = 0;
 
+  // output signals
+
+  /** the calculated value */
+  private int output = 0;
+
   // methods
 
   /**
@@ -55,17 +60,26 @@ public final class Shifter {
    * @return the input of the shifter, possible shifted.
    */
   public int getOutput() {
+    return this.output;
+  }
+
+  /**
+   * Performs calculation of the output signals based on the current values of input signals.
+   * 
+   * @since Date: Nov 21, 2011
+   */
+  public void calculate() {
     if (this.sll8) {
       if (this.sra1) {
         throw new IllegalStateException();
       } else {
-        return (this.input << SLL8_NUMBER_OF_BITS_SHIFTED);
+        this.output = (this.input << SLL8_NUMBER_OF_BITS_SHIFTED);
       }
     } else {
       if (this.sra1) {
-        return this.input >> SRA1_NUMBER_OF_BITS_SHIFTED;
+        this.output = this.input >> SRA1_NUMBER_OF_BITS_SHIFTED;
       } else {
-        return this.input;
+        this.output = this.input;
       }
     }
   }

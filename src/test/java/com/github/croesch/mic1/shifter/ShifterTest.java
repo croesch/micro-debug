@@ -4,6 +4,8 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.Test;
 
+import com.github.croesch.TestUtil;
+
 /**
  * Provides test cases for {@link Shifter}. Basically tests output with variations of the input control lines:<br>
  * <table>
@@ -41,19 +43,35 @@ public class ShifterTest {
 
   @Test
   public void testGetOutput() {
+    TestUtil.printMethodName();
+
     final int[] in = new int[] { Integer.MIN_VALUE, -17, -1274839, 0, Integer.MAX_VALUE };
     final int[] out = new int[] { Integer.MIN_VALUE, -17, -1274839, 0, Integer.MAX_VALUE };
 
     final Shifter s = new Shifter();
     for (int i = 0; i < in.length; ++i) {
       s.setInput(in[i]);
+
+      // be sure that one iteration has been done..
+      if (i > 0) {
+        // output is still old result
+        assertThat(s.getOutput()).isEqualTo(out[i - 1]);
+      }
+
+      s.calculate();
       // System.out.println("shifttest: " + in[i] + " = " + out[i] + "; result=" + s.getOutput());
       assertThat(s.getOutput()).isEqualTo(out[i]);
+
+      TestUtil.printStep();
     }
+
+    TestUtil.printEndOfMethod();
   }
 
   @Test
   public void testGetOutput_NoShift() {
+    TestUtil.printMethodName();
+
     final Shifter s = new Shifter();
     s.setSLL8(false);
     s.setSRA1(false);
@@ -62,13 +80,26 @@ public class ShifterTest {
 
     for (int i = 0; i < in.length; ++i) {
       s.setInput(in[i]);
+
+      // be sure that one iteration has been done..
+      if (i > 0) {
+        // output is still old result
+        assertThat(s.getOutput()).isEqualTo(out[i - 1]);
+      }
+
+      s.calculate();
       // System.out.println("shifttest: " + in[i] + " = " + out[i] + "; result=" + s.getOutput());
       assertThat(s.getOutput()).isEqualTo(out[i]);
+
+      TestUtil.printStep();
     }
+    TestUtil.printEndOfMethod();
   }
 
   @Test
   public void testGetOutput_ShiftLeft() {
+    TestUtil.printMethodName();
+
     final Shifter s = new Shifter();
     s.setSLL8(true);
     s.setSRA1(false);
@@ -77,13 +108,26 @@ public class ShifterTest {
 
     for (int i = 0; i < in.length; ++i) {
       s.setInput(in[i]);
+
+      // be sure that one iteration has been done..
+      if (i > 0) {
+        // output is still old result
+        assertThat(s.getOutput()).isEqualTo(out[i - 1]);
+      }
+
+      s.calculate();
       // System.out.println("shifttest: " + in[i] + " << 8 = " + out[i] + "; result=" + s.getOutput());
       assertThat(s.getOutput()).isEqualTo(out[i]);
+
+      TestUtil.printStep();
     }
+    TestUtil.printEndOfMethod();
   }
 
   @Test
   public void testGetOutput_ShiftRight() {
+    TestUtil.printMethodName();
+
     final Shifter s = new Shifter();
     s.setSLL8(false);
     s.setSRA1(true);
@@ -92,19 +136,32 @@ public class ShifterTest {
 
     for (int i = 0; i < in.length; ++i) {
       s.setInput(in[i]);
+
+      // be sure that one iteration has been done..
+      if (i > 0) {
+        // output is still old result
+        assertThat(s.getOutput()).isEqualTo(out[i - 1]);
+      }
+
+      s.calculate();
       // System.out.println("shifttest: " + in[i] + " >> 1 = " + out[i] + "; result=" + s.getOutput());
       assertThat(s.getOutput()).isEqualTo(out[i]);
+
+      TestUtil.printStep();
     }
+    TestUtil.printEndOfMethod();
   }
 
   @Test(expected = IllegalStateException.class)
   public void testGetOutput_ShiftBoth() {
+    TestUtil.printlnMethodName();
+
     final Shifter s = new Shifter();
     // not allowed - shift in both directions!
     s.setSLL8(true);
     s.setSRA1(true);
     s.setInput(4711);
     // throws exception
-    s.getOutput();
+    s.calculate();
   }
 }
