@@ -55,7 +55,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>SLL8</code>.
    * @return instance of this object for fluent API.
    */
-  Mic1ALUSignalSet setSLL8(final boolean value) {
+  public Mic1ALUSignalSet setSLL8(final boolean value) {
     set(SIGNAL_NUMBER_OF_SLL8, value);
     return this;
   }
@@ -77,7 +77,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>SRA1</code>.
    * @return instance of this object for fluent API.
    */
-  Mic1ALUSignalSet setSRA1(final boolean value) {
+  public Mic1ALUSignalSet setSRA1(final boolean value) {
     set(SIGNAL_NUMBER_OF_SRA1, value);
     return this;
   }
@@ -99,7 +99,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>F0</code>.
    * @return instance of this object for fluent API.
    */
-  Mic1ALUSignalSet setF0(final boolean value) {
+  public Mic1ALUSignalSet setF0(final boolean value) {
     set(SIGNAL_NUMBER_OF_F0, value);
     return this;
   }
@@ -121,7 +121,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>F1</code>.
    * @return instance of this object for fluent API.
    */
-  Mic1ALUSignalSet setF1(final boolean value) {
+  public Mic1ALUSignalSet setF1(final boolean value) {
     set(SIGNAL_NUMBER_OF_F1, value);
     return this;
   }
@@ -143,7 +143,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>ENA</code>.
    * @return instance of this object for fluent API.
    */
-  Mic1ALUSignalSet setEnA(final boolean value) {
+  public Mic1ALUSignalSet setEnA(final boolean value) {
     set(SIGNAL_NUMBER_OF_ENA, value);
     return this;
   }
@@ -165,7 +165,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>ENB</code>.
    * @return instance of this object for fluent API.
    */
-  Mic1ALUSignalSet setEnB(final boolean value) {
+  public Mic1ALUSignalSet setEnB(final boolean value) {
     set(SIGNAL_NUMBER_OF_ENB, value);
     return this;
   }
@@ -187,7 +187,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>INVA</code>.
    * @return instance of this object for fluent API.
    */
-  Mic1ALUSignalSet setInvA(final boolean value) {
+  public Mic1ALUSignalSet setInvA(final boolean value) {
     set(SIGNAL_NUMBER_OF_INVA, value);
     return this;
   }
@@ -209,7 +209,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>INC</code>.
    * @return instance of this object for fluent API.
    */
-  Mic1ALUSignalSet setInc(final boolean value) {
+  public Mic1ALUSignalSet setInc(final boolean value) {
     set(SIGNAL_NUMBER_OF_INC, value);
     return this;
   }
