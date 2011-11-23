@@ -39,7 +39,7 @@ public final class Mic1 {
   private Mic1Instruction instruction = null;
 
   /** the main memory of the processor */
-  private final Memory memory = new Memory(0x10000);
+  private final Memory memory;
 
   /**
    * Constructs a new Mic1-processor, reading the given inputstreams as micro-program and assembler-program.
@@ -51,6 +51,10 @@ public final class Mic1 {
    */
   public Mic1(final InputStream micAsm, final InputStream asm) throws FileFormatException {
     this.controlStore = new Mic1ControlStore(micAsm);
+
+    //TODO implement maximum size of memory as argument
+    final int maxSize = 0x10000;
+    this.memory = new Memory(maxSize, asm);
   }
 
   /**

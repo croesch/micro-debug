@@ -1,6 +1,11 @@
 package com.github.croesch.mic1.mem;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import com.github.croesch.error.FileFormatException;
 import com.github.croesch.mic1.register.Register;
+import com.github.croesch.misc.Utils;
 
 /**
  * Represents the main memory of the processor.
@@ -40,14 +45,70 @@ public final class Memory {
   /** the byte read from the memory */
   private byte byteValue = -1;
 
+  /** the magic number that is needed at the begin of a binary ijvm-file */
+  public static final int IJVM_MAGIC_NUMBER = 0x1DEADFAD;
+
   /**
-   * Constructs a new memory containing the given number of words.
+   * Constructs a new memory containing the given number of words. The initial memory will contain only zeros and then
+   * filled with the bytes read from the given input stream.
    * 
    * @since Date: Nov 23, 2011
    * @param maxSize the size of the memory in words (32-bit-values)
+   * @param programStream the input stream
    */
-  public Memory(final int maxSize) {
+  public Memory(final int maxSize, final InputStream programStream) throws FileFormatException {
     this.memory = new int[maxSize];
+    initMemory(programStream);
+  }
+
+  private void initMemory(final InputStream stream) throws FileFormatException {
+    Utils.checkMagicNumber(stream, IJVM_MAGIC_NUMBER);
+
+    final byte[] bytes = new byte[4];
+    try {
+      while (stream.read(bytes) != -1) {
+        final int startAddress = Utils.bytesToInt(bytes[0], bytes[1], bytes[2], bytes[3]);
+
+        if (stream.read(bytes) == -1) {
+          throw new FileFormatException("unexpected end of file");
+        }
+        final int blockLength = Utils.bytesToInt(bytes[0], bytes[1], bytes[2], bytes[3]);
+        readBlock(startAddress, blockLength, stream);
+      }
+    } catch (final IOException e) {
+      throw new FileFormatException(e);
+    }
+  }
+
+  private void readBlock(final int start, final int length, final InputStream stream) throws IOException {
+    for (int i = 0; i < length; ++i) {
+      int val = stream.read();
+      if (val == -1) {
+        //TODO
+      }
+
+      final int addr = start + i;
+      final int mask;
+      final int word = this.memory[addr / 4];
+      switch (addr % 4) {
+        case 0:
+          val <<= Byte.SIZE * 3;
+          mask = 0x00FFFFFF;
+          break;
+        case 1:
+          val <<= Byte.SIZE * 2;
+          mask = 0xFF00FFFF;
+          break;
+        case 2:
+          val <<= Byte.SIZE;
+          mask = 0xFFFF00FF;
+          break;
+        default:
+          mask = 0xFFFFFF00;
+          break;
+      }
+      this.memory[addr / 4] = (word & mask) | val;
+    }
   }
 
   /**
