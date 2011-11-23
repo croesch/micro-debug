@@ -83,4 +83,17 @@ public class UtilsTest {
     Utils.checkMagicNumber(new ByteArrayInputStream(new byte[] { -1, -1, -1, -1 }), -1);
     Utils.checkMagicNumber(new ByteArrayInputStream(new byte[] { 4, 4, 4, 4 }), 0x04040404);
   }
+
+  @Test
+  public void testBytesToInt() {
+    assertThat(Utils.bytesToInt((byte) 0, (byte) 0, (byte) 0, (byte) 0)).isEqualTo(0);
+    assertThat(Utils.bytesToInt((byte) -1, (byte) -1, (byte) -1, (byte) -1)).isEqualTo(-1);
+    assertThat(Utils.bytesToInt((byte) 0x12, (byte) 0x34, (byte) 0x56, (byte) 0x78)).isEqualTo(0x12345678);
+    assertThat(Utils.bytesToInt((byte) 0x87, (byte) 0x65, (byte) 0x43, (byte) 0x21)).isEqualTo(0x87654321);
+    assertThat(Utils.bytesToInt((byte) 0xff, (byte) 0, (byte) 0xff, (byte) 0)).isEqualTo(0xff00ff00);
+    assertThat(Utils.bytesToInt((byte) 0, (byte) 0xff, (byte) 0, (byte) 0xaa)).isEqualTo(0xff00aa);
+    assertThat(Utils.bytesToInt((byte) 0, (byte) 0, (byte) 0xff, (byte) 0)).isEqualTo(0xff00);
+    assertThat(Utils.bytesToInt((byte) 0, (byte) 0, (byte) 0, (byte) 0xff)).isEqualTo(0xff);
+    assertThat(Utils.bytesToInt((byte) 0, (byte) 0, (byte) 0, (byte) -1)).isEqualTo(255);
+  }
 }

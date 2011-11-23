@@ -13,6 +13,9 @@ import com.github.croesch.error.FileFormatException;
  */
 public final class Utils {
 
+  /** mask to select a byte from an integer */
+  private static final int BYTE_MASK = 0xFF;
+
   /**
    * Hides constructor from being invoked. This is a utility class and objects of it don't make sense.
    * 
@@ -87,6 +90,24 @@ public final class Utils {
     } catch (final IOException e) {
       throw new FileFormatException(e);
     }
+  }
+
+  /**
+   * Assembles the given bytes to one integer.
+   * 
+   * @since Date: Nov 23, 2011
+   * @param b0 the most significant byte
+   * @param b1 the second most significant byte
+   * @param b2 the second least significant byte
+   * @param b3 the least significant byte
+   * @return an integer, assembled by the four bytes
+   */
+  public static int bytesToInt(final byte b0, final byte b1, final byte b2, final byte b3) {
+    int number = b0 << Byte.SIZE * 3;
+    number |= (b1 & BYTE_MASK) << Byte.SIZE * 2;
+    number |= (b2 & BYTE_MASK) << Byte.SIZE;
+    number |= b3 & BYTE_MASK;
+    return number;
   }
 
 }
