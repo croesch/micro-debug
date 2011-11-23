@@ -9,6 +9,8 @@ import com.github.croesch.mic1.controlstore.Mic1CBusSignalSet;
 import com.github.croesch.mic1.controlstore.Mic1ControlStore;
 import com.github.croesch.mic1.controlstore.Mic1Instruction;
 import com.github.croesch.mic1.controlstore.Mic1JMPSignalSet;
+import com.github.croesch.mic1.controlstore.Mic1MemorySignalSet;
+import com.github.croesch.mic1.mem.Memory;
 import com.github.croesch.mic1.mpc.NextMPCCalculator;
 import com.github.croesch.mic1.register.Register;
 import com.github.croesch.mic1.shifter.Shifter;
@@ -35,6 +37,9 @@ public final class Mic1 {
 
   /** current instruction */
   private Mic1Instruction instruction = null;
+
+  /** the main memory of the processor */
+  private final Memory memory = new Memory(0x10000);
 
   /**
    * Constructs a new Mic1-processor, reading the given inputstreams as micro-program and assembler-program.
@@ -98,7 +103,9 @@ public final class Mic1 {
     // set N and Z
     this.mpcCalculator.setN(this.alu.isN());
     this.mpcCalculator.setZ(this.alu.isZ());
-    // TODO fill MBR and MDR
+
+    // fill MBR and MDR
+    this.memory.fillRegisters(Register.MDR, Register.MBR);
   }
 
   /**
@@ -107,16 +114,29 @@ public final class Mic1 {
    * @since Date: Nov 21, 2011
    */
   private void doClock3() {
+    // fetch address and MBR for calculation of mpc
     this.mpcCalculator.setAddr(this.instruction.getNextAddress());
     this.mpcCalculator.setMbr((byte) Register.MBR.getValue());
 
+    // fetch signals for calculation of mpc
     final Mic1JMPSignalSet jmpSignals = this.instruction.getJmpSignals();
     this.mpcCalculator.setJmpC(jmpSignals.isJmpC());
     this.mpcCalculator.setJmpN(jmpSignals.isJmpN());
     this.mpcCalculator.setJmpZ(jmpSignals.isJmpZ());
+    // calculate next mpc
     this.mpcCalculator.calculate();
 
-    // TODO set signals read, write and fetch and read value
+    // fetch signals for memory operations
+    final Mic1MemorySignalSet memSignals = this.instruction.getMemorySignals();
+    this.memory.setFetch(memSignals.isFetch());
+    this.memory.setRead(memSignals.isRead());
+    this.memory.setWrite(memSignals.isWrite());
+    // fetch values of PC, MAR and MDR and set it to the memory
+    this.memory.setByteAddress(Register.PC.getValue());
+    this.memory.setWordAddress(Register.MAR.getValue());
+    this.memory.setWordValue(Register.MDR.getValue());
+    // let the memory do its work
+    this.memory.poke();
   }
 
   /**

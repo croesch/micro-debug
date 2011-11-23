@@ -10,19 +10,14 @@ import com.github.croesch.mic1.register.Register;
  */
 public final class Memory {
 
-  /** the maximum size of the main memory - TODO make configurable */
-  private static final int MEMORY_MAX_SIZE = 0x00010000;
+  /** mask to select a byte from an int */
+  private static final int BYTE_MASK = 0xFF;
 
-  //  private static final int START_POS_LV = 0x00006000;
-
-  //  private static final int START_POS_SP = 0x00004000;
-
-  //  private static final int START_POS_CPP = 0x00002000;
-
-  //  private static final int START_POS_PC = -1;
+  /** address which isn't an address in the memory, but is connected to memory mapped io */
+  public static final int MEMORY_MAPPED_IO_ADDRESS = 0xFFFFFFFD;
 
   /** the representation of the memory */
-  private final int[] memory = new int[MEMORY_MAX_SIZE];
+  private final int[] memory;
 
   /** the input signal that enforces the memory to read a word */
   private boolean read = false;
@@ -43,7 +38,17 @@ public final class Memory {
   private int byteAddress = -1;
 
   /** the byte read from the memory */
-  private final byte byteValue = -1;
+  private byte byteValue = -1;
+
+  /**
+   * Constructs a new memory containing the given number of words.
+   * 
+   * @since Date: Nov 23, 2011
+   * @param maxSize the size of the memory in words (32-bit-values)
+   */
+  public Memory(final int maxSize) {
+    this.memory = new int[maxSize];
+  }
 
   /**
    * Sets the input signal <code>read</code>, that enforces the main memory to read a word from the memory.
@@ -131,8 +136,7 @@ public final class Memory {
       wordRegister.setValue(this.wordValue);
     }
     if (this.fetch) {
-      // TODO test!
-      byteRegister.setValue(this.byteValue);
+      byteRegister.setValue(this.byteValue & BYTE_MASK);
     }
   }
 
@@ -146,13 +150,63 @@ public final class Memory {
    */
   public void poke() {
     if (this.write) {
-      // TODO implement me.
+      write();
     }
     if (this.read) {
-      // TODO implement me.
+      read();
     }
     if (this.fetch) {
+      fetch();
+    }
+  }
+
+  /**
+   * Performs the fetch operation of a byte on the memory.
+   * 
+   * @since Date: Nov 23, 2011
+   */
+  private void fetch() {
+    int word = this.memory[this.byteAddress / 4];
+    switch (this.byteAddress % 4) {
+      case 0:
+        word >>= Byte.SIZE * 3;
+        break;
+      case 1:
+        word >>= Byte.SIZE * 2;
+        break;
+      case 2:
+        word >>= Byte.SIZE;
+        break;
+      default:
+        // nothing to do, because the value we want is already at word[7:0]
+        break;
+    }
+    this.byteValue = (byte) word;
+  }
+
+  /**
+   * Performs the read operation of a word on the memory.
+   * 
+   * @since Date: Nov 23, 2011
+   */
+  private void read() {
+    if (this.wordAddress == MEMORY_MAPPED_IO_ADDRESS) {
       // TODO implement me.
+    } else {
+      this.wordValue = this.memory[this.wordAddress];
+    }
+  }
+
+  /**
+   * Performs the write operation of a word on the memory.
+   * 
+   * @since Date: Nov 23, 2011
+   */
+  private void write() {
+    if (this.wordAddress == MEMORY_MAPPED_IO_ADDRESS) {
+      // TODO implement me.
+    } else {
+      this.memory[this.wordAddress] = this.wordValue;
     }
   }
 }
