@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.github.croesch.mic1.register.Register;
+import com.github.croesch.misc.Utils;
 
 /**
  * Is able to read bytes from {@link InputStream}s and to construct {@link Mic1Instruction}s with the given values.
@@ -88,7 +89,7 @@ public final class Mic1InstructionReader {
     final int b4 = in.read();
 
     // we have reached the end of data, so return null
-    if (isOneValueMinusOne(new int[] { b0, b1, b2, b3, b4 })) {
+    if (Utils.isOneValueMinusOne(new int[] { b0, b1, b2, b3, b4 })) {
       return null;
     }
 
@@ -132,23 +133,6 @@ public final class Mic1InstructionReader {
     final int b = (b4 >> 4) & BIT5678;
 
     return new Mic1Instruction(nextAddress, jmpSet, aluSet, cBusSet, memSet, decodeBBusBits(b));
-  }
-
-  /**
-   * Returns whether one of the given numbers is equal to <code>-1</code>.
-   * 
-   * @since Date: Nov 13, 2011
-   * @param values the numbers to check if any is equal to <code>-1</code>.
-   * @return <code>true</code>, if at least one of the given values is equal to <code>-1</code>.
-   */
-  static boolean isOneValueMinusOne(final int[] values) {
-    final int problematicValue = -1;
-    for (final int val : values) {
-      if (val == problematicValue) {
-        return true;
-      }
-    }
-    return false;
   }
 
   /**
