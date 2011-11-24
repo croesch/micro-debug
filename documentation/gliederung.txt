@@ -1,19 +1,33 @@
-Teil I: Konsolenprogramm
-
-Kapitel Einleitung
-
-Kapitel Aufgabenstellung
-
-Kapitel Bedienung
-
-Kapitel Entwicklung
-
-Teil II: GUI
-
-Kapitel Einleitung
-
-Kapitel Aufgabenstellung
-
-Kapitel Bedienung
-
-Kapitel Entwicklung
+Einleitung
+	Problemstellung
+	Aufbau der Arbeit
+Teil I: Bedienung
+	Allgemein
+		Parameter
+	Per Konsole
+	Per GUI
+Teil III: Implementierung
+	Werkzeuge
+		Versionskontrollsystem
+			Code auschecken
+			Feature implementieren
+			Bug fixen
+		Build-Management
+			Code kompilieren
+			Tests ausführen
+			Abhängigkeiten ändern
+		Entwicklungsumgebung
+			Integration von git und maven
+			Navigatieren im Code
+			Finden von Referenzen
+	Prozessor Mic1
+		ALU
+		MPC-Berechnung
+		Mic1-Instruktionen
+		Register
+		Hauptspeicher
+		Zusammensetzung der Komponenten
+	Interaktion per Konsole
+		.
+	Interaktion per GUI
+		.
