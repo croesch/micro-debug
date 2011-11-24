@@ -1,0 +1,62 @@
+Ist es möglich die Studienarbeit von Hr. Kutzer (2004) zu lesen?
+    Ja, es ist das im Rahmen der VL erhaltene Tutorial zur Bedienung des Simulators.
+
+Wann ist Abgabe für die Studienarbeit, 20.02.2012 für den ersten Teil?
+     Ja, der erste Teil am 20.02.2012 und der endgültige Termin zumindest vor dem offiziellen Beginn der Bachelorarbeit.
+
+Soll die Studienarbeit dem Leser ermöglichen die Entwicklung nachzuvollziehen oder was ist das primäre Ziel der Arbeit?
+     Ja, es ist das Ziel der Arbeit sowohl eine Anleitung zur Bedienung des Debuggers als auch eine Anleitung zu sein, um einen Einstieg in die Entwicklung zu finden. In etwa ein Drittel der Arbeit soll sich mit der Implementierung beschäftigen.
+
+Inwieweit sind Literaturquellen von nöten und theoretische Grundlagen zu diskutieren?
+	  Pragmatisch, es soll nicht theoretisch werden. Es geht darum, dass die Arbeit nützlich ist.
+
+Gibt es Formauflagen, die Sie bevorzugen?
+     Möglichst kompakt den Text auf eine Seite bringen. Latex ist gut, erhöhter Zeilenabstand überflüssig. Das Icon-Logo sollte nicht vorhanden sein auf dem Bericht.
+
+Wer besitzt die Rechte an dem entwickelten Code?
+    Ich, das heißt ich darf mir aussuchen, wie der Code lizenziert wird. Es muss aber eine Form sein, die die Benutzung in der VL von Hr. Stroetmann erlaubt.
+
+Dürfen Bibliotheken und Frameworks bspw. zum schreiben von Tests und zum Entwickeln der GUI genutzt werden?
+       Ja, das ist möglich.
+
+-------------------
+http://www.java-forum.org/allgemeines/12306-parser-fuer-mathematische-formeln.html
+	Sehr wahrscheinlich hinfällig. Wenn dann, java_cup und jflex nutzen, aber ein Parser wird wohl nicht benötigt werden.
+
+Anmerkungen zum Treffen vom 13.10.2011:
+- GUI für den RISC Debugger ist gut implementiert - in Java, kann genutzt werden.
+
+- Bitte aufzeichnen, wie viel Zeit ich für was aufwende, um eine Übersicht zu erhalten, ob wir "im Rahmen" bleiben.
+
+- GUI muss später nicht in der Lage sein parallel zur CMD zu laufen.
+
+--------------------------------------------------
+Wird man, wir oder ich-Schreibweise bevorzugt?
+     Im Prinzip egal, Hr. Stroetmann nutzt selbst i.d.R. "wir" und "man" gilt wohl als schlechter Stil.
+
+Wie kann ich auf den Variablennamen zugreifen für den Trace-Befehl. Ist das nötig?
+    Wenn die Zeit es zulässt, dann am besten mit einem Assembler in den Debugger integrieren, um die Namen der Variablen zu kennen. Ansonsten dazu tendieren sie wegzulassen.
+
+Wenn ich auf das Skript referenziere, kann ich das Buch referenzieren, oder das VL-Skript? Besonders wg. den Seitenzahlen.
+    Das Skript ist schon okay, allerdings dann mit Jahrgangsnummer, damit man es nachvollziehen kann, weil es sich jährlich leicht ändert.
+
+Ist es richtig, dass eine Mikro-Assembler-Instruktion im Bytecode volle 5 Byte belegt?
+    Ja.
+
+Sollte ich Objekte für ControlLines nutzen?
+    Nein, es ist fraglich, ob der Detailgrad der ALU nicht vllt. schon zu viel Performance tilgt, die Leitungen sind zu detailliert! Den gewählten Detailgrad kann ich erstmal beibehalten, wenn sich nicht herausstellt, dass der Debugger zu langsam wird. Er muss in der Lage sein 1000 Instruktionen pro Sekunde abzuarbeiten.
+
+Beim Dekodieren, soll auch der Fall betrachtet werden, dass von JMPN, JMPC und JMPZ mehr als ein Signal gesetzt ist? Oder gilt das als ausgeschlossen wegen dem Compiler?
+    Nein, eigentlich ja, aber praktisch kommt der Fall nie vor, da der Assembler diesen Fall nicht erzeugen kann.
+
+Ist es möglich, dass ich die TeX-Version des Skripts bekomme, um es für meinen eBook-Reader zu kompilieren?
+    Ja, ich habe sie.
+
+--------------------------------------------------
+Wenn der Speicher über mmio Daten liest, muss er ja gepuffert lesen, soll das Schreiben auch gepuffert geschehen?
+
+
+Was soll geschehen, wenn auf eine undefinierte (negativ / höher als Maximum) Speicherstelle zugegriffen wird?
+
+
+Die magic-number für IJVM-Dateien prüfen? Das Format einfach nutzen?

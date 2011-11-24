@@ -1,0 +1,19 @@
+Teil I: Konsolenprogramm
+
+Kapitel Einleitung
+
+Kapitel Aufgabenstellung
+
+Kapitel Bedienung
+
+Kapitel Entwicklung
+
+Teil II: GUI
+
+Kapitel Einleitung
+
+Kapitel Aufgabenstellung
+
+Kapitel Bedienung
+
+Kapitel Entwicklung

@@ -1,0 +1,148 @@
+\documentclass[
+		paper=a4,
+	  twoside=false,
+	 fontsize=10pt,
+			  titlepage,
+			  plainheadsepline,
+			  plainfootsepline,
+			  headsepline,
+			  footsepline,
+		index=totoc,	% fügt Inhaltsverzeichnis in Inhaltsangabe ein
+	   listof=totoc,	% fügt das Sourcenverzeichnis in Inhaltsangabe ein
+ bibliography=totoc,	% fügt Literaturverzeichnis in Inhaltsangabe ein
+	 abstract=false,		%needed?
+	titlepage=false
+]{report}
+
+\raggedright
+
+\parskip2ex plus1ex minus0.5ex
+\setlength{\parindent}{0.5cm}
+
+\usepackage[
+		 left=3cm,
+		right=3cm,
+		  top=2.5cm,
+	   bottom=2.5cm,
+		includeheadfoot
+]{geometry}
+
+\usepackage[
+		pdftex,
+		colorlinks=true,
+		 linkcolor=black,
+		 citecolor=black,
+		 filecolor=black,
+		  urlcolor=black
+]{hyperref}
+\usepackage[all]{hypcap}
+
+\usepackage[english, ngerman]{babel}\selectlanguage{ngerman}
+\usepackage[ngerman]{translator}
+\usepackage[acronym, toc, numberedsection=false]{glossaries}
+
+\usepackage[utf8]{inputenc} %Kodierung, statt latin1 auch utf8 möglich
+%\usepackage{setspace} \onehalfspacing
+
+\usepackage{lmodern}
+%\usepackage{ae,aeguill}
+\usepackage{ae}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage[automark]{scrpage2}
+\pagestyle{scrheadings}
+\setlength{\headheight}{1.5\baselineskip}
+\clearscrheadfoot
+
+\usepackage[round,numbers,square]{natbib}
+\bibliographystyle{alphadin}
+
+\usepackage{graphicx}
+\usepackage{epsfig}
+\setlength{\unitlength}{10mm} %sets unitlength for picture-environment
+
+\usepackage{rotating}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{afterpage}
+
+% \usepackage{eurosym} % euro sign
+
+\usepackage{color}
+\definecolor{blue}{rgb}{0.1647,0,1}
+\definecolor{darkred}{rgb}{0.498,0,0.33333}
+\definecolor{green}{rgb}{0.247,0.498,0.3725}
+\definecolor{lightgray}{rgb}{0.95,0.95,0.95}
+
+\usepackage{listings}
+\lstset{
+		language=Java,									% the language for the code
+	escapeinside={(*@}{@*)},							% the comments in code that are not printed
+	  basicstyle=\scriptsize\ttfamily\color{black},		% the style of the code font
+	keywordstyle=\bfseries\color{darkred},				% the style for keywords
+	 stringstyle=\color{blue},							% the style for strings
+	commentstyle=\color{green},							% the style for comments
+ identifierstyle=\color{black},							% the style for identifiers
+		 numbers=left,									% where to put the line numbers
+	 numberstyle=\tiny,									% the style of line numbers
+showstringspaces=false,									% underline spaces in strings
+	  stepnumber=1,										% the step between two numbered lines
+	   numbersep=10pt,									% space between numbers and code
+	  captionpos=b,										% where the caption should be printed (bottom)
+		   frame=single,  								% if a frame should be printed around the code
+		 tabsize=4,										% how many spaces one tab contains
+       aboveskip=1cm,									% the space above the displayed listing
+ backgroundcolor=\color{lightgray},							% background color to fill the listings with
+			breaklines
+}
+% \renewcommand{\lstlistlistingname}{Quellcodeverzeichnis}
+%\renewcommand{\baselinestretch}{1.5}\normalsize
+
+% Schusterjungen/Hurenkinder ausschließen
+\clubpenalty = 10000
+\widowpenalty = 10000
+\displaywidowpenalty = 10000
+
+\newcommand{\figref}[1]{Abbildung~\ref{fig:#1}}
+\newcommand{\secref}[1]{Abschnitt~\ref{sec:#1}}
+\newcommand{\tabref}[1]{Tabelle~\ref{tbl:#1}}
+\newcommand{\lstref}[1]{Listing~\ref{lst:#1}}
+\newcommand{\srcref}[1]{Zeile~\ref{src:#1}}
+\newcommand{\chpref}[1]{Kapitel~\ref{chp:#1}}
+\newcommand{\icon}{icon~Systemhaus~GmbH\ }
+
+% \usepackage{ifthen}
+% \newcommand{\vgl}[2][]{% #1 = optional, #2 = notwendig
+%   \ifthenelse{\equal{#1}{}}{
+%        % Autor hat kein oder leeres optionales Argument angegeben
+% 		(Vgl. \cite{#2})
+%   }{%
+%        % Autor hat optionales Argument angegeben
+% 		(Vgl. \cite[#1]{#2})
+%   }
+% }
+% \newcommand{\vglausf}[2][]{% #1 = optional, #2 = notwendig
+%   \ifthenelse{\equal{#1}{}}{
+%        % Autor hat kein oder leeres optionales Argument angegeben
+% 		(Vgl. dazu ausführlich \cite{#2})
+%   }{%
+%        % Autor hat optionales Argument angegeben
+% 		(Vgl. dazu ausführlich \cite[#1]{#2})
+%   }
+% }
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\notiz}[1]{\marginpar{\tiny#1}}
+\newcommand{\glentry}[3]{\newglossaryentry{#1}{name={#2},description={{#3}}}}
+
+\usepackage[texcoord]{eso-pic}
+%\newcommand{\startprintinglogo}{
+%	\AddToShipoutPicture{
+%		\parbox[t]{\paperwidth}{
+%			\vspace{0.5cm}
+%			\hspace{16.2cm}
+%			\includegraphics[width=5.36cm,height=2.0cm]{includes/dhbw}
+%		}
+%	}
+%}

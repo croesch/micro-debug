@@ -1,0 +1,132 @@
+\chapter{Konzept}
+Zunächst soll der Debugger für eine Bedienung per Kommandozeile entwickelt werden. Der Benutzer soll den Debugger starten können und anschließend über die Eingabe von verschiedenen Kommandos steuern können.
+
+Um entsprechenden (Mikro-)Assembler-Bytecode debuggen zu können, ist es nötig den CISC-Prozessor simulieren zu können. Im Jahr 2004 wurde von Thomas Kutzer eine Studienarbeit zum Thema ``Mic-1 Simulator'' verfasst. Der Debugger soll den darin entwickelten Simulator ersetzen und um einige Funktionen ergänzen. Der Debugger soll sich daher per Kommandozeile bedienen lassen, wie der Simulator --- das heißt, er muss folgende Befehle unterstützen:
+\begin{description}
+\item[help] \hspace*{\fill}\\
+
+Zeigt einen Hilfe-Text an, der die möglichen Befehle und jeweils eine kurze Beschreibung anzeigt.
+
+\item[run] \hspace*{\fill}\\
+
+Der Debugger simuliert die Abarbeitung des Assembler- und Mikro-Assembler-Programms bis zu einem Haltepunkt oder bis zum Programmende.
+
+\item[step] \emph{[n]}
+
+Der Debugger simuliert die Ausführung von \emph{n} Instruktionen des Assembler-Programms. Hierbei ist der Parameter \emph{n} eine natürliche Zahl und kann weggelassen werden; in diesem Fall wird eine Instruktion ausgeführt.
+
+\item[reset] \hspace*{\fill}\\
+
+Der Debugger wird in den Anfangszustand zurückgesetzt: Der Debugger verhält sich, als wäre er gerade gestartet worden.
+
+\item[set] \emph{Register Wert}
+
+Es wird das angegebene \emph{Register} auf den übergebenen \emph{Wert} gesetzt; dieser muss als Dezimalzahl eingegeben werden.
+
+\item[setmemory] \emph{Adresse Wert}
+
+Es wird das \emph{Wort} an der angegebenen \emph{Adresse} auf den übergebenen \emph{Wert} gesetzt; \emph{Adresse} und \emph{Wert} müssen als Dezimalzahl eingegeben werden. Der Speicher wird byteweise addressiert.
+
+\item[break] \emph{Register=Wert}
+
+Es wird ein bedingter Haltepunkt gesetzt: Sobald das angegebene \emph{Register} den Wert \emph{Wert} erhält, hält der Debugger.
+
+\item[ls-break] \hspace*{\fill}\\
+
+Es werden alle Haltepunkte angezeigt --- mit der jeweiligen Bedingung.
+
+\emph{Beachte:} Dieser Befehl entspricht in etwa dem Befehl \texttt{rmbreak} aus dem Simulator von Thomas Kutzer. Da sich die Funktionalität allerdings verändert hat, wird alternativ der Befehl \texttt{ls-break} benutzt.
+
+\item[ls-reg] \emph{[Register]}
+
+Es wird der Inhalt von \emph{Register} angezeigt. Wird der optionale Parameter weggelassen, werden die Inhalte aller Register angezeigt.
+
+\emph{Hinweis:} Dieser Befehl entspricht dem Befehl \texttt{show} aus dem Simulator von Thomas Kutzer.
+
+\item[ls-mem] \emph{Start Stop}
+
+Es wird der Inhalt des Hauptspeichers zwischen den Adressen \emph{Start} und \emph{Stop} angezeigt. Die Adressen müssen als Dezimalzahl angegeben werden und adressieren den Speicher byteweise.
+
+\emph{Hinweis:} Dieser Befehl entspricht dem Befehl \texttt{dump} aus dem Simulator von Thomas Kutzer.
+
+\item[trace-reg] \emph{[Register]}
+
+Es wird das \emph{Register} zum \emph{Beobachten} registriert, dadurch wird dessen Inhalt nach jedem Simulationsschritt des Debuggers angezeigt. Wird der optionale Parameter weggelassen, werden alle Register zum \emph{Beobachten} registriert.
+
+\emph{Hinweis:} Dieser Befehl entspricht dem Befehl \texttt{trace} aus dem Simulator von Thomas Kutzer.
+
+\item[untrace-reg] \emph{[Register]}
+
+Es wird das \emph{Register} vom \emph{Beobachten} deregistriert, dadurch wird dessen Inhalt nach einem Simulationsschritt des Debuggers nicht mehr angezeigt. Wird der optionale Parameter weggelassen, werden alle Register deregistriert.
+
+\emph{Hinweis:} Dieser Befehl entspricht dem Befehl \texttt{untrace} aus dem Simulator von Thomas Kutzer.
+
+% TODO überprüfen, ob das wirklich umsetzbar ist!
+\item[trace-var] \emph{[Variable]}
+
+Es wird die \emph{Variable} zum \emph{Beobachten} registriert, dadurch wird deren Inhalt nach jedem Simulationsschritt des Debuggers angezeigt. Wird der optionale Parameter weggelassen, werden alle Variablen zum \emph{Beobachten} registriert.
+
+\item[untrace-reg] \emph{[Register]}
+
+Es wird die \emph{Variable} vom \emph{Beobachten} deregistriert, dadurch wird deren Inhalt nach einem Simulationsschritt des Debuggers nicht mehr angezeigt. Wird der optionale Parameter weggelassen, werden alle Variablen deregistriert.
+
+\item[trace-mic] \hspace*{\fill}\\
+
+Es wird der \emph{Mikro-Assembler-Code} zum \emph{Beobachten} registriert, dadurch wird jede ausgeführte Mikro-Instruktion des Debuggers angezeigt.
+
+\item[untrace-mic] \hspace*{\fill}\\
+
+Es wird der \emph{Mikro-Assembler-Code} zum \emph{Beobachten} deregistriert, dadurch wird ausgeführte Mikro-Instruktionen des Debuggers nicht mehr angezeigt.
+
+\item[trace-mac] \hspace*{\fill}\\
+
+Es wird der \emph{Assembler-Code} zum \emph{Beobachten} registriert, dadurch wird jede ausgeführte Assembler-Instruktion des Debuggers angezeigt.
+
+\item[untrace-mac] \hspace*{\fill}\\
+
+Es wird der \emph{Assembler-Code} zum \emph{Beobachten} deregistriert, dadurch wird ausgeführte Assembler-Instruktionen des Debuggers nicht mehr angezeigt.
+
+\item[exit] \hspace*{\fill}\\
+
+Der Debugger wird beendet.
+\end{description}
+
+Zusätzlich zu den im Simulator vorhandenen Befehlen soll der Debugger folgende Befehle unterstützen:
+\begin{description}
+\item[micro-step] \emph{[n]}
+
+Der Debugger simuliert die Ausführung von \emph{n} Instruktionen des Mikro-Assembler-Programms. Hierbei ist der Parameter \emph{n} eine natürliche Zahl und kann weggelassen werden; in diesem Fall wird eine Instruktion ausgeführt.
+
+\item[rm-break] \emph{Nummer}
+
+Es wird der Haltepunkt \emph{Nummer} entfernt. Der Parameter \emph{Nummer} ist eine natürliche Zahl und bezieht sich auf die Nummerierung, die durch \texttt{ls-break} erhalten wird. Die Haltepunkte werden anschließend neu nummeriert, so dass ein erneuter Aufruf von \texttt{ls-break} empfohlen wird.
+
+\item[micro-break] \emph{Adresse}
+
+Es wird ein Haltepunkt hinzugefügt, der die Simulation des Debuggers anhält, sobald der Bytecode des Mikro-Assemblers an der \emph{Adresse} ausgeführt werden soll. \emph{Adresse} wird hierbei als Dezimalzahl übergeben.
+
+\item[macro-break] \emph{Adresse}
+
+Es wird ein Haltepunkt hinzugefügt, der die Simulation des Debuggers anhält, sobald der Bytecode des Assemblers an der \emph{Adresse} ausgeführt werden soll. \emph{Adresse} wird hierbei als Dezimalzahl übergeben.
+
+\item[ls-stack] \hspace*{\fill}\\
+
+Es wird der aktuelle Inhalt des Stacks angezeigt.
+
+\item[ls-micro-code] \emph{[Nummer1 [Nummer2]]}
+
+Es wird der disassemblierte Programmcode des Mikro-Assemblers angezeigt. Dabei gibt es drei Varianten des Befehls:
+\begin{itemize}
+\item Ohne Parameter wird der komplette Mikro-Assembler-Code angezeigt.
+\item Mit einem Parameter \emph{Nummer1} wird die angegebene Anzahl an Zeilen vor und nach der nächsten auszuführenden Codezeile angezeigt.
+\item Mit zwei Parametern, die beide Zeilennummern darstellen, wird der Code von Zeile \emph{Nummer1} bis zur Zeile \emph{Nummer2} angezeigt. 
+\end{itemize}
+
+\item[ls-macro-code] \emph{[Nummer1 [Nummer2]]}
+
+Dieser Befehl entspricht dem Befehl \texttt{ls-micro-code}, mit dem Unterschied, dass \texttt{ls-macro-code} sich auf den disassemblierten Assembler-Code bezieht.
+
+\end{description}
+
+% TODO überlegen
+Unabhängig von den Befehlen soll es möglich sein gewisse Zahlen sowohl als Dezimal- als auch Hexadezimalzahl anzugeben. Möglicherweise sind auch Binär- und Oktalzahlen nötig. Es ist möglich dies über ein Parameter beim Programmstart global zu setzen, oder für jeden Befehl einzeln zu bestimmen.
