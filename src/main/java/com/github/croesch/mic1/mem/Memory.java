@@ -33,6 +33,18 @@ import com.github.croesch.misc.Utils;
  */
 public final class Memory {
 
+  /** a mask to deselect byte 0 */
+  private static final int MASK_BYTE_0 = 0xFFFFFF00;
+
+  /** a mask to deselect byte 1 */
+  private static final int MASK_BYTE_1 = 0xFFFF00FF;
+
+  /** a mask to deselect byte 2 */
+  private static final int MASK_BYTE_2 = 0xFF00FFFF;
+
+  /** a mask to deselect byte 3 */
+  private static final int MASK_BYTE_3 = 0x00FFFFFF;
+
   /** mask to select a byte from an int */
   private static final int BYTE_MASK = 0xFF;
 
@@ -73,12 +85,26 @@ public final class Memory {
    * @since Date: Nov 23, 2011
    * @param maxSize the size of the memory in words (32-bit-values)
    * @param programStream the input stream
+   * @throws FileFormatException if the stream doesn't provide valid data.
    */
   public Memory(final int maxSize, final InputStream programStream) throws FileFormatException {
     this.memory = new int[maxSize];
     initMemory(programStream);
   }
 
+  /**
+   * Initialises the memory with the data fetched from the given {@link InputStream}.
+   * 
+   * @since Date: Nov 26, 2011
+   * @param stream the stream that provides the data to fill the memory with
+   * @throws FileFormatException if
+   *         <ul>
+   *         <li>the stream does only contain less or equal than four bytes</li>
+   *         <li>the magic number isn't correct</li>
+   *         <li>the format of the data is invalid</li>
+   *         <li>an {@link IOException} occurs</li>
+   *         </ul>
+   */
   private void initMemory(final InputStream stream) throws FileFormatException {
     Utils.checkMagicNumber(stream, IJVM_MAGIC_NUMBER);
 
@@ -91,6 +117,7 @@ public final class Memory {
           throw new FileFormatException("unexpected end of file");
         }
         final int blockLength = Utils.bytesToInt(bytes[0], bytes[1], bytes[2], bytes[3]);
+
         readBlock(startAddress, blockLength, stream);
       }
     } catch (final IOException e) {
@@ -98,34 +125,48 @@ public final class Memory {
     }
   }
 
-  private void readBlock(final int start, final int length, final InputStream stream) throws IOException {
-    for (int i = 0; i < length; ++i) {
-      int val = stream.read();
-      if (val == -1) {
-        //TODO
-      }
+  /**
+   * Reads a block of data from the given stream and stores it in the memory.
+   * 
+   * @since Date: Nov 26, 2011
+   * @param start a byte address in the memory where to start storing the data
+   * @param length the number of bytes to read
+   * @param stream the {@link InputStream} to read the data from
+   * @throws FileFormatException if an error occurs
+   */
+  private void readBlock(final int start, final int length, final InputStream stream) throws FileFormatException {
+    try {
+      for (int i = 0; i < length; ++i) {
+        int val = stream.read();
 
-      final int addr = start + i;
-      final int mask;
-      final int word = this.memory[addr / 4];
-      switch (addr % 4) {
-        case 0:
-          val <<= Byte.SIZE * 3;
-          mask = 0x00FFFFFF;
-          break;
-        case 1:
-          val <<= Byte.SIZE * 2;
-          mask = 0xFF00FFFF;
-          break;
-        case 2:
-          val <<= Byte.SIZE;
-          mask = 0xFFFF00FF;
-          break;
-        default:
-          mask = 0xFFFFFF00;
-          break;
+        if (val == -1) {
+          throw new FileFormatException("Unexpected end of file.");
+        }
+
+        final int addr = start + i;
+        final int mask;
+        final int word = this.memory[addr / 4];
+        switch (addr % 4) {
+          case 0:
+            val <<= Byte.SIZE * 3;
+            mask = MASK_BYTE_3;
+            break;
+          case 1:
+            val <<= Byte.SIZE * 2;
+            mask = MASK_BYTE_2;
+            break;
+          case 2:
+            val <<= Byte.SIZE;
+            mask = MASK_BYTE_1;
+            break;
+          default:
+            mask = MASK_BYTE_0;
+            break;
+        }
+        this.memory[addr / 4] = (word & mask) | val;
       }
-      this.memory[addr / 4] = (word & mask) | val;
+    } catch (final IOException e) {
+      throw new FileFormatException(e);
     }
   }
 

@@ -50,6 +50,41 @@ public class MemoryTest {
     this.mem = new Memory(Byte.MAX_VALUE, ClassLoader.getSystemResourceAsStream("mic1/test.ijvm"));
   }
 
+  @Test(expected = FileFormatException.class)
+  public void testConstructor_WrongMagicNumber() throws FileFormatException {
+    this.mem = new Memory(4, ClassLoader.getSystemResourceAsStream("mic1/wrong-file-format-0.ijvm"));
+  }
+
+  @Test
+  public void testConstructor_EmptyData() throws FileFormatException {
+    // file ends after magic number
+    this.mem = new Memory(4, ClassLoader.getSystemResourceAsStream("mic1/wrong-file-format-1.ijvm"));
+  }
+
+  @Test(expected = FileFormatException.class)
+  public void testConstructor_UnexpectedEOF_0() throws FileFormatException {
+    // file ends after reading block size (no data in block)
+    this.mem = new Memory(4, ClassLoader.getSystemResourceAsStream("mic1/wrong-file-format-2.ijvm"));
+  }
+
+  @Test(expected = FileFormatException.class)
+  public void testConstructor_UnexpectedEOF_1() throws FileFormatException {
+    // file ends while reading data of a block
+    this.mem = new Memory(4, ClassLoader.getSystemResourceAsStream("mic1/wrong-file-format-3.ijvm"));
+  }
+
+  @Test
+  public void testConstructor_UnexpectedEOF_2() throws FileFormatException {
+    // file ends while reading block size
+    this.mem = new Memory(4, ClassLoader.getSystemResourceAsStream("mic1/wrong-file-format-4.ijvm"));
+  }
+
+  @Test(expected = FileFormatException.class)
+  public void testConstructor_UnexpectedEOF_3() throws FileFormatException {
+    // file ends while reading start address for memory
+    this.mem = new Memory(4, ClassLoader.getSystemResourceAsStream("mic1/wrong-file-format-5.ijvm"));
+  }
+
   @Test
   public void testConstructor_FileWith_OverlappingByte_0() throws FileFormatException {
     this.mem = new Memory(1, ClassLoader.getSystemResourceAsStream("mic1/ff-file-0.ijvm"));
