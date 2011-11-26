@@ -35,3 +35,8 @@
 23.11.2011 (5,5 h)
 	- Entwicklung des Hauptspeichers, vor allem mit Einlesemöglichkeit von Binärdateien und Untersuchungen der vorhandenen Codes (Java, C++ der anderen Projekte)
 	- Utility Klasse erstellt, um wiederkehrende Elemente zu sammeln
+26.11.2011 (6,5 h)
+	- Entwicklung des Output abgeschlossen
+	- LaTeX Dokumentation zu Projekt hinzugefügt
+	- Input entwickelt
+	* Test für Input sehr lange versucht zu entwickeln (InputStream vs. System.in)

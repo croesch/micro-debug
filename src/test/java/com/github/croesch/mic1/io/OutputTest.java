@@ -27,7 +27,6 @@ import java.io.PrintStream;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -40,11 +39,6 @@ public class OutputTest {
 
   private static ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-  @BeforeClass
-  public static void init() {
-    Output.setOut(new PrintStream(out));
-  }
-
   @AfterClass
   public static void tearDown() {
     Output.setOut(System.out);
@@ -52,6 +46,7 @@ public class OutputTest {
 
   @Before
   public void before() {
+    Output.setOut(new PrintStream(out));
     Output.setBuffered(true);
   }
 
@@ -70,6 +65,30 @@ public class OutputTest {
     out.reset();
     Output.print((byte) '2');
     assertThat(out.toString()).isEqualTo("2");
+  }
+
+  @Test
+  public void testSetOut() throws IOException {
+    final ByteArrayOutputStream out2 = new ByteArrayOutputStream();
+
+    Output.setOut(new PrintStream(out2));
+    Output.print((byte) '9');
+    Output.print((byte) '8');
+    assertThat(out.toString()).isEmpty();
+    assertThat(out2.toString()).isEmpty();
+    Output.print((byte) 10);
+    assertThat(out.toString()).isEmpty();
+    assertThat(out2.toString()).isEqualTo("98\n");
+    out2.reset();
+
+    Output.setOut(null);
+
+    Output.print((byte) '7');
+    Output.print((byte) '6');
+    assertThat(out.toString()).isEmpty();
+    assertThat(out2.toString()).isEmpty();
+    Output.print((byte) 10);
+    assertThat(out2.toString()).isEqualTo("76\n");
   }
 
   @Test
