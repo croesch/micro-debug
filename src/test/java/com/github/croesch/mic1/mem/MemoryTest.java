@@ -21,12 +21,15 @@ package com.github.croesch.mic1.mem;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.github.croesch.TestUtil;
 import com.github.croesch.error.FileFormatException;
+import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.register.Register;
 
 /**
@@ -311,5 +314,32 @@ public class MemoryTest {
     old = Register.H.getValue();
     this.mem.fillRegisters(null, Register.H);
     assertThat(Register.H.getValue()).isEqualTo(old);
+  }
+
+  @Test
+  public void testWriteOut() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Output.setOut(new PrintStream(out));
+
+    this.mem.setWordAddress(Memory.MEMORY_MAPPED_IO_ADDRESS);
+    // 0x78 = 120 -> x
+    this.mem.setWordValue(0x12345678);
+    this.mem.setWrite(true);
+
+    assertThat(out.toString()).isEmpty();
+    this.mem.poke();
+    assertThat(out.toString()).isEmpty();
+    Output.flush();
+    assertThat(out.toString()).isEqualTo("x");
+
+    int old = Register.H.getValue();
+    this.mem.fillRegisters(Register.H, null);
+    assertThat(Register.H.getValue()).isEqualTo(old);
+
+    old = Register.H.getValue();
+    this.mem.fillRegisters(null, Register.H);
+    assertThat(Register.H.getValue()).isEqualTo(old);
+
+    Output.setOut(System.out);
   }
 }

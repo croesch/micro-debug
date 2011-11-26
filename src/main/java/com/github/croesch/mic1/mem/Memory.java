@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.github.croesch.error.FileFormatException;
+import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.register.Register;
 import com.github.croesch.misc.Utils;
 
@@ -324,7 +325,7 @@ public final class Memory {
    */
   private void write() {
     if (this.wordAddress == MEMORY_MAPPED_IO_ADDRESS) {
-      // TODO implement me.
+      Output.print((byte) this.wordValue);
     } else {
       this.memory[this.wordAddress] = this.wordValue;
     }
