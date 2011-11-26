@@ -45,7 +45,13 @@ public final class Mic1ControlStore {
    * 
    * @since Date: Nov 19, 2011
    * @param in the stream to read the instructions from
-   * @throws FileFormatException if there are not enough or too many bytes in the stream
+   * @throws FileFormatException if
+   *         <ul>
+   *         <li>the stream does only contain less or equal than four bytes</li>
+   *         <li>the magic number isn't correct</li>
+   *         <li>the stream contains too much data</li>
+   *         <li>an {@link IOException} occurs</li>
+   *         </ul>
    */
   public Mic1ControlStore(final InputStream in) throws FileFormatException {
     Utils.checkMagicNumber(in, Mic1InstructionReader.MIC1_MAGIC_NUMBER);
