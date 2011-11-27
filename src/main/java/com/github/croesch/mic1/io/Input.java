@@ -20,8 +20,8 @@ package com.github.croesch.mic1.io;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 
 /**
  * This class represents the connection to the input of the mic1-processor. It is called buffered, because it reads one
@@ -32,8 +32,10 @@ import java.io.Reader;
  */
 public final class Input {
 
+  /** the reader that reads from the input stream */
   private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
+  /** the current line */
   private static String line = "";
 
   /**
@@ -45,16 +47,32 @@ public final class Input {
     throw new AssertionError("called constructor of utility class");
   }
 
-  public static void setIn(final Reader reader) {
-    if (reader != null) {
-      in = new BufferedReader(reader);
+  /**
+   * Sets the input stream for the component. The processor will now read from the given stream.
+   * 
+   * @since Date: Nov 27, 2011
+   * @param stream the new input stream, mustn't be <code>null</code>
+   */
+  public static void setIn(final InputStream stream) {
+    if (stream != null) {
+      in = new BufferedReader(new InputStreamReader(stream));
       line = null;
     }
   }
 
+  /**
+   * Reads a single byte from the given input stream. If the buffer is empty this will include reading a complete line
+   * from the input stream.
+   * 
+   * @since Date: Nov 27, 2011
+   * @return the byte value of the read byte, or -1 if the stream doesn't return anything to read.
+   */
   public static byte read() {
-    while (line == null || line.isEmpty()) {
+    if (line == null || line.isEmpty()) {
       refill();
+    }
+    if (line == null || line.isEmpty()) {
+      return -1;
     }
     final byte read = line.getBytes()[0];
     line = line.substring(1);
@@ -62,6 +80,11 @@ public final class Input {
     return read;
   }
 
+  /**
+   * Reads a new line from the input stream to refill the internal buffer.
+   * 
+   * @since Date: Nov 27, 2011
+   */
   private static void refill() {
     try {
       line = in.readLine();
