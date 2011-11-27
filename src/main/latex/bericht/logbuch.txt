@@ -40,3 +40,5 @@
 	- LaTeX Dokumentation zu Projekt hinzugefügt
 	- Input entwickelt
 	* Test für Input sehr lange versucht zu entwickeln (InputStream vs. System.in)
+27.11.2011 (0,5 h)
+	- Input in Hauptspeicher integriert, Speicher damit abgeschlossen

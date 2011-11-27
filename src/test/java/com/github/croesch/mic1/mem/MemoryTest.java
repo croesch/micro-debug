@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import com.github.croesch.TestUtil;
 import com.github.croesch.error.FileFormatException;
+import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.register.Register;
 
@@ -341,5 +342,45 @@ public class MemoryTest {
     assertThat(Register.H.getValue()).isEqualTo(old);
 
     Output.setOut(System.out);
+  }
+
+  @Test
+  public void testReadIn() {
+    // H -> 72 = 0x48
+    final ByteArrayInputStream in = new ByteArrayInputStream("Hi!".getBytes());
+    Input.setIn(in);
+
+    this.mem.setWordAddress(Memory.MEMORY_MAPPED_IO_ADDRESS);
+    // write something to wordValue, that'll be overridden
+    this.mem.setWordValue(0x12345678);
+    this.mem.setRead(true);
+
+    this.mem.fillRegisters(Register.H, null);
+    assertThat(Register.H.getValue()).isEqualTo(0x12345678);
+    this.mem.poke();
+    this.mem.fillRegisters(Register.H, null);
+    assertThat(Register.H.getValue()).isEqualTo(0x48);
+
+    Input.setIn(System.in);
+  }
+
+  @Test
+  public void testReadEmptyStream() {
+    final ByteArrayInputStream in = new ByteArrayInputStream("".getBytes());
+    Input.setIn(in);
+
+    this.mem.setWordAddress(Memory.MEMORY_MAPPED_IO_ADDRESS);
+    // write something to wordValue, that'll be overridden
+    this.mem.setWordValue(0x12345678);
+    this.mem.setRead(true);
+
+    this.mem.fillRegisters(Register.H, null);
+    assertThat(Register.H.getValue()).isEqualTo(0x12345678);
+    this.mem.poke();
+    this.mem.fillRegisters(Register.H, null);
+    // read -1 but as byte value -> 0xFF as integer
+    assertThat(Register.H.getValue()).isEqualTo(0xFF);
+
+    Input.setIn(System.in);
   }
 }
