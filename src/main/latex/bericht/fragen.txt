@@ -60,3 +60,12 @@ Was soll geschehen, wenn auf eine undefinierte (negativ / höher als Maximum) Sp
 
 
 Die magic-number für IJVM-Dateien prüfen? Das Format einfach nutzen?
+
+
+Skript 7.5.6 i=0x68 muss i=0x69 lauten.
+
+
+Wie nop und wie halt implementieren/verstehen?
+
+
+Initialwerte für Register?

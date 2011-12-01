@@ -73,6 +73,20 @@ public final class Mic1 {
     //TODO implement maximum size of memory as argument
     final int maxSize = 0x10000;
     this.memory = new Memory(maxSize, asm);
+
+    initRegisters();
+  }
+
+  /**
+   * Initializes the registers values.
+   * 
+   * @since Date: Dec 1, 2011
+   */
+  private void initRegisters() {
+    Register.PC.setValue(0xFFFFFFFF);
+    Register.SP.setValue(0xC000);
+    Register.LV.setValue(0x8000);
+    Register.CPP.setValue(0x4000);
   }
 
   /**
