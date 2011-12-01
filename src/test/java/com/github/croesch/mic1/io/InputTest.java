@@ -20,13 +20,10 @@ package com.github.croesch.mic1.io;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -53,24 +50,48 @@ public class InputTest {
   }
 
   /**
-   * TODO fix test<br />
-   * Test should test that processor reads a line, then somebody else reads a line and then the processor again reads a
-   * line. But the processor reads all of the test input stream and the other one cannot read anything.
+   * Tests that processor reads a line, then somebody else reads a line and then the processor again reads a line.
    */
   @Test
-  @Ignore
   public void testRead() throws IOException {
 
-    final ByteArrayInputStream in = new ByteArrayInputStream("Test\nnicht gelesen\nHi!".getBytes());
-    // works with System.in
+    final ByteArrayInputStream in = new ByteArrayInputStream("Test\nNOT\nHi!".getBytes());
     Input.setIn(in);
 
     assertThat(Input.read()).isEqualTo((byte) 'T');
     assertThat(Input.read()).isEqualTo((byte) 'e');
 
-    final BufferedReader bin = new BufferedReader(new InputStreamReader(in));
-    assertThat(bin.readLine()).isEqualTo("nicht gelesen");
+    assertThat(in.read()).isEqualTo('N');
+    assertThat(in.read()).isEqualTo('O');
+    assertThat(in.read()).isEqualTo('T');
+
+    assertThat(Input.read()).isEqualTo((byte) 's');
+    assertThat(Input.read()).isEqualTo((byte) 't');
+
+    assertThat(in.read()).isEqualTo('\n');
+
+    assertThat(Input.read()).isEqualTo((byte) '\n');
+    assertThat(Input.read()).isEqualTo((byte) 'H');
+    assertThat(Input.read()).isEqualTo((byte) 'i');
+    assertThat(Input.read()).isEqualTo((byte) '!');
+
+    assertThat(Input.read()).isEqualTo((byte) -1);
 
     Input.setIn(System.in);
+  }
+
+  @Test
+  public void testRead_IOExc() throws IOException {
+    final InputStream in = new InputStream() {
+      @Override
+      public int read() throws IOException {
+        throw new IOException();
+      }
+    };
+
+    Input.setIn(in);
+    assertThat(Input.read()).isEqualTo((byte) -1);
+    Input.setIn(System.in);
+
   }
 }

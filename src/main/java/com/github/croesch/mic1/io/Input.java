@@ -18,10 +18,8 @@
  */
 package com.github.croesch.mic1.io;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 /**
  * This class represents the connection to the input of the mic1-processor. It is called buffered, because it reads one
@@ -32,8 +30,8 @@ import java.io.InputStreamReader;
  */
 public final class Input {
 
-  /** the reader that reads from the input stream */
-  private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+  /** the input stream to read data from */
+  private static InputStream in = System.in;
 
   /** the current line */
   private static String line = "";
@@ -55,7 +53,7 @@ public final class Input {
    */
   public static void setIn(final InputStream stream) {
     if (stream != null) {
-      in = new BufferedReader(new InputStreamReader(stream));
+      in = stream;
       line = null;
     }
   }
@@ -65,15 +63,19 @@ public final class Input {
    * from the input stream.
    * 
    * @since Date: Nov 27, 2011
-   * @return the byte value of the read byte, or -1 if the stream doesn't return anything to read.
+   * @return the byte value of the read byte,<br>
+   *         or <code>-1</code> if the stream doesn't return anything to read.
    */
   public static byte read() {
     if (line == null || line.isEmpty()) {
-      refill();
+      // the buffer is empty, so read the next line
+      readLine();
     }
     if (line == null || line.isEmpty()) {
+      // if there is still no data, return -1
       return -1;
     }
+    // read first byte and remove it from buffer
     final byte read = line.getBytes()[0];
     line = line.substring(1);
 
@@ -81,14 +83,31 @@ public final class Input {
   }
 
   /**
-   * Reads a new line from the input stream to refill the internal buffer.
+   * Reads a line from the input stream to refill the internal buffer.
    * 
    * @since Date: Nov 27, 2011
    */
-  private static void refill() {
+  private static void readLine() {
     try {
-      line = in.readLine();
+      final StringBuilder sb = new StringBuilder();
+
+      boolean endOfLine = false;
+      while (!endOfLine) {
+        final int read = in.read();
+        if (read == -1) {
+          // the end of the stream has been reached
+          endOfLine = true;
+        } else {
+          // we have read data from the stream, append it
+          sb.append((char) read);
+          // if the LF is read, update the flag
+          endOfLine = read == '\n';
+        }
+      }
+      // set the buffer to the read data
+      line = sb.toString();
     } catch (final IOException e) {
+      // TODO handle this in a logger
       e.printStackTrace();
     }
   }
