@@ -69,3 +69,6 @@ Wie nop und wie halt implementieren/verstehen?
 
 
 Initialwerte für Register?
+
+
+Wie ijvm-Code von Daten unterscheiden? Beim Ausgeben ..
