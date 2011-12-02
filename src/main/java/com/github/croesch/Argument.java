@@ -22,6 +22,8 @@ import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
 
+import com.github.croesch.i18n.Text;
+
 /**
  * Enumeration of all possible command line arguments for the debugger.
  * 
@@ -30,14 +32,50 @@ import java.util.Map;
  */
 enum Argument {
 
+  /** argument to define the debug level of the program */
+  DEBUG_LEVEL (1) {
+    @Override
+    public boolean execute() {
+      // TODO Auto-generated method stub
+      return true;
+    }
+  },
+
   /** argument to view a help about usage of the debugger */
-  HELP,
+  HELP {
+    @Override
+    public boolean execute() {
+      // TODO Auto-generated method stub
+      return false;
+    }
+  },
+
+  /** argument that signalizes an unknown argument */
+  ERROR_UNKNOWN {
+    @Override
+    public boolean execute() {
+      // TODO Auto-generated method stub
+      return false;
+    }
+  },
+
+  /** argument that signalizes an argument with the wrong number of parameters */
+  ERROR_PARAM_NUMBER {
+    @Override
+    public boolean execute() {
+      // TODO Auto-generated method stub
+      return false;
+    }
+  },
 
   /** argument to view the version of the debugger */
-  VERSION,
-
-  /** argument to define the debug level of the program */
-  DEBUG_LEVEL (1);
+  VERSION {
+    @Override
+    public boolean execute() {
+      System.out.println(Text.VERSION);
+      return false;
+    }
+  };
 
   /** the different ways this argument can be called */
   private final String[] args = new String[2];
@@ -139,13 +177,18 @@ enum Argument {
       for (int i = 0; i < args.length; ++i) {
         if (args[i] != null) {
           final Argument arg = of(args[i]);
-          if (arg != null) {
+          if (arg == null) {
+            addErrorArgument(map, ERROR_UNKNOWN, args[i]);
+          } else {
             final String[] params = new String[arg.getNumberOfParameters()];
             if (i + arg.getNumberOfParameters() < args.length) {
               for (int j = 0; j < arg.getNumberOfParameters(); ++j) {
                 params[j] = args[j + i + 1];
               }
+              i += arg.getNumberOfParameters();
               map.put(arg, params);
+            } else {
+              addErrorArgument(map, Argument.ERROR_PARAM_NUMBER, args[i]);
             }
           }
         }
@@ -153,4 +196,51 @@ enum Argument {
     }
     return map;
   }
+
+  /**
+   * Appends the given value to the array belonging to the given argument in the given map.
+   * 
+   * @since Date: Dec 2, 2011
+   * @param map the map, that'll contain a key argument and an array that contains at least the given value
+   * @param arg the argument that is the key in the given map
+   * @param value the new value to append to the array, belonging to the key in the map.
+   */
+  private static void addErrorArgument(final Map<Argument, String[]> map, final Argument arg, final String value) {
+    if (!map.containsKey(arg)) {
+      // key not in map -> create it
+      map.put(arg, new String[] { value });
+    } else {
+      // key already in map -> append value to the array
+      final String[] newArray = appendValueToArray(map.get(arg), value);
+      map.put(arg, newArray);
+    }
+  }
+
+  /**
+   * Appends a value to the given array and returns the new created array.
+   * 
+   * @since Date: Dec 2, 2011
+   * @param old the array to append the value to
+   * @param value the value to append
+   * @return the new array, containing elements from the old array and the new value.
+   */
+  private static String[] appendValueToArray(final String[] old, final String value) {
+    final String[] newArray = new String[old.length + 1];
+    // copy array
+    for (int i = 0; i < old.length; ++i) {
+      newArray[i] = old[i];
+    }
+    // set new value
+    newArray[old.length] = value;
+
+    return newArray;
+  }
+
+  /**
+   * Executes commands that result in the specific argument.
+   * 
+   * @since Date: Dec 2, 2011
+   * @return <code>false</code>, if the argument enforces the application to stop
+   */
+  public abstract boolean execute();
 }
