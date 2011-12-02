@@ -25,6 +25,7 @@ import java.io.PrintStream;
 
 import org.junit.Test;
 
+import com.github.croesch.console.Printer;
 import com.github.croesch.i18n.Text;
 
 /**
@@ -194,13 +195,10 @@ public class ArgumentTest {
 
   @Test
   public final void testExecuteVersion() {
-    final PrintStream oldOut = System.out;
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(out));
+    Printer.setPrintStream(new PrintStream(out));
 
     assertThat(Argument.VERSION.execute()).isFalse();
     assertThat(out.toString()).isEqualTo(Text.VERSION.text() + "\n");
-
-    System.setOut(oldOut);
   }
 }

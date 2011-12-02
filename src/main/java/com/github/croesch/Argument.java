@@ -22,6 +22,7 @@ import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
 
+import com.github.croesch.console.Printer;
 import com.github.croesch.i18n.Text;
 
 /**
@@ -72,7 +73,7 @@ enum Argument {
   VERSION {
     @Override
     public boolean execute() {
-      System.out.println(Text.VERSION);
+      Printer.println(Text.VERSION);
       return false;
     }
   };
