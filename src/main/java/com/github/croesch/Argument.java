@@ -227,9 +227,7 @@ enum Argument {
   private static String[] appendValueToArray(final String[] old, final String value) {
     final String[] newArray = new String[old.length + 1];
     // copy array
-    for (int i = 0; i < old.length; ++i) {
-      newArray[i] = old[i];
-    }
+    System.arraycopy(old, 0, newArray, 0, old.length);
     // set new value
     newArray[old.length] = value;
 
