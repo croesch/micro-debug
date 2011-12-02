@@ -44,3 +44,8 @@
 	- Input in Hauptspeicher integriert, Speicher damit abgeschlossen
 01.12.2011 (2 h)
 	- Tests für Prozessor geschrieben (Hi!\n und Performance)
+02.12.2011 (3 h)
+	- Logger mit Konfiguration angebunden
+	- Argumente angebunden
+	- i18n-Mechanismus angebunden inklusive xml-Datei
+	- Printer implementiert, als Schnittstelle zur Konsolenausgabe
