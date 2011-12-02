@@ -29,6 +29,7 @@ import com.github.croesch.console.Printer;
 import com.github.croesch.i18n.Text;
 
 /**
+ * TODO write test, if there's an argument with at least one parameter<br>
  * Provides several test methods for {@link Argument}.
  * 
  * @author croesch
@@ -36,9 +37,6 @@ import com.github.croesch.i18n.Text;
  */
 public class ArgumentTest {
 
-  /**
-   * Test method for {@link Argument#of(String)}.
-   */
   @Test
   public final void testOf_DifferentValues() {
     assertThat(Argument.of("--help")).isSameAs(Argument.HELP);
@@ -47,13 +45,10 @@ public class ArgumentTest {
     assertThat(Argument.of("--version")).isSameAs(Argument.VERSION);
     assertThat(Argument.of("-v")).isSameAs(Argument.VERSION);
 
-    assertThat(Argument.of("--debug-level")).isSameAs(Argument.DEBUG_LEVEL);
-    assertThat(Argument.of("-d")).isSameAs(Argument.DEBUG_LEVEL);
+    //    assertThat(Argument.of("--debug-level")).isSameAs(Argument.DEBUG_LEVEL);
+    //    assertThat(Argument.of("-d")).isSameAs(Argument.DEBUG_LEVEL);
   }
 
-  /**
-   * Test method for {@link Argument#of(String)}.
-   */
   @Test
   public final void testOf_Unkown() {
     assertThat(Argument.of(null)).isNull();
@@ -61,37 +56,23 @@ public class ArgumentTest {
     assertThat(Argument.of(" ")).isNull();
     assertThat(Argument.of("HELP")).isNull();
     assertThat(Argument.of("-help")).isNull();
-    assertThat(Argument.of("-debug-level")).isNull();
-    assertThat(Argument.of("--debug_level")).isNull();
   }
 
-  /**
-   * Test method for {@link Argument#createArgumentList(String[])}.
-   */
   @Test
   public final void testCreateArgumentList_NullDeliversEmptyMap() {
     assertThat(Argument.createArgumentList(null)).isEmpty();
   }
 
-  /**
-   * Test method for {@link Argument#createArgumentList(String[])}.
-   */
   @Test
   public final void testCreateArgumentList_EmptyArrayDeliversEmptyMap() {
     assertThat(Argument.createArgumentList(new String[] {})).isEmpty();
   }
 
-  /**
-   * Test method for {@link Argument#createArgumentList(String[])}.
-   */
   @Test
   public final void testCreateArgumentList_NullArgumentProducesNoEntry() {
     assertThat(Argument.createArgumentList(new String[] { null })).isEmpty();
   }
 
-  /**
-   * Test method for {@link Argument#createArgumentList(String[])}.
-   */
   @Test
   public final void testCreateArgumentList_UnknownArgument() {
     String[] args = new String[] { "" };
@@ -111,9 +92,6 @@ public class ArgumentTest {
     assertThat(Argument.createArgumentList(args).get(Argument.ERROR_UNKNOWN)).containsOnly("asd", "-help");
   }
 
-  /**
-   * Test method for {@link Argument#createArgumentList(String[])}.
-   */
   @Test
   public final void testCreateArgumentList_HelpInArray() {
     String[] args = new String[] { "-h" };
@@ -126,9 +104,6 @@ public class ArgumentTest {
     assertThat(Argument.createArgumentList(args).get(Argument.HELP)).isEmpty();
   }
 
-  /**
-   * Test method for {@link Argument#createArgumentList(String[])}.
-   */
   @Test
   public final void testCreateArgumentList_VersionInArray() {
     String[] args = new String[] { "-v" };
@@ -141,28 +116,22 @@ public class ArgumentTest {
     assertThat(Argument.createArgumentList(args).get(Argument.VERSION)).isEmpty();
   }
 
-  /**
-   * Test method for {@link Argument#createArgumentList(String[])}.
-   */
-  @Test
-  public final void testCreateArgumentList_DebugLevelInArray() {
-    String[] args = new String[] { "-d" };
+  //  @Test
+  //  public final void testCreateArgumentList_DebugLevelInArray() {
+  //    String[] args = new String[] { "-d" };
+  //
+  //    assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.ERROR_PARAM_NUMBER);
+  //    assertThat(Argument.createArgumentList(args).get(Argument.ERROR_PARAM_NUMBER)).containsOnly("-d");
+  //
+  //    args = new String[] { "-d", "2" };
+  //    assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.DEBUG_LEVEL);
+  //    assertThat(Argument.createArgumentList(args).get(Argument.DEBUG_LEVEL)).containsOnly("2");
+  //
+  //    args = new String[] { "--debug-level", "2" };
+  //    assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.DEBUG_LEVEL);
+  //    assertThat(Argument.createArgumentList(args).get(Argument.DEBUG_LEVEL)).containsOnly("2");
+  //  }
 
-    assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.ERROR_PARAM_NUMBER);
-    assertThat(Argument.createArgumentList(args).get(Argument.ERROR_PARAM_NUMBER)).containsOnly("-d");
-
-    args = new String[] { "-d", "2" };
-    assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.DEBUG_LEVEL);
-    assertThat(Argument.createArgumentList(args).get(Argument.DEBUG_LEVEL)).containsOnly("2");
-
-    args = new String[] { "--debug-level", "2" };
-    assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.DEBUG_LEVEL);
-    assertThat(Argument.createArgumentList(args).get(Argument.DEBUG_LEVEL)).containsOnly("2");
-  }
-
-  /**
-   * Test method for {@link Argument#createArgumentList(String[])}.
-   */
   @Test
   public final void testCreateArgumentList() {
     final String[] args = new String[] { "-h", "-v", null, "--help", "--xxno-argument", "null" };
@@ -175,22 +144,17 @@ public class ArgumentTest {
     assertThat(Argument.createArgumentList(args).get(Argument.ERROR_UNKNOWN)).containsOnly("--xxno-argument", "null");
   }
 
-  /**
-   * Test method for {@link Argument#createArgumentList(String[])}.
-   */
   @Test
   public final void testCreateArgumentList2() {
     final String[] args = new String[] { "-h", "-v", null, "--xxno-argument", "null", "-dx", "-d" };
 
-    assertThat(Argument.createArgumentList(args)).hasSize(4);
+    assertThat(Argument.createArgumentList(args)).hasSize(3);
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.VERSION, Argument.HELP,
-                                                                        Argument.ERROR_UNKNOWN,
-                                                                        Argument.ERROR_PARAM_NUMBER);
+                                                                        Argument.ERROR_UNKNOWN);
     assertThat(Argument.createArgumentList(args).get(Argument.HELP)).isEmpty();
     assertThat(Argument.createArgumentList(args).get(Argument.VERSION)).isEmpty();
     assertThat(Argument.createArgumentList(args).get(Argument.ERROR_UNKNOWN)).containsOnly("--xxno-argument", "null",
-                                                                                           "-dx");
-    assertThat(Argument.createArgumentList(args).get(Argument.ERROR_PARAM_NUMBER)).containsOnly("-d");
+                                                                                           "-dx", "-d");
   }
 
   @Test
@@ -198,7 +162,39 @@ public class ArgumentTest {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
 
-    assertThat(Argument.VERSION.execute()).isFalse();
+    assertThat(Argument.VERSION.execute(null)).isFalse();
     assertThat(out.toString()).isEqualTo(Text.VERSION.text() + "\n");
+  }
+
+  @Test
+  public final void testExecuteUnknownArgument() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    assertThat(Argument.ERROR_UNKNOWN.execute(null)).isTrue();
+    assertThat(out.toString()).isEmpty();
+
+    assertThat(Argument.ERROR_UNKNOWN.execute(new String[] {})).isTrue();
+    assertThat(out.toString()).isEmpty();
+
+    assertThat(Argument.ERROR_UNKNOWN.execute(new String[] { null })).isTrue();
+    assertThat(out.toString()).isEmpty();
+
+    assertThat(Argument.ERROR_UNKNOWN.execute(new String[] { "bla" })).isFalse();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("bla")) + "\n");
+
+    out.reset();
+
+    assertThat(Argument.ERROR_UNKNOWN.execute(new String[] { "bla", "--bla", "-wow" })).isFalse();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("bla")) + "\n"
+                                                 + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("--bla")) + "\n"
+                                                 + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("-wow")) + "\n");
+  }
+
+  @Test
+  public void testErrorArgs() {
+    assertThat(Argument.of("--error-unknown")).isNull();
+    assertThat(Argument.of("--error-param-number")).isNull();
+    assertThat(Argument.of("-e")).isNull();
   }
 }

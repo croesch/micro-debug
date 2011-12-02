@@ -32,7 +32,13 @@ import java.util.logging.Logger;
 public enum Text {
 
   /** the text for the version of the program. */
-  VERSION;
+  VERSION,
+
+  /** the text to format an error line output */
+  ERROR,
+
+  /** the text to describe an unknown argument */
+  UNKNOWN_ARGUMENT;
 
   /** the {@link Logger} for this class */
   private final Logger logger = Logger.getLogger(Text.class.getName());

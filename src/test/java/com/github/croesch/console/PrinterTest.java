@@ -25,6 +25,8 @@ import java.io.PrintStream;
 
 import org.junit.Test;
 
+import com.github.croesch.i18n.Text;
+
 /**
  * Provides test cases for {@link Printer}.
  * 
@@ -34,12 +36,30 @@ import org.junit.Test;
 public class PrinterTest {
 
   @Test
+  public void testNullValues() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    Printer.println(null);
+    assertThat(out.toString()).isEmpty();
+
+    Printer.println((String) null);
+    assertThat(out.toString()).isEmpty();
+
+    Printer.printErrorln(null);
+    assertThat(out.toString()).isEmpty();
+  }
+
+  @Test
   public void testPrintln() {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
 
     Printer.println("asd");
     assertThat(out.toString()).isEqualTo("asd\n");
+
+    Printer.println("");
+    assertThat(out.toString()).isEqualTo("asd\n\n");
 
     out.reset();
 
@@ -66,13 +86,14 @@ public class PrinterTest {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
 
-    Printer.print("asd");
-    assertThat(out.toString()).isEqualTo("asd");
+    Printer.printErrorln("asd");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text("asd") + "\n");
 
     out.reset();
 
-    Printer.print("Dies ist eine neue Zeile\nund hier noch eine");
-    assertThat(out.toString()).isEqualTo("Dies ist eine neue Zeile\nund hier noch eine");
+    Printer.printErrorln("Dies ist eine neue Zeile\nund hier noch eine");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text("Dies ist eine neue Zeile") + "\n"
+                                                 + Text.ERROR.text("und hier noch eine") + "\n");
   }
 
   @Test

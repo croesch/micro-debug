@@ -21,6 +21,7 @@ package com.github.croesch;
 import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.github.croesch.console.Printer;
 import com.github.croesch.i18n.Text;
@@ -33,19 +34,10 @@ import com.github.croesch.i18n.Text;
  */
 enum Argument {
 
-  /** argument to define the debug level of the program */
-  DEBUG_LEVEL (1) {
-    @Override
-    public boolean execute() {
-      // TODO Auto-generated method stub
-      return true;
-    }
-  },
-
   /** argument to view a help about usage of the debugger */
   HELP {
     @Override
-    public boolean execute() {
+    public boolean execute(final String[] params) {
       // TODO Auto-generated method stub
       return false;
     }
@@ -54,16 +46,30 @@ enum Argument {
   /** argument that signalizes an unknown argument */
   ERROR_UNKNOWN {
     @Override
-    public boolean execute() {
-      // TODO Auto-generated method stub
-      return false;
+    public boolean execute(final String[] params) {
+      if (params == null || params.length == 0) {
+        // if there are no unknown arguments then calling this method might be a mistake
+        Logger.getLogger(getClass().getName()).warning("No parameters passed to execution of unknown argument error");
+        return true;
+      }
+
+      // flag, because we still might have a corrupt array
+      boolean wrongArgumentFound = false;
+      for (final String param : params) {
+        if (param != null) {
+          // we have the unknown argument, so print it
+          Printer.printErrorln(Text.UNKNOWN_ARGUMENT.text(param));
+          wrongArgumentFound = true;
+        }
+      }
+      return !wrongArgumentFound;
     }
   },
 
   /** argument that signalizes an argument with the wrong number of parameters */
   ERROR_PARAM_NUMBER {
     @Override
-    public boolean execute() {
+    public boolean execute(final String[] params) {
       // TODO Auto-generated method stub
       return false;
     }
@@ -72,7 +78,7 @@ enum Argument {
   /** argument to view the version of the debugger */
   VERSION {
     @Override
-    public boolean execute() {
+    public boolean execute(final String[] params) {
       Printer.println(Text.VERSION);
       return false;
     }
@@ -124,15 +130,20 @@ enum Argument {
   }
 
   /**
-   * Returns whether this argument can be called with m. Will return <code>false</code>, if m is <code>null</code>.
+   * Returns whether this argument can be called with the given {@link String}. Will return <code>false</code>, if the
+   * given {@link String} is <code>null</code> or if the {@link Argument} is a pseudo-argument that cannot be called.
    * 
    * @since Date: Aug 13, 2011
-   * @param m the string to test if it's a possible call for this argument
-   * @return <code>true</code>, if this argument can be called with m. For example <code>--argument</code> will return
-   *         <code>true</code> for the argument <code>ARGUMENT</code>.
+   * @param argStr the {@link String} to test if it's a possible call for this argument
+   * @return <code>true</code>, if this argument can be called with the given {@link String}.<br>
+   *         For example <code>--argument</code> will return <code>true</code> for the argument <code>ARGUMENT</code>.
    */
-  private boolean matches(final String m) {
-    return m != null && (m.equals(this.args[0]) || m.equals(this.args[1]));
+  private boolean matches(final String argStr) {
+    if (this == ERROR_PARAM_NUMBER || this == ERROR_UNKNOWN) {
+      // make sure we cannot call pseudo-arguments
+      return false;
+    }
+    return argStr != null && (argStr.equals(this.args[0]) || argStr.equals(this.args[1]));
   }
 
   /**
@@ -173,6 +184,7 @@ enum Argument {
    *         for that argument.
    */
   static Map<Argument, String[]> createArgumentList(final String[] args) {
+    // TODO comment this
     final Map<Argument, String[]> map = new EnumMap<Argument, String[]>(Argument.class);
     if (args != null) {
       for (int i = 0; i < args.length; ++i) {
@@ -239,7 +251,9 @@ enum Argument {
    * Executes commands that result in the specific argument.
    * 
    * @since Date: Dec 2, 2011
+   * @param params the parameters of that argument, in case of the pseudo arguments (prefix ERROR_) this array contains
+   *        the causes for the error.
    * @return <code>false</code>, if the argument enforces the application to stop
    */
-  public abstract boolean execute();
+  public abstract boolean execute(String[] params);
 }

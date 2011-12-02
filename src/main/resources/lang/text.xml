@@ -25,4 +25,8 @@
 
 	<entry key="version">Version ${version}</entry>
 	
+	<entry key="error">ERROR: {0}</entry>
+	
+	<entry key="unknown-argument">Unknown argument: {0}</entry>
+	
 </properties>

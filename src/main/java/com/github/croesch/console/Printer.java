@@ -20,6 +20,8 @@ package com.github.croesch.console;
 
 import java.io.PrintStream;
 
+import com.github.croesch.i18n.Text;
+
 /**
  * The interface to print information to the console.
  * 
@@ -44,30 +46,40 @@ public final class Printer {
    * Writes the given text to the {@link PrintStream} and adds a LF.
    * 
    * @since Date: Dec 2, 2011
-   * @param line the text to be printed to the {@link PrintStream}.
+   * @param line the text to be printed to the {@link PrintStream}. <code>null</code> -values will be ignored.
    */
   public static void println(final String line) {
-    out.println(line);
+    if (line != null) {
+      out.println(line);
+    }
   }
 
   /**
    * Writes the text representation of the given object to the {@link PrintStream} and adds a LF.
    * 
    * @since Date: Dec 2, 2011
-   * @param obj the object, whose text representation should be printed to the {@link PrintStream}.
+   * @param obj the object, whose text representation should be printed to the {@link PrintStream}. <code>null</code>
+   *        -values will be ignored.
    */
   public static void println(final Object obj) {
-    out.println(obj);
+    if (obj != null) {
+      out.println(obj);
+    }
   }
 
   /**
-   * Writes the given text to the {@link PrintStream}.
+   * Writes the text representation of the given object as an error to the {@link PrintStream} and adds a LF. If the
+   * text representation of the object contains LFs, this will produce several different lines as output.
    * 
    * @since Date: Dec 2, 2011
-   * @param line the text to be printed to the {@link PrintStream}.
+   * @param obj the object, whose text representation should be printed to the {@link PrintStream} as an error.
    */
-  public static void print(final String line) {
-    out.print(line);
+  public static void printErrorln(final Object obj) {
+    if (obj != null) {
+      for (final String line : obj.toString().split("\n")) {
+        out.println(Text.ERROR.text(line));
+      }
+    }
   }
 
   /**

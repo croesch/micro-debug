@@ -49,4 +49,19 @@ public class MicroDebugTest {
     MicroDebug.main(new String[] { "--version" });
     assertThat(out.toString()).isEqualTo(Text.VERSION.text() + "\n");
   }
+
+  @Test
+  public final void testMain_Unknown() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    MicroDebug.main(new String[] { "-xxx" });
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("-xxx")) + "\n");
+
+    out.reset();
+
+    MicroDebug.main(new String[] { "asd", "efgh" });
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("asd")) + "\n"
+                                                 + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("efgh")) + "\n");
+  }
 }

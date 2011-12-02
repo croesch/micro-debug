@@ -54,7 +54,7 @@ public final class MicroDebug {
     final Map<Argument, String[]> map = Argument.createArgumentList(args);
     for (final Argument arg : map.keySet()) {
       LOGGER.fine("Executing argument: " + arg);
-      startApplication &= arg.execute();
+      startApplication &= arg.execute(map.get(arg));
     }
 
     LOGGER.finer("starting application: " + startApplication);
