@@ -18,6 +18,7 @@
  */
 package com.github.croesch.i18n;
 
+import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -41,15 +42,15 @@ public enum Text {
 
   /**
    * Constructs a new instance of a text that is part of the i18n. Each key will be searched in the file
-   * 'lang/text*.properties' (where '*' is a string build from the locales properties language, country and variant, so
-   * there will be four file names and the most specific will be searched first). The name of this enumeration is the
-   * suffix of the key where underscores will be replaced by minuses.
+   * 'lang/text*.xml' (where '*' is a string build from the locales properties language, country and variant, so there
+   * will be four file names and the most specific will be searched first). The name of this enumeration is the suffix
+   * of the key where underscores will be replaced by minuses.
    * 
    * @since Date: Dec 2, 2011
    */
   private Text() {
     final ResourceBundle b = ResourceBundle.getBundle("lang/text", new XMLBundleControl());
-    final String key = name().toLowerCase().replace('_', '-');
+    final String key = name().toLowerCase(Locale.GERMAN).replace('_', '-');
     String value;
     try {
       value = b.getString(key);
