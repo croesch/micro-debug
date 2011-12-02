@@ -25,6 +25,7 @@ import java.io.PrintStream;
 
 import org.junit.Test;
 
+import com.github.croesch.console.Printer;
 import com.github.croesch.i18n.Text;
 
 /**
@@ -37,9 +38,8 @@ public class MicroDebugTest {
 
   @Test
   public final void testMain_Version() {
-    final PrintStream oldOut = System.out;
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(out));
+    Printer.setPrintStream(new PrintStream(out));
 
     MicroDebug.main(new String[] { "-v" });
     assertThat(out.toString()).isEqualTo(Text.VERSION.text() + "\n");
@@ -48,7 +48,5 @@ public class MicroDebugTest {
 
     MicroDebug.main(new String[] { "--version" });
     assertThat(out.toString()).isEqualTo(Text.VERSION.text() + "\n");
-
-    System.setOut(oldOut);
   }
 }
