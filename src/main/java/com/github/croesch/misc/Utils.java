@@ -20,6 +20,7 @@ package com.github.croesch.misc;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Logger;
 
 import com.github.croesch.error.FileFormatException;
 
@@ -128,4 +129,15 @@ public final class Utils {
     return number;
   }
 
+  /**
+   * Logs that the given {@link Throwable} has been thrown.
+   * @param t the thrown {@link Throwable} to log
+   * 
+   * @since Date: Dec 2, 2011
+   */
+  public static void logThrownThrowable(final Throwable t) {
+    final String className = Thread.currentThread().getStackTrace()[2].getClassName();
+    final String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
+    Logger.getLogger(className).throwing(className, methodName, t);
+  }
 }

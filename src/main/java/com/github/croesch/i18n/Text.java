@@ -20,6 +20,7 @@ package com.github.croesch.i18n;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 /**
  * This class provides access to the internationalized text resources.
@@ -31,6 +32,9 @@ public enum Text {
 
   /** the text for the version of the program. */
   VERSION;
+
+  /** the {@link Logger} for this class */
+  private final Logger logger = Logger.getLogger(Text.class.getName());
 
   /** the value of this instance */
   private final String string;
@@ -50,6 +54,7 @@ public enum Text {
     try {
       value = b.getString(key);
     } catch (final MissingResourceException mre) {
+      this.logger.warning("missing ressource key=" + key);
       value = "!!missing-key=" + key + "!!";
     }
     this.string = value;

@@ -19,6 +19,7 @@
 package com.github.croesch;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * TODO Comment here ...
@@ -27,6 +28,9 @@ import java.util.Map;
  * @since Date: Aug 13, 2011
  */
 public final class MicroDebug {
+
+  /** the {@link Logger} for this class */
+  private static final Logger LOGGER = Logger.getLogger(MicroDebug.class.getName());
 
   /**
    * Hides constructor from being invoked. This class is a utility class and no one should be able to produce objects of
@@ -49,12 +53,13 @@ public final class MicroDebug {
 
     final Map<Argument, String[]> map = Argument.createArgumentList(args);
     for (final Argument arg : map.keySet()) {
+      LOGGER.fine("Executing argument: " + arg);
       startApplication &= arg.execute();
     }
 
+    LOGGER.finer("starting application: " + startApplication);
     if (startApplication) {
       // TODO .. implement ..
-      System.out.println("start");
     }
   }
 }
