@@ -18,6 +18,8 @@
  */
 package com.github.croesch;
 
+import java.util.Map;
+
 /**
  * TODO Comment here ...
  * 
@@ -37,13 +39,22 @@ public final class MicroDebug {
   }
 
   /**
-   * TODO Comment here ...
+   * Starts the debugger. First handles the given arguments and then starts the debugging of the processor.
    * 
    * @since Date: Aug 13, 2011
    * @param args the arguments of the program
    */
   public static void main(final String[] args) {
-    // TODO define
-  }
+    boolean startApplication = true;
 
+    final Map<Argument, String[]> map = Argument.createArgumentList(args);
+    for (final Argument arg : map.keySet()) {
+      startApplication &= arg.execute();
+    }
+
+    if (startApplication) {
+      // TODO .. implement ..
+      System.out.println("start");
+    }
+  }
 }
