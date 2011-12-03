@@ -27,6 +27,9 @@
 
 	<entry key="error">ERROR: {0}</entry>
 
+	<entry key="invalid-number">'{0}' is not a valid number</entry>
+	<entry key="invalid-register">'{0}' is not a valid register</entry>
+
 	<entry key="unknown-argument">Unknown argument: {0}</entry>
 
 	<entry key="wrong-format-mic1">wrong format of micro-assembler-file: {0}</entry>

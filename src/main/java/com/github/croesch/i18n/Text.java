@@ -39,6 +39,12 @@ public enum Text {
   /** the text to format an error line output */
   ERROR,
 
+  /** describes an invalid number */
+  INVALID_NUMBER,
+
+  /** describes an invalid register */
+  INVALID_REGISTER,
+
   /** the text to describe an unknown argument */
   UNKNOWN_ARGUMENT,
 
