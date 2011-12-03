@@ -37,6 +37,34 @@ import com.github.croesch.i18n.Text;
 public class MicroDebugTest {
 
   @Test
+  public final void testMain_ToFewArgs() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    MicroDebug.main(new String[] { "-u" });
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.MISSING_IJVM_FILE) + "\n" + Text.TRY_HELP + "\n");
+
+    out.reset();
+
+    MicroDebug.main(new String[] { "u" });
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.MISSING_IJVM_FILE) + "\n" + Text.TRY_HELP + "\n");
+
+    out.reset();
+
+    MicroDebug.main(new String[] {});
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.MISSING_MIC1_FILE) + "\n"
+                                                 + Text.ERROR.text(Text.MISSING_IJVM_FILE) + "\n" + Text.TRY_HELP
+                                                 + "\n");
+
+    out.reset();
+
+    MicroDebug.main(null);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.MISSING_MIC1_FILE) + "\n"
+                                                 + Text.ERROR.text(Text.MISSING_IJVM_FILE) + "\n" + Text.TRY_HELP
+                                                 + "\n");
+  }
+
+  @Test
   public final void testMain_Version() {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
@@ -48,6 +76,16 @@ public class MicroDebugTest {
 
     MicroDebug.main(new String[] { "--version" });
     assertThat(out.toString()).isEqualTo(Text.VERSION.text() + "\n");
+
+    out.reset();
+
+    MicroDebug.main(new String[] { "--version", "mic1", "ijvm" });
+    assertThat(out.toString()).isEqualTo(Text.VERSION.text() + "\n");
+
+    out.reset();
+
+    MicroDebug.main(new String[] { "--version", "mic1" });
+    assertThat(out.toString()).isEmpty();
   }
 
   @Test
@@ -55,12 +93,12 @@ public class MicroDebugTest {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
 
-    MicroDebug.main(new String[] { "-xxx" });
+    MicroDebug.main(new String[] { "-xxx", "", "" });
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("-xxx")) + "\n");
 
     out.reset();
 
-    MicroDebug.main(new String[] { "asd", "efgh" });
+    MicroDebug.main(new String[] { "asd", "efgh", "xy", "as" });
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("asd")) + "\n"
                                                  + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("efgh")) + "\n");
   }

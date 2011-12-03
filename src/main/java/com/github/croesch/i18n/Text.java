@@ -38,7 +38,16 @@ public enum Text {
   ERROR,
 
   /** the text to describe an unknown argument */
-  UNKNOWN_ARGUMENT;
+  UNKNOWN_ARGUMENT,
+
+  /** the text to describe that the ijvm-file is missing */
+  MISSING_IJVM_FILE,
+
+  /** the text to describe that the mic1-file is missing */
+  MISSING_MIC1_FILE,
+
+  /** the text to give a hint to the user that he should try to read the help */
+  TRY_HELP;
 
   /** the {@link Logger} for this class */
   private final Logger logger = Logger.getLogger(Text.class.getName());
