@@ -43,7 +43,7 @@ public class DebuggerTest {
 
   @Test
   public void testRun_Exit() {
-    final Debugger debugger = new Debugger();
+    final Debugger debugger = new Debugger(null);
 
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
@@ -62,7 +62,7 @@ public class DebuggerTest {
 
   @Test
   public void testRun_WrongCommand() {
-    final Debugger debugger = new Debugger();
+    final Debugger debugger = new Debugger(null);
 
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
@@ -80,7 +80,7 @@ public class DebuggerTest {
 
   @Test
   public void testRun_Help() throws IOException {
-    final Debugger debugger = new Debugger();
+    final Debugger debugger = new Debugger(null);
 
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));

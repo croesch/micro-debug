@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Locale;
 
+import com.github.croesch.mic1.Mic1;
 import com.github.croesch.misc.Utils;
 
 /**
@@ -35,7 +36,7 @@ enum Instruction {
   /** ends the debugger */
   EXIT {
     @Override
-    public boolean execute(final String ... params) {
+    public boolean execute(final Mic1 processor, final String ... params) {
       // simply return to end the program
       return false;
     }
@@ -47,7 +48,7 @@ enum Instruction {
     private static final String HELP_FILE = "instruction-help.txt";
 
     @Override
-    public boolean execute(final String ... params) {
+    public boolean execute(final Mic1 processor, final String ... params) {
       final InputStream fileStream = Utils.class.getClassLoader().getResourceAsStream(HELP_FILE);
       Utils.printReaderToPrinter(new InputStreamReader(fileStream));
       return true;
@@ -106,10 +107,11 @@ enum Instruction {
    * Executes the instruction with the given parameters.
    * 
    * @since Date: Dec 3, 2011
+   * @param processor the processor to operate on, is not needed for every {@link Instruction}.
    * @param params the parameters of that {@link Instruction}.
    * @return <code>true</code>, if the application can continue<br>
    *         <code>false</code>, if the {@link Instruction} enforces the application to stop.
    */
-  public abstract boolean execute(String ... params);
+  public abstract boolean execute(Mic1 processor, String ... params);
 
 }

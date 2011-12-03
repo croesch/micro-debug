@@ -57,9 +57,9 @@ public class InstructionTest {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
 
-    assertThat(Instruction.EXIT.execute()).isFalse();
-    assertThat(Instruction.EXIT.execute("asd")).isFalse();
-    assertThat(Instruction.EXIT.execute("asd", "asd")).isFalse();
+    assertThat(Instruction.EXIT.execute(null)).isFalse();
+    assertThat(Instruction.EXIT.execute(null, "asd")).isFalse();
+    assertThat(Instruction.EXIT.execute(null, "asd", "asd")).isFalse();
 
     assertThat(out.toString()).isEmpty();
     Printer.setPrintStream(System.out);
@@ -70,11 +70,11 @@ public class InstructionTest {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
 
-    assertThat(Instruction.HELP.execute("asd")).isTrue();
-    assertThat(Instruction.HELP.execute("asd", "asd")).isTrue();
+    assertThat(Instruction.HELP.execute(null, "asd")).isTrue();
+    assertThat(Instruction.HELP.execute(null, "asd", "asd")).isTrue();
     out.reset();
 
-    assertThat(Instruction.HELP.execute()).isTrue();
+    assertThat(Instruction.HELP.execute(null)).isTrue();
 
     final StringBuilder sb = new StringBuilder();
     BufferedReader reader = null;

@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import com.github.croesch.console.Debugger;
 import com.github.croesch.console.io.Printer;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
@@ -96,8 +97,7 @@ public final class MicroDebug {
       // if files where found, try to start application
       if (micAsm != null && asm != null) {
         try {
-          // TODO .. implement ..
-          new Mic1(micAsm, asm);
+          new Debugger(new Mic1(micAsm, asm)).run();
         } catch (final FileFormatException e) {
           // the input files were invalid, log this, user has already received information
           LOGGER.finest("started application with wrong file format");

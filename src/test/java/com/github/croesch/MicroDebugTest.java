@@ -22,10 +22,12 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.io.StringReader;
 
 import org.junit.Test;
 
 import com.github.croesch.console.io.Printer;
+import com.github.croesch.console.io.Reader;
 import com.github.croesch.i18n.Text;
 
 /**
@@ -115,5 +117,16 @@ public class MicroDebugTest {
     MicroDebug.main(new String[] { "asd", "efgh", "xy", "as" });
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("asd")) + "\n"
                                                  + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("efgh")) + "\n");
+  }
+
+  @Test
+  public final void testMain_Hi() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+    Reader.setReader(new StringReader("exit"));
+    MicroDebug.main(new String[] { "--unbuffered-output",
+                                  "src/test/resources/mic1/hi.mic1",
+                                  "src/test/resources/mic1/hi.ijvm" });
+    assertThat(out.toString()).isEmpty();
   }
 }
