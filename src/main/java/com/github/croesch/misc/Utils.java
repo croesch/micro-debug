@@ -18,13 +18,10 @@
  */
 package com.github.croesch.misc;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.util.logging.Logger;
 
-import com.github.croesch.console.io.Printer;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 
@@ -143,41 +140,5 @@ public final class Utils {
     final String className = Thread.currentThread().getStackTrace()[2].getClassName();
     final String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
     Logger.getLogger(className).throwing(className, methodName, t);
-  }
-
-  /**
-   * Prints every line of the given {@link Reader} to the {@link Printer}.
-   * 
-   * @since Date: Dec 3, 2011
-   * @param r the {@link Reader} to read the lines from and print to the {@link Printer}.
-   */
-  public static void printReaderToPrinter(final Reader r) {
-    if (r == null) {
-      // null-values are not permitted.
-      return;
-    }
-
-    BufferedReader reader = null;
-    try {
-      // buffer the reader
-      reader = new BufferedReader(r);
-
-      String line;
-      while ((line = reader.readLine()) != null) {
-        // print all lines via printer
-        Printer.println(line);
-      }
-    } catch (final IOException e) {
-      Utils.logThrownThrowable(e);
-    } finally {
-      if (reader != null) {
-        try {
-          // close the reader
-          reader.close();
-        } catch (final IOException e) {
-          Utils.logThrownThrowable(e);
-        }
-      }
-    }
   }
 }

@@ -21,14 +21,9 @@ package com.github.croesch;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.StringReader;
 
 import org.junit.Test;
 
-import com.github.croesch.console.io.Printer;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.misc.Utils;
 
@@ -118,57 +113,5 @@ public class UtilsTest {
     assertThat(Utils.bytesToInt((byte) 0, (byte) 0, (byte) 0xff, (byte) 0)).isEqualTo(0xff00);
     assertThat(Utils.bytesToInt((byte) 0, (byte) 0, (byte) 0, (byte) 0xff)).isEqualTo(0xff);
     assertThat(Utils.bytesToInt((byte) 0, (byte) 0, (byte) 0, (byte) -1)).isEqualTo(255);
-  }
-
-  @Test
-  public void testPrintReaderToPrinter_Null() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
-    Utils.printReaderToPrinter(null);
-    assertThat(out.toString()).isEmpty();
-  }
-
-  @Test(expected = IOException.class)
-  public void testPrintReaderToPrinter_ClosedAfter() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
-    final StringReader r = new StringReader("xy");
-    Utils.printReaderToPrinter(r);
-    assertThat(out.toString()).isEqualTo("xy\n");
-    r.read(); // stream closed
-  }
-
-  @Test
-  public void testPrintReaderToPrinter_ClosedBefore() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
-    final StringReader r = new StringReader("xy");
-    r.close();
-    Utils.printReaderToPrinter(r);
-    assertThat(out.toString()).isEmpty();
-  }
-
-  @Test
-  public void testPrintReaderToPrinter() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
-    String text = "aaa\nbb\nccc\n";
-    Utils.printReaderToPrinter(new StringReader(text));
-    assertThat(out.toString()).isEqualTo(text);
-    out.reset();
-
-    text = "";
-    Utils.printReaderToPrinter(new StringReader(text));
-    assertThat(out.toString()).isEqualTo(text);
-    out.reset();
-
-    text = "ß0987654321\n!§$%&/()=?\n@ł€ŧ←↓→\n";
-    Utils.printReaderToPrinter(new StringReader(text));
-    assertThat(out.toString()).isEqualTo(text);
-    out.reset();
   }
 }

@@ -46,7 +46,7 @@ enum Argument {
     @Override
     public boolean execute(final String[] params) {
       final InputStream fileStream = Utils.class.getClassLoader().getResourceAsStream(HELP_FILE);
-      Utils.printReaderToPrinter(new InputStreamReader(fileStream));
+      Printer.printReader(new InputStreamReader(fileStream));
       return false;
     }
   },

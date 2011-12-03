@@ -18,9 +18,13 @@
  */
 package com.github.croesch.console.io;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.io.Reader;
 
 import com.github.croesch.i18n.Text;
+import com.github.croesch.misc.Utils;
 
 /**
  * The interface to print information to the console.
@@ -91,6 +95,43 @@ public final class Printer {
   public static void setPrintStream(final PrintStream newOut) {
     if (newOut != null) {
       out = newOut;
+    }
+  }
+
+  /**
+   * Prints every line of the given {@link Reader} to the {@link PrintStream}.
+   * 
+   * @since Date: Dec 3, 2011
+   * @param r the {@link Reader} to read the lines from and print to the {@link PrintStream}, <code>null</code>-values
+   *        will be ignored.
+   */
+  public static void printReader(final Reader r) {
+    if (r == null) {
+      // null-values are not permitted.
+      return;
+    }
+
+    BufferedReader reader = null;
+    try {
+      // buffer the reader
+      reader = new BufferedReader(r);
+
+      String line;
+      while ((line = reader.readLine()) != null) {
+        // print all lines via printer
+        println(line);
+      }
+    } catch (final IOException e) {
+      Utils.logThrownThrowable(e);
+    } finally {
+      if (reader != null) {
+        try {
+          // close the reader
+          reader.close();
+        } catch (final IOException e) {
+          Utils.logThrownThrowable(e);
+        }
+      }
     }
   }
 }

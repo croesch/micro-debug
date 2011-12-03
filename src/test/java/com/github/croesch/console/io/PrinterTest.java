@@ -21,11 +21,14 @@ package com.github.croesch.console.io;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.io.StringReader;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
-import com.github.croesch.console.io.Printer;
 import com.github.croesch.i18n.Text;
 
 /**
@@ -36,65 +39,65 @@ import com.github.croesch.i18n.Text;
  */
 public class PrinterTest {
 
+  private final ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+  @Before
+  public void setUp() {
+    Printer.setPrintStream(new PrintStream(this.out));
+  }
+
+  @After
+  public void tearDown() {
+    this.out.reset();
+  }
+
   @Test
   public void testNullValues() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     Printer.println(null);
-    assertThat(out.toString()).isEmpty();
+    assertThat(this.out.toString()).isEmpty();
 
     Printer.println((String) null);
-    assertThat(out.toString()).isEmpty();
+    assertThat(this.out.toString()).isEmpty();
 
     Printer.printErrorln(null);
-    assertThat(out.toString()).isEmpty();
+    assertThat(this.out.toString()).isEmpty();
   }
 
   @Test
   public void testPrintln() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     Printer.println("asd");
-    assertThat(out.toString()).isEqualTo("asd\n");
+    assertThat(this.out.toString()).isEqualTo("asd\n");
 
     Printer.println("");
-    assertThat(out.toString()).isEqualTo("asd\n\n");
+    assertThat(this.out.toString()).isEqualTo("asd\n\n");
 
-    out.reset();
+    this.out.reset();
 
     Printer.println("Dies ist eine neue Zeile\nund hier noch eine");
-    assertThat(out.toString()).isEqualTo("Dies ist eine neue Zeile\nund hier noch eine\n");
+    assertThat(this.out.toString()).isEqualTo("Dies ist eine neue Zeile\nund hier noch eine\n");
   }
 
   @Test
   public void testPrintln_Object() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     Printer.println(14);
-    assertThat(out.toString()).isEqualTo("14\n");
+    assertThat(this.out.toString()).isEqualTo("14\n");
 
-    out.reset();
+    this.out.reset();
 
     Printer.println(123);
-    assertThat(out.toString()).isEqualTo("123\n");
+    assertThat(this.out.toString()).isEqualTo("123\n");
   }
 
   @Test
   public void testPrint() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     Printer.printErrorln("asd");
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text("asd") + "\n");
+    assertThat(this.out.toString()).isEqualTo(Text.ERROR.text("asd") + "\n");
 
-    out.reset();
+    this.out.reset();
 
     Printer.printErrorln("Dies ist eine neue Zeile\nund hier noch eine");
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text("Dies ist eine neue Zeile") + "\n"
-                                                 + Text.ERROR.text("und hier noch eine") + "\n");
+    assertThat(this.out.toString()).isEqualTo(Text.ERROR.text("Dies ist eine neue Zeile") + "\n"
+                                                      + Text.ERROR.text("und hier noch eine") + "\n");
   }
 
   @Test
@@ -122,5 +125,44 @@ public class PrinterTest {
     Printer.println("asd");
     assertThat(out1.toString()).isEqualTo("asd\nasd\n");
     assertThat(out2.toString()).isEqualTo("asd\nasd\n");
+  }
+
+  @Test
+  public void testPrintReaderToPrinter_Null() {
+    Printer.printReader(null);
+    assertThat(this.out.toString()).isEmpty();
+  }
+
+  @Test(expected = IOException.class)
+  public void testPrintReaderToPrinter_ClosedAfter() throws IOException {
+    final StringReader r = new StringReader("xy");
+    Printer.printReader(r);
+    assertThat(this.out.toString()).isEqualTo("xy\n");
+    r.read(); // stream closed
+  }
+
+  @Test
+  public void testPrintReaderToPrinter_ClosedBefore() throws IOException {
+    final StringReader r = new StringReader("xy");
+    r.close();
+    Printer.printReader(r);
+    assertThat(this.out.toString()).isEmpty();
+  }
+
+  @Test
+  public void testPrintReaderToPrinter() {
+    String text = "aaa\nbb\nccc\n";
+    Printer.printReader(new StringReader(text));
+    assertThat(this.out.toString()).isEqualTo(text);
+    this.out.reset();
+
+    text = "";
+    Printer.printReader(new StringReader(text));
+    assertThat(this.out.toString()).isEqualTo(text);
+    this.out.reset();
+
+    text = "ß0987654321\n!§$%&/()=?\n@ł€ŧ←↓→\n";
+    Printer.printReader(new StringReader(text));
+    assertThat(this.out.toString()).isEqualTo(text);
   }
 }
