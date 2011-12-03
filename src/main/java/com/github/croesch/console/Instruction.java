@@ -93,7 +93,7 @@ enum Instruction {
    */
   static Instruction of(final String s) {
     if (s != null) {
-      final String instruction = s.toLowerCase();
+      final String instruction = s.toLowerCase(Locale.GERMAN);
       for (final Instruction a : values()) {
         if (a.matches(instruction)) {
           return a;
