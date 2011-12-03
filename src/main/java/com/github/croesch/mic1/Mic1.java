@@ -20,7 +20,7 @@ package com.github.croesch.mic1;
 
 import java.io.InputStream;
 
-import com.github.croesch.console.Printer;
+import com.github.croesch.console.io.Printer;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.alu.Alu;

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.croesch.console;
+package com.github.croesch.console.io;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -25,6 +25,7 @@ import java.io.PrintStream;
 
 import org.junit.Test;
 
+import com.github.croesch.console.io.Printer;
 import com.github.croesch.i18n.Text;
 
 /**

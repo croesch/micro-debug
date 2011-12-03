@@ -25,7 +25,7 @@ import java.io.PrintStream;
 
 import org.junit.Test;
 
-import com.github.croesch.console.Printer;
+import com.github.croesch.console.io.Printer;
 import com.github.croesch.i18n.Text;
 
 /**
