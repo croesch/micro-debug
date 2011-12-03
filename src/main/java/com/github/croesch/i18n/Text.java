@@ -45,6 +45,9 @@ public enum Text {
   /** describes an invalid register */
   INVALID_REGISTER,
 
+  /** describes an unknown instruction */
+  UNKNOWN_INSTRUCTION,
+
   /** the text to describe an unknown argument */
   UNKNOWN_ARGUMENT,
 

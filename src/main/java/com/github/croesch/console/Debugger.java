@@ -1,0 +1,66 @@
+/*
+ * Copyright (C) 2011-2012  Christian Roesch
+ * 
+ * This file is part of micro-debug.
+ * 
+ * micro-debug is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * micro-debug is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package com.github.croesch.console;
+
+import com.github.croesch.console.io.Printer;
+import com.github.croesch.console.io.Reader;
+import com.github.croesch.i18n.Text;
+
+/**
+ * Class that handles the core of debugging. Reads user input and handles the instructions.
+ * 
+ * @author croesch
+ * @since Date: Dec 3, 2011
+ */
+public final class Debugger implements Runnable {
+
+  /** {@link String} that separates instruction from parameters and each parameter to another */
+  private static final String SEPARATING_STRING = " ";
+
+  @Override
+  public void run() {
+    boolean canContinue = true;
+    while (canContinue) {
+      // prompt user
+      final String[] usersInstruction = askUserWhatToDo().split(SEPARATING_STRING);
+      // check if this was a valid instruction
+      final Instruction in = Instruction.of(usersInstruction[0]);
+      if (in != null) {
+        // valid instruction -> copy parameters
+        final String[] params = new String[usersInstruction.length - 1];
+        System.arraycopy(usersInstruction, 1, params, 0, params.length);
+        // execute the instruction, returns whether program can continue
+        canContinue = in.execute(params);
+      } else {
+        // unknown instruction -> inform user
+        Printer.printErrorln(Text.UNKNOWN_INSTRUCTION.text(usersInstruction[0]));
+      }
+    }
+  }
+
+  /**
+   * Reads a line from the users input and returns it.
+   * 
+   * @since Date: Dec 3, 2011
+   * @return the line provided by the {@link Reader}.
+   */
+  private String askUserWhatToDo() {
+    return Reader.readLine();
+  }
+}

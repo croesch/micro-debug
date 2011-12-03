@@ -31,6 +31,7 @@
 	<entry key="invalid-register">'{0}' is not a valid register</entry>
 
 	<entry key="unknown-argument">Unknown argument: {0}</entry>
+	<entry key="unknown-instruction">Unknown instruction: {0}</entry>
 
 	<entry key="wrong-format-mic1">wrong format of micro-assembler-file: {0}</entry>
 	<entry key="wrong-format-ijvm">wrong format of assembler-file: {0}</entry>

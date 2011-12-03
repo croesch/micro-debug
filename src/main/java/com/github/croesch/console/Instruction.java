@@ -104,8 +104,8 @@ enum Instruction {
    * 
    * @since Date: Aug 13, 2011
    * @param s the {@link String} that is able to call the returned {@link Instruction}.
-   * @return the {@link Instruction} that matches the given {@link String}, or <code>null</code> if no argument can be
-   *         called with the given {@link String}.
+   * @return the {@link Instruction} that matches the given {@link String}, or<br>
+   *         <code>null</code> if no {@link Instruction} can be called with the given {@link String}.
    * @see Instruction#matches(String)
    */
   static Instruction of(final String s) {
