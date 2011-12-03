@@ -45,6 +45,9 @@ public class ArgumentTest {
     assertThat(Argument.of("--version")).isSameAs(Argument.VERSION);
     assertThat(Argument.of("-v")).isSameAs(Argument.VERSION);
 
+    assertThat(Argument.of("--unbuffered-output")).isSameAs(Argument.UNBUFFERED_OUTPUT);
+    assertThat(Argument.of("-u")).isSameAs(Argument.UNBUFFERED_OUTPUT);
+
     //    assertThat(Argument.of("--debug-level")).isSameAs(Argument.DEBUG_LEVEL);
     //    assertThat(Argument.of("-d")).isSameAs(Argument.DEBUG_LEVEL);
   }
@@ -56,6 +59,7 @@ public class ArgumentTest {
     assertThat(Argument.of(" ")).isNull();
     assertThat(Argument.of("HELP")).isNull();
     assertThat(Argument.of("-help")).isNull();
+    assertThat(Argument.of("--h")).isNull();
   }
 
   @Test

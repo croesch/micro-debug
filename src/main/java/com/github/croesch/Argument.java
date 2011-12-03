@@ -75,6 +75,15 @@ enum Argument {
     }
   },
 
+  /** argument that makes the output to be unbuffered */
+  UNBUFFERED_OUTPUT {
+    @Override
+    public boolean execute(final String[] params) {
+      // TODO Auto-generated method stub
+      return false;
+    }
+  },
+
   /** argument to view the version of the debugger */
   VERSION {
     @Override
