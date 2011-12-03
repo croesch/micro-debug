@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.github.croesch.error.FileFormatException;
+import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.register.Register;
@@ -116,14 +117,14 @@ public final class Memory {
         final int startAddress = Utils.bytesToInt(bytes[0], bytes[1], bytes[2], bytes[3]);
 
         if (stream.read(bytes) == -1) {
-          throw new FileFormatException("unexpected end of file");
+          throw new FileFormatException(Text.WRONG_FORMAT_UNEXPECTED_END);
         }
         final int blockLength = Utils.bytesToInt(bytes[0], bytes[1], bytes[2], bytes[3]);
 
         readBlock(startAddress, blockLength, stream);
       }
     } catch (final IOException e) {
-      throw new FileFormatException(e);
+      throw new FileFormatException(e.getMessage(), e);
     }
   }
 
@@ -142,7 +143,7 @@ public final class Memory {
         int val = stream.read();
 
         if (val == -1) {
-          throw new FileFormatException("Unexpected end of file.");
+          throw new FileFormatException(Text.WRONG_FORMAT_UNEXPECTED_END_OF_BLOCK);
         }
 
         final int addr = start + i;
@@ -168,7 +169,7 @@ public final class Memory {
         this.memory[addr / 4] = (word & mask) | val;
       }
     } catch (final IOException e) {
-      throw new FileFormatException(e);
+      throw new FileFormatException(e.getMessage(), e);
     }
   }
 

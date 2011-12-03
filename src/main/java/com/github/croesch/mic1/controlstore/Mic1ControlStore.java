@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.github.croesch.error.FileFormatException;
+import com.github.croesch.i18n.Text;
 import com.github.croesch.misc.Utils;
 
 /**
@@ -71,12 +72,12 @@ public final class Mic1ControlStore {
         // reached the end of input stream
         if (i == 0) {
           // only the magic number has been found
-          throw new FileFormatException("File is empty.");
+          throw new FileFormatException(Text.WRONG_FORMAT_EMPTY);
         }
         eof = true;
       } else if (i >= this.store.length) {
         // more instructions to read than capacity in the store
-        throw new FileFormatException("File is too big.");
+        throw new FileFormatException(Text.WRONG_FORMAT_TOO_BIG);
       } else {
         // save the instruction
         this.store[i] = instr;

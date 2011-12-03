@@ -20,12 +20,15 @@ package com.github.croesch.mic1;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import org.junit.Test;
 
+import com.github.croesch.console.Printer;
 import com.github.croesch.error.FileFormatException;
+import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.register.Register;
 
@@ -184,5 +187,105 @@ public class Mic1Test {
     assertThat(out.toString()).isEqualTo("Hi!\n");
 
     Output.setOut(System.out);
+  }
+
+  @Test
+  public void testErrorTexts() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    // less than four bytes
+    try {
+      new Mic1(new ByteArrayInputStream(new byte[] {}), new ByteArrayInputStream(new byte[] {}));
+      throw new AssertionError("should throw exception");
+    } catch (final FileFormatException e) {
+      // expected
+    }
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_TOO_SMALL))
+                                                 + "\n"
+                                                 + Text.ERROR.text(Text.WRONG_FORMAT_IJVM
+                                                   .text(Text.WRONG_FORMAT_TOO_SMALL)) + "\n");
+    out.reset();
+
+    // wrong magic number
+    try {
+      new Mic1(new ByteArrayInputStream(new byte[] { 0x1d, (byte) 0xea, (byte) 0xdf, (byte) 0xad }),
+               new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x78 }));
+      throw new AssertionError("should throw exception");
+    } catch (final FileFormatException e) {
+      // expected
+    }
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_MAGIC_NUMBER))
+                                                 + "\n"
+                                                 + Text.ERROR.text(Text.WRONG_FORMAT_IJVM
+                                                   .text(Text.WRONG_FORMAT_MAGIC_NUMBER + "\n")));
+    out.reset();
+
+    // empty files
+    try {
+      new Mic1(new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x78 }),
+               new ByteArrayInputStream(new byte[] { 0x1d, (byte) 0xea, (byte) 0xdf, (byte) 0xad }));
+      throw new AssertionError("should throw exception");
+    } catch (final FileFormatException e) {
+      // expected
+    }
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_EMPTY)) + "\n");
+    out.reset();
+
+    // unexpected eof
+    try {
+      new Mic1(new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x78, 0, 0, 0, 0, 0 }),
+               new ByteArrayInputStream(new byte[] { 0x1d, (byte) 0xea, (byte) 0xdf, (byte) 0xad, 0 }));
+      throw new AssertionError("should throw exception");
+    } catch (final FileFormatException e) {
+      // expected
+    }
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_IJVM.text(Text.WRONG_FORMAT_UNEXPECTED_END))
+                                                 + "\n");
+    out.reset();
+
+    // unexpected end of block
+    try {
+      new Mic1(new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x78, 0, 0, 0, 0, 0 }),
+               new ByteArrayInputStream(new byte[] { 0x1d,
+                                                    (byte) 0xea,
+                                                    (byte) 0xdf,
+                                                    (byte) 0xad,
+                                                    0,
+                                                    0,
+                                                    0,
+                                                    0,
+                                                    0,
+                                                    0,
+                                                    0,
+                                                    12 }));
+      throw new AssertionError("should throw exception");
+    } catch (final FileFormatException e) {
+      // expected
+    }
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_IJVM
+                                           .text(Text.WRONG_FORMAT_UNEXPECTED_END_OF_BLOCK)) + "\n");
+    out.reset();
+
+    // file too big
+    final byte[] mic1File = new byte[5000];
+    mic1File[0] = 0x12;
+    mic1File[1] = 0x34;
+    mic1File[2] = 0x56;
+    mic1File[3] = 0x78;
+    try {
+      new Mic1(new ByteArrayInputStream(mic1File), new ByteArrayInputStream(new byte[] { 0x1d,
+                                                                                        (byte) 0xea,
+                                                                                        (byte) 0xdf,
+                                                                                        (byte) 0xad }));
+      throw new AssertionError("should throw exception");
+    } catch (final FileFormatException e) {
+      // expected
+    }
+    assertThat(out.toString())
+      .isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_TOO_BIG)) + "\n");
+    out.reset();
+
+    Printer.setPrintStream(System.out);
   }
 }

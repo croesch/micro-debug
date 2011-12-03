@@ -34,17 +34,46 @@ public enum Text {
   /** the text for the version of the program. */
   VERSION,
 
+  // descriptions of different problems
+
   /** the text to format an error line output */
   ERROR,
 
   /** the text to describe an unknown argument */
   UNKNOWN_ARGUMENT,
 
-  /** the text to describe that the ijvm-file is missing */
+  /** the text to describe that the argument for the ijvm-file is missing */
   MISSING_IJVM_FILE,
 
-  /** the text to describe that the mic1-file is missing */
+  /** the text to describe that the argument for the mic1-file is missing */
   MISSING_MIC1_FILE,
+
+  /** describes that the mic1-file has a wrong file format */
+  WRONG_FORMAT_MIC1,
+
+  /** describes that the ijvm-file has a wrong file format */
+  WRONG_FORMAT_IJVM,
+
+  /** describes that the specific file couldn't be found */
+  FILE_NOT_FOUND,
+
+  /** describes that the specific file is too small, not enough bytes to check the magic number */
+  WRONG_FORMAT_TOO_SMALL,
+
+  /** describes that the specific file is too big, not enough space to read the file */
+  WRONG_FORMAT_TOO_BIG,
+
+  /** describes that the specific file is empty, no content could be found */
+  WRONG_FORMAT_EMPTY,
+
+  /** describes that the specific file has the wrong magic number */
+  WRONG_FORMAT_MAGIC_NUMBER,
+
+  /** describes that the specific file has unexpectedly reached eof */
+  WRONG_FORMAT_UNEXPECTED_END,
+
+  /** describes that the specific file has unexpectedly reached end of a block to read */
+  WRONG_FORMAT_UNEXPECTED_END_OF_BLOCK,
 
   /** the text to give a hint to the user that he should try to read the help */
   TRY_HELP;

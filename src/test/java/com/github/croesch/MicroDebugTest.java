@@ -37,7 +37,20 @@ import com.github.croesch.i18n.Text;
 public class MicroDebugTest {
 
   @Test
-  public final void testMain_ToFewArgs() {
+  public final void testMain_FileNotFound() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    MicroDebug.main(new String[] { "asd", "bas" });
+
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.FILE_NOT_FOUND.text("asd")) + "\n"
+                                                 + Text.ERROR.text(Text.FILE_NOT_FOUND.text("bas")) + "\n");
+
+    Printer.setPrintStream(System.out);
+  }
+
+  @Test
+  public final void testMain_TooFewArgs() {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
 
@@ -85,7 +98,8 @@ public class MicroDebugTest {
     out.reset();
 
     MicroDebug.main(new String[] { "--version", "mic1" });
-    assertThat(out.toString()).isEmpty();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.FILE_NOT_FOUND.text("--version")) + "\n"
+                                                 + Text.ERROR.text(Text.FILE_NOT_FOUND.text("mic1")) + "\n");
   }
 
   @Test

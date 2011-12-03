@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.util.logging.Logger;
 
 import com.github.croesch.error.FileFormatException;
+import com.github.croesch.i18n.Text;
 
 /**
  * Class with utility methods.
@@ -93,7 +94,7 @@ public final class Utils {
 
       // we have not enough data to determine a magic number
       if (isOneValueMinusOne(new int[] { b0, b1, b2, b3 })) {
-        throw new FileFormatException("File is too small.");
+        throw new FileFormatException(Text.WRONG_FORMAT_TOO_SMALL);
       }
 
       // build the magic number fetched from the stream
@@ -103,11 +104,11 @@ public final class Utils {
       magicNumber |= b3;
 
       if (magicNumber != magic) {
-        throw new FileFormatException("File has the wrong magic number");
+        throw new FileFormatException(Text.WRONG_FORMAT_MAGIC_NUMBER);
       }
 
     } catch (final IOException e) {
-      throw new FileFormatException(e);
+      throw new FileFormatException(e.getMessage(), e);
     }
   }
 
@@ -131,8 +132,8 @@ public final class Utils {
 
   /**
    * Logs that the given {@link Throwable} has been thrown.
-   * @param t the thrown {@link Throwable} to log
    * 
+   * @param t the thrown {@link Throwable} to log
    * @since Date: Dec 2, 2011
    */
   public static void logThrownThrowable(final Throwable t) {

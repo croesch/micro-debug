@@ -18,11 +18,15 @@
  */
 package com.github.croesch;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import com.github.croesch.console.Printer;
+import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
+import com.github.croesch.mic1.Mic1;
 
 /**
  * TODO Comment here ...
@@ -86,7 +90,34 @@ public final class MicroDebug {
       final String mic1File = args[args.length - 2];
       LOGGER.config(".ijvm-file: " + ijvmFile);
       LOGGER.config(".mic1-file: " + mic1File);
-      // TODO .. implement ..
+
+      final FileInputStream micAsm = createFileInputStream(mic1File);
+      final FileInputStream asm = createFileInputStream(ijvmFile);
+
+      if (micAsm != null && asm != null) {
+        try {
+          // TODO .. implement ..
+          new Mic1(micAsm, asm);
+        } catch (final FileFormatException e) {
+          LOGGER.finest("started application with wrong file format");
+        }
+      }
+    }
+  }
+
+  /**
+   * Tries to create a {@link FileInputStream}.
+   * 
+   * @since Date: Dec 3, 2011
+   * @param mic1File the path to the file to create the stream from
+   * @return the constructed {@link FileInputStream} or <code>null</code>, if the file couldn't be found
+   */
+  private static FileInputStream createFileInputStream(final String mic1File) {
+    try {
+      return new FileInputStream(mic1File);
+    } catch (final FileNotFoundException e) {
+      Printer.printErrorln(Text.FILE_NOT_FOUND.text(mic1File));
+      return null;
     }
   }
 

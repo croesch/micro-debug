@@ -24,13 +24,24 @@
 <properties>
 
 	<entry key="version">Version ${version}</entry>
-	
+
 	<entry key="error">ERROR: {0}</entry>
-	
+
 	<entry key="unknown-argument">Unknown argument: {0}</entry>
 
-	<entry key="missing-ijvm-file">.ijvm-file is missing</entry>
-	<entry key="missing-mic1-file">.mic1-file is missing</entry>
+	<entry key="wrong-format-mic1">wrong format of micro-assembler-file: {0}</entry>
+	<entry key="wrong-format-ijvm">wrong format of assembler-file: {0}</entry>
+
+	<entry key="file-not-found">file not found {0}</entry>
+	<entry key="wrong-format-too-small">file is too small</entry>
+	<entry key="wrong-format-too-big">file is too big</entry>
+	<entry key="wrong-format-empty">file has no content</entry>
+	<entry key="wrong-format-magic-number">file has the wrong magic number</entry>
+	<entry key="wrong-format-unexpected-end">unexpected end of file</entry>
+	<entry key="wrong-format-unexpected-end-of-block">unexpected end of block</entry>
+
+	<entry key="missing-ijvm-file">argument for .ijvm-file is missing</entry>
+	<entry key="missing-mic1-file">argument for .mic1-file is missing</entry>
 	<entry key="try-help">Try '--help' for more information.</entry>
-	
+
 </properties>

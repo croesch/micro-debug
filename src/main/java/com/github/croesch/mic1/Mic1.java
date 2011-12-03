@@ -20,7 +20,9 @@ package com.github.croesch.mic1;
 
 import java.io.InputStream;
 
+import com.github.croesch.console.Printer;
 import com.github.croesch.error.FileFormatException;
+import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.alu.Alu;
 import com.github.croesch.mic1.controlstore.Mic1ALUSignalSet;
 import com.github.croesch.mic1.controlstore.Mic1CBusSignalSet;
@@ -65,16 +67,56 @@ public final class Mic1 {
    * @since Date: Nov 21, 2011
    * @param micAsm the micro-assembler-program
    * @param asm the assembler-program
-   * @throws FileFormatException if the format of either the assembler- or the micro-assembler-program is incorrect.
+   * @throws FileFormatException if one of the streams contains a file with the wrong file format
    */
   public Mic1(final InputStream micAsm, final InputStream asm) throws FileFormatException {
-    this.controlStore = new Mic1ControlStore(micAsm);
+    this.controlStore = createMic1ControlStore(micAsm);
 
     //TODO implement maximum size of memory as argument
     final int maxSize = 0x10000;
-    this.memory = new Memory(maxSize, asm);
+    this.memory = createMemory(asm, maxSize);
+
+    if (this.controlStore == null || this.memory == null) {
+      // inform the caller about the problem
+      throw new FileFormatException();
+    }
 
     initRegisters();
+  }
+
+  /**
+   * Tries to create the memory of the processor and prints an error if one occurred.
+   * 
+   * @since Date: Dec 3, 2011
+   * @param asm the input stream to pass to the {@link Memory#Memory(int, InputStream)}
+   * @param maxSize the maximum size of the memory
+   * @return the constructed memory, or <code>null</code> if an error occurred
+   * @see Memory#Memory(int, InputStream)
+   */
+  private Memory createMemory(final InputStream asm, final int maxSize) {
+    try {
+      return new Memory(maxSize, asm);
+    } catch (final FileFormatException e) {
+      Printer.printErrorln(Text.WRONG_FORMAT_IJVM.text(e.getMessage()));
+      return null;
+    }
+  }
+
+  /**
+   * Tries to create the control store of the processor and prints an error if one occurred.
+   * 
+   * @since Date: Dec 3, 2011
+   * @param micAsm the input stream to pass to the {@link Mic1ControlStore#Mic1ControlStore(InputStream)}
+   * @return the constructed control store, or <code>null</code> if an error occurred
+   * @see Mic1ControlStore#Mic1ControlStore(InputStream)
+   */
+  private Mic1ControlStore createMic1ControlStore(final InputStream micAsm) {
+    try {
+      return new Mic1ControlStore(micAsm);
+    } catch (final FileFormatException e) {
+      Printer.printErrorln(Text.WRONG_FORMAT_MIC1.text(e.getMessage()));
+      return null;
+    }
   }
 
   /**
