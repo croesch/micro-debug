@@ -218,23 +218,32 @@ enum Argument {
    *         for that argument.
    */
   static Map<Argument, String[]> createArgumentList(final String[] args) {
-    // TODO comment this
+    // map that'll contain the parsed arguments
     final Map<Argument, String[]> map = new EnumMap<Argument, String[]>(Argument.class);
+
     if (args != null) {
+      // arguments are a valid array, so start iterating
       for (int i = 0; i < args.length; ++i) {
+
+        // handle only non-null-values
         if (args[i] != null) {
+          // parse the current argument
           final Argument arg = of(args[i]);
           if (arg == null) {
+            // unknown argument, add it to the map as parameter to ERROR_UNKNOWN
             addErrorArgument(map, ERROR_UNKNOWN, args[i]);
           } else {
-            final String[] params = new String[arg.getNumberOfParameters()];
+            // known argument, check if the required parameters are given
             if (i + arg.getNumberOfParameters() < args.length) {
-              for (int j = 0; j < arg.getNumberOfParameters(); ++j) {
-                params[j] = args[j + i + 1];
-              }
+              // copy parameters into own array
+              final String[] params = new String[arg.getNumberOfParameters()];
+              System.arraycopy(args, i + 1, params, 0, arg.getNumberOfParameters());
+              // skip parsing the parameters of current argument in further iterations
               i += arg.getNumberOfParameters();
+              // put argument with parameters to the map
               map.put(arg, params);
             } else {
+              // not enough parameters given, add argument as parameter to ERROR_PARAM_NUMBER
               addErrorArgument(map, Argument.ERROR_PARAM_NUMBER, args[i]);
             }
           }

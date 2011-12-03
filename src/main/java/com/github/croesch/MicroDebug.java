@@ -21,6 +21,7 @@ package com.github.croesch;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import com.github.croesch.console.Printer;
@@ -73,36 +74,57 @@ public final class MicroDebug {
    * @param args the array that contains at least to arguments and is not <code>null</code>.
    */
   private static void handleEnoughArguments(final String[] args) {
+    // create the array containing only the variable arguments
     final String[] optionArgs = new String[args.length - 2];
     System.arraycopy(args, 0, optionArgs, 0, optionArgs.length);
 
-    boolean startApplication = true;
+    // handle the arguments
+    final boolean startApplication = executeTheArguments(Argument.createArgumentList(optionArgs));
 
-    final Map<Argument, String[]> map = Argument.createArgumentList(optionArgs);
-    for (final Argument arg : map.keySet()) {
-      LOGGER.fine("Executing argument: " + arg);
-      startApplication &= arg.execute(map.get(arg));
-    }
-
+    // start the application itself, if the arguments where valid
     LOGGER.finer("starting application: " + startApplication);
     if (startApplication) {
+
+      // create streams to read from the two binary files
       final String ijvmFile = args[args.length - 1];
       final String mic1File = args[args.length - 2];
       LOGGER.config(".ijvm-file: " + ijvmFile);
       LOGGER.config(".mic1-file: " + mic1File);
-
       final FileInputStream micAsm = createFileInputStream(mic1File);
       final FileInputStream asm = createFileInputStream(ijvmFile);
 
+      // if files where found, try to start application
       if (micAsm != null && asm != null) {
         try {
           // TODO .. implement ..
           new Mic1(micAsm, asm);
         } catch (final FileFormatException e) {
+          // the input files were invalid, log this, user has already received information
           LOGGER.finest("started application with wrong file format");
         }
       }
     }
+  }
+
+  /**
+   * Executes all {@link Argument}s in the given {@link Map} with the parameters stored in the map.
+   * 
+   * @since Date: Dec 3, 2011
+   * @param map the map that contains the {@link Argument}s and the {@link String[]} as parameter for the argument.
+   * @return <code>true</code> if the application can be started, <code>false</code> otherwise
+   */
+  private static boolean executeTheArguments(final Map<Argument, String[]> map) {
+    boolean startApplication = true;
+
+    for (final Entry<Argument, String[]> argumentEntry : map.entrySet()) {
+      final Argument arg = argumentEntry.getKey();
+      final String[] params = argumentEntry.getValue();
+
+      LOGGER.fine("Executing argument: " + arg);
+      startApplication &= arg.execute(params);
+    }
+
+    return startApplication;
   }
 
   /**
