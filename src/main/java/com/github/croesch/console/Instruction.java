@@ -18,12 +18,10 @@
  */
 package com.github.croesch.console;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Locale;
 
-import com.github.croesch.console.io.Printer;
 import com.github.croesch.misc.Utils;
 
 /**
@@ -50,24 +48,8 @@ enum Instruction {
 
     @Override
     public boolean execute(final String ... params) {
-      BufferedReader reader = null;
-      try {
-        reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(HELP_FILE)));
-        String line;
-        while ((line = reader.readLine()) != null) {
-          Printer.println(line);
-        }
-      } catch (final IOException e) {
-        Utils.logThrownThrowable(e);
-      } finally {
-        if (reader != null) {
-          try {
-            reader.close();
-          } catch (final IOException e) {
-            Utils.logThrownThrowable(e);
-          }
-        }
-      }
+      final InputStream fileStream = Utils.class.getClassLoader().getResourceAsStream(HELP_FILE);
+      Utils.printReaderToPrinter(new InputStreamReader(fileStream));
       return true;
     }
   };
