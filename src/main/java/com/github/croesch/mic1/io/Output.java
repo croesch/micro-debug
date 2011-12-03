@@ -68,6 +68,17 @@ public final class Output {
   }
 
   /**
+   * Returns whether this output is buffered or not. See {@link #setBuffered(boolean)} for more information.
+   * 
+   * @since Date: Dec 3, 2011
+   * @return <code>true</code>, if the output is buffered
+   * @see #setBuffered(boolean)
+   */
+  public static boolean isBuffered() {
+    return buffered;
+  }
+
+  /**
    * Prints a single byte to the {@link PrintStream}. If the output is buffered, the output will be flushed, when
    * {@link #print(byte)} is called with a LF.
    * 

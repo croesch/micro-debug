@@ -20,13 +20,17 @@ package com.github.croesch;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 
 import org.junit.Test;
 
 import com.github.croesch.console.Printer;
 import com.github.croesch.i18n.Text;
+import com.github.croesch.mic1.io.Output;
 
 /**
  * TODO write test, if there's an argument with at least one parameter<br>
@@ -168,6 +172,46 @@ public class ArgumentTest {
 
     assertThat(Argument.VERSION.execute(null)).isFalse();
     assertThat(out.toString()).isEqualTo(Text.VERSION.text() + "\n");
+  }
+
+  @Test
+  public final void testExecuteHelp() throws IOException {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    assertThat(Argument.HELP.execute(null)).isFalse();
+
+    final StringBuilder sb = new StringBuilder();
+    BufferedReader reader = null;
+    try {
+      reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("help.txt")));
+      String line;
+      while ((line = reader.readLine()) != null) {
+        sb.append(line).append("\n");
+      }
+    } finally {
+      if (reader != null) {
+        reader.close();
+      }
+    }
+
+    assertThat(out.toString()).isEqualTo(sb.toString());
+  }
+
+  @Test
+  public final void testExecuteUnbufferedOutput() {
+    assertThat(Argument.UNBUFFERED_OUTPUT.execute(null)).isTrue();
+    assertThat(Output.isBuffered()).isFalse();
+
+    Output.setBuffered(true);
+    assertThat(Output.isBuffered()).isTrue();
+    assertThat(Argument.UNBUFFERED_OUTPUT.execute(null)).isTrue();
+    assertThat(Output.isBuffered()).isFalse();
+
+    assertThat(Argument.UNBUFFERED_OUTPUT.execute(null)).isTrue();
+    assertThat(Output.isBuffered()).isFalse();
+
+    Output.setBuffered(true);
   }
 
   @Test

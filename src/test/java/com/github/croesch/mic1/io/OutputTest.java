@@ -57,14 +57,17 @@ public class OutputTest {
 
   @Test
   public void testSetBuffered_Unbuffered() throws IOException {
+    assertThat(Output.isBuffered()).isTrue();
     Output.print((byte) '0');
     Output.print((byte) '1');
     assertThat(out.toString()).isEmpty();
     Output.setBuffered(false);
+    assertThat(Output.isBuffered()).isFalse();
     assertThat(out.toString()).isEqualTo("01");
     out.reset();
     Output.print((byte) '2');
     assertThat(out.toString()).isEqualTo("2");
+    assertThat(Output.isBuffered()).isFalse();
   }
 
   @Test
@@ -72,6 +75,7 @@ public class OutputTest {
     final ByteArrayOutputStream out2 = new ByteArrayOutputStream();
 
     Output.setOut(new PrintStream(out2));
+    assertThat(Output.isBuffered()).isTrue();
     Output.print((byte) '9');
     Output.print((byte) '8');
     assertThat(out.toString()).isEmpty();
@@ -83,6 +87,7 @@ public class OutputTest {
 
     Output.setOut(null);
 
+    assertThat(Output.isBuffered()).isTrue();
     Output.print((byte) '7');
     Output.print((byte) '6');
     assertThat(out.toString()).isEmpty();
@@ -93,6 +98,7 @@ public class OutputTest {
 
   @Test
   public void testPrint() throws IOException {
+    assertThat(Output.isBuffered()).isTrue();
     Output.print((byte) '9');
     Output.print((byte) '8');
     assertThat(out.toString()).isEmpty();
@@ -100,6 +106,7 @@ public class OutputTest {
     assertThat(out.toString()).isEqualTo("98\n");
     out.reset();
 
+    assertThat(Output.isBuffered()).isTrue();
     Output.print((byte) '7');
     Output.print((byte) '6');
     assertThat(out.toString()).isEmpty();
@@ -119,6 +126,7 @@ public class OutputTest {
 
   @Test
   public void testFlush() throws IOException {
+    assertThat(Output.isBuffered()).isTrue();
     Output.print((byte) 'a');
     Output.print((byte) 'b');
     Output.print((byte) 'c');
@@ -128,6 +136,7 @@ public class OutputTest {
     assertThat(out.toString()).isEqualTo("abcc");
     out.reset();
 
+    assertThat(Output.isBuffered()).isTrue();
     Output.print((byte) 'b');
     Output.print((byte) 'c');
     Output.print((byte) 'a');

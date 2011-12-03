@@ -18,6 +18,9 @@
  */
 package com.github.croesch;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
@@ -25,6 +28,8 @@ import java.util.logging.Logger;
 
 import com.github.croesch.console.Printer;
 import com.github.croesch.i18n.Text;
+import com.github.croesch.mic1.io.Output;
+import com.github.croesch.misc.Utils;
 
 /**
  * Enumeration of all possible command line arguments for the debugger.
@@ -36,9 +41,29 @@ enum Argument {
 
   /** argument to view a help about usage of the debugger */
   HELP {
+    /** path to the file containing the help text */
+    private static final String HELP_FILE = "help.txt";
+
     @Override
     public boolean execute(final String[] params) {
-      // TODO Auto-generated method stub
+      BufferedReader reader = null;
+      try {
+        reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(HELP_FILE)));
+        String line;
+        while ((line = reader.readLine()) != null) {
+          Printer.println(line);
+        }
+      } catch (final IOException e) {
+        Utils.logThrownThrowable(e);
+      } finally {
+        if (reader != null) {
+          try {
+            reader.close();
+          } catch (final IOException e) {
+            Utils.logThrownThrowable(e);
+          }
+        }
+      }
       return false;
     }
   },
@@ -79,8 +104,8 @@ enum Argument {
   UNBUFFERED_OUTPUT {
     @Override
     public boolean execute(final String[] params) {
-      // TODO Auto-generated method stub
-      return false;
+      Output.setBuffered(false);
+      return true;
     }
   },
 

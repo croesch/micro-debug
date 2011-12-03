@@ -51,3 +51,5 @@
 	- Printer implementiert, als Schnittstelle zur Konsolenausgabe
 03.12.2011 (0,5 h)
 	- Anzahl der Programm-Argumente implementiert (mic1+ijvm+X | V/H)
+	- Argument --unbuffered-output implementiert
+	- Argument --help implementiert

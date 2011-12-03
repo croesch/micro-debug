@@ -1,0 +1,32 @@
+NAME
+	MicroDebug - debug micro-assembler and assembler files
+
+SYNOPSIS
+	MicroDebug [OPTION]... MIC1 IJVM
+	MicroDebug -h|--help|-v|--version
+
+DESCRIPTION
+	Debug micro-assembler-file MIC1 and assembler-file IJVM.
+
+	Mandatory arguments to long options are mandatory for short options too.
+
+	-h, --help
+		display this help and exit.
+
+	-u, --unbuffered-output
+		make the output of the application being debugged printed unbuffered.
+		So each time a character is being written by the application, this character
+		will be printed to the output of MicroDebug immediately.
+
+	-v, --version
+		display version information and exit.
+
+AUTHOR
+	Written by Christian Rösch.
+
+REPORTING BUGS
+	Report MicroDebug bugs to <https://github.com/croesch/micro-debug/issues>
+
+COPYRIGHT
+	Copyright © 2011 Christian Rösch.  License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+	This is free software: you are free to change and redistribute it.  There is NO WARRANTY, to the extent permitted by law.
