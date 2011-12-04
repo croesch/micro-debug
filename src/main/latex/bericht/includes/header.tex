@@ -12,7 +12,7 @@
  bibliography=totoc,	% fügt Literaturverzeichnis in Inhaltsangabe ein
 	 abstract=false,		%needed?
 	titlepage=false
-]{report}
+]{scrreprt}
 
 \raggedright
 
@@ -104,14 +104,7 @@ showstringspaces=false,									% underline spaces in strings
 \widowpenalty = 10000
 \displaywidowpenalty = 10000
 
-\newcommand{\figref}[1]{Abbildung~\ref{fig:#1}}
-\newcommand{\secref}[1]{Abschnitt~\ref{sec:#1}}
-\newcommand{\tabref}[1]{Tabelle~\ref{tbl:#1}}
-\newcommand{\lstref}[1]{Listing~\ref{lst:#1}}
-\newcommand{\srcref}[1]{Zeile~\ref{src:#1}}
-\newcommand{\chpref}[1]{Kapitel~\ref{chp:#1}}
-\newcommand{\icon}{icon~Systemhaus~GmbH\ }
-\newcommand{\git}{git}
+\input{includes/commands}
 
 % \usepackage{ifthen}
 % \newcommand{\vgl}[2][]{% #1 = optional, #2 = notwendig
