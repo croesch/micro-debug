@@ -33,8 +33,14 @@ public final class Mic1InstructionDecoder {
   /** contains a bit mask to define the highest bit in the nine-bit-value of address - 2 to the 8th */
   private static final int HIGHEST_BIT_OF_ADDRESS = 256;
 
-  /** the text to represent negotiation of a value */
+  /** the text to represent 'not' operation of a value */
   private static final String TXT_NOT = "NOT";
+
+  /** the text to represent 'or' operation of two values */
+  private static final String TXT_OR = "OR";
+
+  /** the text to represent 'and' operation of two values */
+  private static final String TXT_AND = "AND";
 
   /**
    * Hides constructor from being invoked.
@@ -53,25 +59,25 @@ public final class Mic1InstructionDecoder {
    * @return the {@link String} representing the function of the given instruction
    */
   public static String decode(final Mic1Instruction instruction) {
-    StringBuilder s = new StringBuilder();
-    final String a = "H";
-    final String b = decodeBBusBits(instruction.getbBusSelect());
+    StringBuilder decodedInstruction = new StringBuilder();
+    final String aBusValue = Register.H.name();
+    final String bBusValue = decodeBBusBits(instruction.getbBusSelect());
 
-    decodeCBusBits(instruction.getCBusSignals(), s);
-    decodeALUOperation(instruction.getAluSignals(), s, a, b);
-    decodeShifterOperation(instruction.getAluSignals(), s);
-    decodeMemoryBits(instruction.getMemorySignals(), s);
-    decodeJMPAndAddress(instruction.getJmpSignals(), instruction.getNextAddress(), s);
+    decodeCBusBits(instruction.getCBusSignals(), decodedInstruction);
+    decodeALUOperation(instruction.getAluSignals(), decodedInstruction, aBusValue, bBusValue);
+    decodeShifterOperation(instruction.getAluSignals(), decodedInstruction);
+    decodeMemoryBits(instruction.getMemorySignals(), decodedInstruction);
+    decodeJMPAndAddress(instruction.getJmpSignals(), instruction.getNextAddress(), decodedInstruction);
 
     // TODO decide when to write 'nop'
     //    if (s.toString().equals("0")) {
     //      s = new StringBuilder("nop");
     //    } else 
-    if (s.toString().startsWith("0;")) {
-      s = new StringBuilder(s.toString().substring(2));
+    if (decodedInstruction.toString().startsWith("0;")) {
+      decodedInstruction = new StringBuilder(decodedInstruction.toString().substring(2));
     }
 
-    return s.toString();
+    return decodedInstruction.toString();
   }
 
   /**
@@ -97,11 +103,11 @@ public final class Mic1InstructionDecoder {
       s.append(convertIntToHex(nextAddress | HIGHEST_BIT_OF_ADDRESS)).append("; else goto 0x");
       s.append(convertIntToHex(nextAddress));
     } else if (jmpSignals.isJmpC()) {
-      if (nextAddress == 0) {
-        s.append(";goto (MBR)");
-      } else {
-        s.append(";goto (MBR OR 0x").append(convertIntToHex(nextAddress)).append(")");
+      s.append(";goto (").append(Register.MBR.name());
+      if (nextAddress != 0) {
+        s.append(" ").append(TXT_OR).append(" 0x").append(convertIntToHex(nextAddress));
       }
+      s.append(")");
     } else {
       s.append(";goto 0x").append(convertIntToHex(nextAddress));
     }
@@ -293,16 +299,16 @@ public final class Mic1InstructionDecoder {
     if (aluSignals.isEnA()) {
       if (aluSignals.isEnB()) {
         if (aluSignals.isInvA()) {
-          s.append("(" + TXT_NOT + " ").append(a).append(") OR ").append(b);
-        } else {
-          s.append(a).append(" OR ").append(b);
-        }
-      } else {
-        if (aluSignals.isInvA()) {
-          s.append(TXT_NOT + " ").append(a);
+          s.append("(").append(TXT_NOT).append(" ").append(a).append(")");
         } else {
           s.append(a);
         }
+        s.append(" ").append(TXT_OR).append(" ").append(b);
+      } else {
+        if (aluSignals.isInvA()) {
+          s.append(TXT_NOT).append(" ");
+        }
+        s.append(a);
       }
     } else { // a is not enabled
       if (aluSignals.isInvA()) {
@@ -331,11 +337,11 @@ public final class Mic1InstructionDecoder {
     if (aluSignals.isEnB()) {
       if (aluSignals.isEnA()) {
         if (aluSignals.isInvA()) {
-          s.append("(" + TXT_NOT + " ").append(a).append(")");
+          s.append("(").append(TXT_NOT).append(" ").append(a).append(")");
         } else {
           s.append(a);
         }
-        s.append(" AND ").append(b);
+        s.append(" ").append(TXT_AND).append(" ").append(b);
       } else if (aluSignals.isInvA()) {
         s.append(b);
       } else {
@@ -372,31 +378,31 @@ public final class Mic1InstructionDecoder {
   static void decodeCBusBits(final Mic1CBusSignalSet cBusSignals, final StringBuilder s) {
     // decode the C-bus bits
     if (cBusSignals.isH()) {
-      s.append("H=");
+      s.append(Register.H.name()).append("=");
     }
     if (cBusSignals.isOpc()) {
-      s.append("OPC=");
+      s.append(Register.OPC.name()).append("=");
     }
     if (cBusSignals.isTos()) {
-      s.append("TOS=");
+      s.append(Register.TOS.name()).append("=");
     }
     if (cBusSignals.isCpp()) {
-      s.append("CPP=");
+      s.append(Register.CPP.name()).append("=");
     }
     if (cBusSignals.isLv()) {
-      s.append("LV=");
+      s.append(Register.LV.name()).append("=");
     }
     if (cBusSignals.isSp()) {
-      s.append("SP=");
+      s.append(Register.SP.name()).append("=");
     }
     if (cBusSignals.isPc()) {
-      s.append("PC=");
+      s.append(Register.PC.name()).append("=");
     }
     if (cBusSignals.isMdr()) {
-      s.append("MDR=");
+      s.append(Register.MDR.name()).append("=");
     }
     if (cBusSignals.isMar()) {
-      s.append("MAR=");
+      s.append(Register.MAR.name()).append("=");
     }
   }
 
