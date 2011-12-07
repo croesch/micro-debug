@@ -54,21 +54,42 @@ Ist es möglich, dass ich die TeX-Version des Skripts bekomme, um es für meinen
 
 --------------------------------------------------
 Wenn der Speicher über mmio Daten liest, muss er ja gepuffert lesen, soll das Schreiben auch gepuffert geschehen?
+     Programmargument implementieren zur Dateiausgabe.
 
+Wie nop und wie halt implementieren/verstehen?
+    nop: nicht extra implementieren -> goto xy
+    halt: ist nur goto zu sich selbst
 
+Initialwerte für Register?
+    Konfigurierbar, alle 0, bis auf PC, CPP, LV, SP
+
+Wie ijvm-Code von Daten unterscheiden? Beim Ausgeben ..
+    Wir gehen von ijvm-code aus. Code anhand der Initialwerte der Register
+
+IJVM.conf Datei lesen und dem Benutzer die Möglichkeit geben, diese Datei zu ändern
+
+IJVM breakpoint, wenn Mic1Instruction at 0x3 gelesen wird und MBR = breakpoint ist
+    --> 0x3 in properties Datei
+
+Stack ausgeben: Initial-SP - aktueller SP
+    --> SP wächst "nach oben"
+
+unknown-argument --> Hilfe anzeigen
+
+Willkommen-Nachricht beim Start anzeigen
+
+Dateiformat-Fehler --> Benutzerlage beachten, bspw. "did you assemble ..", Details loggen
+
+Java 5!
+
+Instruction --> UserInstruction
+
+10_123123 --> 123123_10 (0x, 0o, 0b anbieten)
+
+--------------------------------------------------
 Was soll geschehen, wenn auf eine undefinierte (negativ / höher als Maximum) Speicherstelle zugegriffen wird?
 
 
 Die magic-number für IJVM-Dateien prüfen? Das Format einfach nutzen?
 
 
-Skript 7.5.6 i=0x68 muss i=0x69 lauten.
-
-
-Wie nop und wie halt implementieren/verstehen?
-
-
-Initialwerte für Register?
-
-
-Wie ijvm-Code von Daten unterscheiden? Beim Ausgeben ..
