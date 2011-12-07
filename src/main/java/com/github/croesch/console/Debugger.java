@@ -47,7 +47,9 @@ public final class Debugger implements Runnable {
     this.processor = mic1;
   }
 
-  @Override
+  /**
+   * Starts the debugger and returns when the debugger ended his work.
+   */
   public void run() {
     boolean canContinue = true;
     while (canContinue) {
