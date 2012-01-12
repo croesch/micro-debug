@@ -34,6 +34,9 @@ public enum Text {
   /** the text for the version of the program. */
   VERSION,
 
+  /** the text that is printed when the program is started, before any error message */
+  GREETING,
+
   // descriptions of different problems
 
   /** the text to format an error line output */

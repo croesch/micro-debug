@@ -60,3 +60,5 @@
 	- (keine ausreichenden Integrationstests)
 04.12.2011 (3,5 h)
 	- Bericht über Werkzeuge git und maven geschrieben
+12.01.2012 (0,5 h)
+	- Begrüßungsnachricht hinzugefügt

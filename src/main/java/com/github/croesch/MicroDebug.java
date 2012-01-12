@@ -59,6 +59,8 @@ public final class MicroDebug {
    */
   public static void main(final String[] args) {
 
+    Printer.println(Text.GREETING);
+
     if (args == null || args.length == 0) {
       handleNoArguments();
     } else if (args.length == 1) {
