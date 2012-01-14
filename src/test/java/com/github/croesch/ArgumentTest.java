@@ -52,8 +52,8 @@ public class ArgumentTest {
     assertThat(Argument.of("--unbuffered-output")).isSameAs(Argument.UNBUFFERED_OUTPUT);
     assertThat(Argument.of("-u")).isSameAs(Argument.UNBUFFERED_OUTPUT);
 
-    //    assertThat(Argument.of("--debug-level")).isSameAs(Argument.DEBUG_LEVEL);
-    //    assertThat(Argument.of("-d")).isSameAs(Argument.DEBUG_LEVEL);
+    assertThat(Argument.of("--output-file")).isSameAs(Argument.OUTPUT_FILE);
+    assertThat(Argument.of("-o")).isSameAs(Argument.OUTPUT_FILE);
   }
 
   @Test
@@ -124,45 +124,49 @@ public class ArgumentTest {
     assertThat(Argument.createArgumentList(args).get(Argument.VERSION)).isEmpty();
   }
 
-  //  @Test
-  //  public final void testCreateArgumentList_DebugLevelInArray() {
-  //    String[] args = new String[] { "-d" };
-  //
-  //    assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.ERROR_PARAM_NUMBER);
-  //    assertThat(Argument.createArgumentList(args).get(Argument.ERROR_PARAM_NUMBER)).containsOnly("-d");
-  //
-  //    args = new String[] { "-d", "2" };
-  //    assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.DEBUG_LEVEL);
-  //    assertThat(Argument.createArgumentList(args).get(Argument.DEBUG_LEVEL)).containsOnly("2");
-  //
-  //    args = new String[] { "--debug-level", "2" };
-  //    assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.DEBUG_LEVEL);
-  //    assertThat(Argument.createArgumentList(args).get(Argument.DEBUG_LEVEL)).containsOnly("2");
-  //  }
+  @Test
+  public final void testCreateArgumentList_OutputFileInArray() {
+    String[] args = new String[] { "-o" };
+
+    assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.ERROR_PARAM_NUMBER);
+    assertThat(Argument.createArgumentList(args).get(Argument.ERROR_PARAM_NUMBER)).containsOnly("-o");
+
+    args = new String[] { "-o", "2" };
+    assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.OUTPUT_FILE);
+    assertThat(Argument.createArgumentList(args).get(Argument.OUTPUT_FILE)).containsOnly("2");
+
+    args = new String[] { "--output-file", "2" };
+    assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.OUTPUT_FILE);
+    assertThat(Argument.createArgumentList(args).get(Argument.OUTPUT_FILE)).containsOnly("2");
+  }
 
   @Test
   public final void testCreateArgumentList() {
-    final String[] args = new String[] { "-h", "-v", null, "--help", "--xxno-argument", "null" };
+    final String[] args = new String[] { "-h", "-v", null, "--help", "--xxno-argument", "null", "-o" };
 
-    assertThat(Argument.createArgumentList(args)).hasSize(3);
+    assertThat(Argument.createArgumentList(args)).hasSize(4);
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.VERSION, Argument.HELP,
-                                                                        Argument.ERROR_UNKNOWN);
+                                                                        Argument.ERROR_UNKNOWN,
+                                                                        Argument.ERROR_PARAM_NUMBER);
     assertThat(Argument.createArgumentList(args).get(Argument.VERSION)).isEmpty();
     assertThat(Argument.createArgumentList(args).get(Argument.HELP)).isEmpty();
     assertThat(Argument.createArgumentList(args).get(Argument.ERROR_UNKNOWN)).containsOnly("--xxno-argument", "null");
+    assertThat(Argument.createArgumentList(args).get(Argument.ERROR_PARAM_NUMBER)).containsOnly("-o");
   }
 
   @Test
   public final void testCreateArgumentList2() {
-    final String[] args = new String[] { "-h", "-v", null, "--xxno-argument", "null", "-dx", "-d" };
+    final String[] args = new String[] { "-h", "-v", null, "--xxno-argument", "null", "-dx", "-d", "--output-file" };
 
-    assertThat(Argument.createArgumentList(args)).hasSize(3);
+    assertThat(Argument.createArgumentList(args)).hasSize(4);
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.VERSION, Argument.HELP,
-                                                                        Argument.ERROR_UNKNOWN);
+                                                                        Argument.ERROR_UNKNOWN,
+                                                                        Argument.ERROR_PARAM_NUMBER);
     assertThat(Argument.createArgumentList(args).get(Argument.HELP)).isEmpty();
     assertThat(Argument.createArgumentList(args).get(Argument.VERSION)).isEmpty();
     assertThat(Argument.createArgumentList(args).get(Argument.ERROR_UNKNOWN)).containsOnly("--xxno-argument", "null",
                                                                                            "-dx", "-d");
+    assertThat(Argument.createArgumentList(args).get(Argument.ERROR_PARAM_NUMBER)).containsOnly("--output-file");
   }
 
   @Test
@@ -237,6 +241,24 @@ public class ArgumentTest {
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("bla")) + "\n"
                                                  + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("--bla")) + "\n"
                                                  + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("-wow")) + "\n");
+  }
+
+  @Test
+  public final void testExecuteParameterNumber() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    assertThat(Argument.ERROR_PARAM_NUMBER.execute(null)).isTrue();
+    assertThat(out.toString()).isEmpty();
+
+    assertThat(Argument.ERROR_PARAM_NUMBER.execute(new String[] {})).isTrue();
+    assertThat(out.toString()).isEmpty();
+
+    assertThat(Argument.ERROR_PARAM_NUMBER.execute(new String[] { null })).isTrue();
+    assertThat(out.toString()).isEmpty();
+
+    assertThat(Argument.ERROR_PARAM_NUMBER.execute(new String[] { "-o" })).isFalse();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.ARGUMENT_WITH_WRONG_PARAM_NUMBER.text("-o")) + "\n");
   }
 
   @Test

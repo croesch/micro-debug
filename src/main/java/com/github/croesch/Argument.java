@@ -18,8 +18,12 @@
  */
 package com.github.croesch;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
@@ -55,22 +59,7 @@ enum Argument {
   ERROR_UNKNOWN {
     @Override
     public boolean execute(final String[] params) {
-      if (params == null || params.length == 0) {
-        // if there are no unknown arguments then calling this method might be a mistake
-        Logger.getLogger(getClass().getName()).warning("No parameters passed to execution of unknown argument error");
-        return true;
-      }
-
-      // flag, because we still might have a corrupt array
-      boolean wrongArgumentFound = false;
-      for (final String param : params) {
-        if (param != null) {
-          // we have the unknown argument, so print it
-          Printer.printErrorln(Text.UNKNOWN_ARGUMENT.text(param));
-          wrongArgumentFound = true;
-        }
-      }
-      return !wrongArgumentFound;
+      return printError(params, Text.UNKNOWN_ARGUMENT, this);
     }
   },
 
@@ -78,8 +67,20 @@ enum Argument {
   ERROR_PARAM_NUMBER {
     @Override
     public boolean execute(final String[] params) {
-      // TODO Auto-generated method stub
-      return false;
+      return printError(params, Text.ARGUMENT_WITH_WRONG_PARAM_NUMBER, this);
+    }
+  },
+
+  /** argument to specify a file to append the output of the debugger to */
+  OUTPUT_FILE (1) {
+    @Override
+    public boolean execute(final String[] params) {
+      try {
+        Output.setOut(new PrintStream(new FileOutputStream(new File(params[0]), true)));
+      } catch (final FileNotFoundException e) {
+        Utils.logThrownThrowable(e);
+      }
+      return true;
     }
   },
 
@@ -282,4 +283,34 @@ enum Argument {
    * @return <code>false</code>, if the argument enforces the application to stop
    */
   public abstract boolean execute(String[] params);
+
+  /**
+   * Prints the given array of arguments as an error. Returns whether the application can continue.
+   * 
+   * @since Date: Jan 14, 2012
+   * @param params the arguments to be printed as an error
+   * @param errorText the {@link Text} that is used to print each argument
+   * @param errorArgument the type of error that the arguments are
+   * @return <code>true</code>, if the application can start,<br>
+   *         <code>false</code> otherwise
+   */
+  boolean printError(final String[] params, final Text errorText, final Argument errorArgument) {
+    if (params == null || params.length == 0) {
+      // if there are no arguments then calling this method might be a mistake
+      Logger.getLogger(getClass().getName()).warning("No parameters passed to execution of '" + errorArgument.name()
+                                                             + "'");
+      return true;
+    }
+
+    // flag, because we still might have a corrupt array
+    boolean argumentFound = false;
+    for (final String param : params) {
+      if (param != null) {
+        // we have the argument, so print it
+        Printer.printErrorln(errorText.text(param));
+        argumentFound = true;
+      }
+    }
+    return !argumentFound;
+  }
 }

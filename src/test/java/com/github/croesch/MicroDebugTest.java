@@ -20,7 +20,12 @@ package com.github.croesch;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.StringReader;
 
@@ -140,5 +145,33 @@ public class MicroDebugTest {
                                   "src/test/resources/mic1/hi.mic1",
                                   "src/test/resources/mic1/hi.ijvm" });
     assertThat(out.toString()).isEqualTo(GREETING + WELCOME + "Hi!\n" + Text.TICKS.text(14) + "\n");
+  }
+
+  @Test
+  public final void testMain_Hi_OutputFile() throws IOException {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+    Reader.setReader(new StringReader("run\nexit"));
+
+    final String filePath = "tmp-micro-debug-test.del";
+    MicroDebug.main(new String[] { "--unbuffered-output",
+                                  "-o",
+                                  filePath,
+                                  "src/test/resources/mic1/hi.mic1",
+                                  "src/test/resources/mic1/hi.ijvm" });
+    assertThat(out.toString()).isEqualTo(GREETING + WELCOME + Text.TICKS.text(14) + "\n");
+
+    BufferedReader in = null;
+    try {
+      in = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));
+      assertThat(in.readLine()).isEqualTo("Hi!");
+      assertThat(in.readLine()).isNull();
+    } finally {
+      if (in != null) {
+        in.close();
+      }
+    }
+
+    new File(filePath).delete();
   }
 }

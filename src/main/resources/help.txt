@@ -13,6 +13,11 @@ DESCRIPTION
 	-h, --help
 		display this help and exit.
 
+	-o, --output-file FILE
+		make the output of the application being debugged printed to the given file.
+		Every output of the processor is appended to that file. The file may exist or not.
+		FILE, the path to the file to append the output to.
+
 	-u, --unbuffered-output
 		make the output of the application being debugged printed unbuffered.
 		So each time a character is being written by the application, this character

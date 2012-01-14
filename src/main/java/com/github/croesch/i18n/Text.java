@@ -63,6 +63,9 @@ public enum Text {
   /** the text to describe an unknown argument */
   UNKNOWN_ARGUMENT,
 
+  /** the text to describe that the argument has the wrong number of parameters */
+  ARGUMENT_WITH_WRONG_PARAM_NUMBER,
+
   /** the text to describe that the argument for the ijvm-file is missing */
   MISSING_IJVM_FILE,
 
