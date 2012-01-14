@@ -40,6 +40,33 @@ class Mic1SignalSet {
   }
 
   /**
+   * Returns the number of signals this set contains.
+   * 
+   * @since Date: Jan 14, 2012
+   * @return the number of signals this set contains, greater or equal than zero
+   * @see Mic1SignalSet#Mic1SignalSet(int)
+   */
+  public final int getSize() {
+    return this.signals.length;
+  }
+
+  /**
+   * Returns whether any of the signals is set.
+   * 
+   * @since Date: Jan 14, 2012
+   * @return <code>true</code>, if at least one of the signals is set,<br>
+   *         <code>false</code> otherwise.
+   */
+  public final boolean isAnythingSet() {
+    for (int i = 0; i < this.signals.length; ++i) {
+      if (this.signals[i]) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Returns whether the specific signal is set.
    * 
    * @since Date: Nov 12, 2011
