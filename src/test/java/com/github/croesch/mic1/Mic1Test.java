@@ -55,6 +55,33 @@ public class Mic1Test {
     }
   }
 
+  @Test(timeout = 4000)
+  public void testDivide() throws FileFormatException {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Output.setOut(new PrintStream(out));
+
+    final Mic1 processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm2.mic1"),
+                                    ClassLoader.getSystemResourceAsStream("mic1/divtest.ijvm"));
+    assertThat(processor.run()).isEqualTo(3965);
+
+    assertThat(out.toString()).isEqualTo("11111111111111111111111110000000\n");
+    Output.setOut(System.out);
+  }
+
+  @Test
+  public void testIJVM() throws FileFormatException {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Output.setOut(new PrintStream(out));
+    Output.setBuffered(false);
+
+    final Mic1 processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                                    ClassLoader.getSystemResourceAsStream("mic1/ijvmtest.ijvm"));
+    assertThat(processor.run()).isEqualTo(31816);
+
+    assertThat(out.toString()).isEqualTo("OK");
+    Output.setOut(System.out);
+  }
+
   @Test
   public void testHi() throws FileFormatException {
     Mic1 processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),

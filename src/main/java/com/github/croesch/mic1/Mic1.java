@@ -65,7 +65,7 @@ public final class Mic1 {
   private Mic1Instruction instruction = null;
 
   /** current value of mpc */
-  private int oldMpc = this.mpcCalculator.getMpc();
+  private int oldMpc = -1;
 
   /** the main memory of the processor */
   private final Memory memory;
@@ -91,8 +91,6 @@ public final class Mic1 {
     }
 
     initRegisters();
-
-    fetchNextInstruction();
   }
 
   /**
@@ -136,6 +134,9 @@ public final class Mic1 {
    * @since Date: Dec 1, 2011
    */
   private void initRegisters() {
+    for (final Register r : Register.values()) {
+      r.setValue(0);
+    }
     Register.PC.setValue(0xFFFFFFFF);
     Register.SP.setValue(0xC000);
     Register.LV.setValue(0x8000);
@@ -284,7 +285,7 @@ public final class Mic1 {
    */
   public int run() {
     int ticks = 0;
-    while (this.instruction != null && !isHaltInstruction()) {
+    while (!isHaltInstruction()) {
       doTick();
       ++ticks;
     }
@@ -301,18 +302,23 @@ public final class Mic1 {
    * @return <code>true</code>, if the current instruction causes the processor to halt
    */
   public boolean isHaltInstruction() {
-    if (this.instruction.isNopOrHalt() && this.mpcCalculator.getMpc() == this.oldMpc) {
+    boolean halt = false;
+
+    // instruction should be >null< only at the beginning of the program
+    if (this.instruction != null && this.instruction.isNopOrHalt() && this.mpcCalculator.getMpc() == this.oldMpc) {
       // regular halt condition
-      return true;
-    }
-    if (this.controlStore.getInstruction(this.mpcCalculator.getMpc()) == null) {
+      halt = true;
+    } else if (this.controlStore.getInstruction(this.mpcCalculator.getMpc()) == null) {
       // instruction points to an undefined position
       LOGGER.warning("instruction at " + Utils.toHexString(this.oldMpc) + " ["
                      + Mic1InstructionDecoder.decode(this.instruction) + "] points to an undefined address: "
                      + Utils.toHexString(this.mpcCalculator.getMpc()));
-      LOGGER.info("processor will now halt");
-      return true;
+      halt = true;
     }
-    return false;
+
+    if (halt && this.instruction != null) {
+      LOGGER.finer("found halt: (" + Mic1InstructionDecoder.decode(this.instruction) + ")");
+    }
+    return halt;
   }
 }
