@@ -36,6 +36,7 @@ import com.github.croesch.mic1.mem.Memory;
 import com.github.croesch.mic1.mpc.NextMPCCalculator;
 import com.github.croesch.mic1.register.Register;
 import com.github.croesch.mic1.shifter.Shifter;
+import com.github.croesch.misc.Settings;
 import com.github.croesch.misc.Utils;
 
 /**
@@ -134,13 +135,16 @@ public final class Mic1 {
    * @since Date: Dec 1, 2011
    */
   private void initRegisters() {
-    for (final Register r : Register.values()) {
-      r.setValue(0);
-    }
-    Register.PC.setValue(0xFFFFFFFF);
-    Register.SP.setValue(0xC000);
-    Register.LV.setValue(0x8000);
-    Register.CPP.setValue(0x4000);
+    Register.CPP.setValue(Settings.MIC1_REGISTER_CPP_DEFVAL.getValue());
+    Register.H.setValue(Settings.MIC1_REGISTER_H_DEFVAL.getValue());
+    Register.LV.setValue(Settings.MIC1_REGISTER_LV_DEFVAL.getValue());
+    Register.MAR.setValue(Settings.MIC1_REGISTER_MAR_DEFVAL.getValue());
+    Register.MBR.setValue(Settings.MIC1_REGISTER_MBR_DEFVAL.getValue());
+    Register.MDR.setValue(Settings.MIC1_REGISTER_MDR_DEFVAL.getValue());
+    Register.OPC.setValue(Settings.MIC1_REGISTER_OPC_DEFVAL.getValue());
+    Register.PC.setValue(Settings.MIC1_REGISTER_PC_DEFVAL.getValue());
+    Register.SP.setValue(Settings.MIC1_REGISTER_SP_DEFVAL.getValue());
+    Register.TOS.setValue(Settings.MIC1_REGISTER_TOS_DEFVAL.getValue());
   }
 
   /**
