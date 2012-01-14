@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.croesch.console;
+package com.github.croesch.misc;
 
 import java.util.Locale;
 
@@ -25,7 +25,7 @@ import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.register.Register;
 
 /**
- * Represents the different types of parameter that can belong to an {@link Instruction}.
+ * Represents the different types of parameter that are possible.
  * 
  * @author croesch
  * @since Date: Dec 3, 2011
