@@ -198,4 +198,26 @@ public final class Mic1Instruction {
   public Register getbBusSelect() {
     return this.bBusSelect;
   }
+
+  /**
+   * Returns whether this instruction simply points to another one without changing something.
+   * 
+   * @since Date: Jan 14, 2012
+   * @return <code>true</code>, if this instruction is simply like <code>goto 0x..</code>
+   */
+  public boolean isNopOrHalt() {
+    if (this.jmpSignals.isAnythingSet()) {
+      return false;
+    }
+    if (this.aluSignals.isAnythingSet()) {
+      return false;
+    }
+    if (this.cBusSignals.isAnythingSet()) {
+      return false;
+    }
+    if (this.memorySignals.isAnythingSet()) {
+      return false;
+    }
+    return true;
+  }
 }

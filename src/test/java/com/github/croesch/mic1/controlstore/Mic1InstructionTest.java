@@ -303,4 +303,40 @@ public class Mic1InstructionTest {
 
     assertThat(this.instruction.toString()).isEqualTo("101010_111_11111111_111111111_111_MBR");
   }
+
+  @Test
+  public void testIsNopOrHalt() {
+    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
+    final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
+
+    this.instruction = new Mic1Instruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
+    assertThat(this.instruction.isNopOrHalt()).isTrue();
+
+    jmpSet.setJmpC(true);
+    this.instruction = new Mic1Instruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
+    assertThat(this.instruction.isNopOrHalt()).isFalse();
+
+    jmpSet.setJmpC(false);
+    this.instruction = new Mic1Instruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
+    assertThat(this.instruction.isNopOrHalt()).isTrue();
+    aluSet.setF1(true);
+    this.instruction = new Mic1Instruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
+    assertThat(this.instruction.isNopOrHalt()).isFalse();
+
+    aluSet.setF1(false);
+    this.instruction = new Mic1Instruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
+    assertThat(this.instruction.isNopOrHalt()).isTrue();
+    cBusSet.setLv(true);
+    this.instruction = new Mic1Instruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
+    assertThat(this.instruction.isNopOrHalt()).isFalse();
+
+    cBusSet.setLv(false);
+    this.instruction = new Mic1Instruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
+    assertThat(this.instruction.isNopOrHalt()).isTrue();
+    memSet.setRead(true);
+    this.instruction = new Mic1Instruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
+    assertThat(this.instruction.isNopOrHalt()).isFalse();
+  }
 }
