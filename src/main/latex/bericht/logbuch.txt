@@ -62,5 +62,9 @@
 	- Bericht über Werkzeuge git und maven geschrieben
 12.01.2012 (0,5 h)
 	- Begrüßungsnachricht hinzugefügt
-14.01.2012 (1 h)
+14.01.2012 (9 h)
 	- Startnachricht hinzugefügt
+	- RUN Kommando implementiert
+	- --output-file Argument implementiert
+	- Properties-Datei erstellt und Zugriff programmiert
+	- Integrationstests für Prozessor/Debugger verbessert
