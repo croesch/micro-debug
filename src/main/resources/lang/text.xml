@@ -24,7 +24,11 @@
 <properties>
 
 	<entry key="version">Version ${version}</entry>
+	
+	<entry key="border">----------------------------------------</entry>
+	
 	<entry key="greeting">MicroDebug - Copyright (C) 2011-2012 Christian Rösch</entry>
+	<entry key="welcome">Welcome! Please type 'help' for a list of valid commands</entry>
 
 	<entry key="error">ERROR: {0}</entry>
 

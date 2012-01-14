@@ -62,12 +62,25 @@ public final class MicroDebug {
     Printer.println(Text.GREETING);
 
     if (args == null || args.length == 0) {
+      printBorder();
       handleNoArguments();
     } else if (args.length == 1) {
+      printBorder();
       handleOneArgument(args[0]);
     } else {
+      Printer.println(Text.WELCOME);
+      printBorder();
       handleEnoughArguments(args);
     }
+  }
+
+  /**
+   * Prints text that visualizes a border.
+   * 
+   * @since Date: Jan 14, 2012
+   */
+  private static void printBorder() {
+    Printer.println(Text.BORDER);
   }
 
   /**
@@ -87,7 +100,6 @@ public final class MicroDebug {
     // start the application itself, if the arguments where valid
     LOGGER.finer("starting application: " + startApplication);
     if (startApplication) {
-
       // create streams to read from the two binary files
       final String ijvmFile = args[args.length - 1];
       final String mic1File = args[args.length - 2];
@@ -153,13 +165,25 @@ public final class MicroDebug {
    */
   private static void handleOneArgument(final String argument) {
     final Argument arg = Argument.of(argument);
-    if (arg == Argument.HELP || arg == Argument.VERSION) {
+
+    if (isValidAsOnlyArgument(arg)) {
       // if the help or version should be viewed it's okay to have only one argument
       arg.execute(null);
     } else {
       Printer.printErrorln(Text.MISSING_IJVM_FILE);
       printTryHelp();
     }
+  }
+
+  /**
+   * Returns whether the given argument is valid to be the only argument given to the application.
+   * 
+   * @since Date: Jan 14, 2012
+   * @param arg the {@link Argument} to check
+   * @return <code>true</code>, whether it is okay to start the application with only the given argument
+   */
+  private static boolean isValidAsOnlyArgument(final Argument arg) {
+    return arg == Argument.HELP || arg == Argument.VERSION;
   }
 
   /**

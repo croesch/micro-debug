@@ -40,6 +40,10 @@ public class MicroDebugTest {
 
   private static final String GREETING = Text.GREETING.text() + "\n";
 
+  private static final String BORDER = Text.BORDER.text() + "\n";
+
+  private static final String WELCOME = Text.WELCOME.text() + "\n" + BORDER;
+
   @Test
   public final void testMain_FileNotFound() {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -47,7 +51,7 @@ public class MicroDebugTest {
 
     MicroDebug.main(new String[] { "asd", "bas" });
 
-    assertThat(out.toString()).isEqualTo(GREETING + Text.ERROR.text(Text.FILE_NOT_FOUND.text("asd")) + "\n"
+    assertThat(out.toString()).isEqualTo(GREETING + WELCOME + Text.ERROR.text(Text.FILE_NOT_FOUND.text("asd")) + "\n"
                                                  + Text.ERROR.text(Text.FILE_NOT_FOUND.text("bas")) + "\n");
 
     Printer.setPrintStream(System.out);
@@ -59,26 +63,26 @@ public class MicroDebugTest {
     Printer.setPrintStream(new PrintStream(out));
 
     MicroDebug.main(new String[] { "-u" });
-    assertThat(out.toString()).isEqualTo(GREETING + Text.ERROR.text(Text.MISSING_IJVM_FILE) + "\n" + Text.TRY_HELP
-                                                 + "\n");
+    assertThat(out.toString()).isEqualTo(GREETING + BORDER + Text.ERROR.text(Text.MISSING_IJVM_FILE) + "\n"
+                                                 + Text.TRY_HELP + "\n");
 
     out.reset();
 
     MicroDebug.main(new String[] { "u" });
-    assertThat(out.toString()).isEqualTo(GREETING + Text.ERROR.text(Text.MISSING_IJVM_FILE) + "\n" + Text.TRY_HELP
-                                                 + "\n");
+    assertThat(out.toString()).isEqualTo(GREETING + BORDER + Text.ERROR.text(Text.MISSING_IJVM_FILE) + "\n"
+                                                 + Text.TRY_HELP + "\n");
 
     out.reset();
 
     MicroDebug.main(new String[] {});
-    assertThat(out.toString()).isEqualTo(GREETING + Text.ERROR.text(Text.MISSING_MIC1_FILE) + "\n"
+    assertThat(out.toString()).isEqualTo(GREETING + BORDER + Text.ERROR.text(Text.MISSING_MIC1_FILE) + "\n"
                                                  + Text.ERROR.text(Text.MISSING_IJVM_FILE) + "\n" + Text.TRY_HELP
                                                  + "\n");
 
     out.reset();
 
     MicroDebug.main(null);
-    assertThat(out.toString()).isEqualTo(GREETING + Text.ERROR.text(Text.MISSING_MIC1_FILE) + "\n"
+    assertThat(out.toString()).isEqualTo(GREETING + BORDER + Text.ERROR.text(Text.MISSING_MIC1_FILE) + "\n"
                                                  + Text.ERROR.text(Text.MISSING_IJVM_FILE) + "\n" + Text.TRY_HELP
                                                  + "\n");
   }
@@ -89,23 +93,23 @@ public class MicroDebugTest {
     Printer.setPrintStream(new PrintStream(out));
 
     MicroDebug.main(new String[] { "-v" });
-    assertThat(out.toString()).isEqualTo(GREETING + Text.VERSION.text() + "\n");
+    assertThat(out.toString()).isEqualTo(GREETING + BORDER + Text.VERSION.text() + "\n");
 
     out.reset();
 
     MicroDebug.main(new String[] { "--version" });
-    assertThat(out.toString()).isEqualTo(GREETING + Text.VERSION.text() + "\n");
+    assertThat(out.toString()).isEqualTo(GREETING + BORDER + Text.VERSION.text() + "\n");
 
     out.reset();
 
     MicroDebug.main(new String[] { "--version", "mic1", "ijvm" });
-    assertThat(out.toString()).isEqualTo(GREETING + Text.VERSION.text() + "\n");
+    assertThat(out.toString()).isEqualTo(GREETING + WELCOME + Text.VERSION.text() + "\n");
 
     out.reset();
 
     MicroDebug.main(new String[] { "--version", "mic1" });
-    assertThat(out.toString()).isEqualTo(GREETING + Text.ERROR.text(Text.FILE_NOT_FOUND.text("--version")) + "\n"
-                                                 + Text.ERROR.text(Text.FILE_NOT_FOUND.text("mic1")) + "\n");
+    assertThat(out.toString()).isEqualTo(GREETING + WELCOME + Text.ERROR.text(Text.FILE_NOT_FOUND.text("--version"))
+                                                 + "\n" + Text.ERROR.text(Text.FILE_NOT_FOUND.text("mic1")) + "\n");
   }
 
   @Test
@@ -114,12 +118,13 @@ public class MicroDebugTest {
     Printer.setPrintStream(new PrintStream(out));
 
     MicroDebug.main(new String[] { "-xxx", "", "" });
-    assertThat(out.toString()).isEqualTo(GREETING + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("-xxx")) + "\n");
+    assertThat(out.toString()).isEqualTo(GREETING + WELCOME + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("-xxx"))
+                                                 + "\n");
 
     out.reset();
 
     MicroDebug.main(new String[] { "asd", "efgh", "xy", "as" });
-    assertThat(out.toString()).isEqualTo(GREETING + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("asd")) + "\n"
+    assertThat(out.toString()).isEqualTo(GREETING + WELCOME + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("asd")) + "\n"
                                                  + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("efgh")) + "\n");
   }
 
@@ -131,6 +136,6 @@ public class MicroDebugTest {
     MicroDebug.main(new String[] { "--unbuffered-output",
                                   "src/test/resources/mic1/hi.mic1",
                                   "src/test/resources/mic1/hi.ijvm" });
-    assertThat(out.toString()).isEqualTo(GREETING);
+    assertThat(out.toString()).isEqualTo(GREETING + WELCOME);
   }
 }

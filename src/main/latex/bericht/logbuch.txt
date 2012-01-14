@@ -62,3 +62,5 @@
 	- Bericht über Werkzeuge git und maven geschrieben
 12.01.2012 (0,5 h)
 	- Begrüßungsnachricht hinzugefügt
+14.01.2012 (1 h)
+	- Startnachricht hinzugefügt

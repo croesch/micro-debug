@@ -34,8 +34,14 @@ public enum Text {
   /** the text for the version of the program. */
   VERSION,
 
+  /** the text to visualize a border */
+  BORDER,
+
   /** the text that is printed when the program is started, before any error message */
   GREETING,
+
+  /** the text that is printed, when the program is starting. Only if no error occured */
+  WELCOME,
 
   // descriptions of different problems
 
