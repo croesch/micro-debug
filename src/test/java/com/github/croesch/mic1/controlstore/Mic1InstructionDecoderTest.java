@@ -63,6 +63,14 @@ public class Mic1InstructionDecoderTest {
                                            Register.MDR);
     assertThat(Mic1InstructionDecoder.decode(this.instruction)).isEqualTo("goto 0x0");
 
+    this.instruction = new Mic1Instruction(144,
+                                           new Mic1JMPSignalSet(),
+                                           new Mic1ALUSignalSet(),
+                                           new Mic1CBusSignalSet(),
+                                           new Mic1MemorySignalSet(),
+                                           Register.SP);
+    assertThat(Mic1InstructionDecoder.decode(this.instruction)).isEqualTo("goto 0x90");
+
     final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
     final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
     final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
