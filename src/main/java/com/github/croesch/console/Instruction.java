@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.util.Locale;
 
 import com.github.croesch.console.io.Printer;
+import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.Mic1;
 import com.github.croesch.misc.Utils;
 
@@ -52,6 +53,16 @@ enum Instruction {
     public boolean execute(final Mic1 processor, final String ... params) {
       final InputStream fileStream = Utils.class.getClassLoader().getResourceAsStream(HELP_FILE);
       Printer.printReader(new InputStreamReader(fileStream));
+      return true;
+    }
+  },
+
+  /** runs the program to the end */
+  RUN {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      final int ticks = processor.run();
+      Printer.println(Text.TICKS.text(ticks));
       return true;
     }
   };

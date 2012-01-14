@@ -43,6 +43,9 @@ public enum Text {
   /** the text that is printed, when the program is starting. Only if no error occured */
   WELCOME,
 
+  /** the text to view how many ticks have been executed by the processor */
+  TICKS,
+
   // descriptions of different problems
 
   /** the text to format an error line output */

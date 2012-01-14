@@ -30,6 +30,8 @@
 	<entry key="greeting">MicroDebug - Copyright (C) 2011-2012 Christian Rösch</entry>
 	<entry key="welcome">Welcome! Please type 'help' for a list of valid commands</entry>
 
+	<entry key="ticks">Processor executed {0} ticks.</entry>
+
 	<entry key="error">ERROR: {0}</entry>
 
 	<entry key="invalid-number">'{0}' is not a valid number</entry>

@@ -29,6 +29,7 @@ import org.junit.Test;
 import com.github.croesch.console.io.Printer;
 import com.github.croesch.console.io.Reader;
 import com.github.croesch.i18n.Text;
+import com.github.croesch.mic1.io.Output;
 
 /**
  * Contains tests for {@link MicroDebug}.
@@ -132,10 +133,12 @@ public class MicroDebugTest {
   public final void testMain_Hi() {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
-    Reader.setReader(new StringReader("exit"));
+    Output.setOut(new PrintStream(out));
+    Reader.setReader(new StringReader("run\nexit"));
+
     MicroDebug.main(new String[] { "--unbuffered-output",
                                   "src/test/resources/mic1/hi.mic1",
                                   "src/test/resources/mic1/hi.ijvm" });
-    assertThat(out.toString()).isEqualTo(GREETING + WELCOME);
+    assertThat(out.toString()).isEqualTo(GREETING + WELCOME + "Hi!\n" + Text.TICKS.text(14) + "\n");
   }
 }

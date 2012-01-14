@@ -29,6 +29,8 @@ import java.io.PrintStream;
 import org.junit.Test;
 
 import com.github.croesch.console.io.Printer;
+import com.github.croesch.i18n.Text;
+import com.github.croesch.mic1.Mic1;
 
 /**
  * Provides test cases for {@link Instruction}.
@@ -40,16 +42,18 @@ public class InstructionTest {
 
   @Test
   public final void testOf() {
-    assertThat(Instruction.of("help")).isSameAs(Instruction.HELP);
-    assertThat(Instruction.of("exit")).isSameAs(Instruction.EXIT);
     assertThat(Instruction.of("Help")).isSameAs(Instruction.HELP);
-    assertThat(Instruction.of("EXIT")).isSameAs(Instruction.EXIT);
+
+    for (final Instruction ins : Instruction.values()) {
+      assertThat(Instruction.of(ins.name())).isSameAs(ins);
+      assertThat(Instruction.of(ins.name().toLowerCase())).isSameAs(ins);
+      assertThat(Instruction.of("--" + ins.name())).isNull();
+      assertThat(Instruction.of("--" + ins.name().toLowerCase())).isNull();
+    }
 
     assertThat(Instruction.of(null)).isNull();
     assertThat(Instruction.of("")).isNull();
     assertThat(Instruction.of(" ")).isNull();
-    assertThat(Instruction.of("--help")).isNull();
-    assertThat(Instruction.of("--exit")).isNull();
   }
 
   @Test
@@ -92,6 +96,34 @@ public class InstructionTest {
     }
 
     assertThat(out.toString()).isEqualTo(sb.toString());
+
+    Printer.setPrintStream(System.out);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public final void testExecuteRun_NPE() throws IOException {
+    Instruction.RUN.execute(null, "asd");
+  }
+
+  @Test
+  public final void testExecuteRun() throws IOException {
+    Mic1 processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    assertThat(Instruction.RUN.execute(processor, "asd")).isTrue();
+    assertThat(Instruction.RUN.execute(processor, "asd", "asd")).isTrue();
+    out.reset();
+
+    processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),
+                         ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
+    assertThat(Instruction.RUN.execute(processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + "\n");
+
+    out.reset();
+    assertThat(Instruction.RUN.execute(processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(0) + "\n");
 
     Printer.setPrintStream(System.out);
   }

@@ -7,6 +7,9 @@ DESCRIPTION
 	exit
 		exits the debugger.
 
+	run
+		runs the program until its end or until a breakpoint is hit.
+
 AUTHOR
 	Written by Christian Rösch.
 
