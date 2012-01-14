@@ -19,6 +19,7 @@
 package com.github.croesch.mic1;
 
 import java.io.InputStream;
+import java.util.logging.Logger;
 
 import com.github.croesch.console.io.Printer;
 import com.github.croesch.error.FileFormatException;
@@ -28,12 +29,14 @@ import com.github.croesch.mic1.controlstore.Mic1ALUSignalSet;
 import com.github.croesch.mic1.controlstore.Mic1CBusSignalSet;
 import com.github.croesch.mic1.controlstore.Mic1ControlStore;
 import com.github.croesch.mic1.controlstore.Mic1Instruction;
+import com.github.croesch.mic1.controlstore.Mic1InstructionDecoder;
 import com.github.croesch.mic1.controlstore.Mic1JMPSignalSet;
 import com.github.croesch.mic1.controlstore.Mic1MemorySignalSet;
 import com.github.croesch.mic1.mem.Memory;
 import com.github.croesch.mic1.mpc.NextMPCCalculator;
 import com.github.croesch.mic1.register.Register;
 import com.github.croesch.mic1.shifter.Shifter;
+import com.github.croesch.misc.Utils;
 
 /**
  * This class represents the CISC-processor being debugged by this program.
@@ -42,6 +45,9 @@ import com.github.croesch.mic1.shifter.Shifter;
  * @since Date: Nov 20, 2011
  */
 public final class Mic1 {
+
+  /** the {@link Logger} for this class */
+  private static final Logger LOGGER = Logger.getLogger(Mic1.class.getName());
 
   /** the ALU of the processor */
   private final Alu alu = new Alu();
@@ -57,6 +63,9 @@ public final class Mic1 {
 
   /** current instruction */
   private Mic1Instruction instruction = null;
+
+  /** current value of mpc */
+  private int oldMpc = this.mpcCalculator.getMpc();
 
   /** the main memory of the processor */
   private final Memory memory;
@@ -82,6 +91,8 @@ public final class Mic1 {
     }
 
     initRegisters();
+
+    fetchNextInstruction();
   }
 
   /**
@@ -149,7 +160,7 @@ public final class Mic1 {
    */
   private void doClock1() {
     // fetching instruction
-    this.instruction = this.controlStore.getInstruction(this.mpcCalculator.getMpc());
+    fetchNextInstruction();
     final Mic1ALUSignalSet aluSignals = this.instruction.getAluSignals();
     // setting the signals
     this.alu.setEnA(aluSignals.isEnA()).setEnB(aluSignals.isEnB());
@@ -168,6 +179,17 @@ public final class Mic1 {
     this.shifter.setInput(this.alu.getOut());
     // run shifter
     this.shifter.calculate();
+  }
+
+  /**
+   * Fetches the next instruction from the {@link Mic1ControlStore} and stores the address from where the instruction
+   * has been fetched.
+   * 
+   * @since Date: Jan 14, 2012
+   */
+  private void fetchNextInstruction() {
+    this.instruction = this.controlStore.getInstruction(this.mpcCalculator.getMpc());
+    this.oldMpc = this.mpcCalculator.getMpc();
   }
 
   /**
@@ -252,5 +274,45 @@ public final class Mic1 {
     if (cBusSignals.isTos()) {
       Register.TOS.setValue(value);
     }
+  }
+
+  /**
+   * Executes all instructions until the end of the program.
+   * 
+   * @since Date: Jan 14, 2012
+   * @return the number of ticks that this method executed.
+   */
+  public int run() {
+    int ticks = 0;
+    while (this.instruction != null && !isHaltInstruction()) {
+      doTick();
+      ++ticks;
+    }
+    return ticks;
+  }
+
+  /**
+   * Returns whether the current instruction is the halt-instruction. If the instruction only is a goto that points to
+   * itself, then this is considered to be a halt instruction.<br>
+   * If the instruction points to an address where no instruction is defined, then this will also be handled as a
+   * halt-instruction.
+   * 
+   * @since Date: Jan 14, 2012
+   * @return <code>true</code>, if the current instruction causes the processor to halt
+   */
+  public boolean isHaltInstruction() {
+    if (this.instruction.isNopOrHalt() && this.mpcCalculator.getMpc() == this.oldMpc) {
+      // regular halt condition
+      return true;
+    }
+    if (this.controlStore.getInstruction(this.mpcCalculator.getMpc()) == null) {
+      // instruction points to an undefined position
+      LOGGER.warning("instruction at " + Utils.toHexString(this.oldMpc) + " ["
+                     + Mic1InstructionDecoder.decode(this.instruction) + "] points to an undefined address: "
+                     + Utils.toHexString(this.mpcCalculator.getMpc()));
+      LOGGER.info("processor will now halt");
+      return true;
+    }
+    return false;
   }
 }

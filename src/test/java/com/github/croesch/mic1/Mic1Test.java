@@ -57,9 +57,68 @@ public class Mic1Test {
 
   @Test
   public void testHi() throws FileFormatException {
-    final Mic1 processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),
-                                    ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
+    Mic1 processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
 
+    testHi(processor);
+
+    processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),
+                         ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
+    testRunHi1(processor);
+
+    processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),
+                         ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
+    testRunHi2(processor);
+  }
+
+  @Test
+  public void testHaltPerUndefinedAddress() throws FileFormatException {
+    Mic1 processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi-halt-per-null.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
+    testHi(processor);
+
+    processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi-halt-per-null.mic1"),
+                         ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
+    testRunHi1(processor);
+
+    processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi-halt-per-null.mic1"),
+                         ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
+    testRunHi2(processor);
+  }
+
+  private void testRunHi2(final Mic1 processor) {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Output.setOut(new PrintStream(out));
+
+    assertThat(processor.isHaltInstruction()).isFalse();
+    assertThat(processor.run()).isEqualTo(14);
+    assertThat(processor.isHaltInstruction()).isTrue();
+    assertThat(processor.run()).isEqualTo(0);
+    assertThat(processor.isHaltInstruction()).isTrue();
+
+    assertThat(out.toString()).isEqualTo("Hi!\n");
+    Output.setOut(System.out);
+  }
+
+  private void testRunHi1(final Mic1 processor) {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Output.setOut(new PrintStream(out));
+
+    processor.doTick();
+    processor.doTick();
+    processor.doTick();
+    processor.doTick();
+    assertThat(processor.isHaltInstruction()).isFalse();
+    assertThat(processor.run()).isEqualTo(10);
+    assertThat(processor.isHaltInstruction()).isTrue();
+    assertThat(processor.run()).isEqualTo(0);
+    assertThat(processor.isHaltInstruction()).isTrue();
+
+    assertThat(out.toString()).isEqualTo("Hi!\n");
+    Output.setOut(System.out);
+  }
+
+  private void testHi(final Mic1 processor) {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Output.setBuffered(false);
     Output.setOut(new PrintStream(out));
@@ -69,6 +128,7 @@ public class Mic1Test {
     assertThat(Register.MAR.getValue()).isEqualTo(0);
     assertThat(Register.PC.getValue()).isEqualTo(0);
     assertThat(out.toString()).isEmpty();
+    assertThat(processor.isHaltInstruction()).isFalse();
 
     // 01: LV = H = -1; goto 2;
     processor.doTick();
@@ -77,6 +137,7 @@ public class Mic1Test {
     assertThat(Register.LV.getValue()).isEqualTo(-1);
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(out.toString()).isEmpty();
+    assertThat(processor.isHaltInstruction()).isFalse();
 
     // 02: LV = H + LV; goto 3;
     processor.doTick();
@@ -86,6 +147,7 @@ public class Mic1Test {
     assertThat(Register.LV.getValue()).isEqualTo(-2);
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(out.toString()).isEmpty();
+    assertThat(processor.isHaltInstruction()).isFalse();
 
     // 03: MAR = LV - 1; wr; goto 4;
     processor.doTick();
@@ -95,6 +157,7 @@ public class Mic1Test {
     assertThat(Register.LV.getValue()).isEqualTo(-2);
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(out.toString()).isEqualTo("H");
+    assertThat(processor.isHaltInstruction()).isFalse();
 
     // 04: MAR = PC = PC + 1; rd; goto 5;
     processor.doTick();
@@ -104,6 +167,7 @@ public class Mic1Test {
     assertThat(Register.LV.getValue()).isEqualTo(-2);
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(out.toString()).isEqualTo("H");
+    assertThat(processor.isHaltInstruction()).isFalse();
 
     // 05: MAR = LV - 1; goto 6;
     processor.doTick();
@@ -113,6 +177,7 @@ public class Mic1Test {
     assertThat(Register.LV.getValue()).isEqualTo(-2);
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(out.toString()).isEqualTo("H");
+    assertThat(processor.isHaltInstruction()).isFalse();
 
     // 06: wr; goto 7;
     processor.doTick();
@@ -122,6 +187,7 @@ public class Mic1Test {
     assertThat(Register.LV.getValue()).isEqualTo(-2);
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(out.toString()).isEqualTo("Hi");
+    assertThat(processor.isHaltInstruction()).isFalse();
 
     // 07: MAR = PC = PC + 1; rd; goto 8;
     processor.doTick();
@@ -131,6 +197,7 @@ public class Mic1Test {
     assertThat(Register.LV.getValue()).isEqualTo(-2);
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(out.toString()).isEqualTo("Hi");
+    assertThat(processor.isHaltInstruction()).isFalse();
 
     // 08: MAR = LV - 1; goto 9;
     processor.doTick();
@@ -140,6 +207,7 @@ public class Mic1Test {
     assertThat(Register.LV.getValue()).isEqualTo(-2);
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(out.toString()).isEqualTo("Hi");
+    assertThat(processor.isHaltInstruction()).isFalse();
 
     // 09: wr; goto 10;
     processor.doTick();
@@ -149,6 +217,7 @@ public class Mic1Test {
     assertThat(Register.LV.getValue()).isEqualTo(-2);
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(out.toString()).isEqualTo("Hi!");
+    assertThat(processor.isHaltInstruction()).isFalse();
 
     // 10: MAR = PC = PC + 1; rd; goto 11;
     processor.doTick();
@@ -158,6 +227,7 @@ public class Mic1Test {
     assertThat(Register.LV.getValue()).isEqualTo(-2);
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(out.toString()).isEqualTo("Hi!");
+    assertThat(processor.isHaltInstruction()).isFalse();
 
     // 11: MAR = LV - 1; goto 12;
     processor.doTick();
@@ -167,6 +237,7 @@ public class Mic1Test {
     assertThat(Register.LV.getValue()).isEqualTo(-2);
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(out.toString()).isEqualTo("Hi!");
+    assertThat(processor.isHaltInstruction()).isFalse();
 
     // 12: wr; goto 13;
     processor.doTick();
@@ -176,6 +247,7 @@ public class Mic1Test {
     assertThat(Register.LV.getValue()).isEqualTo(-2);
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(out.toString()).isEqualTo("Hi!\n");
+    assertThat(processor.isHaltInstruction()).isFalse();
 
     // 13: halt;
     processor.doTick();
@@ -185,6 +257,7 @@ public class Mic1Test {
     assertThat(Register.LV.getValue()).isEqualTo(-2);
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(out.toString()).isEqualTo("Hi!\n");
+    assertThat(processor.isHaltInstruction()).isTrue();
 
     Output.setOut(System.out);
   }
