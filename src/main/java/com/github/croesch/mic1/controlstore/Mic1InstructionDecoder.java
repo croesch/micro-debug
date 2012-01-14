@@ -18,9 +18,8 @@
  */
 package com.github.croesch.mic1.controlstore;
 
-import java.util.Locale;
-
 import com.github.croesch.mic1.register.Register;
+import com.github.croesch.misc.Utils;
 
 /**
  * Decoder for {@link Mic1Instruction}. Is able to construct a {@link String} representing a given instruction.
@@ -99,30 +98,18 @@ public final class Mic1InstructionDecoder {
         c = 'Z';
       }
       s.insert(0, c + "=");
-      s.append(";if (").append(c).append(") goto 0x");
-      s.append(convertIntToHex(nextAddress | HIGHEST_BIT_OF_ADDRESS)).append("; else goto 0x");
-      s.append(convertIntToHex(nextAddress));
+      s.append(";if (").append(c).append(") goto ");
+      s.append(Utils.toHexString(nextAddress | HIGHEST_BIT_OF_ADDRESS)).append("; else goto ");
+      s.append(Utils.toHexString(nextAddress));
     } else if (jmpSignals.isJmpC()) {
       s.append(";goto (").append(Register.MBR.name());
       if (nextAddress != 0) {
-        s.append(" ").append(TXT_OR).append(" 0x").append(convertIntToHex(nextAddress));
+        s.append(" ").append(TXT_OR).append(" ").append(Utils.toHexString(nextAddress));
       }
       s.append(")");
     } else {
-      s.append(";goto 0x").append(convertIntToHex(nextAddress));
+      s.append(";goto ").append(Utils.toHexString(nextAddress));
     }
-  }
-
-  /**
-   * Converts the given number to a hexadecimal string and then converts the result to upper case letters.
-   * 
-   * @since Date: Nov 10, 2011
-   * @param i the number to convert to hexadecimal
-   * @return a {@link String} representing the value of i in hexadecimal
-   * @see Integer#toHexString(int)
-   */
-  static String convertIntToHex(final int i) {
-    return Integer.toHexString(i).toUpperCase(Locale.getDefault());
   }
 
   /**

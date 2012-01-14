@@ -20,6 +20,7 @@ package com.github.croesch.misc;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 import com.github.croesch.error.FileFormatException;
@@ -140,5 +141,18 @@ public final class Utils {
     final String className = Thread.currentThread().getStackTrace()[2].getClassName();
     final String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
     Logger.getLogger(className).throwing(className, methodName, t);
+  }
+
+  /**
+   * Returns a string representation of the integer argument as an unsigned integer in base 16.<br>
+   * <br>
+   * For example: <code>100 &rarr; 0x64</code>
+   * 
+   * @since Date: Jan 14, 2012
+   * @param number the number to represent as hexadecimal string
+   * @return the string representation of the given number in upper case and with leading <code>0x</code>
+   */
+  public static String toHexString(final int number) {
+    return "0x" + Integer.toHexString(number).toUpperCase(Locale.GERMAN);
   }
 }

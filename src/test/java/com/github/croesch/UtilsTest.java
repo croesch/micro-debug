@@ -114,4 +114,19 @@ public class UtilsTest {
     assertThat(Utils.bytesToInt((byte) 0, (byte) 0, (byte) 0, (byte) 0xff)).isEqualTo(0xff);
     assertThat(Utils.bytesToInt((byte) 0, (byte) 0, (byte) 0, (byte) -1)).isEqualTo(255);
   }
+
+  @Test
+  public void testToHextString() {
+    assertThat(Utils.toHexString(12)).isEqualTo("0xC");
+    assertThat(Utils.toHexString(-12)).isEqualTo("0xFFFFFFF4");
+    assertThat(Utils.toHexString(0)).isEqualTo("0x0");
+    assertThat(Utils.toHexString(1)).isEqualTo("0x1");
+    assertThat(Utils.toHexString(100)).isEqualTo("0x64");
+    assertThat(Utils.toHexString(42)).isEqualTo("0x2A");
+    assertThat(Utils.toHexString(4711)).isEqualTo("0x1267");
+    assertThat(Utils.toHexString(-4711)).isEqualTo("0xFFFFED99");
+    assertThat(Utils.toHexString(-1)).isEqualTo("0xFFFFFFFF");
+    assertThat(Utils.toHexString(Integer.MAX_VALUE)).isEqualTo("0x7FFFFFFF");
+    assertThat(Utils.toHexString(Integer.MIN_VALUE)).isEqualTo("0x80000000");
+  }
 }

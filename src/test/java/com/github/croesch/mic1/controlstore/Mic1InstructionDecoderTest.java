@@ -145,40 +145,6 @@ public class Mic1InstructionDecoderTest {
   }
 
   @Test
-  public void testConvertIntToHex() {
-    printMethodName();
-
-    int i = -42;
-    assertThat(Mic1InstructionDecoder.convertIntToHex(i)).isEqualTo("FFFFFFD6");
-
-    i = 42;
-    assertThat(Mic1InstructionDecoder.convertIntToHex(i)).isEqualTo("2A");
-
-    i = 4711;
-    assertThat(Mic1InstructionDecoder.convertIntToHex(i)).isEqualTo("1267");
-
-    i = -4711;
-    assertThat(Mic1InstructionDecoder.convertIntToHex(i)).isEqualTo("FFFFED99");
-
-    i = 0;
-    assertThat(Mic1InstructionDecoder.convertIntToHex(i)).isEqualTo("0");
-
-    i = -1;
-    assertThat(Mic1InstructionDecoder.convertIntToHex(i)).isEqualTo("FFFFFFFF");
-
-    i = 1;
-    assertThat(Mic1InstructionDecoder.convertIntToHex(i)).isEqualTo("1");
-
-    i = Integer.MAX_VALUE;
-    assertThat(Mic1InstructionDecoder.convertIntToHex(i)).isEqualTo("7FFFFFFF");
-
-    i = Integer.MIN_VALUE;
-    assertThat(Mic1InstructionDecoder.convertIntToHex(i)).isEqualTo("80000000");
-
-    printEndOfMethod();
-  }
-
-  @Test
   public void testDecodeMemoryBits() {
     printMethodName();
 
