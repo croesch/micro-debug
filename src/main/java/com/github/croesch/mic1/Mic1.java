@@ -161,6 +161,8 @@ public final class Mic1 {
     doClock1();
     doClock2();
     doClock3();
+
+    update();
   }
 
   /**
@@ -350,4 +352,62 @@ public final class Mic1 {
     this.view.listRegister(r);
   }
 
+  /**
+   * Performs to trace all {@link Register}s.
+   * 
+   * @since Date: Jan 15, 2012
+   */
+  public void traceRegister() {
+    this.view.traceRegister();
+  }
+
+  /**
+   * Performs to trace the given {@link Register}.
+   * 
+   * @since Date: Jan 15, 2012
+   * @param r the {@link Register} to trace.
+   */
+  public void traceRegister(final Register r) {
+    this.view.traceRegister(r);
+  }
+
+  /**
+   * Performs to not trace any {@link Register}.
+   * 
+   * @since Date: Jan 15, 2012
+   */
+  public void untraceRegister() {
+    this.view.untraceRegister();
+  }
+
+  /**
+   * Performs to not trace the given {@link Register} anymore.
+   * 
+   * @since Date: Jan 15, 2012
+   * @param r the {@link Register} not being traced anymore.
+   */
+  public void untraceRegister(final Register r) {
+    this.view.untraceRegister(r);
+  }
+
+  /**
+   * Returns whether the given {@link Register} is currently traced.
+   * 
+   * @since Date: Jan 15, 2012
+   * @param r the {@link Register} to check, if it's traced
+   * @return <code>true</code>, if the {@link Register} is currently traced<br>
+   *         <code>false</code> otherwise.
+   */
+  public boolean isTracing(final Register r) {
+    return this.view.isTracing(r);
+  }
+
+  /**
+   * Tells the view to update itself.
+   * 
+   * @since Date: Jan 15, 2012
+   */
+  public void update() {
+    this.view.update();
+  }
 }

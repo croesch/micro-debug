@@ -85,6 +85,38 @@ enum UserInstruction {
       Printer.println(Text.TICKS.text(ticks));
       return true;
     }
+  },
+
+  /** instruction to trace one or all registers */
+  TRACE_REG {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      if (getSize(params) == 0) {
+        processor.traceRegister();
+      } else {
+        final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
+        if (r != null) {
+          processor.traceRegister(r);
+        }
+      }
+      return true;
+    }
+  },
+
+  /** instruction to not trace one or all registers anymore */
+  UNTRACE_REG {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      if (getSize(params) == 0) {
+        processor.untraceRegister();
+      } else {
+        final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
+        if (r != null) {
+          processor.untraceRegister(r);
+        }
+      }
+      return true;
+    }
   };
 
   /** the different ways this argument can be called */

@@ -175,7 +175,7 @@ public class UserInstructionTest {
     Register.H.setValue(11);
 
     assertThat(out.toString()).isEmpty();
-    UserInstruction.LS_REG.execute(this.processor, (String[]) null);
+    assertThat(UserInstruction.LS_REG.execute(this.processor, (String[]) null)).isTrue();
 
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x1") + "\n"
                                                  + Text.REGISTER_VALUE.text("MDR ", "0x2") + "\n"
@@ -209,7 +209,7 @@ public class UserInstructionTest {
     Register.H.setValue(11);
 
     assertThat(out.toString()).isEmpty();
-    UserInstruction.LS_REG.execute(this.processor, new String[] { null });
+    assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { null })).isTrue();
 
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x1") + "\n"
                                                  + Text.REGISTER_VALUE.text("MDR ", "0x2") + "\n"
@@ -243,7 +243,7 @@ public class UserInstructionTest {
     Register.H.setValue(0x8c1);
 
     assertThat(out.toString()).isEmpty();
-    UserInstruction.LS_REG.execute(this.processor, new String[] { "Bernd" });
+    assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { "Bernd" })).isTrue();
 
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("Bernd")) + "\n"
                                                  + Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF") + "\n"
@@ -267,14 +267,90 @@ public class UserInstructionTest {
     Printer.setPrintStream(new PrintStream(out));
 
     Register.MAR.setValue(0x4711);
-    UserInstruction.LS_REG.execute(this.processor, new String[] { "MAR" });
+    assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { "MAR" })).isTrue();
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x4711") + "\n");
     out.reset();
 
     Register.SP.setValue(-2);
-    UserInstruction.LS_REG.execute(this.processor, new String[] { "SP" });
+    assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { "SP" })).isTrue();
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("SP  ", "0xFFFFFFFE") + "\n");
     out.reset();
+
+    Printer.setPrintStream(System.out);
+  }
+
+  @Test
+  public void testTraceRegister() {
+    for (final Register r : Register.values()) {
+      assertThat(this.processor.isTracing(r)).isFalse();
+      assertThat(UserInstruction.TRACE_REG.execute(this.processor, r.name())).isTrue();
+      assertThat(this.processor.isTracing(r)).isTrue();
+    }
+  }
+
+  @Test
+  public void testTraceAllRegisters() {
+    for (final Register r : Register.values()) {
+      assertThat(this.processor.isTracing(r)).isFalse();
+    }
+
+    assertThat(UserInstruction.TRACE_REG.execute(this.processor, (String[]) null)).isTrue();
+
+    for (final Register r : Register.values()) {
+      assertThat(this.processor.isTracing(r)).isTrue();
+    }
+  }
+
+  @Test
+  public void testUntraceAllRegisters() {
+    assertThat(UserInstruction.TRACE_REG.execute(this.processor, (String[]) null)).isTrue();
+
+    for (final Register r : Register.values()) {
+      assertThat(this.processor.isTracing(r)).isTrue();
+    }
+
+    assertThat(UserInstruction.UNTRACE_REG.execute(this.processor, (String[]) null)).isTrue();
+
+    for (final Register r : Register.values()) {
+      assertThat(this.processor.isTracing(r)).isFalse();
+    }
+  }
+
+  @Test
+  public void testUntraceRegister() {
+    assertThat(UserInstruction.TRACE_REG.execute(this.processor, (String[]) null)).isTrue();
+
+    for (final Register r : Register.values()) {
+      assertThat(this.processor.isTracing(r)).isTrue();
+      assertThat(UserInstruction.UNTRACE_REG.execute(this.processor, r.name())).isTrue();
+      assertThat(this.processor.isTracing(r)).isFalse();
+    }
+  }
+
+  @Test
+  public void testUpdateTracedRegisters() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    assertThat(UserInstruction.TRACE_REG.execute(this.processor, Register.PC.name())).isTrue();
+    assertThat(out.toString()).isEmpty();
+    assertThat(UserInstruction.RUN.execute(this.processor, (String[]) null)).isTrue();
+
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("PC  ", "0x0") + "\n"
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x0") + "\n"
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x0") + "\n"
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x0") + "\n"
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1") + "\n"
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1") + "\n"
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1") + "\n"
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x2") + "\n"
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x2") + "\n"
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x2") + "\n"
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x3") + "\n"
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x3") + "\n"
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x3") + "\n"
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x3") + "\n" + Text.TICKS.text(14)
+                                                 + "\n");
 
     Printer.setPrintStream(System.out);
   }

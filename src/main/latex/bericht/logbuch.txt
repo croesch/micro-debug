@@ -68,3 +68,5 @@
 	- --output-file Argument implementiert
 	- Properties-Datei erstellt und Zugriff programmiert
 	- Integrationstests für Prozessor/Debugger verbessert
+15.01.2012 (4 h)
+	- Instruktionen ls-reg, trace-reg und untrace-reg implementiert
