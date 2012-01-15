@@ -38,6 +38,8 @@ import com.github.croesch.mic1.shifter.Shifter;
 import com.github.croesch.misc.Printer;
 import com.github.croesch.misc.Settings;
 import com.github.croesch.misc.Utils;
+import com.github.croesch.ui.TraceManager;
+import com.github.croesch.ui.api.Mic1View;
 
 /**
  * This class represents the CISC-processor being debugged by this program.
@@ -70,6 +72,9 @@ public final class Mic1 {
 
   /** the main memory of the processor */
   private final Memory memory;
+
+  /** the view that is able to present details of this processor to the user */
+  private final Mic1View view = new TraceManager();
 
   /**
    * Constructs a new Mic1-processor, reading the given inputstreams as micro-program and assembler-program.
@@ -332,9 +337,7 @@ public final class Mic1 {
    * @since Date: Jan 15, 2012
    */
   public void listAllRegisters() {
-    for (final Register r : Register.values()) {
-      listSingleRegister(r);
-    }
+    this.view.listAllRegisters();
   }
 
   /**
@@ -344,7 +347,7 @@ public final class Mic1 {
    * @param r the {@link Register} to print with its value.
    */
   public void listSingleRegister(final Register r) {
-    Printer.println(Text.REGISTER_VALUE.text(String.format("%-4s", r), Utils.toHexString(r.getValue())));
+    this.view.listRegister(r);
   }
 
 }
