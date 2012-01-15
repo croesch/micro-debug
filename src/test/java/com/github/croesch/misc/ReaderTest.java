@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.croesch.console.io;
+package com.github.croesch.misc;
 
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.StringReader;
 
 import org.junit.Test;
+
+import com.github.croesch.misc.Reader;
 
 /**
  * Provides test cases for {@link Reader}.

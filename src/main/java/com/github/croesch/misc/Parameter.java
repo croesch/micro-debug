@@ -20,7 +20,6 @@ package com.github.croesch.misc;
 
 import java.util.Locale;
 
-import com.github.croesch.console.io.Printer;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.register.Register;
 

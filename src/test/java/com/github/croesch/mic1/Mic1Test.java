@@ -26,11 +26,11 @@ import java.io.PrintStream;
 
 import org.junit.Test;
 
-import com.github.croesch.console.io.Printer;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.register.Register;
+import com.github.croesch.misc.Printer;
 
 /**
  * Provides test cases for {@link Mic1}.

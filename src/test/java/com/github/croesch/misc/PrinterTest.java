@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.croesch.console.io;
+package com.github.croesch.misc;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -30,6 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.github.croesch.i18n.Text;
+import com.github.croesch.misc.Printer;
 
 /**
  * Provides test cases for {@link Printer}.

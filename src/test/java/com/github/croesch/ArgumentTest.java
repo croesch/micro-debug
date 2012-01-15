@@ -28,9 +28,9 @@ import java.io.PrintStream;
 
 import org.junit.Test;
 
-import com.github.croesch.console.io.Printer;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.io.Output;
+import com.github.croesch.misc.Printer;
 
 /**
  * TODO write test, if there's an argument with at least one parameter<br>

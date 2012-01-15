@@ -18,10 +18,10 @@
  */
 package com.github.croesch.console;
 
-import com.github.croesch.console.io.Printer;
-import com.github.croesch.console.io.Reader;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.Mic1;
+import com.github.croesch.misc.Printer;
+import com.github.croesch.misc.Reader;
 
 /**
  * Class that handles the core of debugging. Reads user input and handles the instructions.

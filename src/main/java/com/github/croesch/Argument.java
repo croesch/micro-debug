@@ -29,9 +29,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import com.github.croesch.console.io.Printer;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.io.Output;
+import com.github.croesch.misc.Printer;
 import com.github.croesch.misc.Utils;
 
 /**

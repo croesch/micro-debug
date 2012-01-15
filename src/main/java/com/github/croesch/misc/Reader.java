@@ -16,13 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.croesch.console.io;
+package com.github.croesch.misc;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import com.github.croesch.misc.Utils;
 
 /**
  * The interface to read information from the console (or from the given {@link java.io.Reader}).

@@ -21,7 +21,6 @@ package com.github.croesch.mic1;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
-import com.github.croesch.console.io.Printer;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.alu.Alu;
@@ -36,6 +35,7 @@ import com.github.croesch.mic1.mem.Memory;
 import com.github.croesch.mic1.mpc.NextMPCCalculator;
 import com.github.croesch.mic1.register.Register;
 import com.github.croesch.mic1.shifter.Shifter;
+import com.github.croesch.misc.Printer;
 import com.github.croesch.misc.Settings;
 import com.github.croesch.misc.Utils;
 
