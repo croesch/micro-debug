@@ -93,3 +93,10 @@ Was soll geschehen, wenn auf eine undefinierte (negativ / höher als Maximum) Sp
 Die magic-number für IJVM-Dateien prüfen? Das Format einfach nutzen?
 
 
+Soll bei run bei jeder Instruktion alle getracten Dinge ausgegeben werden?
+
+
+MBRU auch anzeigen?
+
+
+
