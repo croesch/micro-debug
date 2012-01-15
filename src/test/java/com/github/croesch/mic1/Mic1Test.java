@@ -22,8 +22,10 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.github.croesch.error.FileFormatException;
@@ -39,6 +41,14 @@ import com.github.croesch.misc.Printer;
  * @since Date: Dec 1, 2011
  */
 public class Mic1Test {
+
+  private Mic1 processor;
+
+  @Before
+  public void setUp() throws FileFormatException {
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
+  }
 
   @Test(timeout = 1000)
   public void testPerformanceOfProcessor() throws FileFormatException {
@@ -84,18 +94,14 @@ public class Mic1Test {
 
   @Test
   public void testHi() throws FileFormatException {
-    Mic1 processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
 
-    testHi(processor);
+    testHi(this.processor);
 
-    processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),
-                         ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
-    testRunHi1(processor);
+    setUp();
+    testRunHi1(this.processor);
 
-    processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),
-                         ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
-    testRunHi2(processor);
+    setUp();
+    testRunHi2(this.processor);
   }
 
   @Test
@@ -384,6 +390,58 @@ public class Mic1Test {
     }
     assertThat(out.toString())
       .isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_TOO_BIG)) + "\n");
+    out.reset();
+
+    Printer.setPrintStream(System.out);
+  }
+
+  @Test
+  public final void testListAllRegisters() throws IOException {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    Register.MAR.setValue(-1);
+    Register.MDR.setValue(0);
+    Register.PC.setValue(1);
+    Register.MBR.setValue(0x1273);
+    Register.SP.setValue(0x8bc);
+    Register.LV.setValue(0x8bd);
+    Register.CPP.setValue(0x8be);
+    Register.TOS.setValue(0x8bf);
+    Register.OPC.setValue(0x8c0);
+    Register.H.setValue(0x8c1);
+
+    assertThat(out.toString()).isEmpty();
+    this.processor.listAllRegisters();
+
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF") + "\n"
+                                                 + Text.REGISTER_VALUE.text("MDR ", "0x0") + "\n"
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1") + "\n"
+                                                 + Text.REGISTER_VALUE.text("MBR ", "0x73") + "\n"
+                                                 + Text.REGISTER_VALUE.text("MBRU", "0x73") + "\n"
+                                                 + Text.REGISTER_VALUE.text("SP  ", "0x8BC") + "\n"
+                                                 + Text.REGISTER_VALUE.text("LV  ", "0x8BD") + "\n"
+                                                 + Text.REGISTER_VALUE.text("CPP ", "0x8BE") + "\n"
+                                                 + Text.REGISTER_VALUE.text("TOS ", "0x8BF") + "\n"
+                                                 + Text.REGISTER_VALUE.text("OPC ", "0x8C0") + "\n"
+                                                 + Text.REGISTER_VALUE.text("H   ", "0x8C1") + "\n");
+
+    Printer.setPrintStream(System.out);
+  }
+
+  @Test
+  public final void testListSingleRegister() throws IOException {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    Register.MAR.setValue(0x4711);
+    this.processor.listSingleRegister(Register.MAR);
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x4711") + "\n");
+    out.reset();
+
+    Register.SP.setValue(-2);
+    this.processor.listSingleRegister(Register.SP);
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("SP  ", "0xFFFFFFFE") + "\n");
     out.reset();
 
     Printer.setPrintStream(System.out);

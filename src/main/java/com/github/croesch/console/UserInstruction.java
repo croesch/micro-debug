@@ -64,37 +64,16 @@ enum UserInstruction {
     @Override
     public boolean execute(final Mic1 processor, final String ... params) {
       if (getSize(params) == 0) {
-        listAllRegisters();
+        processor.listAllRegisters();
       } else {
         final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
         if (r == null) {
-          listAllRegisters();
+          processor.listAllRegisters();
         } else {
-          listSingleRegister(r);
+          processor.listSingleRegister(r);
         }
       }
       return true;
-    }
-
-    /**
-     * Lists the values of all {@link Register}s.
-     * 
-     * @since Date: Jan 15, 2012
-     */
-    private void listAllRegisters() {
-      for (final Register r : Register.values()) {
-        listSingleRegister(r);
-      }
-    }
-
-    /**
-     * Lists the value of a single {@link Register}.
-     * 
-     * @since Date: Jan 15, 2012
-     * @param r the {@link Register} to print with its value.
-     */
-    private void listSingleRegister(final Register r) {
-      Printer.println(Text.REGISTER_VALUE.text(String.format("%-4s", r), Utils.toHexString(r.getValue())));
     }
   },
 

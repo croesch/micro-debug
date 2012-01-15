@@ -26,9 +26,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.github.croesch.TestUtil;
+import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.Mic1;
 import com.github.croesch.mic1.register.Register;
@@ -41,6 +43,14 @@ import com.github.croesch.misc.Printer;
  * @since Date: Dec 3, 2011
  */
 public class UserInstructionTest {
+
+  private Mic1 processor;
+
+  @Before
+  public void setUp() throws FileFormatException {
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
+  }
 
   @Test
   public final void testOf() {
@@ -128,22 +138,20 @@ public class UserInstructionTest {
 
   @Test
   public final void testExecuteRun() throws IOException {
-    Mic1 processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
 
-    assertThat(UserInstruction.RUN.execute(processor, "asd")).isTrue();
-    assertThat(UserInstruction.RUN.execute(processor, "asd", "asd")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.processor, "asd")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.processor, "asd", "asd")).isTrue();
     out.reset();
 
-    processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),
-                         ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
-    assertThat(UserInstruction.RUN.execute(processor)).isTrue();
+    setUp();
+
+    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + "\n");
 
     out.reset();
-    assertThat(UserInstruction.RUN.execute(processor)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(0) + "\n");
 
     Printer.setPrintStream(System.out);
@@ -167,7 +175,7 @@ public class UserInstructionTest {
     Register.H.setValue(11);
 
     assertThat(out.toString()).isEmpty();
-    UserInstruction.LS_REG.execute(null, (String[]) null);
+    UserInstruction.LS_REG.execute(this.processor, (String[]) null);
 
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x1") + "\n"
                                                  + Text.REGISTER_VALUE.text("MDR ", "0x2") + "\n"
@@ -201,7 +209,7 @@ public class UserInstructionTest {
     Register.H.setValue(11);
 
     assertThat(out.toString()).isEmpty();
-    UserInstruction.LS_REG.execute(null, new String[] { null });
+    UserInstruction.LS_REG.execute(this.processor, new String[] { null });
 
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x1") + "\n"
                                                  + Text.REGISTER_VALUE.text("MDR ", "0x2") + "\n"
@@ -235,7 +243,7 @@ public class UserInstructionTest {
     Register.H.setValue(0x8c1);
 
     assertThat(out.toString()).isEmpty();
-    UserInstruction.LS_REG.execute(null, new String[] { "Bernd" });
+    UserInstruction.LS_REG.execute(this.processor, new String[] { "Bernd" });
 
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("Bernd")) + "\n"
                                                  + Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF") + "\n"
@@ -259,12 +267,12 @@ public class UserInstructionTest {
     Printer.setPrintStream(new PrintStream(out));
 
     Register.MAR.setValue(0x4711);
-    UserInstruction.LS_REG.execute(null, new String[] { "MAR" });
+    UserInstruction.LS_REG.execute(this.processor, new String[] { "MAR" });
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x4711") + "\n");
     out.reset();
 
     Register.SP.setValue(-2);
-    UserInstruction.LS_REG.execute(null, new String[] { "SP" });
+    UserInstruction.LS_REG.execute(this.processor, new String[] { "SP" });
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("SP  ", "0xFFFFFFFE") + "\n");
     out.reset();
 

@@ -325,4 +325,26 @@ public final class Mic1 {
     }
     return halt;
   }
+
+  /**
+   * Lists the values of all {@link Register}s.
+   * 
+   * @since Date: Jan 15, 2012
+   */
+  public void listAllRegisters() {
+    for (final Register r : Register.values()) {
+      listSingleRegister(r);
+    }
+  }
+
+  /**
+   * Lists the value of a single {@link Register}.
+   * 
+   * @since Date: Jan 15, 2012
+   * @param r the {@link Register} to print with its value.
+   */
+  public void listSingleRegister(final Register r) {
+    Printer.println(Text.REGISTER_VALUE.text(String.format("%-4s", r), Utils.toHexString(r.getValue())));
+  }
+
 }
