@@ -38,7 +38,7 @@ import com.github.croesch.misc.Printer;
  * @author croesch
  * @since Date: Dec 3, 2011
  */
-public class InstructionTest {
+public class UserInstructionTest {
 
   @Test
   public final void testOf() {
