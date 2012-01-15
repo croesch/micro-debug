@@ -19,6 +19,7 @@
 package com.github.croesch.misc;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -64,7 +65,7 @@ public enum Settings {
    * @since Date: Jan 15, 2012
    */
   private Settings() {
-    final String key = name().toLowerCase().replaceAll("_", ".");
+    final String key = name().toLowerCase(Locale.GERMAN).replaceAll("_", ".");
     final String val = getProperties().getProperty(key);
     final Integer number = (Integer) Parameter.NUMBER.getValue(val);
     this.value = number.intValue();
@@ -82,7 +83,7 @@ public enum Settings {
       try {
         props.load(ClassLoader.getSystemResourceAsStream("micro-debug.properties"));
       } catch (final IOException e) {
-        e.printStackTrace();
+        Utils.logThrownThrowable(e);
       }
     }
     return props;
