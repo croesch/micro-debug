@@ -56,7 +56,7 @@ public final class Debugger implements Runnable {
       // prompt user
       final String[] usersInstruction = askUserWhatToDo().split(SEPARATING_STRING);
       // check if this was a valid instruction
-      final Instruction in = Instruction.of(usersInstruction[0]);
+      final UserInstruction in = UserInstruction.of(usersInstruction[0]);
       if (in != null) {
         // valid instruction -> copy parameters
         final String[] params = new String[usersInstruction.length - 1];

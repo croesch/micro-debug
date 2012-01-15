@@ -33,7 +33,7 @@ import com.github.croesch.misc.Utils;
  * @author croesch
  * @since Date: Dec 3, 2011
  */
-enum Instruction {
+enum UserInstruction {
 
   /** ends the debugger */
   EXIT {
@@ -77,13 +77,13 @@ enum Instruction {
    * 
    * @since Date: Dec 3, 2011
    */
-  private Instruction() {
+  private UserInstruction() {
     this.instruction = this.name().toLowerCase(Locale.GERMAN).replaceAll("_", "-");
   }
 
   /**
    * Returns whether this argument can be called with the given {@link String}. Will return <code>false</code>, if the
-   * given {@link String} is <code>null</code> or if the {@link Instruction} is a pseudo-argument that cannot be called.
+   * given {@link String} is <code>null</code> or if the {@link UserInstruction} is a pseudo-argument that cannot be called.
    * 
    * @since Date: Dec 3, 2011
    * @param argStr the {@link String} to test if it's a possible call for this argument
@@ -95,18 +95,18 @@ enum Instruction {
   }
 
   /**
-   * Returns the {@link Instruction} that matches with the given {@link String}.
+   * Returns the {@link UserInstruction} that matches with the given {@link String}.
    * 
    * @since Date: Aug 13, 2011
-   * @param s the {@link String} that is able to call the returned {@link Instruction}.
-   * @return the {@link Instruction} that matches the given {@link String}, or<br>
-   *         <code>null</code> if no {@link Instruction} can be called with the given {@link String}.
-   * @see Instruction#matches(String)
+   * @param s the {@link String} that is able to call the returned {@link UserInstruction}.
+   * @return the {@link UserInstruction} that matches the given {@link String}, or<br>
+   *         <code>null</code> if no {@link UserInstruction} can be called with the given {@link String}.
+   * @see UserInstruction#matches(String)
    */
-  static Instruction of(final String s) {
+  static UserInstruction of(final String s) {
     if (s != null) {
       final String instruction = s.toLowerCase(Locale.GERMAN);
-      for (final Instruction a : values()) {
+      for (final UserInstruction a : values()) {
         if (a.matches(instruction)) {
           return a;
         }
@@ -119,10 +119,10 @@ enum Instruction {
    * Executes the instruction with the given parameters.
    * 
    * @since Date: Dec 3, 2011
-   * @param processor the processor to operate on, is not needed for every {@link Instruction}.
-   * @param params the parameters of that {@link Instruction}.
+   * @param processor the processor to operate on, is not needed for every {@link UserInstruction}.
+   * @param params the parameters of that {@link UserInstruction}.
    * @return <code>true</code>, if the application can continue<br>
-   *         <code>false</code>, if the {@link Instruction} enforces the application to stop.
+   *         <code>false</code>, if the {@link UserInstruction} enforces the application to stop.
    */
   public abstract boolean execute(Mic1 processor, String ... params);
 

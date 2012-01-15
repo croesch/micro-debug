@@ -33,7 +33,7 @@ import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.Mic1;
 
 /**
- * Provides test cases for {@link Instruction}.
+ * Provides test cases for {@link UserInstruction}.
  * 
  * @author croesch
  * @since Date: Dec 3, 2011
@@ -42,18 +42,18 @@ public class InstructionTest {
 
   @Test
   public final void testOf() {
-    assertThat(Instruction.of("Help")).isSameAs(Instruction.HELP);
+    assertThat(UserInstruction.of("Help")).isSameAs(UserInstruction.HELP);
 
-    for (final Instruction ins : Instruction.values()) {
-      assertThat(Instruction.of(ins.name())).isSameAs(ins);
-      assertThat(Instruction.of(ins.name().toLowerCase())).isSameAs(ins);
-      assertThat(Instruction.of("--" + ins.name())).isNull();
-      assertThat(Instruction.of("--" + ins.name().toLowerCase())).isNull();
+    for (final UserInstruction ins : UserInstruction.values()) {
+      assertThat(UserInstruction.of(ins.name())).isSameAs(ins);
+      assertThat(UserInstruction.of(ins.name().toLowerCase())).isSameAs(ins);
+      assertThat(UserInstruction.of("--" + ins.name())).isNull();
+      assertThat(UserInstruction.of("--" + ins.name().toLowerCase())).isNull();
     }
 
-    assertThat(Instruction.of(null)).isNull();
-    assertThat(Instruction.of("")).isNull();
-    assertThat(Instruction.of(" ")).isNull();
+    assertThat(UserInstruction.of(null)).isNull();
+    assertThat(UserInstruction.of("")).isNull();
+    assertThat(UserInstruction.of(" ")).isNull();
   }
 
   @Test
@@ -61,9 +61,9 @@ public class InstructionTest {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
 
-    assertThat(Instruction.EXIT.execute(null)).isFalse();
-    assertThat(Instruction.EXIT.execute(null, "asd")).isFalse();
-    assertThat(Instruction.EXIT.execute(null, "asd", "asd")).isFalse();
+    assertThat(UserInstruction.EXIT.execute(null)).isFalse();
+    assertThat(UserInstruction.EXIT.execute(null, "asd")).isFalse();
+    assertThat(UserInstruction.EXIT.execute(null, "asd", "asd")).isFalse();
 
     assertThat(out.toString()).isEmpty();
     Printer.setPrintStream(System.out);
@@ -74,11 +74,11 @@ public class InstructionTest {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
 
-    assertThat(Instruction.HELP.execute(null, "asd")).isTrue();
-    assertThat(Instruction.HELP.execute(null, "asd", "asd")).isTrue();
+    assertThat(UserInstruction.HELP.execute(null, "asd")).isTrue();
+    assertThat(UserInstruction.HELP.execute(null, "asd", "asd")).isTrue();
     out.reset();
 
-    assertThat(Instruction.HELP.execute(null)).isTrue();
+    assertThat(UserInstruction.HELP.execute(null)).isTrue();
 
     final StringBuilder sb = new StringBuilder();
     BufferedReader reader = null;
@@ -102,7 +102,7 @@ public class InstructionTest {
 
   @Test(expected = NullPointerException.class)
   public final void testExecuteRun_NPE() throws IOException {
-    Instruction.RUN.execute(null, "asd");
+    UserInstruction.RUN.execute(null, "asd");
   }
 
   @Test
@@ -112,17 +112,17 @@ public class InstructionTest {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
 
-    assertThat(Instruction.RUN.execute(processor, "asd")).isTrue();
-    assertThat(Instruction.RUN.execute(processor, "asd", "asd")).isTrue();
+    assertThat(UserInstruction.RUN.execute(processor, "asd")).isTrue();
+    assertThat(UserInstruction.RUN.execute(processor, "asd", "asd")).isTrue();
     out.reset();
 
     processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),
                          ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
-    assertThat(Instruction.RUN.execute(processor)).isTrue();
+    assertThat(UserInstruction.RUN.execute(processor)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + "\n");
 
     out.reset();
-    assertThat(Instruction.RUN.execute(processor)).isTrue();
+    assertThat(UserInstruction.RUN.execute(processor)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(0) + "\n");
 
     Printer.setPrintStream(System.out);
