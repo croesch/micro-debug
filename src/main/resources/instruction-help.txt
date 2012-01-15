@@ -7,6 +7,10 @@ DESCRIPTION
 	exit
 		exits the debugger.
 
+	ls-reg [REG]
+		Lists the value of a register, where REG is the name of that register.
+		If REG is omitted then the values of all registers are listed.
+
 	run
 		runs the program until its end or until a breakpoint is hit.
 

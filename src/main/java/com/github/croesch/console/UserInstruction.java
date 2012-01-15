@@ -24,6 +24,8 @@ import java.util.Locale;
 
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.Mic1;
+import com.github.croesch.mic1.register.Register;
+import com.github.croesch.misc.Parameter;
 import com.github.croesch.misc.Printer;
 import com.github.croesch.misc.Utils;
 
@@ -57,6 +59,45 @@ enum UserInstruction {
     }
   },
 
+  /** list the values of all or a single register */
+  LS_REG {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      if (getSize(params) == 0) {
+        listAllRegisters();
+      } else {
+        final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
+        if (r == null) {
+          listAllRegisters();
+        } else {
+          listSingleRegister(r);
+        }
+      }
+      return true;
+    }
+
+    /**
+     * Lists the values of all {@link Register}s.
+     * 
+     * @since Date: Jan 15, 2012
+     */
+    private void listAllRegisters() {
+      for (final Register r : Register.values()) {
+        listSingleRegister(r);
+      }
+    }
+
+    /**
+     * Lists the value of a single {@link Register}.
+     * 
+     * @since Date: Jan 15, 2012
+     * @param r the {@link Register} to print with its value.
+     */
+    private void listSingleRegister(final Register r) {
+      Printer.println(Text.REGISTER_VALUE.text(String.format("%-4s", r), Utils.toHexString(r.getValue())));
+    }
+  },
+
   /** runs the program to the end */
   RUN {
     @Override
@@ -83,7 +124,8 @@ enum UserInstruction {
 
   /**
    * Returns whether this argument can be called with the given {@link String}. Will return <code>false</code>, if the
-   * given {@link String} is <code>null</code> or if the {@link UserInstruction} is a pseudo-argument that cannot be called.
+   * given {@link String} is <code>null</code> or if the {@link UserInstruction} is a pseudo-argument that cannot be
+   * called.
    * 
    * @since Date: Dec 3, 2011
    * @param argStr the {@link String} to test if it's a possible call for this argument
@@ -126,4 +168,17 @@ enum UserInstruction {
    */
   public abstract boolean execute(Mic1 processor, String ... params);
 
+  /**
+   * Returns the size of the given array or <code>0</code>, if the array is <code>null</code>.
+   * 
+   * @since Date: Jan 15, 2012
+   * @param array the array to determine the size of
+   * @return the size of the given array or zero, if the given array is <code>null</code>.
+   */
+  protected static int getSize(final Object[] array) {
+    if (array == null) {
+      return 0;
+    }
+    return array.length;
+  }
 }

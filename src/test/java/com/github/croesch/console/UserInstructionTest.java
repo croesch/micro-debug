@@ -28,8 +28,10 @@ import java.io.PrintStream;
 
 import org.junit.Test;
 
+import com.github.croesch.TestUtil;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.Mic1;
+import com.github.croesch.mic1.register.Register;
 import com.github.croesch.misc.Printer;
 
 /**
@@ -42,18 +44,37 @@ public class UserInstructionTest {
 
   @Test
   public final void testOf() {
+    TestUtil.printMethodName();
+
     assertThat(UserInstruction.of("Help")).isSameAs(UserInstruction.HELP);
 
     for (final UserInstruction ins : UserInstruction.values()) {
-      assertThat(UserInstruction.of(ins.name())).isSameAs(ins);
-      assertThat(UserInstruction.of(ins.name().toLowerCase())).isSameAs(ins);
-      assertThat(UserInstruction.of("--" + ins.name())).isNull();
-      assertThat(UserInstruction.of("--" + ins.name().toLowerCase())).isNull();
+      final String name = ins.name().replaceAll("_", "-");
+      assertThat(UserInstruction.of(name)).isSameAs(ins);
+      assertThat(UserInstruction.of(name.toLowerCase())).isSameAs(ins);
+      assertThat(UserInstruction.of("--" + name)).isNull();
+      assertThat(UserInstruction.of("--" + name.toLowerCase())).isNull();
+      TestUtil.printStep();
     }
 
     assertThat(UserInstruction.of(null)).isNull();
     assertThat(UserInstruction.of("")).isNull();
     assertThat(UserInstruction.of(" ")).isNull();
+
+    TestUtil.printEndOfMethod();
+  }
+
+  @Test
+  public final void testGetSize() {
+    assertThat(UserInstruction.getSize(null)).isZero();
+    assertThat(UserInstruction.getSize(new String[] {})).isZero();
+    assertThat(UserInstruction.getSize(new String[] { null })).isEqualTo(1);
+    assertThat(UserInstruction.getSize(new String[] { "" })).isEqualTo(1);
+    assertThat(UserInstruction.getSize(new String[] { " " })).isEqualTo(1);
+    assertThat(UserInstruction.getSize(new String[] { " ", "" })).isEqualTo(2);
+    assertThat(UserInstruction.getSize(new String[] { "H", "14" })).isEqualTo(2);
+    assertThat(UserInstruction.getSize(new Object[] { "H", "14" })).isEqualTo(2);
+    assertThat(UserInstruction.getSize(new Object[] { "H", 14 })).isEqualTo(2);
   }
 
   @Test
@@ -128,4 +149,125 @@ public class UserInstructionTest {
     Printer.setPrintStream(System.out);
   }
 
+  @Test
+  public final void testExecuteLsReg_NoArg() throws IOException {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    Register.MAR.setValue(1);
+    Register.MDR.setValue(2);
+    Register.PC.setValue(3);
+    Register.MBR.setValue(4);
+    Register.MBRU.setValue(5);
+    Register.SP.setValue(6);
+    Register.LV.setValue(7);
+    Register.CPP.setValue(8);
+    Register.TOS.setValue(9);
+    Register.OPC.setValue(10);
+    Register.H.setValue(11);
+
+    assertThat(out.toString()).isEmpty();
+    UserInstruction.LS_REG.execute(null, (String[]) null);
+
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x1") + "\n"
+                                                 + Text.REGISTER_VALUE.text("MDR ", "0x2") + "\n"
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x3") + "\n"
+                                                 + Text.REGISTER_VALUE.text("MBR ", "0x4") + "\n"
+                                                 + Text.REGISTER_VALUE.text("MBRU", "0x5") + "\n"
+                                                 + Text.REGISTER_VALUE.text("SP  ", "0x6") + "\n"
+                                                 + Text.REGISTER_VALUE.text("LV  ", "0x7") + "\n"
+                                                 + Text.REGISTER_VALUE.text("CPP ", "0x8") + "\n"
+                                                 + Text.REGISTER_VALUE.text("TOS ", "0x9") + "\n"
+                                                 + Text.REGISTER_VALUE.text("OPC ", "0xA") + "\n"
+                                                 + Text.REGISTER_VALUE.text("H   ", "0xB") + "\n");
+
+    Printer.setPrintStream(System.out);
+  }
+
+  @Test
+  public final void testExecuteLsReg_NullArg() throws IOException {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    Register.MAR.setValue(1);
+    Register.MDR.setValue(2);
+    Register.PC.setValue(3);
+    Register.MBR.setValue(0x1283);
+    Register.SP.setValue(6);
+    Register.LV.setValue(7);
+    Register.CPP.setValue(8);
+    Register.TOS.setValue(9);
+    Register.OPC.setValue(10);
+    Register.H.setValue(11);
+
+    assertThat(out.toString()).isEmpty();
+    UserInstruction.LS_REG.execute(null, new String[] { null });
+
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x1") + "\n"
+                                                 + Text.REGISTER_VALUE.text("MDR ", "0x2") + "\n"
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x3") + "\n"
+                                                 + Text.REGISTER_VALUE.text("MBR ", "0xFFFFFF83") + "\n"
+                                                 + Text.REGISTER_VALUE.text("MBRU", "0x83") + "\n"
+                                                 + Text.REGISTER_VALUE.text("SP  ", "0x6") + "\n"
+                                                 + Text.REGISTER_VALUE.text("LV  ", "0x7") + "\n"
+                                                 + Text.REGISTER_VALUE.text("CPP ", "0x8") + "\n"
+                                                 + Text.REGISTER_VALUE.text("TOS ", "0x9") + "\n"
+                                                 + Text.REGISTER_VALUE.text("OPC ", "0xA") + "\n"
+                                                 + Text.REGISTER_VALUE.text("H   ", "0xB") + "\n");
+
+    Printer.setPrintStream(System.out);
+  }
+
+  @Test
+  public final void testExecuteLsReg_FalseArg() throws IOException {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    Register.MAR.setValue(-1);
+    Register.MDR.setValue(0);
+    Register.PC.setValue(1);
+    Register.MBR.setValue(0x1273);
+    Register.SP.setValue(0x8bc);
+    Register.LV.setValue(0x8bd);
+    Register.CPP.setValue(0x8be);
+    Register.TOS.setValue(0x8bf);
+    Register.OPC.setValue(0x8c0);
+    Register.H.setValue(0x8c1);
+
+    assertThat(out.toString()).isEmpty();
+    UserInstruction.LS_REG.execute(null, new String[] { "Bernd" });
+
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("Bernd")) + "\n"
+                                                 + Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF") + "\n"
+                                                 + Text.REGISTER_VALUE.text("MDR ", "0x0") + "\n"
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1") + "\n"
+                                                 + Text.REGISTER_VALUE.text("MBR ", "0x73") + "\n"
+                                                 + Text.REGISTER_VALUE.text("MBRU", "0x73") + "\n"
+                                                 + Text.REGISTER_VALUE.text("SP  ", "0x8BC") + "\n"
+                                                 + Text.REGISTER_VALUE.text("LV  ", "0x8BD") + "\n"
+                                                 + Text.REGISTER_VALUE.text("CPP ", "0x8BE") + "\n"
+                                                 + Text.REGISTER_VALUE.text("TOS ", "0x8BF") + "\n"
+                                                 + Text.REGISTER_VALUE.text("OPC ", "0x8C0") + "\n"
+                                                 + Text.REGISTER_VALUE.text("H   ", "0x8C1") + "\n");
+
+    Printer.setPrintStream(System.out);
+  }
+
+  @Test
+  public final void testExecuteLsReg_OneArg() throws IOException {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    Register.MAR.setValue(0x4711);
+    UserInstruction.LS_REG.execute(null, new String[] { "MAR" });
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x4711") + "\n");
+    out.reset();
+
+    Register.SP.setValue(-2);
+    UserInstruction.LS_REG.execute(null, new String[] { "SP" });
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("SP  ", "0xFFFFFFFE") + "\n");
+    out.reset();
+
+    Printer.setPrintStream(System.out);
+  }
 }

@@ -46,6 +46,9 @@ public enum Text {
   /** the text to view how many ticks have been executed by the processor */
   TICKS,
 
+  /** the text to print the value of a register */
+  REGISTER_VALUE,
+
   // descriptions of different problems
 
   /** the text to format an error line output */
