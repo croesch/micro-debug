@@ -87,6 +87,26 @@ enum UserInstruction {
     }
   },
 
+  /** instruction to set the value of a register */
+  SET {
+    /** the number of expected parameters for this instruction */
+    private static final int EXPECTED_PARAMETERS = 2;
+
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      if (getSize(params) == EXPECTED_PARAMETERS) {
+        final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
+        final Integer i = (Integer) Parameter.NUMBER.getValue(params[1]);
+        if (r != null && i != null) {
+          r.setValue(i.intValue());
+        }
+      } else {
+        Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(EXPECTED_PARAMETERS, getSize(params)));
+      }
+      return true;
+    }
+  },
+
   /** executes one or the given number of instructions */
   STEP {
     @Override

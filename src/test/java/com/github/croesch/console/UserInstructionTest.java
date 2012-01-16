@@ -158,6 +158,147 @@ public class UserInstructionTest {
   }
 
   @Test
+  public final void testExecuteSet_WrongNumberOfParameters() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    // 0
+
+    Register.CPP.setValue(0xa1234);
+    assertThat(UserInstruction.SET.execute(null)).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0)) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET.execute(null, (String[]) null)).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0)) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET.execute(null, new String[] {})).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0)) + "\n");
+    out.reset();
+
+    // 1
+
+    assertThat(UserInstruction.SET.execute(null, new String[] { null })).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1)) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET.execute(null, new String[] { "H" })).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1)) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET.execute(null, new String[] { "2" })).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1)) + "\n");
+    out.reset();
+
+    // 3
+
+    assertThat(UserInstruction.SET.execute(null, new String[] { null, "asd", "" })).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3)) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET.execute(null, new String[] { "H", null, " " })).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3)) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET.execute(null, new String[] { "2", "\t", null })).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3)) + "\n");
+    out.reset();
+
+    Printer.setPrintStream(System.out);
+  }
+
+  @Test
+  public void testExecuteSet_Valid() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    Register.CPP.setValue(0xa1234);
+
+    assertThat(UserInstruction.SET.execute(null, Register.CPP.name(), "14")).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xE);
+    assertThat(out.toString()).isEmpty();
+
+    assertThat(UserInstruction.SET.execute(null, Register.H.name(), "0xF1")).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xE);
+    assertThat(Register.H.getValue()).isEqualTo(0xF1);
+    assertThat(out.toString()).isEmpty();
+
+    assertThat(UserInstruction.SET.execute(null, Register.CPP.name(), "2_1010")).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa);
+    assertThat(out.toString()).isEmpty();
+
+    Printer.setPrintStream(System.out);
+  }
+
+  @Test
+  public void testExecuteSet_Invalid() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    Register.CPP.setValue(0xa1234);
+
+    assertThat(UserInstruction.SET.execute(null, "abc", "14")).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("abc")) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET.execute(null, "", "14")).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("")) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET.execute(null, " h ", "14")).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text(" h ")) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET.execute(null, Register.CPP.name(), "2_14")).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("2_14")) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET.execute(null, Register.CPP.name(), "0xXY")).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0xXY")) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET.execute(null, Register.CPP.name(), "H")).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("H")) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET.execute(null, "abc", "2_14")).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("abc")) + "\n"
+                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("2_14")) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET.execute(null, "REG", "0xXY")).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("REG")) + "\n"
+                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("0xXY")) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET.execute(null, "12", "H")).isTrue();
+    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("12")) + "\n"
+                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("H")) + "\n");
+    out.reset();
+
+    Printer.setPrintStream(System.out);
+  }
+
+  @Test
   public final void testExecuteStep() throws IOException {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));

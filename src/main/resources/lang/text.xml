@@ -43,6 +43,8 @@
 	<entry key="unknown-instruction">Unknown instruction: {0}</entry>
 	<entry key="argument-with-wrong-param-number">Argument with wrong number of parameters: {0}</entry>
 
+	<entry key="wrong-param-number">Wrong number of parameters, expected {0} but got {1}</entry>
+
 	<entry key="wrong-format-mic1">wrong format of micro-assembler-file: {0}</entry>
 	<entry key="wrong-format-ijvm">wrong format of assembler-file: {0}</entry>
 

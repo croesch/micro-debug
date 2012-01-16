@@ -14,6 +14,10 @@ DESCRIPTION
 	run
 		runs the program until its end or until a breakpoint is hit.
 
+	set REG VAL
+		Sets REG's value to VAL. Where REG is the name of a register and VAL the
+		new value for that register.
+
 	step [NUM]
 		Executes NUM instructions, where NUM is a natural number. If NUM is omitted
 		then one instruction will be executed.
