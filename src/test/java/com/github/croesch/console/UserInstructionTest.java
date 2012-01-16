@@ -158,6 +158,72 @@ public class UserInstructionTest {
   }
 
   @Test
+  public final void testExecuteStep() throws IOException {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(Register.MAR.getValue()).isZero();
+    assertThat(Register.PC.getValue()).isZero();
+    assertThat(this.processor.isHaltInstruction()).isFalse();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + "\n");
+    out.reset();
+
+    setUp();
+
+    assertThat(UserInstruction.STEP.execute(this.processor, (String[]) null)).isTrue();
+    assertThat(Register.MAR.getValue()).isZero();
+    assertThat(Register.PC.getValue()).isZero();
+    assertThat(this.processor.isHaltInstruction()).isFalse();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "zwei")).isTrue();
+    assertThat(Register.MAR.getValue()).isZero();
+    assertThat(Register.PC.getValue()).isZero();
+    assertThat(Register.LV.getValue()).isEqualTo(-1);
+    assertThat(Register.H.getValue()).isEqualTo(-1);
+    assertThat(this.processor.isHaltInstruction()).isFalse();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("zwei")) + "\n" + Text.TICKS.text(1)
+                                                 + "\n");
+    out.reset();
+
+    setUp();
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "20")).isTrue();
+    assertThat(Register.MDR.getValue()).isEqualTo('\n');
+    assertThat(Register.MAR.getValue()).isEqualTo(-3);
+    assertThat(Register.PC.getValue()).isEqualTo(3);
+    assertThat(Register.LV.getValue()).isEqualTo(-2);
+    assertThat(Register.H.getValue()).isEqualTo(-1);
+    assertThat(this.processor.isHaltInstruction()).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "1")).isTrue();
+    assertThat(Register.MDR.getValue()).isEqualTo('\n');
+    assertThat(Register.MAR.getValue()).isEqualTo(-3);
+    assertThat(Register.PC.getValue()).isEqualTo(3);
+    assertThat(Register.LV.getValue()).isEqualTo(-2);
+    assertThat(Register.H.getValue()).isEqualTo(-1);
+    assertThat(this.processor.isHaltInstruction()).isTrue();
+    assertThat(out.toString()).isEmpty();
+    out.reset();
+
+    setUp();
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "2_10")).isTrue();
+    assertThat(Register.MAR.getValue()).isZero();
+    assertThat(Register.PC.getValue()).isZero();
+    assertThat(Register.LV.getValue()).isEqualTo(-1);
+    assertThat(Register.H.getValue()).isEqualTo(-1);
+    assertThat(this.processor.isHaltInstruction()).isFalse();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + "\n");
+
+    Printer.setPrintStream(System.out);
+  }
+
+  @Test
   public final void testExecuteLsReg_NoArg() throws IOException {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));

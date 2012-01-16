@@ -76,6 +76,9 @@ public final class Mic1 {
   /** the view that is able to present details of this processor to the user */
   private final Mic1View view = new TraceManager();
 
+  /** counter for ticks that have been executed */
+  private int ticks = 0;
+
   /**
    * Constructs a new Mic1-processor, reading the given inputstreams as micro-program and assembler-program.
    * 
@@ -153,16 +156,45 @@ public final class Mic1 {
   }
 
   /**
-   * Performs one execution of the processor.
+   * Performs the execution of the next instruction.
    * 
    * @since Date: Nov 21, 2011
    */
-  public void doTick() {
+  void doTick() {
     doClock1();
     doClock2();
     doClock3();
 
     update();
+    ++this.ticks;
+  }
+
+  /**
+   * If the processor hasn't reached the halt instruction this executes one instruction. <br>
+   * The number of effectively executed instructions is printed to the user.
+   * 
+   * @since Date: Jan 16, 2012
+   */
+  public void step() {
+    step(1);
+  }
+
+  /**
+   * Executes the given number of instructions. If one of them is the halt-instruction, it'll execute less than the
+   * given number.<br>
+   * The number of effectively executed instructions is printed to the user.
+   * 
+   * @since Date: Jan 16, 2012
+   * @param number instructions to execute, if possible.
+   */
+  public void step(final int number) {
+    int ticksDone = 0;
+    for (; ticksDone < number && !isHaltInstruction(); ++ticksDone) {
+      doTick();
+    }
+    if (ticksDone > 0) {
+      Printer.println(Text.TICKS.text(ticksDone));
+    }
   }
 
   /**
@@ -295,12 +327,20 @@ public final class Mic1 {
    * @return the number of ticks that this method executed.
    */
   public int run() {
-    int ticks = 0;
+    resetTicks();
     while (!isHaltInstruction()) {
       doTick();
-      ++ticks;
     }
-    return ticks;
+    return this.ticks;
+  }
+
+  /**
+   * Resets the counter of executed ticks to zero.
+   * 
+   * @since Date: Jan 16, 2012
+   */
+  private void resetTicks() {
+    this.ticks = 0;
   }
 
   /**

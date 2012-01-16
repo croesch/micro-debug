@@ -87,6 +87,25 @@ enum UserInstruction {
     }
   },
 
+  /** executes one or the given number of instructions */
+  STEP {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      if (getSize(params) == 0) {
+        processor.step();
+      } else {
+        final Integer i = (Integer) Parameter.NUMBER.getValue(params[0]);
+        if (i == null) {
+          processor.step();
+        } else {
+          processor.step(i);
+        }
+      }
+
+      return true;
+    }
+  },
+
   /** instruction to trace one or all registers */
   TRACE_REG {
     @Override
