@@ -90,9 +90,7 @@ public final class Mic1 {
   public Mic1(final InputStream micAsm, final InputStream asm) throws FileFormatException {
     this.controlStore = createMic1ControlStore(micAsm);
 
-    //TODO implement maximum size of memory as argument
-    final int maxSize = 0x10000;
-    this.memory = createMemory(asm, maxSize);
+    this.memory = createMemory(asm, Settings.MIC1_MEMORY_MAXSIZE.getValue());
 
     if (this.controlStore == null || this.memory == null) {
       // inform the caller about the problem

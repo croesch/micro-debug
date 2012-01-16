@@ -50,7 +50,10 @@ public enum Settings {
   /** contains the default value for the {@link com.github.croesch.mic1.register.Register#SP} */
   MIC1_REGISTER_SP_DEFVAL,
   /** contains the default value for the {@link com.github.croesch.mic1.register.Register#TOS} */
-  MIC1_REGISTER_TOS_DEFVAL;
+  MIC1_REGISTER_TOS_DEFVAL,
+
+  /** contains the maximum size of the {@link com.github.croesch.mic1.mem.Memory} */
+  MIC1_MEMORY_MAXSIZE;
 
   /** the value set up in the properties file */
   private int value;
