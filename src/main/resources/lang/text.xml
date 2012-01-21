@@ -33,6 +33,7 @@
 	<entry key="ticks">Processor executed {0} ticks.</entry>
 	
 	<entry key="register-value">Register {0}: {1}</entry>
+	<entry key="executed-code">Executed: {0}</entry>
 
 	<entry key="error">ERROR: {0}</entry>
 

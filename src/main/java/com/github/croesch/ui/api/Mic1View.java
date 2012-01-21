@@ -18,6 +18,7 @@
  */
 package com.github.croesch.ui.api;
 
+import com.github.croesch.mic1.controlstore.Mic1Instruction;
 import com.github.croesch.mic1.register.Register;
 
 /**
@@ -84,9 +85,33 @@ public interface Mic1View {
   boolean isTracing(Register r);
 
   /**
+   * Returns whether the micro code is currently traced.
+   * 
+   * @since Date: Jan 21, 2012
+   * @return <code>true</code>, if the micro code is currently traced<br>
+   *         <code>false</code> otherwise.
+   */
+  boolean isTracingMicro();
+
+  /**
+   * Performs to trace the micro code.
+   * 
+   * @since Date: Jan 21, 2012
+   */
+  void traceMicro();
+
+  /**
+   * Performs to not trace the micro code anymore.
+   * 
+   * @since Date: Jan 21, 2012
+   */
+  void untraceMicro();
+
+  /**
    * Tells the view to update itself.
    * 
    * @since Date: Jan 15, 2012
+   * @param currentInstruction the instruction that is now executed
    */
-  void update();
+  void update(Mic1Instruction currentInstruction);
 }

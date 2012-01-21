@@ -22,6 +22,8 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import com.github.croesch.i18n.Text;
+import com.github.croesch.mic1.controlstore.Mic1Instruction;
+import com.github.croesch.mic1.controlstore.Mic1InstructionDecoder;
 import com.github.croesch.mic1.register.Register;
 import com.github.croesch.misc.Printer;
 import com.github.croesch.misc.Utils;
@@ -37,6 +39,9 @@ public final class TraceManager implements Mic1View {
 
   /** contains which registers are traced and which aren't */
   private final Map<Register, Boolean> tracingRegisters = new EnumMap<Register, Boolean>(Register.class);
+
+  /** determines whether the micro code is currently traced */
+  private boolean microTracing = false;
 
   /**
    * Lists the values of all {@link Register}s.
@@ -114,11 +119,47 @@ public final class TraceManager implements Mic1View {
   }
 
   /**
+   * Performs to trace the micro code.
+   * 
+   * @since Date: Jan 21, 2012
+   */
+  public void traceMicro() {
+    this.microTracing = true;
+  }
+
+  /**
+   * Performs to not trace the micro code anymore.
+   * 
+   * @since Date: Jan 21, 2012
+   */
+  public void untraceMicro() {
+    this.microTracing = false;
+  }
+
+  /**
+   * Returns whether the micro code is currently traced.
+   * 
+   * @since Date: Jan 21, 2012
+   * @return <code>true</code>, if the micro code is currently traced<br>
+   *         <code>false</code> otherwise.
+   */
+  public boolean isTracingMicro() {
+    return this.microTracing;
+  }
+
+  /**
    * Tells the view to update itself.
    * 
    * @since Date: Jan 15, 2012
+   * @param currentInstruction the instruction that is now executed
    */
-  public void update() {
+  public void update(final Mic1Instruction currentInstruction) {
+    // trace micro code
+    if (isTracingMicro()) {
+      Printer.println(Text.EXECUTED_CODE.text(Mic1InstructionDecoder.decode(currentInstruction)));
+    }
+
+    // trace register
     for (final Register r : Register.values()) {
       if (isTracing(r)) {
         listRegister(r);

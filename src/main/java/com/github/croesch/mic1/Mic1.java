@@ -186,13 +186,11 @@ public final class Mic1 {
    * @param number instructions to execute, if possible.
    */
   public void step(final int number) {
-    int ticksDone = 0;
-    for (; ticksDone < number && !isHaltInstruction(); ++ticksDone) {
+    resetTicks();
+    while (this.ticks < number && !isHaltInstruction()) {
       doTick();
     }
-    if (ticksDone > 0) {
-      Printer.println(Text.TICKS.text(ticksDone));
-    }
+    printTicks();
   }
 
   /**
@@ -329,7 +327,20 @@ public final class Mic1 {
     while (!isHaltInstruction()) {
       doTick();
     }
+    printTicks();
+
     return this.ticks;
+  }
+
+  /**
+   * Prints the currently executed number of ticks, if its greater than zero.
+   * 
+   * @since Date: Jan 21, 2012
+   */
+  private void printTicks() {
+    if (this.ticks > 0) {
+      Printer.println(Text.TICKS.text(this.ticks));
+    }
   }
 
   /**
@@ -391,6 +402,15 @@ public final class Mic1 {
   }
 
   /**
+   * Performs to trace the micro code.
+   * 
+   * @since Date: Jan 21, 2012
+   */
+  public void traceMicro() {
+    this.view.traceMicro();
+  }
+
+  /**
    * Performs to trace all {@link Register}s.
    * 
    * @since Date: Jan 15, 2012
@@ -407,6 +427,15 @@ public final class Mic1 {
    */
   public void traceRegister(final Register r) {
     this.view.traceRegister(r);
+  }
+
+  /**
+   * Performs to not trace the micro code.
+   * 
+   * @since Date: Jan 21, 2012
+   */
+  public void untraceMicro() {
+    this.view.untraceMicro();
   }
 
   /**
@@ -446,6 +475,6 @@ public final class Mic1 {
    * @since Date: Jan 15, 2012
    */
   public void update() {
-    this.view.update();
+    this.view.update(this.instruction);
   }
 }

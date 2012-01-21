@@ -49,6 +49,9 @@ public enum Text {
   /** the text to print the value of a register */
   REGISTER_VALUE,
 
+  /** the text to print the executed code */
+  EXECUTED_CODE,
+
   // descriptions of different problems
 
   /** the text to format an error line output */

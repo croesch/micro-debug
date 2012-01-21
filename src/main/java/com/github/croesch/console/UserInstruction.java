@@ -81,8 +81,7 @@ enum UserInstruction {
   RUN {
     @Override
     public boolean execute(final Mic1 processor, final String ... params) {
-      final int ticks = processor.run();
-      Printer.println(Text.TICKS.text(ticks));
+      processor.run();
       return true;
     }
   },
@@ -126,6 +125,15 @@ enum UserInstruction {
     }
   },
 
+  /** instruction to trace the micro code */
+  TRACE_MIC {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      processor.traceMicro();
+      return true;
+    }
+  },
+
   /** instruction to trace one or all registers */
   TRACE_REG {
     @Override
@@ -138,6 +146,15 @@ enum UserInstruction {
           processor.traceRegister(r);
         }
       }
+      return true;
+    }
+  },
+
+  /** instruction to not trace the micro code anymore */
+  UNTRACE_MIC {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      processor.untraceMicro();
       return true;
     }
   },

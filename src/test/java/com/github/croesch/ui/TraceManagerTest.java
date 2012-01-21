@@ -26,6 +26,7 @@ import java.io.PrintStream;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.register.Register;
 import com.github.croesch.misc.Printer;
@@ -111,7 +112,7 @@ public class TraceManagerTest {
 
     this.tm.traceRegister();
     assertThat(out.toString()).isEmpty();
-    this.tm.update();
+    this.tm.update(null);
 
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF") + "\n"
                                                  + Text.REGISTER_VALUE.text("MDR ", "0x0") + "\n"
@@ -126,5 +127,14 @@ public class TraceManagerTest {
                                                  + Text.REGISTER_VALUE.text("H   ", "0x8C1") + "\n");
 
     Printer.setPrintStream(System.out);
+  }
+
+  @Test
+  public void testTraceMicro() throws FileFormatException {
+    this.tm.traceMicro();
+    assertThat(this.tm.isTracingMicro()).isTrue();
+
+    this.tm.untraceMicro();
+    assertThat(this.tm.isTracingMicro()).isFalse();
   }
 }

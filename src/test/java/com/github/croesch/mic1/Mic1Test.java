@@ -505,4 +505,48 @@ public class Mic1Test {
 
     Printer.setPrintStream(System.out);
   }
+
+  @Test
+  public final void testTraceMicro() throws IOException {
+    final String firstLine = Text.EXECUTED_CODE.text("PC=MAR=0;rd;goto 0x1") + "\n";
+    final String expected = firstLine + Text.EXECUTED_CODE.text("H=LV=-1;goto 0x2") + "\n"
+                            + Text.EXECUTED_CODE.text("LV=H+LV;wr;goto 0x3") + "\n"
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;wr;goto 0x4") + "\n"
+                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0x5") + "\n"
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0x6") + "\n"
+                            + Text.EXECUTED_CODE.text("wr;goto 0x7") + "\n"
+                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0x8") + "\n"
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0x9") + "\n"
+                            + Text.EXECUTED_CODE.text("wr;goto 0xA") + "\n"
+                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0xB") + "\n"
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0xC") + "\n"
+                            + Text.EXECUTED_CODE.text("wr;goto 0xD") + "\n" + Text.EXECUTED_CODE.text("goto 0xD")
+                            + "\n" + Text.TICKS.text(14) + "\n";
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + "\n");
+    out.reset();
+
+    setUp();
+
+    this.processor.traceMicro();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(expected);
+
+    setUp();
+    out.reset();
+
+    this.processor.traceMicro();
+    this.processor.step();
+    assertThat(out.toString()).isEqualTo(firstLine + Text.TICKS.text(1) + "\n");
+    out.reset();
+
+    this.processor.untraceMicro();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(13) + "\n");
+
+    Printer.setPrintStream(System.out);
+  }
 }
