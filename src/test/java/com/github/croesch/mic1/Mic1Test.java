@@ -97,7 +97,7 @@ public class Mic1Test {
     final ByteArrayOutputStream stdOut = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(stdOut));
 
-    this.processor.step(200);
+    this.processor.microStep(200);
     assertThat(stdOut.toString()).isEqualTo(Text.TICKS.text(14) + "\n");
 
     Printer.setPrintStream(System.out);
@@ -109,11 +109,11 @@ public class Mic1Test {
     Printer.setPrintStream(new PrintStream(stdOut));
 
     for (int i = 0; i < 14; ++i) {
-      this.processor.step();
+      this.processor.microStep();
       assertThat(stdOut.toString()).isEqualTo(Text.TICKS.text(1) + "\n");
       stdOut.reset();
     }
-    this.processor.step();
+    this.processor.microStep();
     assertThat(stdOut.toString()).isEmpty();
 
     Printer.setPrintStream(System.out);
@@ -166,9 +166,9 @@ public class Mic1Test {
     final ByteArrayOutputStream stdOut = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(stdOut));
 
-    processor.step(1);
+    processor.microStep(1);
     assertOneTickDoneAndResetPrintStream(stdOut);
-    processor.step(3);
+    processor.microStep(3);
     assertThat(stdOut.toString()).isEqualTo(Text.TICKS.text(3) + "\n");
     stdOut.reset();
 
@@ -190,7 +190,7 @@ public class Mic1Test {
     Printer.setPrintStream(new PrintStream(stdOut));
 
     // 00: MAR = PC = 0; rd; goto 1;
-    processor.step();
+    processor.microStep();
     assertThat(Register.MAR.getValue()).isEqualTo(0);
     assertThat(Register.PC.getValue()).isEqualTo(0);
     assertThat(out.toString()).isEmpty();
@@ -198,7 +198,7 @@ public class Mic1Test {
     assertOneTickDoneAndResetPrintStream(stdOut);
 
     // 01: LV = H = -1; goto 2;
-    processor.step();
+    processor.microStep();
     assertThat(Register.MAR.getValue()).isEqualTo(0);
     assertThat(Register.PC.getValue()).isEqualTo(0);
     assertThat(Register.LV.getValue()).isEqualTo(-1);
@@ -208,7 +208,7 @@ public class Mic1Test {
     assertOneTickDoneAndResetPrintStream(stdOut);
 
     // 02: LV = H + LV; goto 3;
-    processor.step();
+    processor.microStep();
     assertThat(Register.MDR.getValue()).isEqualTo('H');
     assertThat(Register.MAR.getValue()).isEqualTo(0);
     assertThat(Register.PC.getValue()).isEqualTo(0);
@@ -219,7 +219,7 @@ public class Mic1Test {
     assertOneTickDoneAndResetPrintStream(stdOut);
 
     // 03: MAR = LV - 1; wr; goto 4;
-    processor.step();
+    processor.microStep();
     assertThat(Register.MDR.getValue()).isEqualTo('H');
     assertThat(Register.MAR.getValue()).isEqualTo(-3);
     assertThat(Register.PC.getValue()).isEqualTo(0);
@@ -230,7 +230,7 @@ public class Mic1Test {
     assertOneTickDoneAndResetPrintStream(stdOut);
 
     // 04: MAR = PC = PC + 1; rd; goto 5;
-    processor.step();
+    processor.microStep();
     assertThat(Register.MDR.getValue()).isEqualTo('H');
     assertThat(Register.MAR.getValue()).isEqualTo(1);
     assertThat(Register.PC.getValue()).isEqualTo(1);
@@ -241,7 +241,7 @@ public class Mic1Test {
     assertOneTickDoneAndResetPrintStream(stdOut);
 
     // 05: MAR = LV - 1; goto 6;
-    processor.step();
+    processor.microStep();
     assertThat(Register.MDR.getValue()).isEqualTo('i');
     assertThat(Register.MAR.getValue()).isEqualTo(-3);
     assertThat(Register.PC.getValue()).isEqualTo(1);
@@ -252,7 +252,7 @@ public class Mic1Test {
     assertOneTickDoneAndResetPrintStream(stdOut);
 
     // 06: wr; goto 7;
-    processor.step();
+    processor.microStep();
     assertThat(Register.MDR.getValue()).isEqualTo('i');
     assertThat(Register.MAR.getValue()).isEqualTo(-3);
     assertThat(Register.PC.getValue()).isEqualTo(1);
@@ -263,7 +263,7 @@ public class Mic1Test {
     assertOneTickDoneAndResetPrintStream(stdOut);
 
     // 07: MAR = PC = PC + 1; rd; goto 8;
-    processor.step();
+    processor.microStep();
     assertThat(Register.MDR.getValue()).isEqualTo('i');
     assertThat(Register.MAR.getValue()).isEqualTo(2);
     assertThat(Register.PC.getValue()).isEqualTo(2);
@@ -274,7 +274,7 @@ public class Mic1Test {
     assertOneTickDoneAndResetPrintStream(stdOut);
 
     // 08: MAR = LV - 1; goto 9;
-    processor.step();
+    processor.microStep();
     assertThat(Register.MDR.getValue()).isEqualTo('!');
     assertThat(Register.MAR.getValue()).isEqualTo(-3);
     assertThat(Register.PC.getValue()).isEqualTo(2);
@@ -285,7 +285,7 @@ public class Mic1Test {
     assertOneTickDoneAndResetPrintStream(stdOut);
 
     // 09: wr; goto 10;
-    processor.step();
+    processor.microStep();
     assertThat(Register.MDR.getValue()).isEqualTo('!');
     assertThat(Register.MAR.getValue()).isEqualTo(-3);
     assertThat(Register.PC.getValue()).isEqualTo(2);
@@ -296,7 +296,7 @@ public class Mic1Test {
     assertOneTickDoneAndResetPrintStream(stdOut);
 
     // 10: MAR = PC = PC + 1; rd; goto 11;
-    processor.step();
+    processor.microStep();
     assertThat(Register.MDR.getValue()).isEqualTo('!');
     assertThat(Register.MAR.getValue()).isEqualTo(3);
     assertThat(Register.PC.getValue()).isEqualTo(3);
@@ -307,7 +307,7 @@ public class Mic1Test {
     assertOneTickDoneAndResetPrintStream(stdOut);
 
     // 11: MAR = LV - 1; goto 12;
-    processor.step();
+    processor.microStep();
     assertThat(Register.MDR.getValue()).isEqualTo('\n');
     assertThat(Register.MAR.getValue()).isEqualTo(-3);
     assertThat(Register.PC.getValue()).isEqualTo(3);
@@ -318,7 +318,7 @@ public class Mic1Test {
     assertOneTickDoneAndResetPrintStream(stdOut);
 
     // 12: wr; goto 13;
-    processor.step();
+    processor.microStep();
     assertThat(Register.MDR.getValue()).isEqualTo('\n');
     assertThat(Register.MAR.getValue()).isEqualTo(-3);
     assertThat(Register.PC.getValue()).isEqualTo(3);
@@ -329,7 +329,7 @@ public class Mic1Test {
     assertOneTickDoneAndResetPrintStream(stdOut);
 
     // 13: halt;
-    processor.step();
+    processor.microStep();
     assertThat(Register.MDR.getValue()).isEqualTo('\n');
     assertThat(Register.MAR.getValue()).isEqualTo(-3);
     assertThat(Register.PC.getValue()).isEqualTo(3);
@@ -339,10 +339,10 @@ public class Mic1Test {
     assertThat(processor.isHaltInstruction()).isTrue();
     assertOneTickDoneAndResetPrintStream(stdOut);
 
-    processor.step();
+    processor.microStep();
     assertThat(stdOut.toString()).isEmpty();
 
-    processor.step(15);
+    processor.microStep(15);
     assertThat(stdOut.toString()).isEmpty();
 
     Output.setOut(System.out);
@@ -539,7 +539,7 @@ public class Mic1Test {
     out.reset();
 
     this.processor.traceMicro();
-    this.processor.step();
+    this.processor.microStep();
     assertThat(out.toString()).isEqualTo(firstLine + Text.TICKS.text(1) + "\n");
     out.reset();
 

@@ -168,24 +168,24 @@ public final class Mic1 {
   }
 
   /**
-   * If the processor hasn't reached the halt instruction this executes one instruction. <br>
+   * If the processor hasn't reached the halt instruction this executes one micro instruction.<br>
    * The number of effectively executed instructions is printed to the user.
    * 
    * @since Date: Jan 16, 2012
    */
-  public void step() {
-    step(1);
+  public void microStep() {
+    microStep(1);
   }
 
   /**
-   * Executes the given number of instructions. If one of them is the halt-instruction, it'll execute less than the
-   * given number.<br>
+   * Executes the given number of micro instructions. If one of them is the halt-instruction, it'll execute less than
+   * the given number.<br>
    * The number of effectively executed instructions is printed to the user.
    * 
    * @since Date: Jan 16, 2012
-   * @param number instructions to execute, if possible.
+   * @param number micro instructions to execute, if possible.
    */
-  public void step(final int number) {
+  public void microStep(final int number) {
     resetTicks();
     while (this.ticks < number && !isHaltInstruction()) {
       doTick();

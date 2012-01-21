@@ -77,6 +77,25 @@ enum UserInstruction {
     }
   },
 
+  /** executes one or the given number of micro instructions */
+  MICRO_STEP {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      if (getSize(params) == 0) {
+        processor.microStep();
+      } else {
+        final Integer i = (Integer) Parameter.NUMBER.getValue(params[0]);
+        if (i == null) {
+          processor.microStep();
+        } else {
+          processor.microStep(i);
+        }
+      }
+
+      return true;
+    }
+  },
+
   /** runs the program to the end */
   RUN {
     @Override
@@ -102,25 +121,6 @@ enum UserInstruction {
       } else {
         Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(EXPECTED_PARAMETERS, getSize(params)));
       }
-      return true;
-    }
-  },
-
-  /** executes one or the given number of instructions */
-  STEP {
-    @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
-      if (getSize(params) == 0) {
-        processor.step();
-      } else {
-        final Integer i = (Integer) Parameter.NUMBER.getValue(params[0]);
-        if (i == null) {
-          processor.step();
-        } else {
-          processor.step(i);
-        }
-      }
-
       return true;
     }
   },
