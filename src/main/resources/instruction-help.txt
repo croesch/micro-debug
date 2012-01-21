@@ -23,6 +23,12 @@ DESCRIPTION
 		then one instruction will be executed.
 		The processor executes only instructions until the halt-instruction is found.
 
+	trace-mic
+		Traces the executed micro instructions.
+
+	untrace-mic
+		Ends tracing the executed micro instructions.
+
 	trace-reg [REG]
 		Traces the value of a register after each instruction, where REG is the name
 		of that register. If REG is omitted then all registers are traced.
