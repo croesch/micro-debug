@@ -18,6 +18,10 @@ DESCRIPTION
 		Sets REG's value to VAL. Where REG is the name of a register and VAL the
 		new value for that register.
 
+	set-mem ADDR VAL
+		Sets the value of the main memory at the address ADDR. Where VAL is the new
+		value to store at that address.
+
 	step [NUM]
 		Executes NUM instructions, where NUM is a natural number. If NUM is omitted
 		then one instruction will be executed.

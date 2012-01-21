@@ -299,7 +299,7 @@ public class UserInstructionTest {
   }
 
   @Test
-  public final void testExecuteStep() throws IOException {
+  public final void testExecuteMicroStep() throws IOException {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
 
@@ -604,6 +604,122 @@ public class UserInstructionTest {
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(13) + "\n");
 
     Printer.setPrintStream(System.out);
+  }
 
+  @Test
+  public final void testExecuteSetMem_WrongNumberOfParameters() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    // 0
+
+    assertThat(UserInstruction.SET_MEM.execute(null)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0)) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET_MEM.execute(null, (String[]) null)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0)) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET_MEM.execute(null, new String[] {})).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0)) + "\n");
+    out.reset();
+
+    // 1
+
+    assertThat(UserInstruction.SET_MEM.execute(null, new String[] { null })).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1)) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET_MEM.execute(null, new String[] { "H" })).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1)) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET_MEM.execute(null, new String[] { "2" })).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1)) + "\n");
+    out.reset();
+
+    // 3
+
+    assertThat(UserInstruction.SET_MEM.execute(null, new String[] { null, "asd", "" })).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3)) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET_MEM.execute(null, new String[] { "H", null, " " })).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3)) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET_MEM.execute(null, new String[] { "2", "\t", null })).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3)) + "\n");
+    out.reset();
+
+    Printer.setPrintStream(System.out);
+  }
+
+  @Test
+  public void testExecuteSetMem_Valid() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    assertThat(UserInstruction.SET_MEM.execute(this.processor, "0xA", "14")).isTrue();
+    assertThat(this.processor.getMemoryValue(0xa)).isEqualTo(14);
+    assertThat(out.toString()).isEmpty();
+
+    assertThat(UserInstruction.SET_MEM.execute(this.processor, "12", "0xF1")).isTrue();
+    assertThat(this.processor.getMemoryValue(12)).isEqualTo(0xf1);
+    assertThat(out.toString()).isEmpty();
+
+    assertThat(UserInstruction.SET_MEM.execute(this.processor, "2_10", "2_1010")).isTrue();
+    assertThat(this.processor.getMemoryValue(2)).isEqualTo(10);
+    assertThat(out.toString()).isEmpty();
+
+    Printer.setPrintStream(System.out);
+  }
+
+  @Test
+  public void testExecuteSetMem_Invalid() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    assertThat(UserInstruction.SET_MEM.execute(this.processor, "abc", "14")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("abc")) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET_MEM.execute(this.processor, "", "14")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("")) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET_MEM.execute(this.processor, " h ", "-123414")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text(" h ")) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET_MEM.execute(this.processor, "23", "2_14")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("2_14")) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET_MEM.execute(this.processor, "0", "0xXY")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0xXY")) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET_MEM.execute(this.processor, "12", "H")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("H")) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET_MEM.execute(this.processor, "abc", "2_14")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("abc")) + "\n"
+                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("2_14")) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET_MEM.execute(this.processor, "REG", "0xXY")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("REG")) + "\n"
+                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("0xXY")) + "\n");
+    out.reset();
+
+    assertThat(UserInstruction.SET_MEM.execute(this.processor, "0X12", "H")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0X12")) + "\n"
+                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("H")) + "\n");
+    out.reset();
+
+    Printer.setPrintStream(System.out);
   }
 }

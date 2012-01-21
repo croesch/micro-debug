@@ -477,4 +477,26 @@ public final class Mic1 {
   public void update() {
     this.view.update(this.instruction);
   }
+
+  /**
+   * Sets the value of the memory at the given address to the given value.
+   * 
+   * @since Date: Jan 21, 2012
+   * @param addr the address, where to set the new value
+   * @param val the new value
+   */
+  public void setMemoryValue(final int addr, final int val) {
+    this.memory.setWord(addr, val);
+  }
+
+  /**
+   * Returns the value of the memory at the given address.
+   * 
+   * @since Date: Jan 21, 2012
+   * @param addr the address to read the value from the memory.
+   * @return the value fetched from the memory at the given address
+   */
+  public int getMemoryValue(final int addr) {
+    return this.memory.getWord(addr);
+  }
 }

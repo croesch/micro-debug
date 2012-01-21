@@ -57,6 +57,9 @@ public enum Text {
   /** the text to format an error line output */
   ERROR,
 
+  /** describes an invalid memory address */
+  INVALID_MEM_ADDR,
+
   /** describes an invalid number */
   INVALID_NUMBER,
 

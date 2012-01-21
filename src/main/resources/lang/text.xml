@@ -37,6 +37,7 @@
 
 	<entry key="error">ERROR: {0}</entry>
 
+	<entry key="invalid-mem-addr">'{0}' is not a valid memory address</entry>
 	<entry key="invalid-number">'{0}' is not a valid number</entry>
 	<entry key="invalid-register">'{0}' is not a valid register</entry>
 

@@ -26,6 +26,7 @@ import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.register.Register;
+import com.github.croesch.misc.Printer;
 import com.github.croesch.misc.Utils;
 
 /**
@@ -331,5 +332,48 @@ public final class Memory {
     } else {
       this.memory[this.wordAddress] = this.wordValue;
     }
+  }
+
+  /**
+   * Returns the word value at the given address.
+   * 
+   * @since Date: Jan 21, 2012
+   * @param addr the address, from where to fetch the word
+   * @return the word value read from the memory
+   */
+  public int getWord(final int addr) {
+    if (isAddressValid(addr)) {
+      return this.memory[addr];
+    }
+    return -1;
+  }
+
+  /**
+   * Sets the word value at the given address to the given value.
+   * 
+   * @since Date: Jan 21, 2012
+   * @param addr the address, where to write the word to
+   * @param value the word to write to the memory
+   */
+  public void setWord(final int addr, final int value) {
+    if (isAddressValid(addr)) {
+      this.memory[addr] = value;
+    }
+  }
+
+  /**
+   * Returns whether the given address is a valid address in the memory.
+   * 
+   * @since Date: Jan 21, 2012
+   * @param addr the address to check
+   * @return <code>true</code> if the address is valid<br>
+   *         <code>false</code> otherwise
+   */
+  private boolean isAddressValid(final int addr) {
+    final boolean valid = addr >= 0 && addr < this.memory.length;
+    if (!valid) {
+      Printer.printErrorln(Text.INVALID_MEM_ADDR.text(Utils.toHexString(addr)));
+    }
+    return valid;
   }
 }

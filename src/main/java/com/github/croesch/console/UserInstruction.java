@@ -125,6 +125,26 @@ enum UserInstruction {
     }
   },
 
+  /** instruction to set the value of the memory at a specific address */
+  SET_MEM {
+    /** the number of expected parameters for this instruction */
+    private static final int EXPECTED_PARAMETERS = 2;
+
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      if (getSize(params) != EXPECTED_PARAMETERS) {
+        Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(EXPECTED_PARAMETERS, getSize(params)));
+      } else {
+        final Integer a = (Integer) Parameter.NUMBER.getValue(params[0]);
+        final Integer v = (Integer) Parameter.NUMBER.getValue(params[1]);
+        if (a != null && v != null) {
+          processor.setMemoryValue(a, v);
+        }
+      }
+      return true;
+    }
+  },
+
   /** instruction to trace the micro code */
   TRACE_MIC {
     @Override

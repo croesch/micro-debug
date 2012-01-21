@@ -29,9 +29,12 @@ import org.junit.Test;
 
 import com.github.croesch.TestUtil;
 import com.github.croesch.error.FileFormatException;
+import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.register.Register;
+import com.github.croesch.misc.Printer;
+import com.github.croesch.misc.Utils;
 
 /**
  * Provides test cases for {@link Memory}
@@ -97,7 +100,8 @@ public class MemoryTest {
     this.mem.setWordAddress(0);
     this.mem.poke();
     this.mem.fillRegisters(Register.H, null);
-    assertThat(Register.H.getValue()).isEqualTo(0x00FFFFFF);
+    assertThat(Register.H.getValue()).isEqualTo(0xFFFFFF);
+    assertThat(this.mem.getWord(0)).isEqualTo(0xFFFFFF);
   }
 
   @Test
@@ -109,6 +113,7 @@ public class MemoryTest {
     this.mem.poke();
     this.mem.fillRegisters(Register.H, null);
     assertThat(Register.H.getValue()).isEqualTo(0xFF00FFFF);
+    assertThat(this.mem.getWord(0)).isEqualTo(0xFF00FFFF);
   }
 
   @Test
@@ -120,6 +125,7 @@ public class MemoryTest {
     this.mem.poke();
     this.mem.fillRegisters(Register.H, null);
     assertThat(Register.H.getValue()).isEqualTo(0xFFFF00FF);
+    assertThat(this.mem.getWord(0)).isEqualTo(0xFFFF00FF);
   }
 
   @Test
@@ -131,6 +137,7 @@ public class MemoryTest {
     this.mem.poke();
     this.mem.fillRegisters(Register.H, null);
     assertThat(Register.H.getValue()).isEqualTo(0xFFFFFF00);
+    assertThat(this.mem.getWord(0)).isEqualTo(0xFFFFFF00);
   }
 
   @Test
@@ -382,5 +389,74 @@ public class MemoryTest {
     assertThat(Register.H.getValue()).isEqualTo(0xFF);
 
     Input.setIn(System.in);
+  }
+
+  @Test
+  public void testGetSetWord() {
+    assertThat(this.mem.getWord(0)).isEqualTo(0x00010203);
+    assertThat(this.mem.getWord(1)).isEqualTo(0x04050607);
+    assertThat(this.mem.getWord(2)).isEqualTo(0x08090A0B);
+    assertThat(this.mem.getWord(3)).isEqualTo(0x0C0D0E0F);
+    assertThat(this.mem.getWord(4)).isEqualTo(0x10111213);
+    assertThat(this.mem.getWord(5)).isEqualTo(0x14151617);
+    assertThat(this.mem.getWord(6)).isEqualTo(0x18191A1B);
+    assertThat(this.mem.getWord(7)).isEqualTo(0x1C1D1E1F);
+
+    this.mem.setWord(0, 0x98979695);
+
+    assertThat(this.mem.getWord(0)).isEqualTo(0x98979695);
+    assertThat(this.mem.getWord(1)).isEqualTo(0x04050607);
+    assertThat(this.mem.getWord(2)).isEqualTo(0x08090A0B);
+    assertThat(this.mem.getWord(3)).isEqualTo(0x0C0D0E0F);
+    assertThat(this.mem.getWord(4)).isEqualTo(0x10111213);
+    assertThat(this.mem.getWord(5)).isEqualTo(0x14151617);
+    assertThat(this.mem.getWord(6)).isEqualTo(0x18191A1B);
+    assertThat(this.mem.getWord(7)).isEqualTo(0x1C1D1E1F);
+
+    this.mem.setByteAddress(2);
+    this.mem.setFetch(true);
+    this.mem.poke();
+    this.mem.fillRegisters(Register.H, Register.LV);
+    assertThat(Register.LV.getValue()).isEqualTo(0x96);
+
+    this.mem.setFetch(false);
+  }
+
+  @Test
+  public void testSetInvalidAddresses() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    this.mem.setWord(-1, 0);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(-1))) + "\n");
+    out.reset();
+
+    this.mem.setWord(0, 0);
+    assertThat(out.toString()).isEmpty();
+
+    this.mem.setWord(Byte.MAX_VALUE, 0);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(Byte.MAX_VALUE)))
+                                                 + "\n");
+
+    Printer.setPrintStream(System.out);
+  }
+
+  @Test
+  public void testGetInvalidAddresses() {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    this.mem.getWord(-1);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(-1))) + "\n");
+    out.reset();
+
+    this.mem.getWord(0);
+    assertThat(out.toString()).isEmpty();
+
+    this.mem.getWord(Byte.MAX_VALUE);
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(Byte.MAX_VALUE)))
+                                                 + "\n");
+
+    Printer.setPrintStream(System.out);
   }
 }
