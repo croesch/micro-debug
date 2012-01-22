@@ -75,3 +75,5 @@
 	- Maximale Größe des Speichers in die Properties aufgenommen
 21.01.2012 (2,5 h)
 	- Instruktionen trace-mic, untrace-mic und set-mem implementiert
+22.01.2012 (7,5 h)
+	- Vorbereitungen für die Implementierung von ls-macro-code getroffen
