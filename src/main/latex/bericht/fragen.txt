@@ -99,4 +99,6 @@ Soll bei run bei jeder Instruktion alle getracten Dinge ausgegeben werden?
 MBRU auch anzeigen?
 
 
+Bei Ausgabe von Stack und IJVM-Code, wie Ende erkennen?
+
 

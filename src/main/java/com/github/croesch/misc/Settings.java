@@ -53,7 +53,12 @@ public enum Settings {
   MIC1_REGISTER_TOS_DEFVAL,
 
   /** contains the maximum size of the {@link com.github.croesch.mic1.mem.Memory} */
-  MIC1_MEMORY_MAXSIZE;
+  MIC1_MEMORY_MAXSIZE,
+
+  /** the width of a formatted address of a micro code instruction */
+  MIC1_CODE_MICRO_HEX_WIDTH,
+  /** the width of a formatted address of a macro/ijvm code instruction */
+  MIC1_CODE_MACRO_HEX_WIDTH;
 
   /** the value set up in the properties file */
   private int value;

@@ -24,8 +24,8 @@ import java.io.ByteArrayInputStream;
 
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
 import com.github.croesch.error.FileFormatException;
-import com.github.croesch.misc.Utils;
 
 /**
  * Provides tests for {@link Utils}.
@@ -33,7 +33,7 @@ import com.github.croesch.misc.Utils;
  * @author croesch
  * @since Date: Nov 23, 2011
  */
-public class UtilsTest {
+public class UtilsTest extends DefaultTestCase {
 
   @Test
   public void testIsOneValueMinusOne() {
@@ -128,5 +128,16 @@ public class UtilsTest {
     assertThat(Utils.toHexString(-1)).isEqualTo("0xFFFFFFFF");
     assertThat(Utils.toHexString(Integer.MAX_VALUE)).isEqualTo("0x7FFFFFFF");
     assertThat(Utils.toHexString(Integer.MIN_VALUE)).isEqualTo("0x80000000");
+  }
+
+  @Test
+  public void testGetNextHigherValue() {
+    assertThat(Utils.getNextHigherValue(-20, 0, 200, 19, 4, 15, 16)).isEqualTo(0);
+    assertThat(Utils.getNextHigherValue(0, 0, 200, 19, 4, 15, 16)).isEqualTo(4);
+    assertThat(Utils.getNextHigherValue(12, 0, 200, 19, 4, 15, 16)).isEqualTo(15);
+    assertThat(Utils.getNextHigherValue(17, 0, 200, 19, 4, 15, 16)).isEqualTo(19);
+    assertThat(Utils.getNextHigherValue(11, 0, 1, 2, 5, 10, 15, 20, 33, 23, 13, 3, -3)).isEqualTo(13);
+    assertThat(Utils.getNextHigherValue(110, 0, 1, 2, 5, 10, 15, 20, 33, 23, 13, 3, -3)).isEqualTo(Integer.MAX_VALUE);
+    assertThat(Utils.getNextHigherValue(110)).isEqualTo(Integer.MAX_VALUE);
   }
 }

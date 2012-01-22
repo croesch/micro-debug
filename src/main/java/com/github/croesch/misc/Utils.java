@@ -155,4 +155,24 @@ public final class Utils {
   public static String toHexString(final int number) {
     return "0x" + Integer.toHexString(number).toUpperCase(Locale.GERMAN);
   }
+
+  /**
+   * Giving a start value this iterates over all the other given values and returns the minimum of them that is higher
+   * than the given start value. So to say the next higher value seen from the starting point.
+   * 
+   * @since Date: Jan 22, 2012
+   * @param start the number to start from
+   * @param values the other numbers to iterate over and to search for the next higher value
+   * @return the next higher value than the start number<br>
+   *         or {@link Integer#MAX_VALUE} if no value is higher than the given start number.
+   */
+  public static int getNextHigherValue(final int start, final int ... values) {
+    int nextHigherValue = Integer.MAX_VALUE;
+    for (final int val : values) {
+      if (val < nextHigherValue && val > start) {
+        nextHigherValue = val;
+      }
+    }
+    return nextHigherValue;
+  }
 }

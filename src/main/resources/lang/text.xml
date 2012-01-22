@@ -34,6 +34,9 @@
 	
 	<entry key="register-value">Register {0}: {1}</entry>
 	<entry key="executed-code">Executed: {0}</entry>
+	<entry key="code-line">{0}: [{1}] {2} {3}</entry>
+
+	<entry key="unknown-ijvm-instruction">---</entry>
 
 	<entry key="error">ERROR: {0}</entry>
 

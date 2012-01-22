@@ -22,7 +22,10 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.io.Reader;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +37,7 @@ import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.register.Register;
 import com.github.croesch.misc.Printer;
+import com.github.croesch.misc.Settings;
 import com.github.croesch.misc.Utils;
 
 /**
@@ -456,6 +460,26 @@ public class MemoryTest {
     this.mem.getWord(Byte.MAX_VALUE);
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(Byte.MAX_VALUE)))
                                                  + "\n");
+
+    Printer.setPrintStream(System.out);
+  }
+
+  @Test
+  public void testPrintCode_All() throws IOException {
+    final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    Printer.setPrintStream(new PrintStream(out));
+
+    this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
+                          ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    this.mem.printCode();
+    final StringBuilder sb = new StringBuilder();
+    final Reader r = new InputStreamReader(ClassLoader.getSystemResourceAsStream("mic1/add.ijvm.dis"));
+    int c;
+    while ((c = r.read()) != -1) {
+      sb.append((char) c);
+    }
+
+    assertThat(out.toString()).isEqualTo(sb.toString());
 
     Printer.setPrintStream(System.out);
   }

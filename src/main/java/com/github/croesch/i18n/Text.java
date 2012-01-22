@@ -52,6 +52,12 @@ public enum Text {
   /** the text to print the executed code */
   EXECUTED_CODE,
 
+  /** the text to print a single line of code */
+  CODE_LINE,
+
+  /** the text that describes an unknown ijvm instruction */
+  UNKNOWN_IJVM_INSTRUCTION,
+
   // descriptions of different problems
 
   /** the text to format an error line output */

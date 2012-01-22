@@ -20,6 +20,7 @@ package com.github.croesch.mic1.mem;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
@@ -27,6 +28,7 @@ import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.register.Register;
 import com.github.croesch.misc.Printer;
+import com.github.croesch.misc.Settings;
 import com.github.croesch.misc.Utils;
 
 /**
@@ -78,6 +80,9 @@ public final class Memory {
 
   /** the byte read from the memory */
   private byte byteValue = -1;
+
+  /** the map that contains the configuration with addresses in micro code and the belonging command */
+  private Map<Integer, IJVMCommand> commands = null;
 
   /** the magic number that is needed at the begin of a binary ijvm-file */
   public static final int IJVM_MAGIC_NUMBER = 0x1DEADFAD;
@@ -290,8 +295,19 @@ public final class Memory {
    * @since Date: Nov 23, 2011
    */
   private void fetch() {
-    int word = this.memory[this.byteAddress / 4];
-    switch (this.byteAddress % 4) {
+    this.byteValue = (byte) getByte(this.byteAddress);
+  }
+
+  /**
+   * Returns a single byte, unsigned, read from the address in the memory.
+   * 
+   * @since Date: Jan 22, 2012
+   * @param addr the byte address of the byte to read from the memory
+   * @return the byte from the memory at the given address.
+   */
+  private int getByte(final int addr) {
+    int word = this.memory[addr / 4];
+    switch (addr % 4) {
       case 0:
         word >>= Byte.SIZE * 3;
         break;
@@ -305,7 +321,7 @@ public final class Memory {
         // nothing to do, because the value we want is already at word[7:0]
         break;
     }
-    this.byteValue = (byte) word;
+    return word & BYTE_MASK;
   }
 
   /**
@@ -375,5 +391,73 @@ public final class Memory {
       Printer.printErrorln(Text.INVALID_MEM_ADDR.text(Utils.toHexString(addr)));
     }
     return valid;
+  }
+
+  /**
+   * Prints the assembler code stored in the memory to the user.
+   * 
+   * @since Date: Jan 22, 2012
+   */
+  public void printCode() {
+    final int start = Settings.MIC1_REGISTER_PC_DEFVAL.getValue() + 1;
+    final int end = Utils.getNextHigherValue(start, Settings.MIC1_REGISTER_CPP_DEFVAL.getValue(),
+                                             Settings.MIC1_REGISTER_SP_DEFVAL.getValue(),
+                                             Settings.MIC1_MEMORY_MAXSIZE.getValue(),
+                                             Settings.MIC1_REGISTER_LV_DEFVAL.getValue());
+    for (int i = start; i < end; ++i) {
+      printCodeLine(start, i);
+    }
+  }
+
+  /**
+   * Reads the value of the memory at the given address, builds the representing {@link String} and prints it to the
+   * user.
+   * 
+   * @since Date: Jan 22, 2012
+   * @param start the start address where the code begins in the memory
+   * @param addr the absolute address of the code instruction to print
+   */
+  private void printCodeLine(final int start, final int addr) {
+    final int cmdCode = Math.abs(getByte(addr));
+    final IJVMCommand cmd = lookupCommand(cmdCode);
+    String name;
+    if (cmd == null) {
+      name = Text.UNKNOWN_IJVM_INSTRUCTION.text();
+    } else {
+      name = cmd.getName();
+    }
+    final String formattedRelativeAddr = formatIntToHex(addr - start, Settings.MIC1_CODE_MACRO_HEX_WIDTH.getValue());
+    final String formattedCmdCode = formatIntToHex(cmdCode, Settings.MIC1_CODE_MICRO_HEX_WIDTH.getValue());
+    Printer.println(Text.CODE_LINE.text(formattedRelativeAddr, formattedCmdCode, name, ""));
+  }
+
+  /**
+   * Formats the given number to a hexadecimal number and returns an right aligned string with the given width.
+   * 
+   * @since Date: Jan 22, 2012
+   * @param number the number to format
+   * @param width the width the formatted string should at least have
+   * @return the formatted string containing the hexadecimal value of the given number and at least <i>width</i>
+   *         characters.
+   */
+  private String formatIntToHex(final int number, final int width) {
+    return String.format("%" + width + "s", Utils.toHexString(number));
+  }
+
+  /**
+   * Returns the {@link IJVMCommand} that belongs to the given address.
+   * 
+   * @since Date: Jan 22, 2012
+   * @param addr the address where the command is placed in the micro code
+   * @return the {@link IJVMCommand} describing the command at the given address<br>
+   *         or <code>null</code> if no command is configured for this address
+   */
+  private IJVMCommand lookupCommand(final int addr) {
+    if (this.commands == null) {
+      // read configuration file the first time
+      final InputStream in = getClass().getClassLoader().getResourceAsStream("ijvm.conf");
+      this.commands = new IJVMConfigReader().readConfig(in);
+    }
+    return this.commands.get(Integer.valueOf(addr));
   }
 }
