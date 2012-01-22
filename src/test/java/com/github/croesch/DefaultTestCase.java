@@ -3,6 +3,7 @@ package com.github.croesch;
 import java.util.Locale;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 
 /*
  * Copyright (C) 2011-2012  Christian Roesch
@@ -24,16 +25,16 @@ import org.junit.BeforeClass;
  */
 
 /**
- * TODO Comment here ...
+ * Default test case to be extended by all test classes.
  * 
  * @author croesch
  * @since Date: Jan 22, 2012
  */
+@Ignore("Just default case")
 public class DefaultTestCase {
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     Locale.setDefault(new Locale("test"));
   }
-
 }
