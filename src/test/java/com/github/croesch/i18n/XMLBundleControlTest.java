@@ -25,13 +25,15 @@ import java.util.Locale;
 
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
+
 /**
  * Provides test cases for {@link XMLBundleControl} and {@link XMLResourceBundle}.
  * 
  * @author croesch
  * @since Date: Aug 17, 2011
  */
-public class XMLBundleControlTest {
+public class XMLBundleControlTest extends DefaultTestCase {
 
   /**
    * Test method for {@link XMLBundleControl#getFormats(String)}.

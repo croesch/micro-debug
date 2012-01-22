@@ -26,6 +26,7 @@ import java.io.InputStream;
 
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
 import com.github.croesch.TestUtil;
 import com.github.croesch.mic1.register.Register;
 
@@ -36,7 +37,7 @@ import com.github.croesch.mic1.register.Register;
  * @author croesch
  * @since Date: Nov 10, 2011
  */
-public class Mic1InstructionReaderTest {
+public class Mic1InstructionReaderTest extends DefaultTestCase {
 
   @Test
   public void testRead() throws IOException {

@@ -24,7 +24,7 @@ import java.io.StringReader;
 
 import org.junit.Test;
 
-import com.github.croesch.misc.Reader;
+import com.github.croesch.DefaultTestCase;
 
 /**
  * Provides test cases for {@link Reader}.
@@ -32,7 +32,7 @@ import com.github.croesch.misc.Reader;
  * @author croesch
  * @since Date: Dec 3, 2011
  */
-public class ReaderTest {
+public class ReaderTest extends DefaultTestCase {
 
   @Test
   public void testSetReader() {

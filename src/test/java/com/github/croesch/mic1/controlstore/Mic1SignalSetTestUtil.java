@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 
 import org.junit.Ignore;
 
+import com.github.croesch.DefaultTestCase;
 import com.github.croesch.TestUtil;
 
 /**
@@ -33,7 +34,7 @@ import com.github.croesch.TestUtil;
  * @since Date: Nov 12, 2011
  */
 @Ignore
-public class Mic1SignalSetTestUtil {
+public class Mic1SignalSetTestUtil extends DefaultTestCase {
 
   protected void testIsSetSignals(final Mic1SignalSet set, final String[] signals) throws Exception {
     TestUtil.printlnMethodName(1);

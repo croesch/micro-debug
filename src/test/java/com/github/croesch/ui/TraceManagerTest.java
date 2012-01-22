@@ -26,6 +26,7 @@ import java.io.PrintStream;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.register.Register;
@@ -37,7 +38,7 @@ import com.github.croesch.misc.Printer;
  * @author croesch
  * @since Date: Jan 15, 2012
  */
-public class TraceManagerTest {
+public class TraceManagerTest extends DefaultTestCase {
 
   private TraceManager tm;
 

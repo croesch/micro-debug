@@ -29,6 +29,7 @@ import java.io.PrintStream;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
 import com.github.croesch.TestUtil;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
@@ -42,7 +43,7 @@ import com.github.croesch.misc.Printer;
  * @author croesch
  * @since Date: Dec 3, 2011
  */
-public class UserInstructionTest {
+public class UserInstructionTest extends DefaultTestCase {
 
   private Mic1 processor;
 

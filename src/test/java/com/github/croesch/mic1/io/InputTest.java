@@ -26,13 +26,15 @@ import java.io.InputStream;
 
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
+
 /**
  * Provides test cases for {@link Input}.
  * 
  * @author croesch
  * @since Date: Nov 26, 2011
  */
-public class InputTest {
+public class InputTest extends DefaultTestCase {
 
   @Test
   public void testSetIn() {

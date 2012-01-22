@@ -29,13 +29,15 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
+
 /**
  * Provides test cases for {@link Output}.
  * 
  * @author croesch
  * @since Date: Nov 26, 2011
  */
-public class OutputTest {
+public class OutputTest extends DefaultTestCase {
 
   private static ByteArrayOutputStream out = new ByteArrayOutputStream();
 

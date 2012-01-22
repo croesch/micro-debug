@@ -22,13 +22,15 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
+
 /**
  * Provides test cases for {@link OneBitAlu}.
  * 
  * @author croesch
  * @since Date: Oct 18, 2011
  */
-public class OneBitAluTest {
+public class OneBitAluTest extends DefaultTestCase {
 
   @Test
   public void test_A_And_B() {

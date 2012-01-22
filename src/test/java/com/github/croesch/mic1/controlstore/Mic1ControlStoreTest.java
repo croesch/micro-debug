@@ -28,6 +28,7 @@ import java.io.InputStreamReader;
 
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
 import com.github.croesch.TestUtil;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.mic1.register.Register;
@@ -38,7 +39,7 @@ import com.github.croesch.mic1.register.Register;
  * @author croesch
  * @since Date: Nov 19, 2011
  */
-public class Mic1ControlStoreTest {
+public class Mic1ControlStoreTest extends DefaultTestCase {
 
   @Test(expected = FileFormatException.class)
   public void testConstructor_TooShortFile_Bytes0() throws FileFormatException {

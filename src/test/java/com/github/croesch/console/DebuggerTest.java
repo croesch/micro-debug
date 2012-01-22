@@ -29,6 +29,7 @@ import java.io.StringReader;
 
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.misc.Printer;
 import com.github.croesch.misc.Reader;
@@ -39,7 +40,7 @@ import com.github.croesch.misc.Reader;
  * @author croesch
  * @since Date: Dec 3, 2011
  */
-public class DebuggerTest {
+public class DebuggerTest extends DefaultTestCase {
 
   @Test
   public void testRun_Exit() {

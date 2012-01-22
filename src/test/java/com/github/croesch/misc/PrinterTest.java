@@ -29,8 +29,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
 import com.github.croesch.i18n.Text;
-import com.github.croesch.misc.Printer;
 
 /**
  * Provides test cases for {@link Printer}.
@@ -38,7 +38,7 @@ import com.github.croesch.misc.Printer;
  * @author croesch
  * @since Date: Dec 2, 2011
  */
-public class PrinterTest {
+public class PrinterTest extends DefaultTestCase {
 
   private final ByteArrayOutputStream out = new ByteArrayOutputStream();
 

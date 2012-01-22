@@ -22,6 +22,8 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
+
 /**
  * Provides test cases for {@link Alu}, based on the table 'calculable functions of the ALU' of the script of Karl
  * Stroetmann.
@@ -29,7 +31,7 @@ import org.junit.Test;
  * @author croesch
  * @since Date: Oct 18, 2011
  */
-public class AluTest {
+public class AluTest extends DefaultTestCase {
 
   private static final int[] TEST_VALUES = new int[] { Integer.MIN_VALUE,
                                                       -2008,

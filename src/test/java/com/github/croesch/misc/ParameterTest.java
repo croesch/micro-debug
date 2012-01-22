@@ -25,6 +25,7 @@ import java.io.PrintStream;
 
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.register.Register;
 
@@ -34,7 +35,7 @@ import com.github.croesch.mic1.register.Register;
  * @author croesch
  * @since Date: Dec 3, 2011
  */
-public class ParameterTest {
+public class ParameterTest extends DefaultTestCase {
 
   @Test
   public void testNumber_Valid() {

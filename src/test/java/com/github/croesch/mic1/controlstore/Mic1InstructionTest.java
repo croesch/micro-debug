@@ -23,6 +23,7 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
 import com.github.croesch.TestUtil;
 import com.github.croesch.mic1.register.Register;
 
@@ -32,7 +33,7 @@ import com.github.croesch.mic1.register.Register;
  * @author croesch
  * @since Date: Nov 10, 2011
  */
-public class Mic1InstructionTest {
+public class Mic1InstructionTest extends DefaultTestCase {
 
   private Mic1Instruction instruction;
 

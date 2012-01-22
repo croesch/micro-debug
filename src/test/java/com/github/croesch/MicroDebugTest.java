@@ -42,7 +42,7 @@ import com.github.croesch.misc.Reader;
  * @author croesch
  * @since Date: Dec 2, 2011
  */
-public class MicroDebugTest {
+public class MicroDebugTest extends DefaultTestCase {
 
   private static final String GREETING = Text.GREETING.text() + "\n";
 

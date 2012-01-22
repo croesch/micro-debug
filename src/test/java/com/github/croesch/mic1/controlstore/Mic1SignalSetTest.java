@@ -22,6 +22,7 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
 import com.github.croesch.TestUtil;
 
 /**
@@ -30,7 +31,7 @@ import com.github.croesch.TestUtil;
  * @author croesch
  * @since Date: Nov 12, 2011
  */
-public class Mic1SignalSetTest {
+public class Mic1SignalSetTest extends DefaultTestCase {
 
   @Test
   public void testEqualsObject() {

@@ -27,13 +27,15 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
+
 /**
  * Provides test cases for {@link IJVMConfigReader}.
  * 
  * @author croesch
  * @since Date: Jan 22, 2012
  */
-public class IJVMConfigReaderTest {
+public class IJVMConfigReaderTest extends DefaultTestCase {
 
   private static final IJVMConfigReader READER = new IJVMConfigReader();
 

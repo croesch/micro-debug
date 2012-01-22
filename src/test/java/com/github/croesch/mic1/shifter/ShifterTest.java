@@ -22,6 +22,7 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
 import com.github.croesch.TestUtil;
 
 /**
@@ -57,7 +58,7 @@ import com.github.croesch.TestUtil;
  * @author croesch
  * @since Date: Nov 7, 2011
  */
-public class ShifterTest {
+public class ShifterTest extends DefaultTestCase {
 
   @Test
   public void testGetOutput() {

@@ -25,13 +25,15 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
+
 /**
  * Provides test cases for {@link IJVMCommand}.
  * 
  * @author croesch
  * @since Date: Jan 22, 2012
  */
-public class IJVMCommandTest {
+public class IJVMCommandTest extends DefaultTestCase {
 
   @Test(expected = IllegalArgumentException.class)
   public void testIJVMCommand_IAE_NameNull() {

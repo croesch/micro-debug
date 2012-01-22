@@ -22,13 +22,15 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
+
 /**
  * Provides performance tests for {@link Alu}.
  * 
  * @author croesch
  * @since Date: Nov 19, 2011
  */
-public class AluPerformanceTest {
+public class AluPerformanceTest extends DefaultTestCase {
 
   /**
    * Tests the performance of {@link Alu#calculate()}. Assuming that adding to numbers is the most intensive job.<br />

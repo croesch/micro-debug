@@ -23,6 +23,7 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
 import com.github.croesch.TestUtil;
 
 /**
@@ -33,7 +34,7 @@ import com.github.croesch.TestUtil;
  * @author croesch
  * @since Date: Nov 7, 2011
  */
-public class NextMPCCalculatorTest {
+public class NextMPCCalculatorTest extends DefaultTestCase {
 
   private NextMPCCalculator nMPCC;
 

@@ -28,13 +28,15 @@ import java.util.ResourceBundle;
 
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
+
 /**
  * Provides test cases for {@link XMLResourceBundle}.
  * 
  * @author croesch
  * @since Date: Aug 17, 2011
  */
-public class XMLResourceBundleTest {
+public class XMLResourceBundleTest extends DefaultTestCase {
 
   /**
    * Test method for {@link XMLResourceBundle#getString(String)}.

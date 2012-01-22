@@ -33,13 +33,12 @@ import com.github.croesch.mic1.io.Output;
 import com.github.croesch.misc.Printer;
 
 /**
- * TODO write test, if there's an argument with at least one parameter<br>
  * Provides several test methods for {@link Argument}.
  * 
  * @author croesch
  * @since Date: Aug 13, 2011
  */
-public class ArgumentTest {
+public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testOf_DifferentValues() {
