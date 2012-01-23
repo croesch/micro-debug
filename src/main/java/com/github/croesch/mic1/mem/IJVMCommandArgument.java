@@ -18,6 +18,8 @@
  */
 package com.github.croesch.mic1.mem;
 
+import com.github.croesch.misc.Utils;
+
 /**
  * Argument that belongs to an {@link IJVMCommand}.
  * 
@@ -27,16 +29,50 @@ package com.github.croesch.mic1.mem;
 enum IJVMCommandArgument {
 
   /** represents a single byte */
-  BYTE,
+  BYTE (1),
   /** represents a label defined in the assembler code */
-  LABEL,
+  LABEL (2),
   /** represents a constant */
-  CONST,
+  CONST (1),
   /** represents a variable */
-  VARNUM,
+  VARNUM (1),
   /** represents an offset */
-  OFFSET,
+  OFFSET (2),
   /** represents an index */
-  INDEX;
+  INDEX (2);
 
+  /** the number of bytes this argument is build of */
+  private int bytes;
+
+  /**
+   * Constructs this argument with the given number of bytes.
+   * 
+   * @since Date: Jan 23, 2012
+   * @param b the number of bytes this argument needs
+   */
+  private IJVMCommandArgument(final int b) {
+    this.bytes = b;
+  }
+
+  /**
+   * Returns the number of bytes needed to build this argument.
+   * 
+   * @since Date: Jan 23, 2012
+   * @return number of bytes needed to build this argument
+   */
+  int getNumberOfBytes() {
+    return this.bytes;
+  }
+
+  /**
+   * Returns the {@link String} representing the given value of this argument.<br>
+   * TODO make this dependent on the arguments
+   * 
+   * @since Date: Jan 23, 2012
+   * @param value the value of the argument to represent as {@link String}
+   * @return the {@link String} representing the given value for this argument.
+   */
+  String getRepresentationOfArgument(final int value) {
+    return Utils.toHexString(value);
+  }
 }
