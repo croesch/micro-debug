@@ -73,6 +73,18 @@ public class IJVMCommandTest extends DefaultTestCase {
                                                                                      IJVMCommandArgument.BYTE,
                                                                                      IJVMCommandArgument.INDEX,
                                                                                      IJVMCommandArgument.LABEL);
+    assertThat(
+               new IJVMCommand("a",
+                               IJVMCommandArgument.BYTE,
+                               null,
+                               null,
+                               IJVMCommandArgument.BYTE,
+                               IJVMCommandArgument.INDEX,
+                               null,
+                               IJVMCommandArgument.LABEL,
+                               null,
+                               null).getArgs()).containsExactly(IJVMCommandArgument.BYTE, IJVMCommandArgument.BYTE,
+                                                                IJVMCommandArgument.INDEX, IJVMCommandArgument.LABEL);
     assertThat(new IJVMCommand("a", IJVMCommandArgument.BYTE, IJVMCommandArgument.BYTE).getArgs())
       .containsExactly(IJVMCommandArgument.BYTE, IJVMCommandArgument.BYTE);
     assertThat(new IJVMCommand("a", IJVMCommandArgument.BYTE).getArgs()).containsExactly(IJVMCommandArgument.BYTE);

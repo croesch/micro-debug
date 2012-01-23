@@ -55,7 +55,9 @@ class IJVMCommand {
     }
 
     for (final IJVMCommandArgument arg : arguments) {
-      this.args.add(arg);
+      if (arg != null) {
+        this.args.add(arg);
+      }
     }
   }
 
@@ -112,7 +114,8 @@ class IJVMCommand {
    * Returns a {@link List} of arguments that are required for this command.
    * 
    * @since Date: Jan 22, 2012
-   * @return a {@link List} containing the required {@link IJVMCommandArgument}s for this command.
+   * @return a {@link List} containing the required {@link IJVMCommandArgument}s for this command. Ensured to be not
+   *         <code>null</code> and to contain no <code>null</code>-values.
    */
   List<IJVMCommandArgument> getArgs() {
     return new ArrayList<IJVMCommandArgument>(this.args);
