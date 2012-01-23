@@ -77,3 +77,5 @@
 	- Instruktionen trace-mic, untrace-mic und set-mem implementiert
 22.01.2012 (7,5 h)
 	- Vorbereitungen für die Implementierung von ls-macro-code getroffen
+23.01.2012 (3 h)
+	- Großteil von ls-macro-code implementiert, Designentscheidung notwendig, was output betrifft, ls-macro-code ohne Argumente schon möglich

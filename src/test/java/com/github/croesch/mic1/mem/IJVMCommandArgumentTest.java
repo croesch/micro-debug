@@ -23,8 +23,10 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.mic1.register.Register;
+import com.github.croesch.misc.Settings;
 
 /**
  * Provides test cases for {@link IJVMCommandArgument}.
@@ -32,13 +34,14 @@ import com.github.croesch.mic1.register.Register;
  * @author croesch
  * @since Date: Jan 23, 2012
  */
-public class IJVMCommandArgumentTest {
+public class IJVMCommandArgumentTest extends DefaultTestCase {
 
   private Memory mem;
 
   @Before
   public void setUp() throws FileFormatException {
-    this.mem = new Memory(Byte.MAX_VALUE, ClassLoader.getSystemResourceAsStream("mic1/test.ijvm"));
+    this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
+                          ClassLoader.getSystemResourceAsStream("mic1/test.ijvm"));
   }
 
   @Test
@@ -103,6 +106,7 @@ public class IJVMCommandArgumentTest {
     assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(130, this.mem)).isEqualTo("0x82");
     assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(-130, this.mem)).isEqualTo("0xFF7E");
 
+    Register.CPP.setValue(0);
     assertThat(IJVMCommandArgument.INDEX.getRepresentationOfArgument(0, this.mem)).isEqualTo("0x0[=0x10203]");
     assertThat(IJVMCommandArgument.INDEX.getRepresentationOfArgument(1, this.mem)).isEqualTo("0x1[=0x4050607]");
     Register.CPP.setValue(Register.CPP.getValue() + 1);
