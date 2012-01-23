@@ -485,7 +485,7 @@ public final class Memory {
         value |= getByte(addr + i) << (Byte.SIZE * (arg.getNumberOfBytes() - i));
         ++bytesRead;
       }
-      sb.append(" ").append(arg.getRepresentationOfArgument(value));
+      sb.append(" ").append(arg.getRepresentationOfArgument(value, this));
     }
     return bytesRead;
   }

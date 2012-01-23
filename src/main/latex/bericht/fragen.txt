@@ -102,3 +102,7 @@ MBRU auch anzeigen?
 Bei Ausgabe von Stack und IJVM-Code, wie Ende erkennen?
 
 
+Unterschied byte und const
+
+
+Formatierung der Parameter ok?

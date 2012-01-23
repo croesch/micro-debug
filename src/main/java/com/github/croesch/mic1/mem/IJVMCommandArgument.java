@@ -18,6 +18,7 @@
  */
 package com.github.croesch.mic1.mem;
 
+import com.github.croesch.mic1.register.Register;
 import com.github.croesch.misc.Utils;
 
 /**
@@ -31,15 +32,43 @@ enum IJVMCommandArgument {
   /** represents a single byte */
   BYTE (1),
   /** represents a label defined in the assembler code */
-  LABEL (2),
+  LABEL (2) {
+    @Override
+    String represent(final int value, final Memory mem) {
+      return String.valueOf(signExtend(value));
+    }
+  },
   /** represents a constant */
   CONST (1),
   /** represents a variable */
-  VARNUM (1),
+  VARNUM (1) {
+    @Override
+    String represent(final int value, final Memory mem) {
+      return String.valueOf(value);
+    }
+  },
   /** represents an offset */
   OFFSET (2),
   /** represents an index */
-  INDEX (2);
+  INDEX (2) {
+    @Override
+    String represent(final int value, final Memory mem) {
+      final int cons = mem.getWord(Register.CPP.getValue() + value);
+      return Utils.toHexString(value) + "[=" + Utils.toHexString(cons) + "]";
+    }
+  };
+
+  /** mask to select one byte */
+  private static final int BYTE_MASK_1 = 0xFF;
+
+  /** mask to select two bytes */
+  private static final int BYTE_MASK_2 = 0xFFFF;
+
+  /** mask to select sign bit of one byte */
+  private static final int SIGN_MASK_1 = 0x80;
+
+  /** mask to select sign bit of two bytes */
+  private static final int SIGN_MASK_2 = 0x8000;
 
   /** the number of bytes this argument is build of */
   private int bytes;
@@ -60,19 +89,77 @@ enum IJVMCommandArgument {
    * @since Date: Jan 23, 2012
    * @return number of bytes needed to build this argument
    */
-  int getNumberOfBytes() {
+  final int getNumberOfBytes() {
     return this.bytes;
   }
 
   /**
-   * Returns the {@link String} representing the given value of this argument.<br>
-   * TODO make this dependent on the arguments
+   * Returns the {@link String} representing the given value of this argument.
    * 
    * @since Date: Jan 23, 2012
    * @param value the value of the argument to represent as {@link String}
+   * @param mem the memory to fetch values from
    * @return the {@link String} representing the given value for this argument.
    */
-  String getRepresentationOfArgument(final int value) {
+  final String getRepresentationOfArgument(final int value, final Memory mem) {
+    return represent(maskValue(value), mem);
+  }
+
+  /**
+   * Ensures that the given number is only as big as expected.
+   * 
+   * @since Date: Jan 23, 2012
+   * @param value the input number to mask
+   * @return the number that is as big as {@link #getNumberOfBytes()} indicates
+   */
+  private int maskValue(final int value) {
+    switch (getNumberOfBytes()) {
+      case 1:
+        return value & BYTE_MASK_1;
+      case 2:
+        return value & BYTE_MASK_2;
+      default:
+        return value;
+    }
+  }
+
+  /**
+   * Returns the sign extended value of the given input number using {@link #getNumberOfBytes()} to find the bit that
+   * defines the sign.
+   * 
+   * @since Date: Jan 23, 2012
+   * @param num the value to sign extend
+   * @return the sign extended number
+   */
+  final int signExtend(final int num) {
+    int ret = num;
+    switch (getNumberOfBytes()) {
+      case 1:
+        if ((ret & (SIGN_MASK_1)) > 0) {
+          ret |= ~BYTE_MASK_1;
+        }
+        break;
+      case 2:
+        if ((ret & (SIGN_MASK_2)) > 0) {
+          ret |= ~BYTE_MASK_2;
+        }
+        break;
+      default:
+        break;
+    }
+    return ret;
+  }
+
+  /**
+   * Returns the {@link String} representation of the given value that is expected to have the correct size. By default
+   * this will return the hexadecimal representation of the given number.
+   * 
+   * @since Date: Jan 23, 2012
+   * @param value the number to represent
+   * @param mem the memory to fetch values from
+   * @return the string representation of the given value for that argument.
+   */
+  String represent(final int value, final Memory mem) {
     return Utils.toHexString(value);
   }
 }

@@ -28,6 +28,7 @@ import java.io.PrintStream;
 import java.io.Reader;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
@@ -488,6 +489,7 @@ public class MemoryTest extends DefaultTestCase {
     Printer.setPrintStream(System.out);
   }
 
+  @Ignore
   @Test
   public void testPrintCode_All() throws IOException {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
