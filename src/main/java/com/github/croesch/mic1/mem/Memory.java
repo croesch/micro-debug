@@ -306,7 +306,7 @@ public final class Memory {
    * @param addr the byte address of the byte to read from the memory
    * @return the byte from the memory at the given address.
    */
-  private int getByte(final int addr) {
+  public int getByte(final int addr) {
     int word = this.memory[addr / 4];
     switch (addr % 4) {
       case 0:

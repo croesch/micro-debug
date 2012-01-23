@@ -428,6 +428,29 @@ public class MemoryTest extends DefaultTestCase {
   }
 
   @Test
+  public void testGetByte() {
+    assertThat(this.mem.getByte(0)).isEqualTo(0x00);
+    assertThat(this.mem.getByte(1)).isEqualTo(0x01);
+    assertThat(this.mem.getByte(2)).isEqualTo(0x02);
+    assertThat(this.mem.getByte(3)).isEqualTo(0x03);
+    assertThat(this.mem.getByte(4)).isEqualTo(0x04);
+    assertThat(this.mem.getByte(5)).isEqualTo(0x05);
+    assertThat(this.mem.getByte(6)).isEqualTo(0x06);
+    assertThat(this.mem.getByte(7)).isEqualTo(0x07);
+
+    this.mem.setWord(0, 0x98979695);
+
+    assertThat(this.mem.getByte(0)).isEqualTo(0x98);
+    assertThat(this.mem.getByte(1)).isEqualTo(0x97);
+    assertThat(this.mem.getByte(2)).isEqualTo(0x96);
+    assertThat(this.mem.getByte(3)).isEqualTo(0x95);
+    assertThat(this.mem.getByte(4)).isEqualTo(0x04);
+    assertThat(this.mem.getByte(5)).isEqualTo(0x05);
+    assertThat(this.mem.getByte(6)).isEqualTo(0x06);
+    assertThat(this.mem.getByte(7)).isEqualTo(0x07);
+  }
+
+  @Test
   public void testSetInvalidAddresses() {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
