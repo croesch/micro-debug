@@ -7,6 +7,9 @@ DESCRIPTION
 	exit
 		exits the debugger.
 
+	ls-macro-code
+		Prints the whole assembler code to the user, trying to disassemble it.
+
 	ls-reg [REG]
 		Lists the value of a register, where REG is the name of that register.
 		If REG is omitted then the values of all registers are listed.

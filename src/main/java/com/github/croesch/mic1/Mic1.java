@@ -499,4 +499,13 @@ public final class Mic1 {
   public int getMemoryValue(final int addr) {
     return this.memory.getWord(addr);
   }
+
+  /**
+   * Prints the whole ijvm code to the user.
+   * 
+   * @since Date: Jan 23, 2012
+   */
+  public void printMacroCode() {
+    this.memory.printCode();
+  }
 }

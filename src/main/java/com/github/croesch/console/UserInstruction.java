@@ -59,6 +59,15 @@ enum UserInstruction {
     }
   },
 
+  /** instruction to print the ijvm code to the user */
+  LS_MACRO_CODE {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      processor.printMacroCode();
+      return true;
+    }
+  },
+
   /** list the values of all or a single register */
   LS_REG {
     @Override
