@@ -22,6 +22,6 @@
 <!-- Contains text resources the tests depend on -->
 
 <properties>
-	<entry key="code-line">{0}: [{1}] {2} {3}</entry>
+	<entry key="code-line">{0}: [{1}] {2}{3}</entry>
 	<entry key="unknown-ijvm-instruction">-</entry>
 </properties>

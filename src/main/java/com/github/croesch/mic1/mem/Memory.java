@@ -20,6 +20,7 @@ package com.github.croesch.mic1.mem;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 import com.github.croesch.error.FileFormatException;
@@ -405,7 +406,7 @@ public final class Memory {
                                              Settings.MIC1_MEMORY_MAXSIZE.getValue(),
                                              Settings.MIC1_REGISTER_LV_DEFVAL.getValue());
     for (int i = start; i < end; ++i) {
-      printCodeLine(start, i);
+      i += printCodeLine(start, i);
     }
   }
 
@@ -416,19 +417,77 @@ public final class Memory {
    * @since Date: Jan 22, 2012
    * @param start the start address where the code begins in the memory
    * @param addr the absolute address of the code instruction to print
+   * @return the number of bytes read as arguments to the command byte
    */
-  private void printCodeLine(final int start, final int addr) {
-    final int cmdCode = Math.abs(getByte(addr));
+  private int printCodeLine(final int start, final int addr) {
+    final StringBuilder formattedArgs = new StringBuilder();
+
+    final int cmdCode = getByte(addr);
     final IJVMCommand cmd = lookupCommand(cmdCode);
-    String name;
-    if (cmd == null) {
-      name = Text.UNKNOWN_IJVM_INSTRUCTION.text();
-    } else {
-      name = cmd.getName();
-    }
+
+    final String name = buildNameForCommand(cmd);
+    final int bytesRead = readArgumentsIfAny(addr, cmd, formattedArgs);
+
     final String formattedRelativeAddr = formatIntToHex(addr - start, Settings.MIC1_CODE_MACRO_HEX_WIDTH.getValue());
     final String formattedCmdCode = formatIntToHex(cmdCode, Settings.MIC1_CODE_MICRO_HEX_WIDTH.getValue());
-    Printer.println(Text.CODE_LINE.text(formattedRelativeAddr, formattedCmdCode, name, ""));
+
+    Printer.println(Text.CODE_LINE.text(formattedRelativeAddr, formattedCmdCode, name, formattedArgs.toString()));
+
+    return bytesRead;
+  }
+
+  /**
+   * If the command is valid, this will read all argument bytes and build a formatted string with them.
+   * 
+   * @since Date: Jan 23, 2012
+   * @param addr the address of the command byte
+   * @param cmd the fetched {@link IJVMCommand} the command byte stands for
+   * @param sb the {@link StringBuilder} that stores the formatted arguments
+   * @return the number of bytes read as arguments
+   */
+  private int readArgumentsIfAny(final int addr, final IJVMCommand cmd, final StringBuilder sb) {
+    if (cmd != null) {
+      return createArgumentList(cmd.getArgs(), addr, sb);
+    }
+    return 0;
+  }
+
+  /**
+   * Returns the name for the given command to display.
+   * 
+   * @since Date: Jan 23, 2012
+   * @param cmd the {@link IJVMCommand} to fetch the name from, may be <code>null</code>
+   * @return the name of the {@link IJVMCommand},<br>
+   *         or an text to indicate, that the command is unknown, if the given command is <code>null</code>
+   * @see IJVMCommand#getName()
+   */
+  private String buildNameForCommand(final IJVMCommand cmd) {
+    if (cmd == null) {
+      return Text.UNKNOWN_IJVM_INSTRUCTION.text();
+    }
+    return cmd.getName();
+  }
+
+  /**
+   * Builds the formatted {@link String} based on the arguments to read.
+   * 
+   * @since Date: Jan 23, 2012
+   * @param args the argument list that define the number of bytes to read, may not be <code>null</code>
+   * @param addr the address of the command byte
+   * @param sb the {@link StringBuilder} that stores the formatted arguments
+   * @return the number of bytes read as arguments
+   */
+  private int createArgumentList(final List<IJVMCommandArgument> args, final int addr, final StringBuilder sb) {
+    int bytesRead = 0;
+    for (final IJVMCommandArgument arg : args) {
+      int value = 0;
+      for (int i = 1; i <= arg.getNumberOfBytes(); ++i) {
+        value |= getByte(addr + i) << (Byte.SIZE * (arg.getNumberOfBytes() - i));
+        ++bytesRead;
+      }
+      sb.append(" ").append(arg.getRepresentationOfArgument(value));
+    }
+    return bytesRead;
   }
 
   /**
