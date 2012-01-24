@@ -106,3 +106,6 @@ Unterschied byte und const
 
 
 Formatierung der Parameter ok?
+
+
+Bei Ausgabe von Code, wie aktuelle Codezeile definieren, Zeile? Vorherige und nachfolgende an Speicherstellen festmachen und nicht an Programmlauf?
