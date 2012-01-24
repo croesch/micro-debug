@@ -1,20 +1,16 @@
 /*
- * Copyright (C) 2011-2012  Christian Roesch
- * 
+ * Copyright (C) 2011-2012 Christian Roesch
  * This file is part of micro-debug.
- * 
  * micro-debug is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
  * micro-debug is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
- * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
+ * along with micro-debug. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.croesch.ui;
 
@@ -27,6 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
+import com.github.croesch.TestUtil;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.register.Register;
@@ -115,17 +112,17 @@ public class TraceManagerTest extends DefaultTestCase {
     assertThat(out.toString()).isEmpty();
     this.tm.update(null);
 
-    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF") + "\n"
-                                                 + Text.REGISTER_VALUE.text("MDR ", "0x0") + "\n"
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1") + "\n"
-                                                 + Text.REGISTER_VALUE.text("MBR ", "0x73") + "\n"
-                                                 + Text.REGISTER_VALUE.text("MBRU", "0x73") + "\n"
-                                                 + Text.REGISTER_VALUE.text("SP  ", "0x8BC") + "\n"
-                                                 + Text.REGISTER_VALUE.text("LV  ", "0x8BD") + "\n"
-                                                 + Text.REGISTER_VALUE.text("CPP ", "0x8BE") + "\n"
-                                                 + Text.REGISTER_VALUE.text("TOS ", "0x8BF") + "\n"
-                                                 + Text.REGISTER_VALUE.text("OPC ", "0x8C0") + "\n"
-                                                 + Text.REGISTER_VALUE.text("H   ", "0x8C1") + "\n");
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("MDR ", "0x0") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("PC  ", "0x1") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("MBR ", "0x73") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("MBRU", "0x73") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("SP  ", "0x8BC") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("LV  ", "0x8BD") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("CPP ", "0x8BE") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("TOS ", "0x8BF") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("OPC ", "0x8C0") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("H   ", "0x8C1") + TestUtil.getLineSeparator());
 
     Printer.setPrintStream(System.out);
   }

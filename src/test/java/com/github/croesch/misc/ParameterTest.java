@@ -1,20 +1,16 @@
 /*
- * Copyright (C) 2011-2012  Christian Roesch
- * 
+ * Copyright (C) 2011-2012 Christian Roesch
  * This file is part of micro-debug.
- * 
  * micro-debug is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
  * micro-debug is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
- * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
+ * along with micro-debug. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.croesch.misc;
 
@@ -26,6 +22,7 @@ import java.io.PrintStream;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
+import com.github.croesch.TestUtil;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.register.Register;
 
@@ -130,13 +127,14 @@ public class ParameterTest extends DefaultTestCase {
 
   private void testInvalidRegister(final String str, final ByteArrayOutputStream out) {
     assertThat(Parameter.REGISTER.getValue(str)).isNull();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text(str)) + "\n");
+    assertThat(out.toString())
+      .isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text(str)) + TestUtil.getLineSeparator());
     out.reset();
   }
 
   private void testInvalidNumber(final String str, final ByteArrayOutputStream out) {
     assertThat(Parameter.NUMBER.getValue(str)).isNull();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text(str)) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text(str)) + TestUtil.getLineSeparator());
     out.reset();
   }
 

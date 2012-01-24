@@ -1,20 +1,16 @@
 /*
- * Copyright (C) 2011-2012  Christian Roesch
- * 
+ * Copyright (C) 2011-2012 Christian Roesch
  * This file is part of micro-debug.
- * 
  * micro-debug is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
  * micro-debug is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
- * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
+ * along with micro-debug. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.croesch.mic1.mem;
 
@@ -238,10 +234,10 @@ public class MemoryTest extends DefaultTestCase {
 
   @Test(expected = ArrayIndexOutOfBoundsException.class)
   public void testPoke_WriteToOOM() throws FileFormatException {
-    final ByteArrayInputStream programStream = new ByteArrayInputStream(new byte[] { 0x1d,
-                                                                                    (byte) 0xea,
-                                                                                    (byte) 0xdf,
-                                                                                    (byte) 0xad });
+    final ByteArrayInputStream programStream = new ByteArrayInputStream(new byte[] {0x1d,
+                                                                                    (byte)0xea,
+                                                                                    (byte)0xdf,
+                                                                                    (byte)0xad});
     this.mem = new Memory(1, programStream);
     this.mem.setWrite(true);
     this.mem.setWordAddress(1);
@@ -250,10 +246,10 @@ public class MemoryTest extends DefaultTestCase {
 
   @Test(expected = ArrayIndexOutOfBoundsException.class)
   public void testPoke_ReadFromOOM() throws FileFormatException {
-    final ByteArrayInputStream programStream = new ByteArrayInputStream(new byte[] { 0x1d,
-                                                                                    (byte) 0xea,
-                                                                                    (byte) 0xdf,
-                                                                                    (byte) 0xad });
+    final ByteArrayInputStream programStream = new ByteArrayInputStream(new byte[] {0x1d,
+                                                                                    (byte)0xea,
+                                                                                    (byte)0xdf,
+                                                                                    (byte)0xad});
     this.mem = new Memory(1, programStream);
     this.mem.setRead(true);
     this.mem.setWordAddress(1);
@@ -262,10 +258,10 @@ public class MemoryTest extends DefaultTestCase {
 
   @Test(expected = ArrayIndexOutOfBoundsException.class)
   public void testPoke_FetchFromOOM() throws FileFormatException {
-    final ByteArrayInputStream programStream = new ByteArrayInputStream(new byte[] { 0x1d,
-                                                                                    (byte) 0xea,
-                                                                                    (byte) 0xdf,
-                                                                                    (byte) 0xad });
+    final ByteArrayInputStream programStream = new ByteArrayInputStream(new byte[] {0x1d,
+                                                                                    (byte)0xea,
+                                                                                    (byte)0xdf,
+                                                                                    (byte)0xad});
     this.mem = new Memory(1, programStream);
     this.mem.setFetch(true);
     this.mem.setByteAddress(4);
@@ -457,7 +453,8 @@ public class MemoryTest extends DefaultTestCase {
     Printer.setPrintStream(new PrintStream(out));
 
     this.mem.setWord(-1, 0);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(-1))) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(-1)))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     this.mem.setWord(0, 0);
@@ -465,7 +462,7 @@ public class MemoryTest extends DefaultTestCase {
 
     this.mem.setWord(Byte.MAX_VALUE, 0);
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(Byte.MAX_VALUE)))
-                                                 + "\n");
+                                         + TestUtil.getLineSeparator());
 
     Printer.setPrintStream(System.out);
   }
@@ -476,7 +473,8 @@ public class MemoryTest extends DefaultTestCase {
     Printer.setPrintStream(new PrintStream(out));
 
     this.mem.getWord(-1);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(-1))) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(-1)))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     this.mem.getWord(0);
@@ -484,7 +482,7 @@ public class MemoryTest extends DefaultTestCase {
 
     this.mem.getWord(Byte.MAX_VALUE);
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(Byte.MAX_VALUE)))
-                                                 + "\n");
+                                         + TestUtil.getLineSeparator());
 
     Printer.setPrintStream(System.out);
   }
@@ -502,7 +500,7 @@ public class MemoryTest extends DefaultTestCase {
     final Reader r = new InputStreamReader(ClassLoader.getSystemResourceAsStream("mic1/add.ijvm.dis"));
     int c;
     while ((c = r.read()) != -1) {
-      sb.append((char) c);
+      sb.append((char)c);
     }
 
     assertThat(out.toString()).isEqualTo(sb.toString());

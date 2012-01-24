@@ -1,20 +1,16 @@
 /*
- * Copyright (C) 2011-2012  Christian Roesch
- * 
+ * Copyright (C) 2011-2012 Christian Roesch
  * This file is part of micro-debug.
- * 
  * micro-debug is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
  * micro-debug is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
- * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
+ * along with micro-debug. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.croesch.mic1;
 
@@ -29,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
+import com.github.croesch.TestUtil;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.io.Output;
@@ -99,7 +96,7 @@ public class Mic1Test extends DefaultTestCase {
     Printer.setPrintStream(new PrintStream(stdOut));
 
     this.processor.microStep(200);
-    assertThat(stdOut.toString()).isEqualTo(Text.TICKS.text(14) + "\n");
+    assertThat(stdOut.toString()).isEqualTo(Text.TICKS.text(14) + TestUtil.getLineSeparator());
 
     Printer.setPrintStream(System.out);
   }
@@ -111,7 +108,7 @@ public class Mic1Test extends DefaultTestCase {
 
     for (int i = 0; i < 14; ++i) {
       this.processor.microStep();
-      assertThat(stdOut.toString()).isEqualTo(Text.TICKS.text(1) + "\n");
+      assertThat(stdOut.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
       stdOut.reset();
     }
     this.processor.microStep();
@@ -170,7 +167,7 @@ public class Mic1Test extends DefaultTestCase {
     processor.microStep(1);
     assertOneTickDoneAndResetPrintStream(stdOut);
     processor.microStep(3);
-    assertThat(stdOut.toString()).isEqualTo(Text.TICKS.text(3) + "\n");
+    assertThat(stdOut.toString()).isEqualTo(Text.TICKS.text(3) + TestUtil.getLineSeparator());
     stdOut.reset();
 
     assertThat(processor.isHaltInstruction()).isFalse();
@@ -351,7 +348,7 @@ public class Mic1Test extends DefaultTestCase {
   }
 
   private void assertOneTickDoneAndResetPrintStream(final ByteArrayOutputStream stdOut) {
-    assertThat(stdOut.toString()).isEqualTo(Text.TICKS.text(1) + "\n");
+    assertThat(stdOut.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
     stdOut.reset();
   }
 
@@ -368,69 +365,59 @@ public class Mic1Test extends DefaultTestCase {
       // expected
     }
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_TOO_SMALL))
-                                                 + "\n"
-                                                 + Text.ERROR.text(Text.WRONG_FORMAT_IJVM
-                                                   .text(Text.WRONG_FORMAT_TOO_SMALL)) + "\n");
+                                         + TestUtil.getLineSeparator()
+                                         + Text.ERROR.text(Text.WRONG_FORMAT_IJVM.text(Text.WRONG_FORMAT_TOO_SMALL))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     // wrong magic number
     try {
-      new Mic1(new ByteArrayInputStream(new byte[] { 0x1d, (byte) 0xea, (byte) 0xdf, (byte) 0xad }),
-               new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x78 }));
+      new Mic1(new ByteArrayInputStream(new byte[] {0x1d, (byte)0xea, (byte)0xdf, (byte)0xad}),
+               new ByteArrayInputStream(new byte[] {0x12, 0x34, 0x56, 0x78}));
       throw new AssertionError("should throw exception");
     } catch (final FileFormatException e) {
       // expected
     }
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_MAGIC_NUMBER))
-                                                 + "\n"
-                                                 + Text.ERROR.text(Text.WRONG_FORMAT_IJVM
-                                                   .text(Text.WRONG_FORMAT_MAGIC_NUMBER + "\n")));
+                                         + TestUtil.getLineSeparator()
+                                         + Text.ERROR.text(Text.WRONG_FORMAT_IJVM.text(Text.WRONG_FORMAT_MAGIC_NUMBER
+                                                                                       + TestUtil.getLineSeparator())));
     out.reset();
 
     // empty files
     try {
-      new Mic1(new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x78 }),
-               new ByteArrayInputStream(new byte[] { 0x1d, (byte) 0xea, (byte) 0xdf, (byte) 0xad }));
+      new Mic1(new ByteArrayInputStream(new byte[] {0x12, 0x34, 0x56, 0x78}),
+               new ByteArrayInputStream(new byte[] {0x1d, (byte)0xea, (byte)0xdf, (byte)0xad}));
       throw new AssertionError("should throw exception");
     } catch (final FileFormatException e) {
       // expected
     }
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_EMPTY)) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_EMPTY))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     // unexpected eof
     try {
-      new Mic1(new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x78, 0, 0, 0, 0, 0 }),
-               new ByteArrayInputStream(new byte[] { 0x1d, (byte) 0xea, (byte) 0xdf, (byte) 0xad, 0 }));
+      new Mic1(new ByteArrayInputStream(new byte[] {0x12, 0x34, 0x56, 0x78, 0, 0, 0, 0, 0}),
+               new ByteArrayInputStream(new byte[] {0x1d, (byte)0xea, (byte)0xdf, (byte)0xad, 0}));
       throw new AssertionError("should throw exception");
     } catch (final FileFormatException e) {
       // expected
     }
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_IJVM.text(Text.WRONG_FORMAT_UNEXPECTED_END))
-                                                 + "\n");
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     // unexpected end of block
     try {
-      new Mic1(new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x78, 0, 0, 0, 0, 0 }),
-               new ByteArrayInputStream(new byte[] { 0x1d,
-                                                    (byte) 0xea,
-                                                    (byte) 0xdf,
-                                                    (byte) 0xad,
-                                                    0,
-                                                    0,
-                                                    0,
-                                                    0,
-                                                    0,
-                                                    0,
-                                                    0,
-                                                    12 }));
+      new Mic1(new ByteArrayInputStream(new byte[] {0x12, 0x34, 0x56, 0x78, 0, 0, 0, 0, 0}),
+               new ByteArrayInputStream(new byte[] {0x1d, (byte)0xea, (byte)0xdf, (byte)0xad, 0, 0, 0, 0, 0, 0, 0, 12}));
       throw new AssertionError("should throw exception");
     } catch (final FileFormatException e) {
       // expected
     }
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_IJVM
-                                           .text(Text.WRONG_FORMAT_UNEXPECTED_END_OF_BLOCK)) + "\n");
+      .text(Text.WRONG_FORMAT_UNEXPECTED_END_OF_BLOCK)) + TestUtil.getLineSeparator());
     out.reset();
 
     // file too big
@@ -440,16 +427,16 @@ public class Mic1Test extends DefaultTestCase {
     mic1File[2] = 0x56;
     mic1File[3] = 0x78;
     try {
-      new Mic1(new ByteArrayInputStream(mic1File), new ByteArrayInputStream(new byte[] { 0x1d,
-                                                                                        (byte) 0xea,
-                                                                                        (byte) 0xdf,
-                                                                                        (byte) 0xad }));
+      new Mic1(new ByteArrayInputStream(mic1File), new ByteArrayInputStream(new byte[] {0x1d,
+                                                                                        (byte)0xea,
+                                                                                        (byte)0xdf,
+                                                                                        (byte)0xad}));
       throw new AssertionError("should throw exception");
     } catch (final FileFormatException e) {
       // expected
     }
-    assertThat(out.toString())
-      .isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_TOO_BIG)) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_TOO_BIG))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     Printer.setPrintStream(System.out);
@@ -474,17 +461,17 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(out.toString()).isEmpty();
     this.processor.listAllRegisters();
 
-    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF") + "\n"
-                                                 + Text.REGISTER_VALUE.text("MDR ", "0x0") + "\n"
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1") + "\n"
-                                                 + Text.REGISTER_VALUE.text("MBR ", "0x73") + "\n"
-                                                 + Text.REGISTER_VALUE.text("MBRU", "0x73") + "\n"
-                                                 + Text.REGISTER_VALUE.text("SP  ", "0x8BC") + "\n"
-                                                 + Text.REGISTER_VALUE.text("LV  ", "0x8BD") + "\n"
-                                                 + Text.REGISTER_VALUE.text("CPP ", "0x8BE") + "\n"
-                                                 + Text.REGISTER_VALUE.text("TOS ", "0x8BF") + "\n"
-                                                 + Text.REGISTER_VALUE.text("OPC ", "0x8C0") + "\n"
-                                                 + Text.REGISTER_VALUE.text("H   ", "0x8C1") + "\n");
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("MDR ", "0x0") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("PC  ", "0x1") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("MBR ", "0x73") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("MBRU", "0x73") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("SP  ", "0x8BC") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("LV  ", "0x8BD") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("CPP ", "0x8BE") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("TOS ", "0x8BF") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("OPC ", "0x8C0") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("H   ", "0x8C1") + TestUtil.getLineSeparator());
 
     Printer.setPrintStream(System.out);
   }
@@ -496,12 +483,12 @@ public class Mic1Test extends DefaultTestCase {
 
     Register.MAR.setValue(0x4711);
     this.processor.listSingleRegister(Register.MAR);
-    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x4711") + "\n");
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x4711") + TestUtil.getLineSeparator());
     out.reset();
 
     Register.SP.setValue(-2);
     this.processor.listSingleRegister(Register.SP);
-    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("SP  ", "0xFFFFFFFE") + "\n");
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("SP  ", "0xFFFFFFFE") + TestUtil.getLineSeparator());
     out.reset();
 
     Printer.setPrintStream(System.out);
@@ -509,25 +496,26 @@ public class Mic1Test extends DefaultTestCase {
 
   @Test
   public final void testTraceMicro() throws IOException {
-    final String firstLine = Text.EXECUTED_CODE.text("PC=MAR=0;rd;goto 0x1") + "\n";
-    final String expected = firstLine + Text.EXECUTED_CODE.text("H=LV=-1;goto 0x2") + "\n"
-                            + Text.EXECUTED_CODE.text("LV=H+LV;wr;goto 0x3") + "\n"
-                            + Text.EXECUTED_CODE.text("MAR=LV-1;wr;goto 0x4") + "\n"
-                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0x5") + "\n"
-                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0x6") + "\n"
-                            + Text.EXECUTED_CODE.text("wr;goto 0x7") + "\n"
-                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0x8") + "\n"
-                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0x9") + "\n"
-                            + Text.EXECUTED_CODE.text("wr;goto 0xA") + "\n"
-                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0xB") + "\n"
-                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0xC") + "\n"
-                            + Text.EXECUTED_CODE.text("wr;goto 0xD") + "\n" + Text.EXECUTED_CODE.text("goto 0xD")
-                            + "\n" + Text.TICKS.text(14) + "\n";
+    final String firstLine = Text.EXECUTED_CODE.text("PC=MAR=0;rd;goto 0x1") + TestUtil.getLineSeparator();
+    final String expected = firstLine + Text.EXECUTED_CODE.text("H=LV=-1;goto 0x2") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("LV=H+LV;wr;goto 0x3") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;wr;goto 0x4") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0x5") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0x6") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("wr;goto 0x7") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0x8") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0x9") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("wr;goto 0xA") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0xB") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0xC") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("wr;goto 0xD") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("goto 0xD") + TestUtil.getLineSeparator() + Text.TICKS.text(14)
+                            + TestUtil.getLineSeparator();
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
 
     this.processor.run();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + TestUtil.getLineSeparator());
     out.reset();
 
     setUp();
@@ -541,12 +529,12 @@ public class Mic1Test extends DefaultTestCase {
 
     this.processor.traceMicro();
     this.processor.microStep();
-    assertThat(out.toString()).isEqualTo(firstLine + Text.TICKS.text(1) + "\n");
+    assertThat(out.toString()).isEqualTo(firstLine + Text.TICKS.text(1) + TestUtil.getLineSeparator());
     out.reset();
 
     this.processor.untraceMicro();
     this.processor.run();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(13) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(13) + TestUtil.getLineSeparator());
 
     Printer.setPrintStream(System.out);
   }

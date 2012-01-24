@@ -1,20 +1,16 @@
 /*
- * Copyright (C) 2011-2012  Christian Roesch
- * 
+ * Copyright (C) 2011-2012 Christian Roesch
  * This file is part of micro-debug.
- * 
  * micro-debug is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
  * micro-debug is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
- * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
+ * along with micro-debug. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.croesch.console;
 
@@ -30,6 +26,7 @@ import java.io.StringReader;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
+import com.github.croesch.TestUtil;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.misc.Printer;
 import com.github.croesch.misc.Reader;
@@ -70,12 +67,14 @@ public class DebuggerTest extends DefaultTestCase {
 
     Reader.setReader(new StringReader("excel\nexit"));
     debugger.run();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_INSTRUCTION.text("excel")) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_INSTRUCTION.text("excel"))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     Reader.setReader(new StringReader("schließe dich!\nEXIT"));
     debugger.run();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_INSTRUCTION.text("schließe")) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_INSTRUCTION.text("schließe"))
+                                         + TestUtil.getLineSeparator());
     out.reset();
   }
 
@@ -112,7 +111,7 @@ public class DebuggerTest extends DefaultTestCase {
         .getResourceAsStream("instruction-help.txt")));
       String line;
       while ((line = reader.readLine()) != null) {
-        sb.append(line).append("\n");
+        sb.append(line).append(TestUtil.getLineSeparator());
       }
     } finally {
       if (reader != null) {

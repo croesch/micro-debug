@@ -1,20 +1,16 @@
 /*
- * Copyright (C) 2011-2012  Christian Roesch
- * 
+ * Copyright (C) 2011-2012 Christian Roesch
  * This file is part of micro-debug.
- * 
  * micro-debug is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
  * micro-debug is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
- * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
+ * along with micro-debug. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.croesch.console;
 
@@ -79,13 +75,13 @@ public class UserInstructionTest extends DefaultTestCase {
   public final void testGetSize() {
     assertThat(UserInstruction.getSize(null)).isZero();
     assertThat(UserInstruction.getSize(new String[] {})).isZero();
-    assertThat(UserInstruction.getSize(new String[] { null })).isEqualTo(1);
-    assertThat(UserInstruction.getSize(new String[] { "" })).isEqualTo(1);
-    assertThat(UserInstruction.getSize(new String[] { " " })).isEqualTo(1);
-    assertThat(UserInstruction.getSize(new String[] { " ", "" })).isEqualTo(2);
-    assertThat(UserInstruction.getSize(new String[] { "H", "14" })).isEqualTo(2);
-    assertThat(UserInstruction.getSize(new Object[] { "H", "14" })).isEqualTo(2);
-    assertThat(UserInstruction.getSize(new Object[] { "H", 14 })).isEqualTo(2);
+    assertThat(UserInstruction.getSize(new String[] {null})).isEqualTo(1);
+    assertThat(UserInstruction.getSize(new String[] {""})).isEqualTo(1);
+    assertThat(UserInstruction.getSize(new String[] {" "})).isEqualTo(1);
+    assertThat(UserInstruction.getSize(new String[] {" ", ""})).isEqualTo(2);
+    assertThat(UserInstruction.getSize(new String[] {"H", "14"})).isEqualTo(2);
+    assertThat(UserInstruction.getSize(new Object[] {"H", "14"})).isEqualTo(2);
+    assertThat(UserInstruction.getSize(new Object[] {"H", 14})).isEqualTo(2);
   }
 
   @Test
@@ -119,7 +115,7 @@ public class UserInstructionTest extends DefaultTestCase {
         .getResourceAsStream("instruction-help.txt")));
       String line;
       while ((line = reader.readLine()) != null) {
-        sb.append(line).append("\n");
+        sb.append(line).append(System.getProperty("line.separator", TestUtil.getLineSeparator()));
       }
     } finally {
       if (reader != null) {
@@ -149,7 +145,7 @@ public class UserInstructionTest extends DefaultTestCase {
     setUp();
 
     assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + TestUtil.getLineSeparator());
 
     out.reset();
     assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
@@ -168,51 +164,60 @@ public class UserInstructionTest extends DefaultTestCase {
     Register.CPP.setValue(0xa1234);
     assertThat(UserInstruction.SET.execute(null)).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0)) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET.execute(null, (String[]) null)).isTrue();
+    assertThat(UserInstruction.SET.execute(null, (String[])null)).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0)) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET.execute(null, new String[] {})).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0)) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     // 1
 
-    assertThat(UserInstruction.SET.execute(null, new String[] { null })).isTrue();
+    assertThat(UserInstruction.SET.execute(null, new String[] {null})).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1)) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET.execute(null, new String[] { "H" })).isTrue();
+    assertThat(UserInstruction.SET.execute(null, new String[] {"H"})).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1)) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET.execute(null, new String[] { "2" })).isTrue();
+    assertThat(UserInstruction.SET.execute(null, new String[] {"2"})).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1)) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     // 3
 
-    assertThat(UserInstruction.SET.execute(null, new String[] { null, "asd", "" })).isTrue();
+    assertThat(UserInstruction.SET.execute(null, new String[] {null, "asd", ""})).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3)) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET.execute(null, new String[] { "H", null, " " })).isTrue();
+    assertThat(UserInstruction.SET.execute(null, new String[] {"H", null, " "})).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3)) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET.execute(null, new String[] { "2", "\t", null })).isTrue();
+    assertThat(UserInstruction.SET.execute(null, new String[] {"2", "\t", null})).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3)) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     Printer.setPrintStream(System.out);
@@ -250,50 +255,59 @@ public class UserInstructionTest extends DefaultTestCase {
 
     assertThat(UserInstruction.SET.execute(null, "abc", "14")).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("abc")) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("abc"))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET.execute(null, "", "14")).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("")) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("")) + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET.execute(null, " h ", "14")).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text(" h ")) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text(" h "))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET.execute(null, Register.CPP.name(), "2_14")).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("2_14")) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("2_14"))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET.execute(null, Register.CPP.name(), "0xXY")).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0xXY")) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0xXY"))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET.execute(null, Register.CPP.name(), "H")).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("H")) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("H")) + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET.execute(null, "abc", "2_14")).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("abc")) + "\n"
-                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("2_14")) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("abc"))
+                                         + TestUtil.getLineSeparator()
+                                         + Text.ERROR.text(Text.INVALID_NUMBER.text("2_14"))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET.execute(null, "REG", "0xXY")).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("REG")) + "\n"
-                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("0xXY")) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("REG"))
+                                         + TestUtil.getLineSeparator()
+                                         + Text.ERROR.text(Text.INVALID_NUMBER.text("0xXY"))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET.execute(null, "12", "H")).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("12")) + "\n"
-                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("H")) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("12"))
+                                         + TestUtil.getLineSeparator() + Text.ERROR.text(Text.INVALID_NUMBER.text("H"))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     Printer.setPrintStream(System.out);
@@ -308,16 +322,16 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(Register.MAR.getValue()).isZero();
     assertThat(Register.PC.getValue()).isZero();
     assertThat(this.processor.isHaltInstruction()).isFalse();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
     out.reset();
 
     setUp();
 
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, (String[]) null)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, (String[])null)).isTrue();
     assertThat(Register.MAR.getValue()).isZero();
     assertThat(Register.PC.getValue()).isZero();
     assertThat(this.processor.isHaltInstruction()).isFalse();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "zwei")).isTrue();
@@ -326,8 +340,9 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(Register.LV.getValue()).isEqualTo(-1);
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(this.processor.isHaltInstruction()).isFalse();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("zwei")) + "\n" + Text.TICKS.text(1)
-                                                 + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("zwei"))
+                                         + TestUtil.getLineSeparator() + Text.TICKS.text(1)
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     setUp();
@@ -339,7 +354,7 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(Register.LV.getValue()).isEqualTo(-2);
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(this.processor.isHaltInstruction()).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "1")).isTrue();
@@ -360,7 +375,7 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(Register.LV.getValue()).isEqualTo(-1);
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(this.processor.isHaltInstruction()).isFalse();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + TestUtil.getLineSeparator());
 
     Printer.setPrintStream(System.out);
   }
@@ -383,19 +398,19 @@ public class UserInstructionTest extends DefaultTestCase {
     Register.H.setValue(11);
 
     assertThat(out.toString()).isEmpty();
-    assertThat(UserInstruction.LS_REG.execute(this.processor, (String[]) null)).isTrue();
+    assertThat(UserInstruction.LS_REG.execute(this.processor, (String[])null)).isTrue();
 
-    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x1") + "\n"
-                                                 + Text.REGISTER_VALUE.text("MDR ", "0x2") + "\n"
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x3") + "\n"
-                                                 + Text.REGISTER_VALUE.text("MBR ", "0x4") + "\n"
-                                                 + Text.REGISTER_VALUE.text("MBRU", "0x5") + "\n"
-                                                 + Text.REGISTER_VALUE.text("SP  ", "0x6") + "\n"
-                                                 + Text.REGISTER_VALUE.text("LV  ", "0x7") + "\n"
-                                                 + Text.REGISTER_VALUE.text("CPP ", "0x8") + "\n"
-                                                 + Text.REGISTER_VALUE.text("TOS ", "0x9") + "\n"
-                                                 + Text.REGISTER_VALUE.text("OPC ", "0xA") + "\n"
-                                                 + Text.REGISTER_VALUE.text("H   ", "0xB") + "\n");
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x1") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("MDR ", "0x2") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("PC  ", "0x3") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("MBR ", "0x4") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("MBRU", "0x5") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("SP  ", "0x6") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("LV  ", "0x7") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("CPP ", "0x8") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("TOS ", "0x9") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("OPC ", "0xA") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("H   ", "0xB") + TestUtil.getLineSeparator());
 
     Printer.setPrintStream(System.out);
   }
@@ -417,19 +432,19 @@ public class UserInstructionTest extends DefaultTestCase {
     Register.H.setValue(11);
 
     assertThat(out.toString()).isEmpty();
-    assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { null })).isTrue();
+    assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] {null})).isTrue();
 
-    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x1") + "\n"
-                                                 + Text.REGISTER_VALUE.text("MDR ", "0x2") + "\n"
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x3") + "\n"
-                                                 + Text.REGISTER_VALUE.text("MBR ", "0xFFFFFF83") + "\n"
-                                                 + Text.REGISTER_VALUE.text("MBRU", "0x83") + "\n"
-                                                 + Text.REGISTER_VALUE.text("SP  ", "0x6") + "\n"
-                                                 + Text.REGISTER_VALUE.text("LV  ", "0x7") + "\n"
-                                                 + Text.REGISTER_VALUE.text("CPP ", "0x8") + "\n"
-                                                 + Text.REGISTER_VALUE.text("TOS ", "0x9") + "\n"
-                                                 + Text.REGISTER_VALUE.text("OPC ", "0xA") + "\n"
-                                                 + Text.REGISTER_VALUE.text("H   ", "0xB") + "\n");
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x1") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("MDR ", "0x2") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("PC  ", "0x3") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("MBR ", "0xFFFFFF83") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("MBRU", "0x83") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("SP  ", "0x6") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("LV  ", "0x7") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("CPP ", "0x8") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("TOS ", "0x9") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("OPC ", "0xA") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("H   ", "0xB") + TestUtil.getLineSeparator());
 
     Printer.setPrintStream(System.out);
   }
@@ -451,20 +466,21 @@ public class UserInstructionTest extends DefaultTestCase {
     Register.H.setValue(0x8c1);
 
     assertThat(out.toString()).isEmpty();
-    assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { "Bernd" })).isTrue();
+    assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] {"Bernd"})).isTrue();
 
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("Bernd")) + "\n"
-                                                 + Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF") + "\n"
-                                                 + Text.REGISTER_VALUE.text("MDR ", "0x0") + "\n"
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1") + "\n"
-                                                 + Text.REGISTER_VALUE.text("MBR ", "0x73") + "\n"
-                                                 + Text.REGISTER_VALUE.text("MBRU", "0x73") + "\n"
-                                                 + Text.REGISTER_VALUE.text("SP  ", "0x8BC") + "\n"
-                                                 + Text.REGISTER_VALUE.text("LV  ", "0x8BD") + "\n"
-                                                 + Text.REGISTER_VALUE.text("CPP ", "0x8BE") + "\n"
-                                                 + Text.REGISTER_VALUE.text("TOS ", "0x8BF") + "\n"
-                                                 + Text.REGISTER_VALUE.text("OPC ", "0x8C0") + "\n"
-                                                 + Text.REGISTER_VALUE.text("H   ", "0x8C1") + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("Bernd"))
+                                         + TestUtil.getLineSeparator() + Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF")
+                                         + TestUtil.getLineSeparator() + Text.REGISTER_VALUE.text("MDR ", "0x0")
+                                         + TestUtil.getLineSeparator() + Text.REGISTER_VALUE.text("PC  ", "0x1")
+                                         + TestUtil.getLineSeparator() + Text.REGISTER_VALUE.text("MBR ", "0x73")
+                                         + TestUtil.getLineSeparator() + Text.REGISTER_VALUE.text("MBRU", "0x73")
+                                         + TestUtil.getLineSeparator() + Text.REGISTER_VALUE.text("SP  ", "0x8BC")
+                                         + TestUtil.getLineSeparator() + Text.REGISTER_VALUE.text("LV  ", "0x8BD")
+                                         + TestUtil.getLineSeparator() + Text.REGISTER_VALUE.text("CPP ", "0x8BE")
+                                         + TestUtil.getLineSeparator() + Text.REGISTER_VALUE.text("TOS ", "0x8BF")
+                                         + TestUtil.getLineSeparator() + Text.REGISTER_VALUE.text("OPC ", "0x8C0")
+                                         + TestUtil.getLineSeparator() + Text.REGISTER_VALUE.text("H   ", "0x8C1")
+                                         + TestUtil.getLineSeparator());
 
     Printer.setPrintStream(System.out);
   }
@@ -475,13 +491,13 @@ public class UserInstructionTest extends DefaultTestCase {
     Printer.setPrintStream(new PrintStream(out));
 
     Register.MAR.setValue(0x4711);
-    assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { "MAR" })).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x4711") + "\n");
+    assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] {"MAR"})).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x4711") + TestUtil.getLineSeparator());
     out.reset();
 
     Register.SP.setValue(-2);
-    assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { "SP" })).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("SP  ", "0xFFFFFFFE") + "\n");
+    assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] {"SP"})).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("SP  ", "0xFFFFFFFE") + TestUtil.getLineSeparator());
     out.reset();
 
     Printer.setPrintStream(System.out);
@@ -502,7 +518,7 @@ public class UserInstructionTest extends DefaultTestCase {
       assertThat(this.processor.isTracing(r)).isFalse();
     }
 
-    assertThat(UserInstruction.TRACE_REG.execute(this.processor, (String[]) null)).isTrue();
+    assertThat(UserInstruction.TRACE_REG.execute(this.processor, (String[])null)).isTrue();
 
     for (final Register r : Register.values()) {
       assertThat(this.processor.isTracing(r)).isTrue();
@@ -511,13 +527,13 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testUntraceAllRegisters() {
-    assertThat(UserInstruction.TRACE_REG.execute(this.processor, (String[]) null)).isTrue();
+    assertThat(UserInstruction.TRACE_REG.execute(this.processor, (String[])null)).isTrue();
 
     for (final Register r : Register.values()) {
       assertThat(this.processor.isTracing(r)).isTrue();
     }
 
-    assertThat(UserInstruction.UNTRACE_REG.execute(this.processor, (String[]) null)).isTrue();
+    assertThat(UserInstruction.UNTRACE_REG.execute(this.processor, (String[])null)).isTrue();
 
     for (final Register r : Register.values()) {
       assertThat(this.processor.isTracing(r)).isFalse();
@@ -526,7 +542,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testUntraceRegister() {
-    assertThat(UserInstruction.TRACE_REG.execute(this.processor, (String[]) null)).isTrue();
+    assertThat(UserInstruction.TRACE_REG.execute(this.processor, (String[])null)).isTrue();
 
     for (final Register r : Register.values()) {
       assertThat(this.processor.isTracing(r)).isTrue();
@@ -542,48 +558,49 @@ public class UserInstructionTest extends DefaultTestCase {
 
     assertThat(UserInstruction.TRACE_REG.execute(this.processor, Register.PC.name())).isTrue();
     assertThat(out.toString()).isEmpty();
-    assertThat(UserInstruction.RUN.execute(this.processor, (String[]) null)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.processor, (String[])null)).isTrue();
 
-    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("PC  ", "0x0") + "\n"
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x0") + "\n"
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x0") + "\n"
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x0") + "\n"
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1") + "\n"
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1") + "\n"
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1") + "\n"
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x2") + "\n"
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x2") + "\n"
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x2") + "\n"
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x3") + "\n"
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x3") + "\n"
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x3") + "\n"
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x3") + "\n" + Text.TICKS.text(14)
-                                                 + "\n");
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("PC  ", "0x0") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("PC  ", "0x0") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("PC  ", "0x0") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("PC  ", "0x0") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("PC  ", "0x1") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("PC  ", "0x1") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("PC  ", "0x1") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("PC  ", "0x2") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("PC  ", "0x2") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("PC  ", "0x2") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("PC  ", "0x3") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("PC  ", "0x3") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("PC  ", "0x3") + TestUtil.getLineSeparator()
+                                         + Text.REGISTER_VALUE.text("PC  ", "0x3") + TestUtil.getLineSeparator()
+                                         + Text.TICKS.text(14) + TestUtil.getLineSeparator());
 
     Printer.setPrintStream(System.out);
   }
 
   @Test
   public final void testTraceMicro() throws IOException {
-    final String firstLine = Text.EXECUTED_CODE.text("PC=MAR=0;rd;goto 0x1") + "\n";
-    final String expected = firstLine + Text.EXECUTED_CODE.text("H=LV=-1;goto 0x2") + "\n"
-                            + Text.EXECUTED_CODE.text("LV=H+LV;wr;goto 0x3") + "\n"
-                            + Text.EXECUTED_CODE.text("MAR=LV-1;wr;goto 0x4") + "\n"
-                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0x5") + "\n"
-                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0x6") + "\n"
-                            + Text.EXECUTED_CODE.text("wr;goto 0x7") + "\n"
-                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0x8") + "\n"
-                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0x9") + "\n"
-                            + Text.EXECUTED_CODE.text("wr;goto 0xA") + "\n"
-                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0xB") + "\n"
-                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0xC") + "\n"
-                            + Text.EXECUTED_CODE.text("wr;goto 0xD") + "\n" + Text.EXECUTED_CODE.text("goto 0xD")
-                            + "\n" + Text.TICKS.text(14) + "\n";
+    final String firstLine = Text.EXECUTED_CODE.text("PC=MAR=0;rd;goto 0x1") + TestUtil.getLineSeparator();
+    final String expected = firstLine + Text.EXECUTED_CODE.text("H=LV=-1;goto 0x2") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("LV=H+LV;wr;goto 0x3") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;wr;goto 0x4") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0x5") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0x6") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("wr;goto 0x7") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0x8") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0x9") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("wr;goto 0xA") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0xB") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0xC") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("wr;goto 0xD") + TestUtil.getLineSeparator()
+                            + Text.EXECUTED_CODE.text("goto 0xD") + TestUtil.getLineSeparator() + Text.TICKS.text(14)
+                            + TestUtil.getLineSeparator();
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
 
     assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + TestUtil.getLineSeparator());
     out.reset();
 
     setUp();
@@ -597,12 +614,12 @@ public class UserInstructionTest extends DefaultTestCase {
 
     assertThat(UserInstruction.TRACE_MIC.execute(this.processor)).isTrue();
     assertThat(UserInstruction.MICRO_STEP.execute(this.processor)).isTrue();
-    assertThat(out.toString()).isEqualTo(firstLine + Text.TICKS.text(1) + "\n");
+    assertThat(out.toString()).isEqualTo(firstLine + Text.TICKS.text(1) + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.UNTRACE_MIC.execute(this.processor)).isTrue();
     assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(13) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(13) + TestUtil.getLineSeparator());
 
     Printer.setPrintStream(System.out);
   }
@@ -615,43 +632,52 @@ public class UserInstructionTest extends DefaultTestCase {
     // 0
 
     assertThat(UserInstruction.SET_MEM.execute(null)).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0)) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET_MEM.execute(null, (String[]) null)).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0)) + "\n");
+    assertThat(UserInstruction.SET_MEM.execute(null, (String[])null)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET_MEM.execute(null, new String[] {})).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0)) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     // 1
 
-    assertThat(UserInstruction.SET_MEM.execute(null, new String[] { null })).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1)) + "\n");
+    assertThat(UserInstruction.SET_MEM.execute(null, new String[] {null})).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET_MEM.execute(null, new String[] { "H" })).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1)) + "\n");
+    assertThat(UserInstruction.SET_MEM.execute(null, new String[] {"H"})).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET_MEM.execute(null, new String[] { "2" })).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1)) + "\n");
+    assertThat(UserInstruction.SET_MEM.execute(null, new String[] {"2"})).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     // 3
 
-    assertThat(UserInstruction.SET_MEM.execute(null, new String[] { null, "asd", "" })).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3)) + "\n");
+    assertThat(UserInstruction.SET_MEM.execute(null, new String[] {null, "asd", ""})).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET_MEM.execute(null, new String[] { "H", null, " " })).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3)) + "\n");
+    assertThat(UserInstruction.SET_MEM.execute(null, new String[] {"H", null, " "})).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET_MEM.execute(null, new String[] { "2", "\t", null })).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3)) + "\n");
+    assertThat(UserInstruction.SET_MEM.execute(null, new String[] {"2", "\t", null})).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     Printer.setPrintStream(System.out);
@@ -683,42 +709,49 @@ public class UserInstructionTest extends DefaultTestCase {
     Printer.setPrintStream(new PrintStream(out));
 
     assertThat(UserInstruction.SET_MEM.execute(this.processor, "abc", "14")).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("abc")) + "\n");
+    assertThat(out.toString())
+      .isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("abc")) + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET_MEM.execute(this.processor, "", "14")).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("")) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("")) + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET_MEM.execute(this.processor, " h ", "-123414")).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text(" h ")) + "\n");
+    assertThat(out.toString())
+      .isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text(" h ")) + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET_MEM.execute(this.processor, "23", "2_14")).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("2_14")) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("2_14"))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET_MEM.execute(this.processor, "0", "0xXY")).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0xXY")) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0xXY"))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET_MEM.execute(this.processor, "12", "H")).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("H")) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("H")) + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET_MEM.execute(this.processor, "abc", "2_14")).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("abc")) + "\n"
-                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("2_14")) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("abc")) + TestUtil.getLineSeparator()
+                                         + Text.ERROR.text(Text.INVALID_NUMBER.text("2_14"))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET_MEM.execute(this.processor, "REG", "0xXY")).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("REG")) + "\n"
-                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("0xXY")) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("REG")) + TestUtil.getLineSeparator()
+                                         + Text.ERROR.text(Text.INVALID_NUMBER.text("0xXY"))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET_MEM.execute(this.processor, "0X12", "H")).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0X12")) + "\n"
-                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("H")) + "\n");
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0X12"))
+                                         + TestUtil.getLineSeparator() + Text.ERROR.text(Text.INVALID_NUMBER.text("H"))
+                                         + TestUtil.getLineSeparator());
     out.reset();
 
     Printer.setPrintStream(System.out);

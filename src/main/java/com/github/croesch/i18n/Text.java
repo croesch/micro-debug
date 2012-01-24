@@ -1,26 +1,25 @@
 /*
- * Copyright (C) 2011-2012  Christian Roesch
- * 
+ * Copyright (C) 2011-2012 Christian Roesch
  * This file is part of micro-debug.
- * 
  * micro-debug is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
  * micro-debug is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
- * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
+ * along with micro-debug. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.croesch.i18n;
 
+import java.io.IOException;
+import java.util.InvalidPropertiesFormatException;
 import java.util.Locale;
 import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.Properties;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 /**
@@ -135,11 +134,20 @@ public enum Text {
    * @since Date: Dec 2, 2011
    */
   private Text() {
-    final ResourceBundle b = ResourceBundle.getBundle("lang/text", new XMLBundleControl());
+    Properties props = new Properties();
+    try {
+      props.loadFromXML(getClass().getClassLoader().getResourceAsStream("lang/text.xml"));
+    } catch (InvalidPropertiesFormatException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
     final String key = name().toLowerCase(Locale.GERMAN).replace('_', '-');
     String value;
     try {
-      value = b.getString(key);
+      value = props.getProperty(key);
     } catch (final MissingResourceException mre) {
       this.logger.warning("missing ressource key=" + key);
       value = "!!missing-key=" + key + "!!";
@@ -150,6 +158,45 @@ public enum Text {
   @Override
   public String toString() {
     return text();
+  }
+
+  private static Vector calculateBundleNames(String baseName, Locale locale) {
+    final Vector result = new Vector(4);
+    final String language = locale.getLanguage();
+    final int languageLength = language.length();
+    final String country = locale.getCountry();
+    final int countryLength = country.length();
+    final String variant = locale.getVariant();
+    final int variantLength = variant.length();
+
+    if (languageLength + countryLength + variantLength == 0) {
+      // The locale is "", "", "".
+      return result;
+    }
+    final StringBuffer temp = new StringBuffer(baseName);
+    temp.append('_');
+    temp.append(language);
+    if (languageLength > 0) {
+      result.addElement(temp.toString());
+    }
+
+    if (countryLength + variantLength == 0) {
+      return result;
+    }
+    temp.append('_');
+    temp.append(country);
+    if (countryLength > 0) {
+      result.addElement(temp.toString());
+    }
+
+    if (variantLength == 0) {
+      return result;
+    }
+    temp.append('_');
+    temp.append(variant);
+    result.addElement(temp.toString());
+
+    return result;
   }
 
   /**
