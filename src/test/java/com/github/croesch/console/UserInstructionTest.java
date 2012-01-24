@@ -1,16 +1,20 @@
 /*
- * Copyright (C) 2011-2012 Christian Roesch
+ * Copyright (C) 2011-2012  Christian Roesch
+ * 
  * This file is part of micro-debug.
+ * 
  * micro-debug is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
+ * 
  * micro-debug is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ * 
  * You should have received a copy of the GNU General Public License
- * along with micro-debug. If not, see <http://www.gnu.org/licenses/>.
+ * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.croesch.console;
 
@@ -75,13 +79,13 @@ public class UserInstructionTest extends DefaultTestCase {
   public final void testGetSize() {
     assertThat(UserInstruction.getSize(null)).isZero();
     assertThat(UserInstruction.getSize(new String[] {})).isZero();
-    assertThat(UserInstruction.getSize(new String[] {null})).isEqualTo(1);
-    assertThat(UserInstruction.getSize(new String[] {""})).isEqualTo(1);
-    assertThat(UserInstruction.getSize(new String[] {" "})).isEqualTo(1);
-    assertThat(UserInstruction.getSize(new String[] {" ", ""})).isEqualTo(2);
-    assertThat(UserInstruction.getSize(new String[] {"H", "14"})).isEqualTo(2);
-    assertThat(UserInstruction.getSize(new Object[] {"H", "14"})).isEqualTo(2);
-    assertThat(UserInstruction.getSize(new Object[] {"H", 14})).isEqualTo(2);
+    assertThat(UserInstruction.getSize(new String[] { null })).isEqualTo(1);
+    assertThat(UserInstruction.getSize(new String[] { "" })).isEqualTo(1);
+    assertThat(UserInstruction.getSize(new String[] { " " })).isEqualTo(1);
+    assertThat(UserInstruction.getSize(new String[] { " ", "" })).isEqualTo(2);
+    assertThat(UserInstruction.getSize(new String[] { "H", "14" })).isEqualTo(2);
+    assertThat(UserInstruction.getSize(new Object[] { "H", "14" })).isEqualTo(2);
+    assertThat(UserInstruction.getSize(new Object[] { "H", 14 })).isEqualTo(2);
   }
 
   @Test
@@ -115,7 +119,7 @@ public class UserInstructionTest extends DefaultTestCase {
         .getResourceAsStream("instruction-help.txt")));
       String line;
       while ((line = reader.readLine()) != null) {
-        sb.append(line).append(System.getProperty("line.separator", TestUtil.getLineSeparator()));
+        sb.append(line).append(TestUtil.getLineSeparator());
       }
     } finally {
       if (reader != null) {

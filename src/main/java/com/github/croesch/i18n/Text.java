@@ -1,26 +1,29 @@
 /*
- * Copyright (C) 2011-2012 Christian Roesch
+ * Copyright (C) 2011-2012  Christian Roesch
+ * 
  * This file is part of micro-debug.
+ * 
  * micro-debug is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
+ * 
  * micro-debug is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ * 
  * You should have received a copy of the GNU General Public License
- * along with micro-debug. If not, see <http://www.gnu.org/licenses/>.
+ * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.croesch.i18n;
 
-import java.io.IOException;
-import java.util.InvalidPropertiesFormatException;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.Properties;
-import java.util.Vector;
 import java.util.logging.Logger;
+
+import com.github.croesch.misc.Utils;
 
 /**
  * This class provides access to the internationalized text resources.
@@ -125,6 +128,9 @@ public enum Text {
   /** the value of this instance */
   private final String string;
 
+  /** the properties containing all i18n key-value pairs */
+  private static Properties properties = null;
+
   /**
    * Constructs a new instance of a text that is part of the i18n. Each key will be searched in the file
    * 'lang/text*.xml' (where '*' is a string build from the locales properties language, country and variant, so there
@@ -134,20 +140,10 @@ public enum Text {
    * @since Date: Dec 2, 2011
    */
   private Text() {
-    Properties props = new Properties();
-    try {
-      props.loadFromXML(getClass().getClassLoader().getResourceAsStream("lang/text.xml"));
-    } catch (InvalidPropertiesFormatException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
     final String key = name().toLowerCase(Locale.GERMAN).replace('_', '-');
     String value;
     try {
-      value = props.getProperty(key);
+      value = getProperties().getProperty(key);
     } catch (final MissingResourceException mre) {
       this.logger.warning("missing ressource key=" + key);
       value = "!!missing-key=" + key + "!!";
@@ -155,48 +151,72 @@ public enum Text {
     this.string = value;
   }
 
+  /**
+   * Returns the properties that contains all i18n key-value pairs read from the files. The first call will cause to
+   * create the {@link Properties}.
+   * 
+   * @since Date: Jan 24, 2012
+   * @return the properties containing all i18n key-value pairs.
+   */
+  private Properties getProperties() {
+    if (properties == null) {
+      properties = new Properties();
+      loadProperties(properties);
+    }
+    return properties;
+  }
+
   @Override
   public String toString() {
     return text();
   }
 
-  private static Vector calculateBundleNames(String baseName, Locale locale) {
-    final Vector result = new Vector(4);
-    final String language = locale.getLanguage();
-    final int languageLength = language.length();
-    final String country = locale.getCountry();
-    final int countryLength = country.length();
-    final String variant = locale.getVariant();
-    final int variantLength = variant.length();
+  /**
+   * Fills the given properties with the key-value pairs of all four possible i18n files.
+   * 
+   * @since Date: Jan 24, 2012
+   * @param props the properties to fill with the key-value pairs.
+   */
+  private void loadProperties(final Properties props) {
+    final String language = Locale.getDefault().getLanguage();
+    final String country = Locale.getDefault().getCountry();
+    final String variant = Locale.getDefault().getVariant();
 
-    if (languageLength + countryLength + variantLength == 0) {
-      // The locale is "", "", "".
-      return result;
-    }
-    final StringBuffer temp = new StringBuffer(baseName);
-    temp.append('_');
-    temp.append(language);
-    if (languageLength > 0) {
-      result.addElement(temp.toString());
-    }
+    final StringBuffer temp = new StringBuffer();
+    loadProperties(props, temp);
 
-    if (countryLength + variantLength == 0) {
-      return result;
+    if (language.length() == 0) {
+      return;
     }
-    temp.append('_');
-    temp.append(country);
-    if (countryLength > 0) {
-      result.addElement(temp.toString());
-    }
+    temp.append('_').append(language);
+    loadProperties(props, temp);
 
-    if (variantLength == 0) {
-      return result;
+    if (country.length() == 0) {
+      return;
     }
-    temp.append('_');
-    temp.append(variant);
-    result.addElement(temp.toString());
+    temp.append('_').append(country);
+    loadProperties(props, temp);
 
-    return result;
+    if (variant.length() == 0) {
+      return;
+    }
+    temp.append('_').append(variant);
+    loadProperties(props, temp);
+  }
+
+  /**
+   * Fills the given properties with the key value pairs fetched from the file with the fiven appendix.
+   * 
+   * @since Date: Jan 24, 2012
+   * @param props the properties to fill with the key-value pairs fetched from the file
+   * @param appendix the appendix for the file that contains the key-value pairs
+   */
+  private void loadProperties(final Properties props, final StringBuffer appendix) {
+    try {
+      props.loadFromXML(getClass().getClassLoader().getResourceAsStream("lang/text" + appendix.toString() + ".xml"));
+    } catch (final Exception e) {
+      Utils.logThrownThrowable(e);
+    }
   }
 
   /**

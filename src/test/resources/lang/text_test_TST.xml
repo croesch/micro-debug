@@ -22,8 +22,5 @@
 <!-- Contains text resources the tests depend on -->
 
 <properties>
-	<entry key="border">b o r d e r</entry>
-	<entry key="try-help">..no one will ever see..</entry>
-	<entry key="code-line">{0}: [{1}] {2}{3}</entry>
-	<entry key="unknown-ijvm-instruction">-</entry>
+	<entry key="try-help">OVERRIDDEN</entry>
 </properties>

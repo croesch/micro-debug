@@ -1,16 +1,20 @@
 /*
- * Copyright (C) 2011-2012 Christian Roesch
+ * Copyright (C) 2011-2012  Christian Roesch
+ * 
  * This file is part of micro-debug.
+ * 
  * micro-debug is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
+ * 
  * micro-debug is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ * 
  * You should have received a copy of the GNU General Public License
- * along with micro-debug. If not, see <http://www.gnu.org/licenses/>.
+ * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.croesch;
 
@@ -78,66 +82,66 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testCreateArgumentList_UnknownArgument() {
-    String[] args = new String[] {""};
+    String[] args = new String[] { "" };
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.ERROR_UNKNOWN);
     assertThat(Argument.createArgumentList(args).get(Argument.ERROR_UNKNOWN)).containsOnly("");
 
-    args = new String[] {" "};
+    args = new String[] { " " };
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.ERROR_UNKNOWN);
     assertThat(Argument.createArgumentList(args).get(Argument.ERROR_UNKNOWN)).containsOnly(" ");
 
-    args = new String[] {"-help"};
+    args = new String[] { "-help" };
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.ERROR_UNKNOWN);
     assertThat(Argument.createArgumentList(args).get(Argument.ERROR_UNKNOWN)).containsOnly("-help");
 
-    args = new String[] {"-help", "asd"};
+    args = new String[] { "-help", "asd" };
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.ERROR_UNKNOWN);
     assertThat(Argument.createArgumentList(args).get(Argument.ERROR_UNKNOWN)).containsOnly("asd", "-help");
   }
 
   @Test
   public final void testCreateArgumentList_HelpInArray() {
-    String[] args = new String[] {"-h"};
+    String[] args = new String[] { "-h" };
 
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.HELP);
     assertThat(Argument.createArgumentList(args).get(Argument.HELP)).isEmpty();
 
-    args = new String[] {"--help"};
+    args = new String[] { "--help" };
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.HELP);
     assertThat(Argument.createArgumentList(args).get(Argument.HELP)).isEmpty();
   }
 
   @Test
   public final void testCreateArgumentList_VersionInArray() {
-    String[] args = new String[] {"-v"};
+    String[] args = new String[] { "-v" };
 
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.VERSION);
     assertThat(Argument.createArgumentList(args).get(Argument.VERSION)).isEmpty();
 
-    args = new String[] {"--version"};
+    args = new String[] { "--version" };
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.VERSION);
     assertThat(Argument.createArgumentList(args).get(Argument.VERSION)).isEmpty();
   }
 
   @Test
   public final void testCreateArgumentList_OutputFileInArray() {
-    String[] args = new String[] {"-o"};
+    String[] args = new String[] { "-o" };
 
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.ERROR_PARAM_NUMBER);
     assertThat(Argument.createArgumentList(args).get(Argument.ERROR_PARAM_NUMBER)).containsOnly("-o");
 
-    args = new String[] {"-o", "2"};
+    args = new String[] { "-o", "2" };
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.OUTPUT_FILE);
     assertThat(Argument.createArgumentList(args).get(Argument.OUTPUT_FILE)).containsOnly("2");
 
-    args = new String[] {"--output-file", "2"};
+    args = new String[] { "--output-file", "2" };
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.OUTPUT_FILE);
     assertThat(Argument.createArgumentList(args).get(Argument.OUTPUT_FILE)).containsOnly("2");
   }
 
   @Test
   public final void testCreateArgumentList() {
-    final String[] args = new String[] {"-h", "-v", null, "--help", "--xxno-argument", "null", "-o"};
+    final String[] args = new String[] { "-h", "-v", null, "--help", "--xxno-argument", "null", "-o" };
 
     assertThat(Argument.createArgumentList(args)).hasSize(4);
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.VERSION,
@@ -152,7 +156,7 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testCreateArgumentList2() {
-    final String[] args = new String[] {"-h", "-v", null, "--xxno-argument", "null", "-dx", "-d", "--output-file"};
+    final String[] args = new String[] { "-h", "-v", null, "--xxno-argument", "null", "-dx", "-d", "--output-file" };
 
     assertThat(Argument.createArgumentList(args)).hasSize(4);
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.VERSION,

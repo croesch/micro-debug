@@ -1,10 +1,3 @@
-package com.github.croesch;
-
-import java.util.Locale;
-
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-
 /*
  * Copyright (C) 2011-2012  Christian Roesch
  * 
@@ -23,18 +16,25 @@ import org.junit.Ignore;
  * You should have received a copy of the GNU General Public License
  * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.github.croesch.i18n;
+
+import static org.fest.assertions.Assertions.assertThat;
+
+import org.junit.Test;
+
+import com.github.croesch.DefaultTestCase;
 
 /**
- * Default test case to be extended by all test classes.
+ * Provides test cases for {@link Text}.
  * 
  * @author croesch
- * @since Date: Jan 22, 2012
+ * @since Date: Jan 24, 2012
  */
-@Ignore("Just default case")
-public class DefaultTestCase {
+public class TextTest extends DefaultTestCase {
 
-  @BeforeClass
-  public static void setUpBeforeClass() throws Exception {
-    Locale.setDefault(new Locale("test", "tst", " "));
+  @Test
+  public void test() {
+    assertThat(Text.BORDER.text()).isEqualTo("b o r d e r");
+    assertThat(Text.TRY_HELP.text()).isEqualTo("OVERRIDDEN");
   }
 }

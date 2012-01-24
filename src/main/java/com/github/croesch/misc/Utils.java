@@ -1,16 +1,20 @@
 /*
- * Copyright (C) 2011-2012 Christian Roesch
+ * Copyright (C) 2011-2012  Christian Roesch
+ * 
  * This file is part of micro-debug.
+ * 
  * micro-debug is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
+ * 
  * micro-debug is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ * 
  * You should have received a copy of the GNU General Public License
- * along with micro-debug. If not, see <http://www.gnu.org/licenses/>.
+ * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.croesch.misc;
 
@@ -70,11 +74,11 @@ public final class Utils {
    * @param magic the magic number
    * @throws IllegalArgumentException if the given stream is <code>null</code>.
    * @throws FileFormatException if:
-   *           <ul>
-   *           <li>the stream doesn't contain four bytes</li>
-   *           <li>the four bytes are not equal to the given magic number</li>
-   *           <li>an {@link IOException} occurs</li>
-   *           </ul>
+   *         <ul>
+   *         <li>the stream doesn't contain four bytes</li>
+   *         <li>the four bytes are not equal to the given magic number</li>
+   *         <li>an {@link IOException} occurs</li>
+   *         </ul>
    */
   public static void checkMagicNumber(final InputStream in, final int magic) throws FileFormatException,
                                                                             IllegalArgumentException {
@@ -90,7 +94,7 @@ public final class Utils {
       final int b3 = in.read();
 
       // we have not enough data to determine a magic number
-      if (isOneValueMinusOne(new int[] {b0, b1, b2, b3})) {
+      if (isOneValueMinusOne(new int[] { b0, b1, b2, b3 })) {
         throw new FileFormatException(Text.WRONG_FORMAT_TOO_SMALL);
       }
 
@@ -172,6 +176,12 @@ public final class Utils {
     return nextHigherValue;
   }
 
+  /**
+   * Returns the line separator that is default for this system.
+   * 
+   * @since Date: Jan 24, 2012
+   * @return {@link String} that represents the line separator
+   */
   public static String getLineSeparator() {
     return System.getProperty("line.separator", "\n");
   }
