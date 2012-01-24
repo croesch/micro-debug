@@ -79,3 +79,5 @@
 	- Vorbereitungen für die Implementierung von ls-macro-code getroffen
 23.01.2012 (3 h)
 	- Großteil von ls-macro-code implementiert, Designentscheidung notwendig, was output betrifft, ls-macro-code ohne Argumente schon möglich
+24.01.2012 (2 h)
+	- Code endlich Java 5 kompatibel gemacht und plattformunabh�ngig (lf)
