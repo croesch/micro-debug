@@ -54,7 +54,8 @@ public class FileFormatException extends IOException {
    *        permitted, and indicates that the cause is nonexistent or unknown.)
    */
   public FileFormatException(final String message, final Throwable cause) {
-    super(message/* , cause */);
+    super(message);
+    initCause(cause);
   }
 
   /**
@@ -79,5 +80,6 @@ public class FileFormatException extends IOException {
    */
   public FileFormatException(final Throwable cause) {
     super(cause.getMessage());
+    initCause(cause);
   }
 }
