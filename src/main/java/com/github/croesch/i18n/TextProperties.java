@@ -18,6 +18,8 @@
  */
 package com.github.croesch.i18n;
 
+import java.io.IOException;
+import java.util.InvalidPropertiesFormatException;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -77,7 +79,13 @@ public class TextProperties extends Properties {
   private void loadProperties(final StringBuffer appendix) {
     try {
       loadFromXML(getClass().getClassLoader().getResourceAsStream("lang/text" + appendix.toString() + ".xml"));
-    } catch (final Exception e) {
+    } catch (final InvalidPropertiesFormatException e) {
+      Utils.logThrownThrowable(e);
+    } catch (final IOException e) {
+      Utils.logThrownThrowable(e);
+    } catch (final NullPointerException e) {
+      Utils.logThrownThrowable(e);
+    } catch (final SecurityException e) {
       Utils.logThrownThrowable(e);
     }
   }
