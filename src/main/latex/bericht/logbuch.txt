@@ -5,45 +5,45 @@
 	- ALU programmiert
 07.11.2011 (5,5 h)
 	- shifter programmiert
-	- Berechner für nächsten MPC programmiert
+	- Berechner fﾃｼr nﾃ､chsten MPC programmiert
 	- sourcen Mic1 angeschaut, versucht Parallelen zu ziehen
 10.11.2011 (4 h)
 	- Decoder eingebaut und Reader abgesplittet
 	- Im Decoder Angefangen mit:
-	  	- Tests für den Decoder zu schreiben
+	  	- Tests fﾃｼr den Decoder zu schreiben
 		- Fehler zu beheben
 		- Duplizierten Code zu entfernen
 11.11.2011 (1 h)
-	- Weitere Tests für Decoder geschrieben
+	- Weitere Tests fﾃｼr Decoder geschrieben
 	- Angefangen Decoder-Code zu kommentieren
 12.11.2011 (8 h)
 	- Decoder-Code fertig kommentiert
-	- Tests für Decoder geschrieben
-	- Code Refactoring für Decoder durchgeführt
+	- Tests fﾃｼr Decoder geschrieben
+	- Code Refactoring fﾃｼr Decoder durchgefﾃｼhrt
 	- Warnungen (CheckStyle) entfernt
 13.11.2011 (1,5 h)
 	- Refactoring: Decoder in eigene Klasse gepackt
 19.11.2011 (4 h)
 	- Register implementiert
-	- Control-Store angefangen zu implementieren (Einlesen einer Binär-Datei, mit Fehlerfällen und Tests)
+	- Control-Store angefangen zu implementieren (Einlesen einer Binﾃ､r-Datei, mit Fehlerfﾃ､llen und Tests)
 20.11.2011 (1 h)
 	- Control-Store weiter implementiert (Ausgeben gespeicherter Befehle)
 21.11.2011 (3 h)
-	- Erster Entwurf für Mic1-Prozessor-Klasse und Memory-Klasse erstellt
+	- Erster Entwurf fﾃｼr Mic1-Prozessor-Klasse und Memory-Klasse erstellt
 	- API von Shifter und NextMPCCalculator angepasst (BitSet eliminiert und zwei Methoden aus getOutput() erstellt)
 	- Verilog-, Java- und C++-Code analysiert vor allem in Bezug auf den Speicher
 23.11.2011 (5,5 h)
-	- Entwicklung des Hauptspeichers, vor allem mit Einlesemöglichkeit von Binärdateien und Untersuchungen der vorhandenen Codes (Java, C++ der anderen Projekte)
+	- Entwicklung des Hauptspeichers, vor allem mit Einlesemﾃｶglichkeit von Binﾃ､rdateien und Untersuchungen der vorhandenen Codes (Java, C++ der anderen Projekte)
 	- Utility Klasse erstellt, um wiederkehrende Elemente zu sammeln
 26.11.2011 (6,5 h)
 	- Entwicklung des Output abgeschlossen
-	- LaTeX Dokumentation zu Projekt hinzugefügt
+	- LaTeX Dokumentation zu Projekt hinzugefﾃｼgt
 	- Input entwickelt
-	* Test für Input sehr lange versucht zu entwickeln (InputStream vs. System.in)
+	* Test fﾃｼr Input sehr lange versucht zu entwickeln (InputStream vs. System.in)
 27.11.2011 (0,5 h)
 	- Input in Hauptspeicher integriert, Speicher damit abgeschlossen
 01.12.2011 (2 h)
-	- Tests für Prozessor geschrieben (Hi!\n und Performance)
+	- Tests fﾃｼr Prozessor geschrieben (Hi!\n und Performance)
 02.12.2011 (3 h)
 	- Logger mit Konfiguration angebunden
 	- Argumente angebunden
@@ -53,31 +53,33 @@
 	- Anzahl der Programm-Argumente implementiert (mic1+ijvm+X | V/H)
 	- Argument --unbuffered-output implementiert
 	- Argument --help implementiert
-	- Einlesen der ijvm- und mic1-Datei in main-Methode implementiert, inkl. Fehlerfällen
-	- Instruktionen, Parameter für Debugger implementiert
+	- Einlesen der ijvm- und mic1-Datei in main-Methode implementiert, inkl. Fehlerfﾃ､llen
+	- Instruktionen, Parameter fﾃｼr Debugger implementiert
 	- Debugger implementiert und integriert
 	- entsprechende Tests
 	- (keine ausreichenden Integrationstests)
 04.12.2011 (3,5 h)
-	- Bericht über Werkzeuge git und maven geschrieben
+	- Bericht ﾃｼber Werkzeuge git und maven geschrieben
 12.01.2012 (0,5 h)
-	- Begrüßungsnachricht hinzugefügt
+	- Begrﾃｼﾃ殷ngsnachricht hinzugefﾃｼgt
 14.01.2012 (9 h)
-	- Startnachricht hinzugefügt
+	- Startnachricht hinzugefﾃｼgt
 	- RUN Kommando implementiert
 	- --output-file Argument implementiert
 	- Properties-Datei erstellt und Zugriff programmiert
-	- Integrationstests für Prozessor/Debugger verbessert
+	- Integrationstests fﾃｼr Prozessor/Debugger verbessert
 15.01.2012 (4 h)
 	- Instruktionen ls-reg, trace-reg und untrace-reg implementiert
 16.01.2012 (2,5 h)
 	- Instruktionen micro-step und set implementiert
-	- Maximale Größe des Speichers in die Properties aufgenommen
+	- Maximale Grﾃｶﾃ歹 des Speichers in die Properties aufgenommen
 21.01.2012 (2,5 h)
 	- Instruktionen trace-mic, untrace-mic und set-mem implementiert
 22.01.2012 (7,5 h)
-	- Vorbereitungen für die Implementierung von ls-macro-code getroffen
+	- Vorbereitungen fﾃｼr die Implementierung von ls-macro-code getroffen
 23.01.2012 (3 h)
-	- Großteil von ls-macro-code implementiert, Designentscheidung notwendig, was output betrifft, ls-macro-code ohne Argumente schon möglich
+	- Groﾃ殳eil von ls-macro-code implementiert, Designentscheidung notwendig, was output betrifft, ls-macro-code ohne Argumente schon mﾃｶglich
 24.01.2012 (2 h)
-	- Code endlich Java 5 kompatibel gemacht und plattformunabh�ngig (lf)
+	- Code endlich Java 5 kompatibel gemacht und plattformunabhängig (lf)
+25.01.2012 (3,5 h)
+	- Treffen und Refactoring

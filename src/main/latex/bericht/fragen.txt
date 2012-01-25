@@ -87,25 +87,34 @@ Instruction --> UserInstruction
 10_123123 --> 123123_10 (0x, 0o, 0b anbieten)
 
 --------------------------------------------------
-Was soll geschehen, wenn auf eine undefinierte (negativ / höher als Maximum) Speicherstelle zugegriffen wird?
-
-
-Die magic-number für IJVM-Dateien prüfen? Das Format einfach nutzen?
-
-
 Soll bei run bei jeder Instruktion alle getracten Dinge ausgegeben werden?
-
+     	Variable + Register bei Änderungen und Code bei Ausführung (Variable, nur die der aktuellen Methode - Zugriff per Dezimalzahl)
 
 MBRU auch anzeigen?
-
+     	Ja
 
 Bei Ausgabe von Stack und IJVM-Code, wie Ende erkennen?
-
+    	s.u.
 
 Unterschied byte und const
-
+	nope .. aber dezimal!
 
 Formatierung der Parameter ok?
-
+	s.u.
 
 Bei Ausgabe von Code, wie aktuelle Codezeile definieren, Zeile? Vorherige und nachfolgende an Speicherstellen festmachen und nicht an Programmlauf?
+    Speicherstellen
+----------------------------------------------------
+Label entweder implementieren oder direkte Speicheradresse
+
+ldc_w erste Zahl dezimal und bei invokevirtual auch
+
+Methode in ijvm evtl. an ireturn/halt + nop + .. + nop + .. erkennen und ausgeben
+
+Bei Stackausgabe multiple nops durch nop/nop..nop ersetzen
+
+User_Instructions bei Fehler abbrechen statt etwas anderes ausführen
+
+reset! ist wichtig
+
+Bei IJVM-Code-Ausgabe Ende des Codes von hinten suchen (alles 0er)
