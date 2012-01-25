@@ -23,8 +23,6 @@ import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import com.github.croesch.misc.Utils;
-
 /**
  * This class provides access to the internationalized text resources.
  * 
@@ -128,9 +126,6 @@ public enum Text {
   /** the value of this instance */
   private final String string;
 
-  /** the properties containing all i18n key-value pairs */
-  private static Properties properties = null;
-
   /**
    * Constructs a new instance of a text that is part of the i18n. Each key will be searched in the file
    * 'lang/text*.xml' (where '*' is a string build from the locales properties language, country and variant, so there
@@ -143,7 +138,7 @@ public enum Text {
     final String key = name().toLowerCase(Locale.GERMAN).replace('_', '-');
     String value;
     try {
-      value = getProperties().getProperty(key);
+      value = LazyHolder.INSTANCE.getProperty(key);
     } catch (final MissingResourceException mre) {
       this.logger.warning("missing ressource key=" + key);
       value = "!!missing-key=" + key + "!!";
@@ -152,71 +147,19 @@ public enum Text {
   }
 
   /**
-   * Returns the properties that contains all i18n key-value pairs read from the files. The first call will cause to
-   * create the {@link Properties}.
+   * Initialization on Demand Holder.
    * 
-   * @since Date: Jan 24, 2012
-   * @return the properties containing all i18n key-value pairs.
+   * @author croesch
+   * @since Date: Jan 25, 2012
    */
-  private Properties getProperties() {
-    if (properties == null) {
-      properties = new Properties();
-      loadProperties(properties);
-    }
-    return properties;
+  private static class LazyHolder {
+    /** instance of {@link TextProperties} */
+    private static final Properties INSTANCE = new TextProperties();
   }
 
   @Override
   public String toString() {
     return text();
-  }
-
-  /**
-   * Fills the given properties with the key-value pairs of all four possible i18n files.
-   * 
-   * @since Date: Jan 24, 2012
-   * @param props the properties to fill with the key-value pairs.
-   */
-  private void loadProperties(final Properties props) {
-    final String language = Locale.getDefault().getLanguage();
-    final String country = Locale.getDefault().getCountry();
-    final String variant = Locale.getDefault().getVariant();
-
-    final StringBuffer temp = new StringBuffer();
-    loadProperties(props, temp);
-
-    if (language.length() == 0) {
-      return;
-    }
-    temp.append('_').append(language);
-    loadProperties(props, temp);
-
-    if (country.length() == 0) {
-      return;
-    }
-    temp.append('_').append(country);
-    loadProperties(props, temp);
-
-    if (variant.length() == 0) {
-      return;
-    }
-    temp.append('_').append(variant);
-    loadProperties(props, temp);
-  }
-
-  /**
-   * Fills the given properties with the key value pairs fetched from the file with the fiven appendix.
-   * 
-   * @since Date: Jan 24, 2012
-   * @param props the properties to fill with the key-value pairs fetched from the file
-   * @param appendix the appendix for the file that contains the key-value pairs
-   */
-  private void loadProperties(final Properties props, final StringBuffer appendix) {
-    try {
-      props.loadFromXML(getClass().getClassLoader().getResourceAsStream("lang/text" + appendix.toString() + ".xml"));
-    } catch (final Exception e) {
-      Utils.logThrownThrowable(e);
-    }
   }
 
   /**
