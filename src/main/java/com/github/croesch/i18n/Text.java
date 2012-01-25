@@ -121,7 +121,7 @@ public enum Text {
   TRY_HELP;
 
   /** the {@link Logger} for this class */
-  private final Logger logger = Logger.getLogger(Text.class.getName());
+  private final transient Logger logger = Logger.getLogger(Text.class.getName());
 
   /** the value of this instance */
   private final String string;
@@ -152,9 +152,18 @@ public enum Text {
    * @author croesch
    * @since Date: Jan 25, 2012
    */
-  private static class LazyHolder {
+  private static final class LazyHolder {
     /** instance of {@link TextProperties} */
-    private static final Properties INSTANCE = new TextProperties();
+    public static final Properties INSTANCE = new TextProperties(Locale.getDefault());
+
+    /**
+     * Hidden constructor..
+     * 
+     * @since Date: Jan 25, 2012
+     */
+    private LazyHolder() {
+      throw new AssertionError();
+    }
   }
 
   @Override

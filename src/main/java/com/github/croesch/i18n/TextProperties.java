@@ -42,11 +42,12 @@ public class TextProperties extends Properties {
    * attributes of the {@link Locale}.
    * 
    * @since Date: Jan 25, 2012
+   * @param loc the {@link Locale} to fetch the language, country and variant from
    */
-  public TextProperties() {
-    final String language = Locale.getDefault().getLanguage();
-    final String country = Locale.getDefault().getCountry();
-    final String variant = Locale.getDefault().getVariant();
+  public TextProperties(final Locale loc) {
+    final String language = loc.getLanguage();
+    final String country = loc.getCountry();
+    final String variant = loc.getVariant();
 
     final StringBuffer temp = new StringBuffer();
     loadProperties(temp);
@@ -83,9 +84,9 @@ public class TextProperties extends Properties {
       Utils.logThrownThrowable(e);
     } catch (final IOException e) {
       Utils.logThrownThrowable(e);
-    } catch (final NullPointerException e) {
-      Utils.logThrownThrowable(e);
     } catch (final SecurityException e) {
+      Utils.logThrownThrowable(e);
+    } catch (final RuntimeException e) {
       Utils.logThrownThrowable(e);
     }
   }
