@@ -96,21 +96,19 @@ public class IJVMCommandArgumentTest extends DefaultTestCase {
     assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(0xABCD, this.mem)).isEqualTo("-21555");
     assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(0x1010, this.mem)).isEqualTo("4112");
 
-    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(0, this.mem)).isEqualTo("0x0");
-    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(127, this.mem)).isEqualTo("0x7F");
-    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(-127, this.mem)).isEqualTo("0xFF81");
-    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(12, this.mem)).isEqualTo("0xC");
-    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(-12, this.mem)).isEqualTo("0xFFF4");
-    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(0xF4, this.mem)).isEqualTo("0xF4");
-    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(258, this.mem)).isEqualTo("0x102");
-    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(130, this.mem)).isEqualTo("0x82");
-    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(-130, this.mem)).isEqualTo("0xFF7E");
+    Register.CPP.setValue(0);
+    assertThat(IJVMCommandArgument.INDEX.getRepresentationOfArgument(0, this.mem)).isEqualTo("0[=0x10203]");
+    assertThat(IJVMCommandArgument.INDEX.getRepresentationOfArgument(1, this.mem)).isEqualTo("1[=0x4050607]");
+    assertThat(IJVMCommandArgument.INDEX.getRepresentationOfArgument(2, this.mem)).isEqualTo("2[=0x8090A0B]");
+    Register.CPP.setValue(Register.CPP.getValue() + 1);
+    assertThat(IJVMCommandArgument.INDEX.getRepresentationOfArgument(0, this.mem)).isEqualTo("0[=0x4050607]");
 
     Register.CPP.setValue(0);
-    assertThat(IJVMCommandArgument.INDEX.getRepresentationOfArgument(0, this.mem)).isEqualTo("0x0[=0x10203]");
-    assertThat(IJVMCommandArgument.INDEX.getRepresentationOfArgument(1, this.mem)).isEqualTo("0x1[=0x4050607]");
+    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(0, this.mem)).isEqualTo("0[=0x10203]");
+    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(1, this.mem)).isEqualTo("1[=0x4050607]");
+    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(2, this.mem)).isEqualTo("2[=0x8090A0B]");
     Register.CPP.setValue(Register.CPP.getValue() + 1);
-    assertThat(IJVMCommandArgument.INDEX.getRepresentationOfArgument(0, this.mem)).isEqualTo("0x0[=0x4050607]");
+    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(0, this.mem)).isEqualTo("0[=0x4050607]");
   }
 
 }

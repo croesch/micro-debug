@@ -48,13 +48,19 @@ enum IJVMCommandArgument {
     }
   },
   /** represents an offset */
-  OFFSET (2),
+  OFFSET (2) {
+    @Override
+    String represent(final int value, final Memory mem) {
+      final int cons = mem.getWord(Register.CPP.getValue() + value);
+      return String.valueOf(value) + "[=" + Utils.toHexString(cons) + "]";
+    }
+  },
   /** represents an index */
   INDEX (2) {
     @Override
     String represent(final int value, final Memory mem) {
       final int cons = mem.getWord(Register.CPP.getValue() + value);
-      return Utils.toHexString(value) + "[=" + Utils.toHexString(cons) + "]";
+      return String.valueOf(value) + "[=" + Utils.toHexString(cons) + "]";
     }
   };
 
