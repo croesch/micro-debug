@@ -83,3 +83,5 @@
 	- Code endlich Java 5 kompatibel gemacht und plattformunabhängig (lf)
 25.01.2012 (3,5 h)
 	- Treffen und Refactoring
+26.01.2012 (3 h)
+	- ls-macro-code fertig implementiert
