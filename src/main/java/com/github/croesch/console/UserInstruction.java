@@ -63,7 +63,21 @@ enum UserInstruction {
   LS_MACRO_CODE {
     @Override
     public boolean execute(final Mic1 processor, final String ... params) {
-      processor.printMacroCode();
+      switch (getSize(params)) {
+        case 0:
+          processor.printMacroCode();
+          break;
+        case 1:
+          final Integer from = (Integer) Parameter.NUMBER.getValue(params[0]);
+          final Integer to = (Integer) Parameter.NUMBER.getValue(params[0]);
+          if (from != null && to != null) {
+            processor.printMacroCode(from.intValue(), to.intValue());
+          }
+          break;
+        default:
+          Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(1, getSize(params)));
+          break;
+      }
       return true;
     }
   },

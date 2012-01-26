@@ -7,8 +7,12 @@ DESCRIPTION
 	exit
 		exits the debugger.
 
-	ls-macro-code
-		Prints the whole assembler code to the user, trying to disassemble it.
+	ls-macro-code [FROM TO]
+		Prints the assembler code to the user, trying to disassemble it.
+		If parameters are omitted, then the whole code will be printed to the user.
+		Else FROM is a number referring the first line to print and TO the number of the
+		last line to print. Lines are numbered according to the output of this function
+		without parameters.
 
 	ls-reg [REG]
 		Lists the value of a register, where REG is the name of that register.

@@ -508,4 +508,15 @@ public final class Mic1 {
   public void printMacroCode() {
     this.memory.printCode();
   }
+
+  /**
+   * Prints the whole ijvm code to the user. Between the given line numbers.
+   * 
+   * @since Date: Jan 26, 2012
+   * @param from the first line to print
+   * @param to the last line to print
+   */
+  public void printMacroCode(final int from, final int to) {
+    this.memory.printCode(from, to);
+  }
 }

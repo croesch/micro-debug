@@ -400,14 +400,63 @@ public final class Memory {
    * @since Date: Jan 22, 2012
    */
   public void printCode() {
-    final int start = Settings.MIC1_REGISTER_PC_DEFVAL.getValue() + 1;
-    final int end = Utils.getNextHigherValue(start, Settings.MIC1_REGISTER_CPP_DEFVAL.getValue(),
-                                             Settings.MIC1_REGISTER_SP_DEFVAL.getValue(),
-                                             Settings.MIC1_MEMORY_MAXSIZE.getValue(),
-                                             Settings.MIC1_REGISTER_LV_DEFVAL.getValue());
-    for (int i = start; i < end; ++i) {
-      i += printCodeLine(start, i);
+    final int start = getFirstPossibleCodeAddress();
+    final int end = refineEndOfCode(getLastPossibleCodeAddress());
+    printCode(start, end);
+  }
+
+  /**
+   * Prints the assembler code stored in the memory to the user between the given lines.
+   * 
+   * @since Date: Jan 26, 2012
+   * @param pos1 the first line to print
+   * @param pos2 the last line to print
+   */
+  public void printCode(final int pos1, final int pos2) {
+    // correct arguments
+    final int start = Math.max(getFirstPossibleCodeAddress(), Math.min(pos1, pos2));
+    final int end = Math.min(refineEndOfCode(getLastPossibleCodeAddress()), Math.max(pos1, pos2));
+
+    for (int i = start; i <= end; ++i) {
+      i += printCodeLine(i);
     }
+  }
+
+  /**
+   * Returns the address where the last possible code is stored.
+   * 
+   * @since Date: Jan 26, 2012
+   * @return the address of the last byte in the code section of the memory.
+   */
+  private int getLastPossibleCodeAddress() {
+    return Utils.getNextHigherValue(getFirstPossibleCodeAddress(), Settings.MIC1_REGISTER_CPP_DEFVAL.getValue(),
+                                    Settings.MIC1_REGISTER_SP_DEFVAL.getValue(),
+                                    Settings.MIC1_MEMORY_MAXSIZE.getValue(),
+                                    Settings.MIC1_REGISTER_LV_DEFVAL.getValue()) - 1;
+  }
+
+  /**
+   * Returns the address where the first possible code is stored.
+   * 
+   * @since Date: Jan 26, 2012
+   * @return the address of the first byte in the code section of the memory.
+   */
+  private int getFirstPossibleCodeAddress() {
+    return Settings.MIC1_REGISTER_PC_DEFVAL.getValue() + 1;
+  }
+
+  /**
+   * Returns the address of the last assembler instruction that is only followed by <code>NOP</code>s
+   * 
+   * @since Date: Jan 26, 2012
+   * @param end the end of the code area in the memory
+   * @return the address of last assembler instruction
+   */
+  private int refineEndOfCode(int end) {
+    while (getByte(end) == 0) {
+      --end;
+    }
+    return end;
   }
 
   /**
@@ -415,11 +464,10 @@ public final class Memory {
    * user.
    * 
    * @since Date: Jan 22, 2012
-   * @param start the start address where the code begins in the memory
    * @param addr the absolute address of the code instruction to print
    * @return the number of bytes read as arguments to the command byte
    */
-  private int printCodeLine(final int start, final int addr) {
+  private int printCodeLine(final int addr) {
     final StringBuilder formattedArgs = new StringBuilder();
 
     final int cmdCode = getByte(addr);
@@ -428,10 +476,10 @@ public final class Memory {
     final String name = buildNameForCommand(cmd);
     final int bytesRead = readArgumentsIfAny(addr, cmd, formattedArgs);
 
-    final String formattedRelativeAddr = formatIntToHex(addr - start, Settings.MIC1_CODE_MACRO_HEX_WIDTH.getValue());
+    final String formattedAddr = formatIntToHex(addr, Settings.MIC1_CODE_MACRO_HEX_WIDTH.getValue());
     final String formattedCmdCode = formatIntToHex(cmdCode, Settings.MIC1_CODE_MICRO_HEX_WIDTH.getValue());
 
-    Printer.println(Text.CODE_LINE.text(formattedRelativeAddr, formattedCmdCode, name, formattedArgs.toString()));
+    Printer.println(Text.CODE_LINE.text(formattedAddr, formattedCmdCode, name, formattedArgs.toString()));
 
     return bytesRead;
   }
