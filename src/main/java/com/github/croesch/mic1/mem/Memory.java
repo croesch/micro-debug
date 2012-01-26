@@ -406,6 +406,17 @@ public final class Memory {
   }
 
   /**
+   * Prints the given number lines of assembler code stored in the memory to the user around the given line.
+   * 
+   * @since Date: Jan 26, 2012
+   * @param line the line around to print the code
+   * @param scope the number of lines to print before and after the given line
+   */
+  public void printCodeAroundLine(final int line, final int scope) {
+    printCode(line - scope, line + scope);
+  }
+
+  /**
    * Prints the assembler code stored in the memory to the user between the given lines.
    * 
    * @since Date: Jan 26, 2012

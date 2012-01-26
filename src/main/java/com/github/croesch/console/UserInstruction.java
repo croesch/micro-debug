@@ -68,14 +68,20 @@ enum UserInstruction {
           processor.printMacroCode();
           break;
         case 1:
+          final Integer num = (Integer) Parameter.NUMBER.getValue(params[0]);
+          if (num != null) {
+            processor.printMacroCode(num.intValue());
+          }
+          break;
+        case 2:
           final Integer from = (Integer) Parameter.NUMBER.getValue(params[0]);
-          final Integer to = (Integer) Parameter.NUMBER.getValue(params[0]);
+          final Integer to = (Integer) Parameter.NUMBER.getValue(params[1]);
           if (from != null && to != null) {
             processor.printMacroCode(from.intValue(), to.intValue());
           }
           break;
         default:
-          Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(1, getSize(params)));
+          Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(2, getSize(params)));
           break;
       }
       return true;

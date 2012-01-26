@@ -118,3 +118,8 @@ User_Instructions bei Fehler abbrechen statt etwas anderes ausführen
 reset! ist wichtig
 
 Bei IJVM-Code-Ausgabe Ende des Codes von hinten suchen (alles 0er)
+------------------------------------------------------
+Die Mikro-Code Adresse, die die IJVM-Instruktionen liest lautet 0x2 statt 0x3?
+
+
+Und dann muss der Wert von PC statt von MBR geladen werden?

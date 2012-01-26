@@ -1,5 +1,8 @@
 package com.github.croesch;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Locale;
 
 import org.junit.BeforeClass;
@@ -36,5 +39,15 @@ public class DefaultTestCase {
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     Locale.setDefault(new Locale("test", "tst", " "));
+  }
+
+  protected StringBuilder readFile(final String name) throws IOException {
+    final StringBuilder sb = new StringBuilder();
+    final Reader r = new InputStreamReader(ClassLoader.getSystemResourceAsStream(name));
+    int c;
+    while ((c = r.read()) != -1) {
+      sb.append((char) c);
+    }
+    return sb;
   }
 }

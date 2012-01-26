@@ -58,7 +58,10 @@ public enum Settings {
   /** the width of a formatted address of a micro code instruction */
   MIC1_CODE_MICRO_HEX_WIDTH,
   /** the width of a formatted address of a macro/ijvm code instruction */
-  MIC1_CODE_MACRO_HEX_WIDTH;
+  MIC1_CODE_MACRO_HEX_WIDTH,
+
+  /** the address of micro assembler code that reads the next ijvm instruction */
+  MIC1_MICRO_ADDRESS_IJVM;
 
   /** the value set up in the properties file */
   private int value;

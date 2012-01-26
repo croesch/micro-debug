@@ -79,6 +79,9 @@ public final class Mic1 {
   /** counter for ticks that have been executed */
   private int ticks = 0;
 
+  /** stores the current address of the ijvm-instruction being executed */
+  private int currentMacroAddress = 0;
+
   /**
    * Constructs a new Mic1-processor, reading the given inputstreams as micro-program and assembler-program.
    * 
@@ -230,6 +233,9 @@ public final class Mic1 {
   private void fetchNextInstruction() {
     this.instruction = this.controlStore.getInstruction(this.mpcCalculator.getMpc());
     this.oldMpc = this.mpcCalculator.getMpc();
+    if (this.oldMpc == Settings.MIC1_MICRO_ADDRESS_IJVM.getValue()) {
+      this.currentMacroAddress = Register.PC.getValue();
+    }
   }
 
   /**
@@ -507,6 +513,16 @@ public final class Mic1 {
    */
   public void printMacroCode() {
     this.memory.printCode();
+  }
+
+  /**
+   * Prints the given number of lines of code around the current line to the user.
+   * 
+   * @since Date: Jan 26, 2012
+   * @param scope the number of lines to print before and after the current line
+   */
+  public void printMacroCode(final int scope) {
+    this.memory.printCodeAroundLine(this.currentMacroAddress, scope);
   }
 
   /**
