@@ -452,11 +452,12 @@ public final class Memory {
    * @param end the end of the code area in the memory
    * @return the address of last assembler instruction
    */
-  private int refineEndOfCode(int end) {
-    while (getByte(end) == 0) {
-      --end;
+  private int refineEndOfCode(final int end) {
+    int refEnd = end;
+    while (getByte(refEnd) == 0) {
+      --refEnd;
     }
-    return end;
+    return refEnd;
   }
 
   /**

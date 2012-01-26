@@ -52,7 +52,7 @@ enum IJVMCommandArgument {
     @Override
     String represent(final int value, final Memory mem) {
       final int cons = mem.getWord(Register.CPP.getValue() + value);
-      return String.valueOf(value) + "[=" + Utils.toHexString(cons) + "]";
+      return value + "[=" + Utils.toHexString(cons) + "]";
     }
   },
   /** represents an index */
@@ -60,7 +60,7 @@ enum IJVMCommandArgument {
     @Override
     String represent(final int value, final Memory mem) {
       final int cons = mem.getWord(Register.CPP.getValue() + value);
-      return String.valueOf(value) + "[=" + Utils.toHexString(cons) + "]";
+      return value + "[=" + Utils.toHexString(cons) + "]";
     }
   };
 
