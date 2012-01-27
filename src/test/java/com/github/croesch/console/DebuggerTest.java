@@ -21,17 +21,14 @@ package com.github.croesch.console;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.io.StringReader;
 
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
 import com.github.croesch.i18n.Text;
-import com.github.croesch.misc.Printer;
 import com.github.croesch.misc.Reader;
 
 /**
@@ -45,9 +42,6 @@ public class DebuggerTest extends DefaultTestCase {
   @Test
   public void testRun_Exit() {
     final Debugger debugger = new Debugger(null);
-
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
 
     Reader.setReader(new StringReader("exit"));
     debugger.run();
@@ -65,9 +59,6 @@ public class DebuggerTest extends DefaultTestCase {
   public void testRun_WrongCommand() {
     final Debugger debugger = new Debugger(null);
 
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     Reader.setReader(new StringReader("excel\nexit"));
     debugger.run();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_INSTRUCTION.text("excel")) + getLineSeparator());
@@ -83,9 +74,6 @@ public class DebuggerTest extends DefaultTestCase {
   @Test
   public void testRun_Help() throws IOException {
     final Debugger debugger = new Debugger(null);
-
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
 
     final StringBuilder sb = readHelpFile();
 

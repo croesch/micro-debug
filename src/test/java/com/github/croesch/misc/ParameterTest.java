@@ -21,7 +21,6 @@ package com.github.croesch.misc;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 
 import org.junit.Test;
 
@@ -39,9 +38,6 @@ public class ParameterTest extends DefaultTestCase {
 
   @Test
   public void testNumber_Valid() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     assertThat(Parameter.NUMBER.getValue("12")).isEqualTo(12);
     assertThat(Parameter.NUMBER.getValue("0x12")).isEqualTo(0x12);
     assertThat(Parameter.NUMBER.getValue("16_12")).isEqualTo(0x12);
@@ -55,14 +51,10 @@ public class ParameterTest extends DefaultTestCase {
     assertThat(Parameter.NUMBER.getValue("-0000")).isEqualTo(0);
 
     assertThat(out.toString()).isEmpty();
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testRegister_Valid() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     assertThat(Parameter.REGISTER.getValue("CPP")).isSameAs(Register.CPP);
     assertThat(Parameter.REGISTER.getValue("H")).isSameAs(Register.H);
     assertThat(Parameter.REGISTER.getValue("LV")).isSameAs(Register.LV);
@@ -87,14 +79,10 @@ public class ParameterTest extends DefaultTestCase {
     assertThat(Parameter.REGISTER.getValue("tOS")).isSameAs(Register.TOS);
 
     assertThat(out.toString()).isEmpty();
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testRegister_Invalid() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     testInvalidRegister("a", out);
     testInvalidRegister("hH", out);
     testInvalidRegister("o", out);
@@ -105,15 +93,10 @@ public class ParameterTest extends DefaultTestCase {
     testInvalidRegister("\t", out);
     testInvalidRegister(".", out);
     assertThat(Parameter.REGISTER.getValue(null)).isNull();
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testNumber_Invalid() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     testInvalidNumber("a_1010", out);
     testInvalidNumber("a_1010", out);
     testInvalidNumber("2_2010", out);
@@ -124,8 +107,6 @@ public class ParameterTest extends DefaultTestCase {
     testInvalidNumber("010,1", out);
     testInvalidNumber("--12", out);
     assertThat(Parameter.NUMBER.getValue(null)).isNull();
-
-    Printer.setPrintStream(System.out);
   }
 
   private void testInvalidRegister(final String str, final ByteArrayOutputStream out) {

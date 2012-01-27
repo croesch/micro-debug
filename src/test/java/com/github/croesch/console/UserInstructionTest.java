@@ -24,7 +24,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 
 import org.junit.Test;
 
@@ -34,7 +33,6 @@ import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.Mic1;
 import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.register.Register;
-import com.github.croesch.misc.Printer;
 
 /**
  * Provides test cases for {@link UserInstruction}.
@@ -98,7 +96,6 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteHelp() throws IOException {
-    Printer.setPrintStream(new PrintStream(out));
     assertThat(UserInstruction.HELP.execute(null, "asd")).isTrue();
     assertThat(UserInstruction.HELP.execute(null, "asd", "asd")).isTrue();
     out.reset();

@@ -20,16 +20,12 @@ package com.github.croesch.ui;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.register.Register;
-import com.github.croesch.misc.Printer;
 
 /**
  * Provides test cases for {@link TraceManager}.
@@ -96,9 +92,6 @@ public class TraceManagerTest extends DefaultTestCase {
 
   @Test
   public void testUpdateTracedRegisters() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     Register.MAR.setValue(-1);
     Register.MDR.setValue(0);
     Register.PC.setValue(1);
@@ -125,8 +118,6 @@ public class TraceManagerTest extends DefaultTestCase {
                                                  + Text.REGISTER_VALUE.text("TOS ", "0x8BF") + getLineSeparator()
                                                  + Text.REGISTER_VALUE.text("OPC ", "0x8C0") + getLineSeparator()
                                                  + Text.REGISTER_VALUE.text("H   ", "0x8C1") + getLineSeparator());
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test

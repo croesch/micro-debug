@@ -21,7 +21,6 @@ package com.github.croesch;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,7 +32,6 @@ import org.junit.Test;
 
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.io.Output;
-import com.github.croesch.misc.Printer;
 import com.github.croesch.misc.Reader;
 
 /**
@@ -52,9 +50,6 @@ public class MicroDebugTest extends DefaultTestCase {
 
   @Test
   public final void testMain_FileNotFound() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     MicroDebug.main(new String[] { "asd", "bas" });
 
     assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME
@@ -62,15 +57,10 @@ public class MicroDebugTest extends DefaultTestCase {
                                                  + getLineSeparator()
                                                  + Text.ERROR.text(Text.FILE_NOT_FOUND.text("bas"))
                                                  + getLineSeparator());
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public final void testMain_TooFewArgs() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     MicroDebug.main(new String[] { "-u" });
     assertThat(out.toString()).isEqualTo(this.GREETING + this.BORDER + Text.ERROR.text(Text.MISSING_IJVM_FILE)
                                                  + getLineSeparator() + Text.TRY_HELP + getLineSeparator());
@@ -98,9 +88,6 @@ public class MicroDebugTest extends DefaultTestCase {
 
   @Test
   public final void testMain_Version() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     MicroDebug.main(new String[] { "-v" });
     assertThat(out.toString()).isEqualTo(this.GREETING + this.BORDER + Text.VERSION.text() + getLineSeparator());
 
@@ -126,9 +113,6 @@ public class MicroDebugTest extends DefaultTestCase {
 
   @Test
   public final void testMain_Unknown() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     MicroDebug.main(new String[] { "-xxx", "", "" });
     assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME
                                                  + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("-xxx"))
@@ -146,8 +130,6 @@ public class MicroDebugTest extends DefaultTestCase {
 
   @Test
   public final void testMain_Hi() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
     Output.setOut(new PrintStream(out));
     Reader.setReader(new StringReader("run\nexit"));
 
@@ -160,8 +142,6 @@ public class MicroDebugTest extends DefaultTestCase {
 
   @Test
   public final void testMain_Hi_OutputFile() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
     Reader.setReader(new StringReader("run" + getLineSeparator() + "exit"));
 
     final String filePath = "tmp-micro-debug-test.del";

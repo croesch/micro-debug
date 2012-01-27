@@ -21,16 +21,13 @@ package com.github.croesch;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 
 import org.junit.Test;
 
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.io.Output;
-import com.github.croesch.misc.Printer;
 
 /**
  * Provides several test methods for {@link Argument}.
@@ -170,18 +167,12 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteVersion() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     assertThat(Argument.VERSION.execute(null)).isFalse();
     assertThat(out.toString()).isEqualTo(Text.VERSION.text() + getLineSeparator());
   }
 
   @Test
   public final void testExecuteHelp() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     assertThat(Argument.HELP.execute(null)).isFalse();
 
     final StringBuilder sb = new StringBuilder();
@@ -219,9 +210,6 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteUnknownArgument() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     assertThat(Argument.ERROR_UNKNOWN.execute(null)).isTrue();
     assertThat(out.toString()).isEmpty();
 
@@ -246,9 +234,6 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteParameterNumber() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     assertThat(Argument.ERROR_PARAM_NUMBER.execute(null)).isTrue();
     assertThat(out.toString()).isEmpty();
 
