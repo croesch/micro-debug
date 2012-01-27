@@ -85,3 +85,7 @@
 	- Treffen und Refactoring
 26.01.2012 (3 h)
 	- ls-macro-code fertig implementiert
+27.01.2012 (3,5 h)
+	- RESET und BREAK reg val implementiert
+	- Teststruktur verbessert
+	- UserInstruction Abbruch bei falscher Parameterzahl eingeführt
