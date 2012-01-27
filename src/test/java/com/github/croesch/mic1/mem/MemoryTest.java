@@ -21,11 +21,8 @@ package com.github.croesch.mic1.mem;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
@@ -35,7 +32,6 @@ import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.register.Register;
-import com.github.croesch.misc.Printer;
 import com.github.croesch.misc.Settings;
 import com.github.croesch.misc.Utils;
 
@@ -51,8 +47,8 @@ public class MemoryTest extends DefaultTestCase {
 
   private final byte[] bytes = new byte[Byte.MAX_VALUE];
 
-  @Before
-  public void setUp() throws FileFormatException {
+  @Override
+  public void setUpDetails() throws FileFormatException {
     for (byte b = 0; b < Byte.MAX_VALUE; ++b) {
       this.bytes[b] = b;
     }
@@ -167,7 +163,7 @@ public class MemoryTest extends DefaultTestCase {
   }
 
   @Test
-  public void testWriteRead() {
+  public void testRead() {
     TestUtil.printMethodName();
 
     this.mem.setFetch(false);
@@ -193,7 +189,7 @@ public class MemoryTest extends DefaultTestCase {
   }
 
   @Test
-  public void testWriteFetch() {
+  public void testFetch() {
     TestUtil.printMethodName();
 
     this.mem.setFetch(true);
@@ -330,19 +326,16 @@ public class MemoryTest extends DefaultTestCase {
 
   @Test
   public void testWriteOut() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Output.setOut(new PrintStream(out));
-
     this.mem.setWordAddress(Memory.MEMORY_MAPPED_IO_ADDRESS);
     // 0x78 = 120 -> x
     this.mem.setWordValue(0x12345678);
     this.mem.setWrite(true);
 
-    assertThat(out.toString()).isEmpty();
+    assertThat(micOut.toString()).isEmpty();
     this.mem.poke();
-    assertThat(out.toString()).isEmpty();
+    assertThat(micOut.toString()).isEmpty();
     Output.flush();
-    assertThat(out.toString()).isEqualTo("x");
+    assertThat(micOut.toString()).isEqualTo("x");
 
     int old = Register.H.getValue();
     this.mem.fillRegisters(Register.H, null);
@@ -424,6 +417,16 @@ public class MemoryTest extends DefaultTestCase {
     assertThat(Register.LV.getValue()).isEqualTo(0x96);
 
     this.mem.setFetch(false);
+
+    this.mem.reset();
+    assertThat(this.mem.getWord(0)).isEqualTo(0x00010203);
+    assertThat(this.mem.getWord(1)).isEqualTo(0x04050607);
+    assertThat(this.mem.getWord(2)).isEqualTo(0x08090A0B);
+    assertThat(this.mem.getWord(3)).isEqualTo(0x0C0D0E0F);
+    assertThat(this.mem.getWord(4)).isEqualTo(0x10111213);
+    assertThat(this.mem.getWord(5)).isEqualTo(0x14151617);
+    assertThat(this.mem.getWord(6)).isEqualTo(0x18191A1B);
+    assertThat(this.mem.getWord(7)).isEqualTo(0x1C1D1E1F);
   }
 
   @Test
@@ -447,13 +450,21 @@ public class MemoryTest extends DefaultTestCase {
     assertThat(this.mem.getByte(5)).isEqualTo(0x05);
     assertThat(this.mem.getByte(6)).isEqualTo(0x06);
     assertThat(this.mem.getByte(7)).isEqualTo(0x07);
+
+    this.mem.reset();
+    assertThat(this.mem.getWord(0)).isEqualTo(0x00010203);
+    assertThat(this.mem.getByte(0)).isEqualTo(0x00);
+    assertThat(this.mem.getByte(1)).isEqualTo(0x01);
+    assertThat(this.mem.getByte(2)).isEqualTo(0x02);
+    assertThat(this.mem.getByte(3)).isEqualTo(0x03);
+    assertThat(this.mem.getByte(4)).isEqualTo(0x04);
+    assertThat(this.mem.getByte(5)).isEqualTo(0x05);
+    assertThat(this.mem.getByte(6)).isEqualTo(0x06);
+    assertThat(this.mem.getByte(7)).isEqualTo(0x07);
   }
 
   @Test
   public void testSetInvalidAddresses() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     this.mem.setWord(-1, 0);
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(-1)))
                                                  + TestUtil.getLineSeparator());
@@ -466,14 +477,10 @@ public class MemoryTest extends DefaultTestCase {
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(Byte.MAX_VALUE)))
                                                  + TestUtil.getLineSeparator());
 
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testGetInvalidAddresses() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     this.mem.getWord(-1);
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(-1)))
                                                  + TestUtil.getLineSeparator());
@@ -486,14 +493,10 @@ public class MemoryTest extends DefaultTestCase {
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(Byte.MAX_VALUE)))
                                                  + TestUtil.getLineSeparator());
 
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testPrintCode_All() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     this.mem.printCode();
@@ -501,14 +504,10 @@ public class MemoryTest extends DefaultTestCase {
 
     assertThat(out.toString()).isEqualTo(sb.toString());
 
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testPrintCode_Part1() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     this.mem.printCode(0, 0x1D);
@@ -526,14 +525,10 @@ public class MemoryTest extends DefaultTestCase {
 
     assertThat(out.toString()).isEqualTo(sb.toString());
 
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testPrintCode_Around1() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     this.mem.printCodeAroundLine(0, 0x1D);
@@ -551,14 +546,10 @@ public class MemoryTest extends DefaultTestCase {
 
     assertThat(out.toString()).isEqualTo(sb.toString());
 
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testPrintCode_Part2() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     this.mem.printCode(0x18, 0x2E);
@@ -580,14 +571,10 @@ public class MemoryTest extends DefaultTestCase {
     assertThat(out.toString()).isNotEqualTo(sb.toString());
     out.reset();
 
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testPrintCode_Around2() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     this.mem.printCodeAroundLine(35, 11);
@@ -596,14 +583,10 @@ public class MemoryTest extends DefaultTestCase {
     assertThat(out.toString()).isEqualTo(sb.toString());
     out.reset();
 
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testPrintCode_Part3() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     final StringBuilder sb = readFile("mic1/add_part3.ijvm.dis");
@@ -624,28 +607,20 @@ public class MemoryTest extends DefaultTestCase {
     assertThat(out.toString()).isNotEqualTo(sb.toString());
     out.reset();
 
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testPrintCode_Around() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     this.mem.printCodeAroundLine(2, 0);
 
     assertThat(out.toString()).isEqualTo("     0x2: [0x59] DUP" + TestUtil.getLineSeparator());
 
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testPrintCode_Around3() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     final StringBuilder sb = readFile("mic1/add_part3.ijvm.dis");
@@ -662,6 +637,29 @@ public class MemoryTest extends DefaultTestCase {
     assertThat(out.toString()).isEqualTo(sb.toString());
     out.reset();
 
-    Printer.setPrintStream(System.out);
+  }
+
+  @Test
+  public void testReset() {
+    TestUtil.printMethodName();
+
+    for (byte b = 0; b < Byte.MAX_VALUE - 3; b += 4) {
+      this.mem.setWord(b / 4, 0);
+
+      TestUtil.printStep();
+    }
+
+    TestUtil.printLoopEnd();
+
+    this.mem.reset();
+
+    this.mem.setFetch(true);
+    for (byte b = 0; b < Byte.MAX_VALUE - 3; ++b) {
+      assertThat(this.mem.getByte(b)).isEqualTo(this.bytes[b]);
+
+      TestUtil.printStep();
+    }
+
+    TestUtil.printEndOfMethod();
   }
 }

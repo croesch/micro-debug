@@ -1,12 +1,19 @@
 package com.github.croesch;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.Reader;
 import java.util.Locale;
 
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
+
+import com.github.croesch.mic1.io.Output;
+import com.github.croesch.misc.Printer;
 
 /*
  * Copyright (C) 2011-2012  Christian Roesch
@@ -36,9 +43,31 @@ import org.junit.Ignore;
 @Ignore("Just default case")
 public class DefaultTestCase {
 
+  protected static final ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+  protected static final ByteArrayOutputStream micOut = new ByteArrayOutputStream();
+
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     Locale.setDefault(new Locale("test", "tst", " "));
+  }
+
+  @Before
+  public void setUp() throws Exception {
+    Printer.setPrintStream(new PrintStream(out));
+    Output.setOut(new PrintStream(micOut));
+    micOut.reset();
+    out.reset();
+    setUpDetails();
+  }
+
+  @AfterClass
+  public static final void after() throws Exception {
+    Printer.setPrintStream(System.out);
+  }
+
+  protected void setUpDetails() throws Exception {
+    // let that be defined by subclasses
   }
 
   protected StringBuilder readFile(final String name) throws IOException {

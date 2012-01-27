@@ -24,7 +24,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,10 +49,6 @@ public class OutputTest extends DefaultTestCase {
   public void before() {
     Output.setOut(new PrintStream(out));
     Output.setBuffered(true);
-  }
-
-  @After
-  public void after() {
     out.reset();
   }
 

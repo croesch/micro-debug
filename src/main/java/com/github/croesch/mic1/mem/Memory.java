@@ -61,6 +61,9 @@ public final class Memory {
   /** the representation of the memory */
   private final int[] memory;
 
+  /** stores the initial state of the memory for reset purpose */
+  private final int[] initialMemory;
+
   /** the input signal that enforces the memory to read a word */
   private boolean read = false;
 
@@ -99,7 +102,27 @@ public final class Memory {
    */
   public Memory(final int maxSize, final InputStream programStream) throws FileFormatException {
     this.memory = new int[maxSize];
+    this.initialMemory = new int[maxSize];
     initMemory(programStream);
+    System.arraycopy(this.memory, 0, this.initialMemory, 0, maxSize);
+  }
+
+  /**
+   * Resets the {@link Memory} so that it behaves as when started.
+   * 
+   * @since Date: Jan 27, 2012
+   */
+  public void reset() {
+    // copy initial memory state
+    System.arraycopy(this.initialMemory, 0, this.memory, 0, this.memory.length);
+    // set values
+    this.read = false;
+    this.fetch = false;
+    this.write = false;
+    this.wordAddress = -1;
+    this.wordValue = -1;
+    this.byteAddress = -1;
+    this.byteValue = -1;
   }
 
   /**
