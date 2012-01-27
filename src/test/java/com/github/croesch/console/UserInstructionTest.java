@@ -147,64 +147,15 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteSet_WrongNumberOfParameters() {
-    // 0
-
     Register.CPP.setValue(0xa1234);
-    assertThat(UserInstruction.SET.execute(null)).isTrue();
+    assertThatNoParameterIsWrong(UserInstruction.SET);
+    assertThatOneParameterIsWrong(UserInstruction.SET);
+    assertThatThreeParametersAreWrong(UserInstruction.SET, 2);
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0))
-                                                 + TestUtil.getLineSeparator());
-    out.reset();
+  }
 
-    assertThat(UserInstruction.SET.execute(null, (String[]) null)).isTrue();
-    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0))
-                                                 + TestUtil.getLineSeparator());
-    out.reset();
-
-    assertThat(UserInstruction.SET.execute(null, new String[] {})).isTrue();
-    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0))
-                                                 + TestUtil.getLineSeparator());
-    out.reset();
-
-    // 1
-
-    assertThat(UserInstruction.SET.execute(null, new String[] { null })).isTrue();
-    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1))
-                                                 + TestUtil.getLineSeparator());
-    out.reset();
-
-    assertThat(UserInstruction.SET.execute(null, new String[] { "H" })).isTrue();
-    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1))
-                                                 + TestUtil.getLineSeparator());
-    out.reset();
-
-    assertThat(UserInstruction.SET.execute(null, new String[] { "2" })).isTrue();
-    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1))
-                                                 + TestUtil.getLineSeparator());
-    out.reset();
-
-    // 3
-
-    assertThat(UserInstruction.SET.execute(null, new String[] { null, "asd", "" })).isTrue();
-    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3))
-                                                 + TestUtil.getLineSeparator());
-    out.reset();
-
-    assertThat(UserInstruction.SET.execute(null, new String[] { "H", null, " " })).isTrue();
-    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3))
-                                                 + TestUtil.getLineSeparator());
-    out.reset();
-
-    assertThat(UserInstruction.SET.execute(null, new String[] { "2", "\t", null })).isTrue();
-    assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3))
+  private void assertThatWrongNumberOfParametersIsPrintedAndResetOut(final int exp, final int was) {
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(exp, was))
                                                  + TestUtil.getLineSeparator());
     out.reset();
   }
@@ -311,12 +262,18 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "zwei")).isTrue();
     assertThat(Register.MAR.getValue()).isZero();
     assertThat(Register.PC.getValue()).isZero();
+    assertThat(this.processor.isHaltInstruction()).isFalse();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("zwei"))
+                                                 + TestUtil.getLineSeparator());
+    out.reset();
+
+    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "1")).isTrue();
+    assertThat(Register.MAR.getValue()).isZero();
+    assertThat(Register.PC.getValue()).isZero();
     assertThat(Register.LV.getValue()).isEqualTo(-1);
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(this.processor.isHaltInstruction()).isFalse();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("zwei"))
-                                                 + TestUtil.getLineSeparator() + Text.TICKS.text(1)
-                                                 + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
@@ -350,6 +307,12 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(this.processor.isHaltInstruction()).isFalse();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + TestUtil.getLineSeparator());
+  }
+
+  @Test
+  public void testExecuteMicroStep_WrongNumberOfParameters() {
+    assertThatTwoParametersAreWrong(UserInstruction.MICRO_STEP);
+    assertThatThreeParametersAreWrong(UserInstruction.MICRO_STEP, 0);
   }
 
   @Test
@@ -394,83 +357,23 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteLsReg_NullArg() throws IOException {
-    Register.MAR.setValue(1);
-    Register.MDR.setValue(2);
-    Register.PC.setValue(3);
-    Register.MBR.setValue(0x1283);
-    Register.SP.setValue(6);
-    Register.LV.setValue(7);
-    Register.CPP.setValue(8);
-    Register.TOS.setValue(9);
-    Register.OPC.setValue(10);
-    Register.H.setValue(11);
-
     assertThat(out.toString()).isEmpty();
     assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { null })).isTrue();
-
-    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x1") + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("MDR ", "0x2")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x3")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("MBR ", "0xFFFFFF83")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("MBRU", "0x83")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("SP  ", "0x6")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("LV  ", "0x7")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("CPP ", "0x8")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("TOS ", "0x9")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("OPC ", "0xA")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("H   ", "0xB")
-                                                 + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEmpty();
   }
 
   @Test
   public final void testExecuteLsReg_FalseArg() throws IOException {
-    Register.MAR.setValue(-1);
-    Register.MDR.setValue(0);
-    Register.PC.setValue(1);
-    Register.MBR.setValue(0x1273);
-    Register.SP.setValue(0x8bc);
-    Register.LV.setValue(0x8bd);
-    Register.CPP.setValue(0x8be);
-    Register.TOS.setValue(0x8bf);
-    Register.OPC.setValue(0x8c0);
-    Register.H.setValue(0x8c1);
-
     assertThat(out.toString()).isEmpty();
     assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { "Bernd" })).isTrue();
-
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("Bernd"))
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("MDR ", "0x0")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("MBR ", "0x73")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("MBRU", "0x73")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("SP  ", "0x8BC")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("LV  ", "0x8BD")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("CPP ", "0x8BE")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("TOS ", "0x8BF")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("OPC ", "0x8C0")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("H   ", "0x8C1")
                                                  + TestUtil.getLineSeparator());
+  }
+
+  @Test
+  public final void testExecuteLsReg_WrongNumberOfParameters() {
+    assertThatTwoParametersAreWrong(UserInstruction.LS_REG);
+    assertThatThreeParametersAreWrong(UserInstruction.LS_REG, 0);
   }
 
   @Test
@@ -487,7 +390,7 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
-  public void testTraceRegister() {
+  public void testExecuteTraceReg() {
     for (final Register r : Register.values()) {
       assertThat(this.processor.isTracing(r)).isFalse();
       assertThat(UserInstruction.TRACE_REG.execute(this.processor, r.name())).isTrue();
@@ -496,7 +399,7 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
-  public void testTraceAllRegisters() {
+  public void testExecuteTraceReg_All() {
     for (final Register r : Register.values()) {
       assertThat(this.processor.isTracing(r)).isFalse();
     }
@@ -509,7 +412,19 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
-  public void testUntraceAllRegisters() {
+  public final void testExecuteTraceReg_WrongNumberOfParameters() {
+    assertThatTwoParametersAreWrong(UserInstruction.TRACE_REG);
+    assertThatThreeParametersAreWrong(UserInstruction.TRACE_REG, 0);
+  }
+
+  @Test
+  public final void testExecuteUntraceReg_WrongNumberOfParameters() {
+    assertThatTwoParametersAreWrong(UserInstruction.UNTRACE_REG);
+    assertThatThreeParametersAreWrong(UserInstruction.UNTRACE_REG, 0);
+  }
+
+  @Test
+  public void testExecuteUntraceReg_All() {
     assertThat(UserInstruction.TRACE_REG.execute(this.processor, (String[]) null)).isTrue();
 
     for (final Register r : Register.values()) {
@@ -524,7 +439,7 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
-  public void testUntraceRegister() {
+  public void testExecuteUntraceReg() {
     assertThat(UserInstruction.TRACE_REG.execute(this.processor, (String[]) null)).isTrue();
 
     for (final Register r : Register.values()) {
@@ -613,56 +528,9 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteSetMem_WrongNumberOfParameters() {
-    // 0
-
-    assertThat(UserInstruction.SET_MEM.execute(null)).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0))
-                                                 + TestUtil.getLineSeparator());
-    out.reset();
-
-    assertThat(UserInstruction.SET_MEM.execute(null, (String[]) null)).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0))
-                                                 + TestUtil.getLineSeparator());
-    out.reset();
-
-    assertThat(UserInstruction.SET_MEM.execute(null, new String[] {})).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 0))
-                                                 + TestUtil.getLineSeparator());
-    out.reset();
-
-    // 1
-
-    assertThat(UserInstruction.SET_MEM.execute(null, new String[] { null })).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1))
-                                                 + TestUtil.getLineSeparator());
-    out.reset();
-
-    assertThat(UserInstruction.SET_MEM.execute(null, new String[] { "H" })).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1))
-                                                 + TestUtil.getLineSeparator());
-    out.reset();
-
-    assertThat(UserInstruction.SET_MEM.execute(null, new String[] { "2" })).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 1))
-                                                 + TestUtil.getLineSeparator());
-    out.reset();
-
-    // 3
-
-    assertThat(UserInstruction.SET_MEM.execute(null, new String[] { null, "asd", "" })).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3))
-                                                 + TestUtil.getLineSeparator());
-    out.reset();
-
-    assertThat(UserInstruction.SET_MEM.execute(null, new String[] { "H", null, " " })).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3))
-                                                 + TestUtil.getLineSeparator());
-    out.reset();
-
-    assertThat(UserInstruction.SET_MEM.execute(null, new String[] { "2", "\t", null })).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3))
-                                                 + TestUtil.getLineSeparator());
-    out.reset();
+    assertThatNoParameterIsWrong(UserInstruction.SET_MEM);
+    assertThatOneParameterIsWrong(UserInstruction.SET_MEM);
+    assertThatThreeParametersAreWrong(UserInstruction.SET_MEM, 2);
   }
 
   @Test
@@ -872,7 +740,7 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
-  public void testRegisterBreakPoint() {
+  public void testExecuteBreak() {
     assertThat(UserInstruction.BREAK.execute(this.processor, Register.H.name(), "-1")).isTrue();
     assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + TestUtil.getLineSeparator());
@@ -893,5 +761,61 @@ public class UserInstructionTest extends DefaultTestCase {
     out.reset();
     assertThat(UserInstruction.MICRO_STEP.execute(this.processor)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
+  }
+
+  @Test
+  public final void testExecuteBreak_WrongNumberOfParameters() {
+    assertThatNoParameterIsWrong(UserInstruction.BREAK);
+    assertThatOneParameterIsWrong(UserInstruction.BREAK);
+    assertThatThreeParametersAreWrong(UserInstruction.BREAK, 2);
+  }
+
+  private void assertThatNoParameterIsWrong(final UserInstruction instr) {
+    assertThat(instr.execute(null)).isTrue();
+    assertThatWrongNumberOfParametersIsPrintedAndResetOut(2, 0);
+
+    assertThat(instr.execute(null, (String[]) null)).isTrue();
+    assertThatWrongNumberOfParametersIsPrintedAndResetOut(2, 0);
+
+    assertThat(instr.execute(null, new String[] {})).isTrue();
+    assertThatWrongNumberOfParametersIsPrintedAndResetOut(2, 0);
+  }
+
+  private void assertThatOneParameterIsWrong(final UserInstruction instr) {
+    assertThat(instr.execute(null, new String[] { null })).isTrue();
+    assertThatWrongNumberOfParametersIsPrintedAndResetOut(2, 1);
+
+    assertThat(instr.execute(null, new String[] { "H" })).isTrue();
+    assertThatWrongNumberOfParametersIsPrintedAndResetOut(2, 1);
+
+    assertThat(instr.execute(null, new String[] { "2" })).isTrue();
+    assertThatWrongNumberOfParametersIsPrintedAndResetOut(2, 1);
+  }
+
+  private void assertThatThreeParametersAreWrong(final UserInstruction instr, final int exp) {
+    assertThat(instr.execute(null, new String[] { null, "asd", "" })).isTrue();
+    assertThatWrongNumberOfParametersIsPrintedAndResetOut(exp, 3);
+
+    assertThat(instr.execute(null, new String[] { "H", null, " " })).isTrue();
+    assertThatWrongNumberOfParametersIsPrintedAndResetOut(exp, 3);
+
+    assertThat(instr.execute(null, new String[] { "2", "\t", null })).isTrue();
+    assertThatWrongNumberOfParametersIsPrintedAndResetOut(exp, 3);
+  }
+
+  private void assertThatTwoParametersAreWrong(final UserInstruction instr) {
+    assertThat(instr.execute(null, new String[] { null, "asd" })).isTrue();
+    assertThatWrongNumberOfParametersIsPrintedAndResetOut(0, 2);
+
+    assertThat(instr.execute(null, new String[] { "H", " " })).isTrue();
+    assertThatWrongNumberOfParametersIsPrintedAndResetOut(0, 2);
+
+    assertThat(instr.execute(null, new String[] { "2", null })).isTrue();
+    assertThatWrongNumberOfParametersIsPrintedAndResetOut(0, 2);
+  }
+
+  @Test
+  public void testExecuteLsMacroCode_WrongNumberOfParameters() {
+    assertThatThreeParametersAreWrong(UserInstruction.LS_MACRO_CODE, 2);
   }
 }

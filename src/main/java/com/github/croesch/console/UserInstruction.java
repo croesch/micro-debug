@@ -47,6 +47,8 @@ enum UserInstruction {
         if (i != null && r != null) {
           processor.addBreakpoint(r, i);
         }
+      } else {
+        Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(2, getSize(params)));
       }
       return true;
     }
@@ -107,15 +109,19 @@ enum UserInstruction {
   LS_REG {
     @Override
     public boolean execute(final Mic1 processor, final String ... params) {
-      if (getSize(params) == 0) {
-        processor.listAllRegisters();
-      } else {
-        final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
-        if (r == null) {
+      switch (getSize(params)) {
+        case 0:
           processor.listAllRegisters();
-        } else {
-          processor.listSingleRegister(r);
-        }
+          break;
+        case 1:
+          final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
+          if (r != null) {
+            processor.listSingleRegister(r);
+          }
+          break;
+        default:
+          Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(0, getSize(params)));
+          break;
       }
       return true;
     }
@@ -125,15 +131,19 @@ enum UserInstruction {
   MICRO_STEP {
     @Override
     public boolean execute(final Mic1 processor, final String ... params) {
-      if (getSize(params) == 0) {
-        processor.microStep();
-      } else {
-        final Integer i = (Integer) Parameter.NUMBER.getValue(params[0]);
-        if (i == null) {
+      switch (getSize(params)) {
+        case 0:
           processor.microStep();
-        } else {
-          processor.microStep(i);
-        }
+          break;
+        case 1:
+          final Integer i = (Integer) Parameter.NUMBER.getValue(params[0]);
+          if (i != null) {
+            processor.microStep(i);
+          }
+          break;
+        default:
+          Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(0, getSize(params)));
+          break;
       }
 
       return true;
@@ -165,14 +175,14 @@ enum UserInstruction {
 
     @Override
     public boolean execute(final Mic1 processor, final String ... params) {
-      if (getSize(params) == EXPECTED_PARAMETERS) {
+      if (getSize(params) != EXPECTED_PARAMETERS) {
+        Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(EXPECTED_PARAMETERS, getSize(params)));
+      } else {
         final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
         final Integer i = (Integer) Parameter.NUMBER.getValue(params[1]);
         if (r != null && i != null) {
           r.setValue(i.intValue());
         }
-      } else {
-        Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(EXPECTED_PARAMETERS, getSize(params)));
       }
       return true;
     }
@@ -211,13 +221,19 @@ enum UserInstruction {
   TRACE_REG {
     @Override
     public boolean execute(final Mic1 processor, final String ... params) {
-      if (getSize(params) == 0) {
-        processor.traceRegister();
-      } else {
-        final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
-        if (r != null) {
-          processor.traceRegister(r);
-        }
+      switch (getSize(params)) {
+        case 0:
+          processor.traceRegister();
+          break;
+        case 1:
+          final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
+          if (r != null) {
+            processor.traceRegister(r);
+          }
+          break;
+        default:
+          Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(0, getSize(params)));
+          break;
       }
       return true;
     }
@@ -236,13 +252,19 @@ enum UserInstruction {
   UNTRACE_REG {
     @Override
     public boolean execute(final Mic1 processor, final String ... params) {
-      if (getSize(params) == 0) {
-        processor.untraceRegister();
-      } else {
-        final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
-        if (r != null) {
-          processor.untraceRegister(r);
-        }
+      switch (getSize(params)) {
+        case 0:
+          processor.untraceRegister();
+          break;
+        case 1:
+          final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
+          if (r != null) {
+            processor.untraceRegister(r);
+          }
+          break;
+        default:
+          Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(0, getSize(params)));
+          break;
       }
       return true;
     }
