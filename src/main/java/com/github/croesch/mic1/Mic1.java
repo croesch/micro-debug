@@ -586,6 +586,6 @@ public final class Mic1 {
    * @param value the value that should be a break point if the given {@link Register} has it.
    */
   public void addBreakpoint(final Register r, final Integer value) {
-    this.bpm.addBreakPoint(r, value);
+    this.bpm.addBreakpoint(r, value);
   }
 }
