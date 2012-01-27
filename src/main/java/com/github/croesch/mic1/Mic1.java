@@ -59,16 +59,16 @@ public final class Mic1 {
   private final Shifter shifter = new Shifter();
 
   /** calculator for next MPC value */
-  private final NextMPCCalculator mpcCalculator = new NextMPCCalculator();
+  private NextMPCCalculator mpcCalculator;
 
   /** store of the micro program */
   private final Mic1ControlStore controlStore;
 
   /** current instruction */
-  private Mic1Instruction instruction = null;
+  private Mic1Instruction instruction;
 
   /** current value of mpc */
-  private int oldMpc = -1;
+  private int oldMpc;
 
   /** the main memory of the processor */
   private final Memory memory;
@@ -77,10 +77,10 @@ public final class Mic1 {
   private final Mic1View view = new TraceManager();
 
   /** counter for ticks that have been executed */
-  private int ticks = 0;
+  private int ticks;
 
   /** stores the current address of the ijvm-instruction being executed */
-  private int currentMacroAddress = 0;
+  private int currentMacroAddress;
 
   /**
    * Constructs a new Mic1-processor, reading the given inputstreams as micro-program and assembler-program.
@@ -91,8 +91,8 @@ public final class Mic1 {
    * @throws FileFormatException if one of the streams contains a file with the wrong file format
    */
   public Mic1(final InputStream micAsm, final InputStream asm) throws FileFormatException {
-    this.controlStore = createMic1ControlStore(micAsm);
 
+    this.controlStore = createMic1ControlStore(micAsm);
     this.memory = createMemory(asm, Settings.MIC1_MEMORY_MAXSIZE.getValue());
 
     if (this.controlStore == null || this.memory == null) {
@@ -100,7 +100,34 @@ public final class Mic1 {
       throw new FileFormatException();
     }
 
+    init();
+  }
+
+  /**
+   * Initializes the {@link Register}s, the current instructions and the {@link NextMPCCalculator}.
+   * 
+   * @since Date: Jan 27, 2012
+   */
+  private void init() {
     initRegisters();
+
+    this.mpcCalculator = new NextMPCCalculator();
+    this.ticks = 0;
+    this.currentMacroAddress = 0;
+    this.oldMpc = -1;
+    this.instruction = null;
+  }
+
+  /**
+   * Resets the processor to its start values, except the debugging options. So {@link Register}s and current
+   * instructions will be reset, but breakpoints or tracing options not.
+   * 
+   * @since Date: Jan 27, 2012
+   */
+  public void reset() {
+    init();
+
+    this.memory.reset();
   }
 
   /**
