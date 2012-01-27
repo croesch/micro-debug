@@ -22,12 +22,10 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
@@ -49,8 +47,8 @@ public class UserInstructionTest extends DefaultTestCase {
 
   private Mic1 processor;
 
-  @Before
-  public void setUp() throws FileFormatException {
+  @Override
+  protected void setUpDetails() throws FileFormatException {
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
   }
@@ -92,22 +90,16 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteExit() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     assertThat(UserInstruction.EXIT.execute(null)).isFalse();
     assertThat(UserInstruction.EXIT.execute(null, "asd")).isFalse();
     assertThat(UserInstruction.EXIT.execute(null, "asd", "asd")).isFalse();
 
     assertThat(out.toString()).isEmpty();
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public final void testExecuteHelp() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
-
     assertThat(UserInstruction.HELP.execute(null, "asd")).isTrue();
     assertThat(UserInstruction.HELP.execute(null, "asd", "asd")).isTrue();
     out.reset();
@@ -130,8 +122,6 @@ public class UserInstructionTest extends DefaultTestCase {
     }
 
     assertThat(out.toString()).isEqualTo(sb.toString());
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test(expected = NullPointerException.class)
@@ -141,14 +131,11 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteRun() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     assertThat(UserInstruction.RUN.execute(this.processor, "asd")).isTrue();
     assertThat(UserInstruction.RUN.execute(this.processor, "asd", "asd")).isTrue();
     out.reset();
 
-    setUp();
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
 
     assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + TestUtil.getLineSeparator());
@@ -156,15 +143,10 @@ public class UserInstructionTest extends DefaultTestCase {
     out.reset();
     assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
     assertThat(out.toString()).isEmpty();
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public final void testExecuteSet_WrongNumberOfParameters() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     // 0
 
     Register.CPP.setValue(0xa1234);
@@ -225,15 +207,10 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3))
                                                  + TestUtil.getLineSeparator());
     out.reset();
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testExecuteSet_Valid() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     Register.CPP.setValue(0xa1234);
 
     assertThat(UserInstruction.SET.execute(null, Register.CPP.name(), "14")).isTrue();
@@ -248,15 +225,10 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.SET.execute(null, Register.CPP.name(), "2_1010")).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa);
     assertThat(out.toString()).isEmpty();
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testExecuteSet_Invalid() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     Register.CPP.setValue(0xa1234);
 
     assertThat(UserInstruction.SET.execute(null, "abc", "14")).isTrue();
@@ -316,15 +288,10 @@ public class UserInstructionTest extends DefaultTestCase {
                                                  + Text.ERROR.text(Text.INVALID_NUMBER.text("H"))
                                                  + TestUtil.getLineSeparator());
     out.reset();
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public final void testExecuteMicroStep() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     assertThat(UserInstruction.MICRO_STEP.execute(this.processor)).isTrue();
     assertThat(Register.MAR.getValue()).isZero();
     assertThat(Register.PC.getValue()).isZero();
@@ -332,7 +299,7 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
     out.reset();
 
-    setUp();
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
 
     assertThat(UserInstruction.MICRO_STEP.execute(this.processor, (String[]) null)).isTrue();
     assertThat(Register.MAR.getValue()).isZero();
@@ -352,7 +319,7 @@ public class UserInstructionTest extends DefaultTestCase {
                                                  + TestUtil.getLineSeparator());
     out.reset();
 
-    setUp();
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
 
     assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "20")).isTrue();
     assertThat(Register.MDR.getValue()).isEqualTo('\n');
@@ -374,7 +341,7 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(out.toString()).isEmpty();
     out.reset();
 
-    setUp();
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
 
     assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "2_10")).isTrue();
     assertThat(Register.MAR.getValue()).isZero();
@@ -383,15 +350,10 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(this.processor.isHaltInstruction()).isFalse();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + TestUtil.getLineSeparator());
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public final void testExecuteLsReg_NoArg() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     Register.MAR.setValue(1);
     Register.MDR.setValue(2);
     Register.PC.setValue(3);
@@ -428,15 +390,10 @@ public class UserInstructionTest extends DefaultTestCase {
                                                  + TestUtil.getLineSeparator()
                                                  + Text.REGISTER_VALUE.text("H   ", "0xB")
                                                  + TestUtil.getLineSeparator());
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public final void testExecuteLsReg_NullArg() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     Register.MAR.setValue(1);
     Register.MDR.setValue(2);
     Register.PC.setValue(3);
@@ -472,15 +429,10 @@ public class UserInstructionTest extends DefaultTestCase {
                                                  + TestUtil.getLineSeparator()
                                                  + Text.REGISTER_VALUE.text("H   ", "0xB")
                                                  + TestUtil.getLineSeparator());
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public final void testExecuteLsReg_FalseArg() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     Register.MAR.setValue(-1);
     Register.MDR.setValue(0);
     Register.PC.setValue(1);
@@ -519,15 +471,10 @@ public class UserInstructionTest extends DefaultTestCase {
                                                  + TestUtil.getLineSeparator()
                                                  + Text.REGISTER_VALUE.text("H   ", "0x8C1")
                                                  + TestUtil.getLineSeparator());
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public final void testExecuteLsReg_OneArg() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     Register.MAR.setValue(0x4711);
     assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { "MAR" })).isTrue();
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x4711") + TestUtil.getLineSeparator());
@@ -537,8 +484,6 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { "SP" })).isTrue();
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("SP  ", "0xFFFFFFFE") + TestUtil.getLineSeparator());
     out.reset();
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
@@ -591,9 +536,6 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testUpdateTracedRegisters() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     assertThat(UserInstruction.TRACE_REG.execute(this.processor, Register.PC.name())).isTrue();
     assertThat(out.toString()).isEmpty();
     assertThat(UserInstruction.RUN.execute(this.processor, (String[]) null)).isTrue();
@@ -626,8 +568,6 @@ public class UserInstructionTest extends DefaultTestCase {
                                                  + Text.REGISTER_VALUE.text("PC  ", "0x3")
                                                  + TestUtil.getLineSeparator() + Text.TICKS.text(14)
                                                  + TestUtil.getLineSeparator());
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
@@ -647,20 +587,18 @@ public class UserInstructionTest extends DefaultTestCase {
                             + Text.EXECUTED_CODE.text("wr;goto 0xD") + TestUtil.getLineSeparator()
                             + Text.EXECUTED_CODE.text("goto 0xD") + TestUtil.getLineSeparator() + Text.TICKS.text(14)
                             + TestUtil.getLineSeparator();
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
 
     assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + TestUtil.getLineSeparator());
     out.reset();
 
-    setUp();
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
 
     assertThat(UserInstruction.TRACE_MIC.execute(this.processor)).isTrue();
     assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
     assertThat(out.toString()).isEqualTo(expected);
 
-    setUp();
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
     out.reset();
 
     assertThat(UserInstruction.TRACE_MIC.execute(this.processor)).isTrue();
@@ -671,15 +609,10 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.UNTRACE_MIC.execute(this.processor)).isTrue();
     assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(13) + TestUtil.getLineSeparator());
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public final void testExecuteSetMem_WrongNumberOfParameters() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     // 0
 
     assertThat(UserInstruction.SET_MEM.execute(null)).isTrue();
@@ -730,15 +663,10 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_PARAM_NUMBER.text(2, 3))
                                                  + TestUtil.getLineSeparator());
     out.reset();
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testExecuteSetMem_Valid() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     assertThat(UserInstruction.SET_MEM.execute(this.processor, "0xA", "14")).isTrue();
     assertThat(this.processor.getMemoryValue(0xa)).isEqualTo(14);
     assertThat(out.toString()).isEmpty();
@@ -750,15 +678,10 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.SET_MEM.execute(this.processor, "2_10", "2_1010")).isTrue();
     assertThat(this.processor.getMemoryValue(2)).isEqualTo(10);
     assertThat(out.toString()).isEmpty();
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testExecuteSetMem_Invalid() {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     assertThat(UserInstruction.SET_MEM.execute(this.processor, "abc", "14")).isTrue();
     assertThat(out.toString())
       .isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("abc")) + TestUtil.getLineSeparator());
@@ -804,31 +727,20 @@ public class UserInstructionTest extends DefaultTestCase {
                                                  + TestUtil.getLineSeparator()
                                                  + Text.ERROR.text(Text.INVALID_NUMBER.text("H"))
                                                  + TestUtil.getLineSeparator());
-    out.reset();
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testPrintCode_All() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     final StringBuilder sb = readFile("mic1/add.ijvm.dis");
 
     assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor)).isTrue();
     assertThat(out.toString()).isEqualTo(sb.toString());
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testPrintCode_Part1() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     final StringBuilder sb = readFile("mic1/add_part1.ijvm.dis");
@@ -845,15 +757,10 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "19_-20", "0x1e")).isTrue();
 
     assertThat(out.toString()).isEqualTo(sb.toString());
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testPrintCode_Around1() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     final StringBuilder sb = readFile("mic1/add_part1.ijvm.dis");
@@ -870,15 +777,16 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "60")).isTrue();
     assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "16")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(60) + TestUtil.getLineSeparator() + sb.toString());
+    out.reset();
 
-    Printer.setPrintStream(System.out);
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "8")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0x1b")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(8) + TestUtil.getLineSeparator() + sb.toString());
   }
 
   @Test
   public void testPrintCode_Part2() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     final StringBuilder sb = readFile("mic1/add_part2.ijvm.dis");
@@ -899,14 +807,10 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0x18", "0x30")).isTrue();
     assertThat(out.toString()).isNotEqualTo(sb.toString());
     out.reset();
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testPrintCode_Around2() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
     Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
 
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
@@ -918,14 +822,16 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(537) + TestUtil.getLineSeparator() + sb.toString());
     out.reset();
 
-    Printer.setPrintStream(System.out);
+    Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "537")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "11")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(537) + TestUtil.getLineSeparator() + sb.toString());
+    out.reset();
   }
 
   @Test
   public void testPrintCode_Part3() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     final StringBuilder sb = readFile("mic1/add_part3.ijvm.dis");
@@ -945,23 +851,23 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0x100", "0x11D")).isTrue();
     assertThat(out.toString()).isNotEqualTo(sb.toString());
     out.reset();
-
-    Printer.setPrintStream(System.out);
   }
 
   @Test
   public void testPrintCode_Around() throws IOException {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    Printer.setPrintStream(new PrintStream(out));
-
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+
     assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "8")).isTrue();
     assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0")).isTrue();
-
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(8) + TestUtil.getLineSeparator() + "     0x2: [0x59] DUP"
                                                  + TestUtil.getLineSeparator());
 
-    Printer.setPrintStream(System.out);
+    out.reset();
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "8")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(8) + TestUtil.getLineSeparator() + "     0x2: [0x59] DUP"
+                                                 + TestUtil.getLineSeparator());
   }
 }

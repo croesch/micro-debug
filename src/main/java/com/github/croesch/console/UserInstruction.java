@@ -125,6 +125,15 @@ enum UserInstruction {
     }
   },
 
+  /** resets the processor to its initial state */
+  RESET {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      processor.reset();
+      return true;
+    }
+  },
+
   /** runs the program to the end */
   RUN {
     @Override

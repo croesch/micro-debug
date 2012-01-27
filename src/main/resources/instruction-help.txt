@@ -20,6 +20,15 @@ DESCRIPTION
 		Lists the value of a register, where REG is the name of that register.
 		If REG is omitted then the values of all registers are listed.
 
+	micro-step [NUM]
+		Executes NUM instructions, where NUM is a natural number. If NUM is omitted
+		then one instruction will be executed.
+		The processor executes only instructions until the halt-instruction is found.
+
+	reset
+		Resets the processor to its initial state. Current instruction and position
+		in code will be set to the initial state.
+
 	run
 		runs the program until its end or until a breakpoint is hit.
 
@@ -30,11 +39,6 @@ DESCRIPTION
 	set-mem ADDR VAL
 		Sets the value of the main memory at the address ADDR. Where VAL is the new
 		value to store at that address.
-
-	step [NUM]
-		Executes NUM instructions, where NUM is a natural number. If NUM is omitted
-		then one instruction will be executed.
-		The processor executes only instructions until the halt-instruction is found.
 
 	trace-mic
 		Traces the executed micro instructions.
