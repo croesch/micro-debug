@@ -28,7 +28,6 @@ import java.io.PrintStream;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
-import com.github.croesch.TestUtil;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.io.Output;
@@ -96,19 +95,19 @@ public class Mic1Test extends DefaultTestCase {
   @Test
   public void testStepN() {
     this.processor.microStep(200);
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + getLineSeparator());
 
     out.reset();
     this.processor.reset();
     this.processor.microStep(200);
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + getLineSeparator());
   }
 
   @Test
   public void testStepOne() {
     for (int i = 0; i < 14; ++i) {
       this.processor.microStep();
-      assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
+      assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
       out.reset();
     }
     this.processor.microStep();
@@ -117,7 +116,7 @@ public class Mic1Test extends DefaultTestCase {
     this.processor.reset();
     for (int i = 0; i < 14; ++i) {
       this.processor.microStep();
-      assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
+      assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
       out.reset();
     }
     this.processor.microStep();
@@ -171,7 +170,7 @@ public class Mic1Test extends DefaultTestCase {
     processor.microStep(1);
     assertOneTickDoneAndResetPrintStream(out);
     processor.microStep(3);
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3) + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3) + getLineSeparator());
     out.reset();
 
     assertThat(processor.isHaltInstruction()).isFalse();
@@ -350,7 +349,7 @@ public class Mic1Test extends DefaultTestCase {
   }
 
   private void assertOneTickDoneAndResetPrintStream(final ByteArrayOutputStream stdOut) {
-    assertThat(stdOut.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
+    assertThat(stdOut.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
     stdOut.reset();
   }
 
@@ -364,9 +363,9 @@ public class Mic1Test extends DefaultTestCase {
       // expected
     }
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_TOO_SMALL))
-                                                 + TestUtil.getLineSeparator()
+                                                 + getLineSeparator()
                                                  + Text.ERROR.text(Text.WRONG_FORMAT_IJVM
-                                                   .text(Text.WRONG_FORMAT_TOO_SMALL)) + TestUtil.getLineSeparator());
+                                                   .text(Text.WRONG_FORMAT_TOO_SMALL)) + getLineSeparator());
     out.reset();
 
     // wrong magic number
@@ -377,11 +376,10 @@ public class Mic1Test extends DefaultTestCase {
     } catch (final FileFormatException e) {
       // expected
     }
-    assertThat(out.toString())
-      .isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_MAGIC_NUMBER))
-                         + TestUtil.getLineSeparator()
-                         + Text.ERROR.text(Text.WRONG_FORMAT_IJVM.text(Text.WRONG_FORMAT_MAGIC_NUMBER
-                                                                       + TestUtil.getLineSeparator())));
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_MAGIC_NUMBER))
+                                                 + getLineSeparator()
+                                                 + Text.ERROR.text(Text.WRONG_FORMAT_IJVM
+                                                   .text(Text.WRONG_FORMAT_MAGIC_NUMBER + getLineSeparator())));
     out.reset();
 
     // empty files
@@ -393,7 +391,7 @@ public class Mic1Test extends DefaultTestCase {
       // expected
     }
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_EMPTY))
-                                                 + TestUtil.getLineSeparator());
+                                                 + getLineSeparator());
     out.reset();
 
     // unexpected eof
@@ -405,7 +403,7 @@ public class Mic1Test extends DefaultTestCase {
       // expected
     }
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_IJVM.text(Text.WRONG_FORMAT_UNEXPECTED_END))
-                                                 + TestUtil.getLineSeparator());
+                                                 + getLineSeparator());
     out.reset();
 
     // unexpected end of block
@@ -428,8 +426,7 @@ public class Mic1Test extends DefaultTestCase {
       // expected
     }
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_IJVM
-                                           .text(Text.WRONG_FORMAT_UNEXPECTED_END_OF_BLOCK))
-                                                 + TestUtil.getLineSeparator());
+                                           .text(Text.WRONG_FORMAT_UNEXPECTED_END_OF_BLOCK)) + getLineSeparator());
     out.reset();
 
     // file too big
@@ -448,7 +445,7 @@ public class Mic1Test extends DefaultTestCase {
       // expected
     }
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_TOO_BIG))
-                                                 + TestUtil.getLineSeparator());
+                                                 + getLineSeparator());
     out.reset();
   }
 
@@ -468,62 +465,52 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(out.toString()).isEmpty();
     this.processor.listAllRegisters();
 
-    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF") + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("MDR ", "0x0")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("MBR ", "0x73")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("MBRU", "0x73")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("SP  ", "0x8BC")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("LV  ", "0x8BD")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("CPP ", "0x8BE")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("TOS ", "0x8BF")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("OPC ", "0x8C0")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("H   ", "0x8C1")
-                                                 + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("MDR ", "0x0") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("MBR ", "0x73") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("MBRU", "0x73") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("SP  ", "0x8BC") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("LV  ", "0x8BD") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("CPP ", "0x8BE") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("TOS ", "0x8BF") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("OPC ", "0x8C0") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("H   ", "0x8C1") + getLineSeparator());
   }
 
   @Test
   public final void testListSingleRegister() throws IOException {
     Register.MAR.setValue(0x4711);
     this.processor.listSingleRegister(Register.MAR);
-    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x4711") + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x4711") + getLineSeparator());
     out.reset();
 
     Register.SP.setValue(-2);
     this.processor.listSingleRegister(Register.SP);
-    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("SP  ", "0xFFFFFFFE") + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("SP  ", "0xFFFFFFFE") + getLineSeparator());
     out.reset();
   }
 
   @Test
   public final void testTraceMicro() throws IOException {
-    final String firstLine = Text.EXECUTED_CODE.text("PC=MAR=0;rd;goto 0x1") + TestUtil.getLineSeparator();
-    final String expected = firstLine + Text.EXECUTED_CODE.text("H=LV=-1;goto 0x2") + TestUtil.getLineSeparator()
-                            + Text.EXECUTED_CODE.text("LV=H+LV;wr;goto 0x3") + TestUtil.getLineSeparator()
-                            + Text.EXECUTED_CODE.text("MAR=LV-1;wr;goto 0x4") + TestUtil.getLineSeparator()
-                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0x5") + TestUtil.getLineSeparator()
-                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0x6") + TestUtil.getLineSeparator()
-                            + Text.EXECUTED_CODE.text("wr;goto 0x7") + TestUtil.getLineSeparator()
-                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0x8") + TestUtil.getLineSeparator()
-                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0x9") + TestUtil.getLineSeparator()
-                            + Text.EXECUTED_CODE.text("wr;goto 0xA") + TestUtil.getLineSeparator()
-                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0xB") + TestUtil.getLineSeparator()
-                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0xC") + TestUtil.getLineSeparator()
-                            + Text.EXECUTED_CODE.text("wr;goto 0xD") + TestUtil.getLineSeparator()
-                            + Text.EXECUTED_CODE.text("goto 0xD") + TestUtil.getLineSeparator() + Text.TICKS.text(14)
-                            + TestUtil.getLineSeparator();
+    final String firstLine = Text.EXECUTED_CODE.text("PC=MAR=0;rd;goto 0x1") + getLineSeparator();
+    final String expected = firstLine + Text.EXECUTED_CODE.text("H=LV=-1;goto 0x2") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("LV=H+LV;wr;goto 0x3") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;wr;goto 0x4") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0x5") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0x6") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("wr;goto 0x7") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0x8") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0x9") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("wr;goto 0xA") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0xB") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0xC") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("wr;goto 0xD") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("goto 0xD") + getLineSeparator() + Text.TICKS.text(14)
+                            + getLineSeparator();
 
     this.processor.run();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + getLineSeparator());
     out.reset();
 
     this.processor.reset();
@@ -537,35 +524,35 @@ public class Mic1Test extends DefaultTestCase {
 
     this.processor.traceMicro();
     this.processor.microStep();
-    assertThat(out.toString()).isEqualTo(firstLine + Text.TICKS.text(1) + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(firstLine + Text.TICKS.text(1) + getLineSeparator());
     out.reset();
 
     this.processor.untraceMicro();
     this.processor.run();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(13) + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(13) + getLineSeparator());
   }
 
   @Test
   public void testRegisterBreakPoint() {
     this.processor.addBreakpoint(Register.H, Integer.valueOf(-1));
     this.processor.run();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
 
     out.reset();
     this.processor.run();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
 
     out.reset();
     this.processor.reset();
     this.processor.microStep();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
 
     out.reset();
     this.processor.microStep();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
 
     out.reset();
     this.processor.microStep();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
   }
 }

@@ -26,7 +26,6 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
-import com.github.croesch.TestUtil;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.io.Input;
@@ -142,7 +141,7 @@ public class MemoryTest extends DefaultTestCase {
 
   @Test
   public void testConstructor_FileWithFFValues() throws FileFormatException {
-    TestUtil.printMethodName();
+    printMethodName();
     this.mem = new Memory(2, ClassLoader.getSystemResourceAsStream("mic1/ff-file.ijvm"));
 
     this.mem.setFetch(true);
@@ -156,15 +155,15 @@ public class MemoryTest extends DefaultTestCase {
       assertThat(Register.H.getValue()).isEqualTo(old);
       assertThat(Register.LV.getValue()).isEqualTo(0xff);
 
-      TestUtil.printStep();
+      printStep();
     }
 
-    TestUtil.printEndOfMethod();
+    printEndOfMethod();
   }
 
   @Test
   public void testRead() {
-    TestUtil.printMethodName();
+    printMethodName();
 
     this.mem.setFetch(false);
     this.mem.setRead(true);
@@ -183,14 +182,14 @@ public class MemoryTest extends DefaultTestCase {
       val |= this.bytes[b + 3];
       assertThat(Register.H.getValue()).isEqualTo(val);
 
-      TestUtil.printStep();
+      printStep();
     }
-    TestUtil.printEndOfMethod();
+    printEndOfMethod();
   }
 
   @Test
   public void testFetch() {
-    TestUtil.printMethodName();
+    printMethodName();
 
     this.mem.setFetch(true);
     this.mem.setRead(false);
@@ -203,10 +202,10 @@ public class MemoryTest extends DefaultTestCase {
       assertThat(Register.H.getValue()).isEqualTo(old);
       assertThat(Register.LV.getValue()).isEqualTo(this.bytes[b]);
 
-      TestUtil.printStep();
+      printStep();
     }
 
-    TestUtil.printEndOfMethod();
+    printEndOfMethod();
   }
 
   @Test(expected = ArrayIndexOutOfBoundsException.class)
@@ -467,7 +466,7 @@ public class MemoryTest extends DefaultTestCase {
   public void testSetInvalidAddresses() {
     this.mem.setWord(-1, 0);
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(-1)))
-                                                 + TestUtil.getLineSeparator());
+                                                 + getLineSeparator());
     out.reset();
 
     this.mem.setWord(0, 0);
@@ -475,7 +474,7 @@ public class MemoryTest extends DefaultTestCase {
 
     this.mem.setWord(Byte.MAX_VALUE, 0);
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(Byte.MAX_VALUE)))
-                                                 + TestUtil.getLineSeparator());
+                                                 + getLineSeparator());
 
   }
 
@@ -483,7 +482,7 @@ public class MemoryTest extends DefaultTestCase {
   public void testGetInvalidAddresses() {
     this.mem.getWord(-1);
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(-1)))
-                                                 + TestUtil.getLineSeparator());
+                                                 + getLineSeparator());
     out.reset();
 
     this.mem.getWord(0);
@@ -491,7 +490,7 @@ public class MemoryTest extends DefaultTestCase {
 
     this.mem.getWord(Byte.MAX_VALUE);
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MEM_ADDR.text(Utils.toHexString(Byte.MAX_VALUE)))
-                                                 + TestUtil.getLineSeparator());
+                                                 + getLineSeparator());
 
   }
 
@@ -615,7 +614,7 @@ public class MemoryTest extends DefaultTestCase {
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     this.mem.printCodeAroundLine(2, 0);
 
-    assertThat(out.toString()).isEqualTo("     0x2: [0x59] DUP" + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo("     0x2: [0x59] DUP" + getLineSeparator());
 
   }
 
@@ -641,15 +640,15 @@ public class MemoryTest extends DefaultTestCase {
 
   @Test
   public void testReset() {
-    TestUtil.printMethodName();
+    printMethodName();
 
     for (byte b = 0; b < Byte.MAX_VALUE - 3; b += 4) {
       this.mem.setWord(b / 4, 0);
 
-      TestUtil.printStep();
+      printStep();
     }
 
-    TestUtil.printLoopEnd();
+    printLoopEnd();
 
     this.mem.reset();
 
@@ -657,9 +656,9 @@ public class MemoryTest extends DefaultTestCase {
     for (byte b = 0; b < Byte.MAX_VALUE - 3; ++b) {
       assertThat(this.mem.getByte(b)).isEqualTo(this.bytes[b]);
 
-      TestUtil.printStep();
+      printStep();
     }
 
-    TestUtil.printEndOfMethod();
+    printEndOfMethod();
   }
 }

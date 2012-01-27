@@ -29,7 +29,6 @@ import java.io.InputStreamReader;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
-import com.github.croesch.TestUtil;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.mic1.register.Register;
 
@@ -107,17 +106,17 @@ public class Mic1ControlStoreTest extends DefaultTestCase {
 
   @Test
   public void testDecodingOfBinaryFile() throws IOException {
-    TestUtil.printMethodName();
+    printMethodName();
 
     final Mic1ControlStore store = new Mic1ControlStore(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"));
     final BufferedReader expectedFile = new BufferedReader(new InputStreamReader(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.txt")));
 
     for (int i = 0; i < 512; ++i) {
       assertThat(Mic1InstructionDecoder.decode(store.getInstruction(i))).isEqualTo(expectedFile.readLine());
-      TestUtil.printStep();
+      printStep();
     }
 
-    TestUtil.printEndOfMethod();
+    printEndOfMethod();
   }
 
   @Test

@@ -26,7 +26,6 @@ import java.io.PrintStream;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
-import com.github.croesch.TestUtil;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.register.Register;
 
@@ -131,14 +130,13 @@ public class ParameterTest extends DefaultTestCase {
 
   private void testInvalidRegister(final String str, final ByteArrayOutputStream out) {
     assertThat(Parameter.REGISTER.getValue(str)).isNull();
-    assertThat(out.toString())
-      .isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text(str)) + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text(str)) + getLineSeparator());
     out.reset();
   }
 
   private void testInvalidNumber(final String str, final ByteArrayOutputStream out) {
     assertThat(Parameter.NUMBER.getValue(str)).isNull();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text(str)) + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text(str)) + getLineSeparator());
     out.reset();
   }
 

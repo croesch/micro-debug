@@ -77,7 +77,7 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testCreateArgumentList_NullArgumentProducesNoEntry() {
-    assertThat(Argument.createArgumentList(new String[] {null})).isEmpty();
+    assertThat(Argument.createArgumentList(new String[] { null })).isEmpty();
   }
 
   @Test
@@ -144,8 +144,7 @@ public class ArgumentTest extends DefaultTestCase {
     final String[] args = new String[] { "-h", "-v", null, "--help", "--xxno-argument", "null", "-o" };
 
     assertThat(Argument.createArgumentList(args)).hasSize(4);
-    assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.VERSION,
-                                                                        Argument.HELP,
+    assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.VERSION, Argument.HELP,
                                                                         Argument.ERROR_UNKNOWN,
                                                                         Argument.ERROR_PARAM_NUMBER);
     assertThat(Argument.createArgumentList(args).get(Argument.VERSION)).isEmpty();
@@ -159,16 +158,13 @@ public class ArgumentTest extends DefaultTestCase {
     final String[] args = new String[] { "-h", "-v", null, "--xxno-argument", "null", "-dx", "-d", "--output-file" };
 
     assertThat(Argument.createArgumentList(args)).hasSize(4);
-    assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.VERSION,
-                                                                        Argument.HELP,
+    assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.VERSION, Argument.HELP,
                                                                         Argument.ERROR_UNKNOWN,
                                                                         Argument.ERROR_PARAM_NUMBER);
     assertThat(Argument.createArgumentList(args).get(Argument.HELP)).isEmpty();
     assertThat(Argument.createArgumentList(args).get(Argument.VERSION)).isEmpty();
-    assertThat(Argument.createArgumentList(args).get(Argument.ERROR_UNKNOWN)).containsOnly("--xxno-argument",
-                                                                                           "null",
-                                                                                           "-dx",
-                                                                                           "-d");
+    assertThat(Argument.createArgumentList(args).get(Argument.ERROR_UNKNOWN)).containsOnly("--xxno-argument", "null",
+                                                                                           "-dx", "-d");
     assertThat(Argument.createArgumentList(args).get(Argument.ERROR_PARAM_NUMBER)).containsOnly("--output-file");
   }
 
@@ -178,7 +174,7 @@ public class ArgumentTest extends DefaultTestCase {
     Printer.setPrintStream(new PrintStream(out));
 
     assertThat(Argument.VERSION.execute(null)).isFalse();
-    assertThat(out.toString()).isEqualTo(Text.VERSION.text() + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.VERSION.text() + getLineSeparator());
   }
 
   @Test
@@ -194,7 +190,7 @@ public class ArgumentTest extends DefaultTestCase {
       reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("help.txt")));
       String line;
       while ((line = reader.readLine()) != null) {
-        sb.append(line).append(TestUtil.getLineSeparator());
+        sb.append(line).append(getLineSeparator());
       }
     } finally {
       if (reader != null) {
@@ -232,22 +228,20 @@ public class ArgumentTest extends DefaultTestCase {
     assertThat(Argument.ERROR_UNKNOWN.execute(new String[] {})).isTrue();
     assertThat(out.toString()).isEmpty();
 
-    assertThat(Argument.ERROR_UNKNOWN.execute(new String[] {null})).isTrue();
+    assertThat(Argument.ERROR_UNKNOWN.execute(new String[] { null })).isTrue();
     assertThat(out.toString()).isEmpty();
 
-    assertThat(Argument.ERROR_UNKNOWN.execute(new String[] {"bla"})).isFalse();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("bla"))
-                                         + TestUtil.getLineSeparator());
+    assertThat(Argument.ERROR_UNKNOWN.execute(new String[] { "bla" })).isFalse();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("bla")) + getLineSeparator());
 
     out.reset();
 
-    assertThat(Argument.ERROR_UNKNOWN.execute(new String[] {"bla", "--bla", "-wow"})).isFalse();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("bla"))
-                                         + TestUtil.getLineSeparator()
-                                         + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("--bla"))
-                                         + TestUtil.getLineSeparator()
-                                         + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("-wow"))
-                                         + TestUtil.getLineSeparator());
+    assertThat(Argument.ERROR_UNKNOWN.execute(new String[] { "bla", "--bla", "-wow" })).isFalse();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("bla")) + getLineSeparator()
+                                                 + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("--bla"))
+                                                 + getLineSeparator()
+                                                 + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("-wow"))
+                                                 + getLineSeparator());
   }
 
   @Test
@@ -261,12 +255,12 @@ public class ArgumentTest extends DefaultTestCase {
     assertThat(Argument.ERROR_PARAM_NUMBER.execute(new String[] {})).isTrue();
     assertThat(out.toString()).isEmpty();
 
-    assertThat(Argument.ERROR_PARAM_NUMBER.execute(new String[] {null})).isTrue();
+    assertThat(Argument.ERROR_PARAM_NUMBER.execute(new String[] { null })).isTrue();
     assertThat(out.toString()).isEmpty();
 
-    assertThat(Argument.ERROR_PARAM_NUMBER.execute(new String[] {"-o"})).isFalse();
+    assertThat(Argument.ERROR_PARAM_NUMBER.execute(new String[] { "-o" })).isFalse();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.ARGUMENT_WITH_WRONG_PARAM_NUMBER.text("-o"))
-                                         + TestUtil.getLineSeparator());
+                                                 + getLineSeparator());
   }
 
   @Test

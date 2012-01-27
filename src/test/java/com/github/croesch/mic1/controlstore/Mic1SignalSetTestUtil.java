@@ -25,7 +25,6 @@ import java.lang.reflect.Method;
 import org.junit.Ignore;
 
 import com.github.croesch.DefaultTestCase;
-import com.github.croesch.TestUtil;
 
 /**
  * Provides utility methods for tests of {@link Mic1SignalSet}-objects.
@@ -37,7 +36,7 @@ import com.github.croesch.TestUtil;
 public class Mic1SignalSetTestUtil extends DefaultTestCase {
 
   protected void testIsSetSignals(final Mic1SignalSet set, final String[] signals) throws Exception {
-    TestUtil.printlnMethodName(1);
+    printlnMethodName(1);
 
     for (final String signal : signals) {
 
@@ -69,7 +68,7 @@ public class Mic1SignalSetTestUtil extends DefaultTestCase {
 
   protected void testEquals(final Mic1SignalSet set, final Mic1SignalSet other, final String[] signals)
                                                                                                        throws Exception {
-    TestUtil.printlnMethodName(1);
+    printlnMethodName(1);
 
     assertThat(set).isNotEqualTo(null);
     assertThat(set).isNotEqualTo("set");

@@ -30,7 +30,6 @@ import java.io.StringReader;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
-import com.github.croesch.TestUtil;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.misc.Printer;
 import com.github.croesch.misc.Reader;
@@ -71,14 +70,13 @@ public class DebuggerTest extends DefaultTestCase {
 
     Reader.setReader(new StringReader("excel\nexit"));
     debugger.run();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_INSTRUCTION.text("excel"))
-                                         + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_INSTRUCTION.text("excel")) + getLineSeparator());
     out.reset();
 
     Reader.setReader(new StringReader("schließe dich!\nEXIT"));
     debugger.run();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_INSTRUCTION.text("schließe"))
-                                         + TestUtil.getLineSeparator());
+                                                 + getLineSeparator());
     out.reset();
   }
 
@@ -115,7 +113,7 @@ public class DebuggerTest extends DefaultTestCase {
         .getResourceAsStream("instruction-help.txt")));
       String line;
       while ((line = reader.readLine()) != null) {
-        sb.append(line).append(TestUtil.getLineSeparator());
+        sb.append(line).append(getLineSeparator());
       }
     } finally {
       if (reader != null) {

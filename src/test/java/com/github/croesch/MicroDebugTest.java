@@ -44,23 +44,24 @@ import com.github.croesch.misc.Reader;
  */
 public class MicroDebugTest extends DefaultTestCase {
 
-  private static final String GREETING = Text.GREETING.text() + TestUtil.getLineSeparator();
+  private final String GREETING = Text.GREETING.text() + getLineSeparator();
 
-  private static final String BORDER = Text.BORDER.text() + TestUtil.getLineSeparator();
+  private final String BORDER = Text.BORDER.text() + getLineSeparator();
 
-  private static final String WELCOME = Text.WELCOME.text() + TestUtil.getLineSeparator() + BORDER;
+  private final String WELCOME = Text.WELCOME.text() + getLineSeparator() + this.BORDER;
 
   @Test
   public final void testMain_FileNotFound() {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
 
-    MicroDebug.main(new String[] {"asd", "bas"});
+    MicroDebug.main(new String[] { "asd", "bas" });
 
-    assertThat(out.toString()).isEqualTo(GREETING + WELCOME + Text.ERROR.text(Text.FILE_NOT_FOUND.text("asd"))
-                                         + TestUtil.getLineSeparator()
-                                         + Text.ERROR.text(Text.FILE_NOT_FOUND.text("bas"))
-                                         + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME
+                                                 + Text.ERROR.text(Text.FILE_NOT_FOUND.text("asd"))
+                                                 + getLineSeparator()
+                                                 + Text.ERROR.text(Text.FILE_NOT_FOUND.text("bas"))
+                                                 + getLineSeparator());
 
     Printer.setPrintStream(System.out);
   }
@@ -70,29 +71,29 @@ public class MicroDebugTest extends DefaultTestCase {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
 
-    MicroDebug.main(new String[] {"-u"});
-    assertThat(out.toString()).isEqualTo(GREETING + BORDER + Text.ERROR.text(Text.MISSING_IJVM_FILE)
-                                         + TestUtil.getLineSeparator() + Text.TRY_HELP + TestUtil.getLineSeparator());
+    MicroDebug.main(new String[] { "-u" });
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.BORDER + Text.ERROR.text(Text.MISSING_IJVM_FILE)
+                                                 + getLineSeparator() + Text.TRY_HELP + getLineSeparator());
 
     out.reset();
 
-    MicroDebug.main(new String[] {"u"});
-    assertThat(out.toString()).isEqualTo(GREETING + BORDER + Text.ERROR.text(Text.MISSING_IJVM_FILE)
-                                         + TestUtil.getLineSeparator() + Text.TRY_HELP + TestUtil.getLineSeparator());
+    MicroDebug.main(new String[] { "u" });
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.BORDER + Text.ERROR.text(Text.MISSING_IJVM_FILE)
+                                                 + getLineSeparator() + Text.TRY_HELP + getLineSeparator());
 
     out.reset();
 
     MicroDebug.main(new String[] {});
-    assertThat(out.toString()).isEqualTo(GREETING + BORDER + Text.ERROR.text(Text.MISSING_MIC1_FILE)
-                                         + TestUtil.getLineSeparator() + Text.ERROR.text(Text.MISSING_IJVM_FILE)
-                                         + TestUtil.getLineSeparator() + Text.TRY_HELP + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.BORDER + Text.ERROR.text(Text.MISSING_MIC1_FILE)
+                                                 + getLineSeparator() + Text.ERROR.text(Text.MISSING_IJVM_FILE)
+                                                 + getLineSeparator() + Text.TRY_HELP + getLineSeparator());
 
     out.reset();
 
     MicroDebug.main(null);
-    assertThat(out.toString()).isEqualTo(GREETING + BORDER + Text.ERROR.text(Text.MISSING_MIC1_FILE)
-                                         + TestUtil.getLineSeparator() + Text.ERROR.text(Text.MISSING_IJVM_FILE)
-                                         + TestUtil.getLineSeparator() + Text.TRY_HELP + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.BORDER + Text.ERROR.text(Text.MISSING_MIC1_FILE)
+                                                 + getLineSeparator() + Text.ERROR.text(Text.MISSING_IJVM_FILE)
+                                                 + getLineSeparator() + Text.TRY_HELP + getLineSeparator());
   }
 
   @Test
@@ -100,26 +101,27 @@ public class MicroDebugTest extends DefaultTestCase {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
 
-    MicroDebug.main(new String[] {"-v"});
-    assertThat(out.toString()).isEqualTo(GREETING + BORDER + Text.VERSION.text() + TestUtil.getLineSeparator());
+    MicroDebug.main(new String[] { "-v" });
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.BORDER + Text.VERSION.text() + getLineSeparator());
 
     out.reset();
 
-    MicroDebug.main(new String[] {"--version"});
-    assertThat(out.toString()).isEqualTo(GREETING + BORDER + Text.VERSION.text() + TestUtil.getLineSeparator());
+    MicroDebug.main(new String[] { "--version" });
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.BORDER + Text.VERSION.text() + getLineSeparator());
 
     out.reset();
 
-    MicroDebug.main(new String[] {"--version", "mic1", "ijvm"});
-    assertThat(out.toString()).isEqualTo(GREETING + WELCOME + Text.VERSION.text() + TestUtil.getLineSeparator());
+    MicroDebug.main(new String[] { "--version", "mic1", "ijvm" });
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME + Text.VERSION.text() + getLineSeparator());
 
     out.reset();
 
-    MicroDebug.main(new String[] {"--version", "mic1"});
-    assertThat(out.toString()).isEqualTo(GREETING + WELCOME + Text.ERROR.text(Text.FILE_NOT_FOUND.text("--version"))
-                                         + TestUtil.getLineSeparator()
-                                         + Text.ERROR.text(Text.FILE_NOT_FOUND.text("mic1"))
-                                         + TestUtil.getLineSeparator());
+    MicroDebug.main(new String[] { "--version", "mic1" });
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME
+                                                 + Text.ERROR.text(Text.FILE_NOT_FOUND.text("--version"))
+                                                 + getLineSeparator()
+                                                 + Text.ERROR.text(Text.FILE_NOT_FOUND.text("mic1"))
+                                                 + getLineSeparator());
   }
 
   @Test
@@ -127,17 +129,19 @@ public class MicroDebugTest extends DefaultTestCase {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
 
-    MicroDebug.main(new String[] {"-xxx", "", ""});
-    assertThat(out.toString()).isEqualTo(GREETING + WELCOME + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("-xxx"))
-                                         + TestUtil.getLineSeparator());
+    MicroDebug.main(new String[] { "-xxx", "", "" });
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME
+                                                 + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("-xxx"))
+                                                 + getLineSeparator());
 
     out.reset();
 
-    MicroDebug.main(new String[] {"asd", "efgh", "xy", "as"});
-    assertThat(out.toString()).isEqualTo(GREETING + WELCOME + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("asd"))
-                                         + TestUtil.getLineSeparator()
-                                         + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("efgh"))
-                                         + TestUtil.getLineSeparator());
+    MicroDebug.main(new String[] { "asd", "efgh", "xy", "as" });
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME
+                                                 + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("asd"))
+                                                 + getLineSeparator()
+                                                 + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("efgh"))
+                                                 + getLineSeparator());
   }
 
   @Test
@@ -147,26 +151,26 @@ public class MicroDebugTest extends DefaultTestCase {
     Output.setOut(new PrintStream(out));
     Reader.setReader(new StringReader("run\nexit"));
 
-    MicroDebug.main(new String[] {"--unbuffered-output",
+    MicroDebug.main(new String[] { "--unbuffered-output",
                                   "src/test/resources/mic1/hi.mic1",
-                                  "src/test/resources/mic1/hi.ijvm"});
-    assertThat(out.toString()).isEqualTo(GREETING + WELCOME + "Hi!\n" + Text.TICKS.text(14)
-                                         + TestUtil.getLineSeparator());
+                                  "src/test/resources/mic1/hi.ijvm" });
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME + "Hi!\n" + Text.TICKS.text(14)
+                                                 + getLineSeparator());
   }
 
   @Test
   public final void testMain_Hi_OutputFile() throws IOException {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out));
-    Reader.setReader(new StringReader("run" + TestUtil.getLineSeparator() + "exit"));
+    Reader.setReader(new StringReader("run" + getLineSeparator() + "exit"));
 
     final String filePath = "tmp-micro-debug-test.del";
-    MicroDebug.main(new String[] {"--unbuffered-output",
+    MicroDebug.main(new String[] { "--unbuffered-output",
                                   "-o",
                                   filePath,
                                   "src/test/resources/mic1/hi.mic1",
-                                  "src/test/resources/mic1/hi.ijvm"});
-    assertThat(out.toString()).isEqualTo(GREETING + WELCOME + Text.TICKS.text(14) + TestUtil.getLineSeparator());
+                                  "src/test/resources/mic1/hi.ijvm" });
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME + Text.TICKS.text(14) + getLineSeparator());
 
     BufferedReader in = null;
     FileInputStream fileInputStream = null;

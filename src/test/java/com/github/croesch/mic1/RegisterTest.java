@@ -23,7 +23,6 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
-import com.github.croesch.TestUtil;
 import com.github.croesch.mic1.register.Register;
 
 /**
@@ -55,7 +54,7 @@ public class RegisterTest extends DefaultTestCase {
 
   @Test
   public void testSetValue() {
-    TestUtil.printMethodName();
+    printMethodName();
 
     final int oldValue = 4711;
 
@@ -71,14 +70,14 @@ public class RegisterTest extends DefaultTestCase {
           r.setValue(i);
           assertThat(r.getValue()).isEqualTo(i);
           assertThat(old.getValue()).isEqualTo(oldValue);
-          TestUtil.printStep();
+          printStep();
         }
         old = r;
-        TestUtil.printLoopEnd();
+        printLoopEnd();
       }
     }
 
-    TestUtil.printEndOfMethod();
+    printEndOfMethod();
   }
 
   @Test

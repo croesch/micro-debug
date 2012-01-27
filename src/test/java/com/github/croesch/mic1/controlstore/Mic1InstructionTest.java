@@ -23,7 +23,6 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
-import com.github.croesch.TestUtil;
 import com.github.croesch.mic1.register.Register;
 
 /**
@@ -73,7 +72,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
 
   @Test
   public void testHashCodeAndEqualsObject_BBus() {
-    TestUtil.printMethodName();
+    printMethodName();
 
     final int addr = 0;
     final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
@@ -84,10 +83,10 @@ public class Mic1InstructionTest extends DefaultTestCase {
 
     for (final Register b : Register.values()) {
       other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
-      TestUtil.printStep();
+      printStep();
     }
 
-    TestUtil.printEndOfMethod();
+    printEndOfMethod();
   }
 
   @Test

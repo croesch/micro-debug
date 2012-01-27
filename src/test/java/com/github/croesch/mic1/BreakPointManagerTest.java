@@ -23,7 +23,6 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
-import com.github.croesch.TestUtil;
 import com.github.croesch.mic1.register.Register;
 
 /**
@@ -50,7 +49,7 @@ public class BreakPointManagerTest extends DefaultTestCase {
 
   @Test
   public void testIsBreakPoint() {
-    TestUtil.printMethodName();
+    printMethodName();
 
     for (final Register r : Register.values()) {
       r.setValue(0);
@@ -62,9 +61,9 @@ public class BreakPointManagerTest extends DefaultTestCase {
       r.setValue(1);
       assertThat(this.bpm.isBreakPoint()).isTrue();
       r.setValue(0);
-      TestUtil.printStep();
+      printStep();
     }
-    TestUtil.printLoopEnd();
+    printLoopEnd();
     for (final Register r : Register.values()) {
       this.bpm.addBreakpoint(r, Integer.valueOf(2));
       assertThat(this.bpm.isBreakPoint()).isFalse();
@@ -73,8 +72,8 @@ public class BreakPointManagerTest extends DefaultTestCase {
       r.setValue(2);
       assertThat(this.bpm.isBreakPoint()).isTrue();
       r.setValue(0);
-      TestUtil.printStep();
+      printStep();
     }
-    TestUtil.printEndOfMethod();
+    printEndOfMethod();
   }
 }

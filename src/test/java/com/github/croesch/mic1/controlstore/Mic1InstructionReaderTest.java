@@ -27,7 +27,6 @@ import java.io.InputStream;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
-import com.github.croesch.TestUtil;
 import com.github.croesch.mic1.register.Register;
 
 /**
@@ -72,7 +71,7 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
    */
   @Test
   public void testRead_BBus() throws IOException {
-    TestUtil.printMethodName();
+    printMethodName();
 
     // some bits to read
     final byte[] buf = new byte[] { (byte) 0xe7, (byte) 0x99, (byte) 0x8f, (byte) 0xf8, (byte) 0x00 };
@@ -96,10 +95,10 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
       assertThat(bBusSelect).isEqualTo(expected[b]);
 
       in.close();
-      TestUtil.printStep();
+      printStep();
     }
 
-    TestUtil.printLoopEnd();
+    printLoopEnd();
 
     // test that all values greater or equal than 0x90 for the fifth bit of MIR result in null as B-Bus-select
     for (int b = 9; b < 16; ++b) {
@@ -109,10 +108,10 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
       assertThat(Mic1InstructionReader.read(in).getbBusSelect()).isNull();
 
       in.close();
-      TestUtil.printStep();
+      printStep();
     }
 
-    TestUtil.printEndOfMethod();
+    printEndOfMethod();
   }
 
   @Test

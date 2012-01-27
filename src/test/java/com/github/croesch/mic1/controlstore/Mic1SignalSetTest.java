@@ -23,7 +23,6 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
-import com.github.croesch.TestUtil;
 
 /**
  * Provides test cases for {@link Mic1SignalSet}.
@@ -56,15 +55,15 @@ public class Mic1SignalSetTest extends DefaultTestCase {
 
   @Test
   public void testGetSize() {
-    TestUtil.printMethodName();
+    printMethodName();
 
     for (int i = 0; i < 100; ++i) {
       final Mic1SignalSet set = new Mic1SignalSet(i);
       assertThat(set.getSize()).isEqualTo(i);
-      TestUtil.printStep();
+      printStep();
     }
 
-    TestUtil.printEndOfMethod();
+    printEndOfMethod();
   }
 
   @Test
@@ -95,7 +94,7 @@ public class Mic1SignalSetTest extends DefaultTestCase {
 
   @Test
   public void testIsSetSomething_BruteForce() {
-    TestUtil.printMethodName();
+    printMethodName();
 
     for (int size = 0; size < 100; ++size) {
       final Mic1SignalSet set = new Mic1SignalSet(size);
@@ -108,10 +107,10 @@ public class Mic1SignalSetTest extends DefaultTestCase {
         set.set(i, false);
         assertThat(set.isAnythingSet()).isFalse();
 
-        TestUtil.printStep();
+        printStep();
       }
-      TestUtil.printLoopEnd();
+      printLoopEnd();
     }
-    TestUtil.printEndOfMethod();
+    printEndOfMethod();
   }
 }

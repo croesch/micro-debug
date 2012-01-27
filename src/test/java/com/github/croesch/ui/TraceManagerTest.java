@@ -26,7 +26,6 @@ import java.io.PrintStream;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
-import com.github.croesch.TestUtil;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.register.Register;
@@ -115,27 +114,17 @@ public class TraceManagerTest extends DefaultTestCase {
     assertThat(out.toString()).isEmpty();
     this.tm.update(null);
 
-    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF") + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("MDR ", "0x0")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("MBR ", "0x73")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("MBRU", "0x73")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("SP  ", "0x8BC")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("LV  ", "0x8BD")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("CPP ", "0x8BE")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("TOS ", "0x8BF")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("OPC ", "0x8C0")
-                                                 + TestUtil.getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("H   ", "0x8C1")
-                                                 + TestUtil.getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("MDR ", "0x0") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("MBR ", "0x73") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("MBRU", "0x73") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("SP  ", "0x8BC") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("LV  ", "0x8BD") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("CPP ", "0x8BE") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("TOS ", "0x8BF") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("OPC ", "0x8C0") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("H   ", "0x8C1") + getLineSeparator());
 
     Printer.setPrintStream(System.out);
   }

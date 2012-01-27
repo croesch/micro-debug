@@ -23,7 +23,6 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
-import com.github.croesch.TestUtil;
 
 /**
  * Provides test cases for {@link NextMPCCalculator}. It first tests all variations for control lines JMPN, JMPZ, N and
@@ -364,7 +363,7 @@ public class NextMPCCalculatorTest extends DefaultTestCase {
 
   @Test
   public void testGetMpc_Bits0To7_JMPC() {
-    TestUtil.printMethodName();
+    printMethodName();
 
     final int addr = 0xAA; // [0]1010_1010
     final byte mbr = 0x55; // 0101_0101
@@ -390,20 +389,20 @@ public class NextMPCCalculatorTest extends DefaultTestCase {
             } else {
               assertThat(this.nMPCC.getMpc()).isEqualTo(0xFF);
             }
-            TestUtil.printStep();
+            printStep();
           }
-          TestUtil.printLoopEnd();
+          printLoopEnd();
         }
-        TestUtil.printLoopEnd();
+        printLoopEnd();
       }
-      TestUtil.printLoopEnd();
+      printLoopEnd();
     }
-    TestUtil.printEndOfMethod();
+    printEndOfMethod();
   }
 
   @Test
   public void testGetMpc_Bits0To7_NotJMPC() {
-    TestUtil.printMethodName();
+    printMethodName();
 
     final int addr = 0xAA; // [0]_1010_1010
     final byte mbr = 0x55; // 0101_0101
@@ -429,20 +428,20 @@ public class NextMPCCalculatorTest extends DefaultTestCase {
             } else {
               assertThat(this.nMPCC.getMpc()).isEqualTo(0xAA);
             }
-            TestUtil.printStep();
+            printStep();
           }
-          TestUtil.printLoopEnd();
+          printLoopEnd();
         }
-        TestUtil.printLoopEnd();
+        printLoopEnd();
       }
-      TestUtil.printLoopEnd();
+      printLoopEnd();
     }
-    TestUtil.printEndOfMethod();
+    printEndOfMethod();
   }
 
   @Test
   public void testGetMpc_MaximumNineBits() {
-    TestUtil.printMethodName();
+    printMethodName();
 
     final int addr = 0xFFFFFFFF; // [0]_1010_1010
     final byte mbr = (byte) 0xFF; // 0101_0101
@@ -464,16 +463,16 @@ public class NextMPCCalculatorTest extends DefaultTestCase {
               this.nMPCC.calculate();
 
               assertThat(this.nMPCC.getMpc() & 0xFFFFFE00).isZero();
-              TestUtil.printStep();
+              printStep();
             }
-            TestUtil.printLoopEnd();
+            printLoopEnd();
           }
-          TestUtil.printLoopEnd();
+          printLoopEnd();
         }
-        TestUtil.printLoopEnd();
+        printLoopEnd();
       }
-      TestUtil.printLoopEnd();
+      printLoopEnd();
     }
-    TestUtil.printEndOfMethod();
+    printEndOfMethod();
   }
 }

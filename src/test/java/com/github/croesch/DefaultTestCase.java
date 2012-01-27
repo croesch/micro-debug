@@ -14,6 +14,7 @@ import org.junit.Ignore;
 
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.misc.Printer;
+import com.github.croesch.misc.Utils;
 
 /*
  * Copyright (C) 2011-2012  Christian Roesch
@@ -70,7 +71,7 @@ public class DefaultTestCase {
     // let that be defined by subclasses
   }
 
-  protected StringBuilder readFile(final String name) throws IOException {
+  protected final StringBuilder readFile(final String name) throws IOException {
     final StringBuilder sb = new StringBuilder();
     final Reader r = new InputStreamReader(ClassLoader.getSystemResourceAsStream(name));
     int c;
@@ -78,5 +79,40 @@ public class DefaultTestCase {
       sb.append((char) c);
     }
     return sb;
+  }
+
+  protected final void printMethodName() {
+    printMethodName(1);
+  }
+
+  protected final void printlnMethodName() {
+    printMethodName(1);
+    System.out.println();
+  }
+
+  protected final void printlnMethodName(final int lvl) {
+    printMethodName(1 + lvl);
+    System.out.println();
+  }
+
+  protected final void printMethodName(final int lvl) {
+    System.out.print(Thread.currentThread().getStackTrace()[2 + lvl].getClassName() + "#");
+    System.out.print(Thread.currentThread().getStackTrace()[2 + lvl].getMethodName() + " ");
+  }
+
+  protected final void printLoopEnd() {
+    System.out.print(" ");
+  }
+
+  protected final void printStep() {
+    System.out.print(".");
+  }
+
+  protected final void printEndOfMethod() {
+    System.out.println();
+  }
+
+  protected final String getLineSeparator() {
+    return Utils.getLineSeparator();
   }
 }

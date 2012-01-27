@@ -23,7 +23,6 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
-import com.github.croesch.TestUtil;
 import com.github.croesch.mic1.register.Register;
 
 /**
@@ -168,11 +167,11 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
           assertThat(this.stringBuilder.toString().contains(";wr")).isEqualTo(write);
           assertThat(this.stringBuilder.toString().contains(";rd")).isEqualTo(read);
           assertThat(this.stringBuilder.toString().contains(";fetch")).isEqualTo(fetch);
-          TestUtil.printStep();
+          printStep();
         }
-        TestUtil.printLoopEnd();
+        printLoopEnd();
       }
-      TestUtil.printLoopEnd();
+      printLoopEnd();
     }
     printEndOfMethod();
   }
@@ -197,9 +196,9 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
         assertThat(this.stringBuilder.toString()).startsWith(start);
         assertThat(this.stringBuilder.toString().contains(">>1")).isEqualTo(sra1);
         assertThat(this.stringBuilder.toString().contains("<<8")).isEqualTo(sll8);
-        TestUtil.printStep();
+        printStep();
       }
-      TestUtil.printLoopEnd();
+      printLoopEnd();
     }
     printEndOfMethod();
   }
@@ -288,13 +287,13 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
             } else if (!enableA && !enableB && !invertA && !increment) {
               assertThat(this.stringBuilder.toString()).isEqualTo(start + "0");
             }
-            TestUtil.printStep();
+            printStep();
           }
-          TestUtil.printLoopEnd();
+          printLoopEnd();
         }
-        TestUtil.printLoopEnd();
+        printLoopEnd();
       }
-      TestUtil.printLoopEnd();
+      printLoopEnd();
     }
     printEndOfMethod();
   }
@@ -320,7 +319,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
       } else {
         assertThat(this.stringBuilder.toString()).isEqualTo(start + "0");
       }
-      TestUtil.printStep();
+      printStep();
     }
     printEndOfMethod();
   }
@@ -360,11 +359,11 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
           } else if (!enableA && !enableB && !invertA) {
             assertThat(this.stringBuilder.toString()).isEqualTo(start + "0");
           }
-          TestUtil.printStep();
+          printStep();
         }
-        TestUtil.printLoopEnd();
+        printLoopEnd();
       }
-      TestUtil.printLoopEnd();
+      printLoopEnd();
     }
     printEndOfMethod();
   }
@@ -404,11 +403,11 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
           } else if (!enableA && !enableB && !invertA) {
             assertThat(this.stringBuilder.toString()).isEqualTo(start + "0");
           }
-          TestUtil.printStep();
+          printStep();
         }
-        TestUtil.printLoopEnd();
+        printLoopEnd();
       }
-      TestUtil.printLoopEnd();
+      printLoopEnd();
     }
     printEndOfMethod();
   }
@@ -478,32 +477,24 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
                                          || this.stringBuilder.toString().contains("=PC=")).isEqualTo(pc);
                       assertThat(this.stringBuilder.toString().contains("SP=")).isEqualTo(sp);
                       assertThat(this.stringBuilder.toString().contains("TOS=")).isEqualTo(tos);
-                      TestUtil.printStep();
+                      printStep();
                     }
-                    TestUtil.printLoopEnd();
+                    printLoopEnd();
                   }
-                  TestUtil.printLoopEnd();
+                  printLoopEnd();
                 }
-                TestUtil.printLoopEnd();
+                printLoopEnd();
               }
-              TestUtil.printLoopEnd();
+              printLoopEnd();
             }
-            TestUtil.printLoopEnd();
+            printLoopEnd();
           }
-          TestUtil.printLoopEnd();
+          printLoopEnd();
         }
-        TestUtil.printLoopEnd();
+        printLoopEnd();
       }
-      TestUtil.printLoopEnd();
+      printLoopEnd();
     }
     printEndOfMethod();
-  }
-
-  private void printEndOfMethod() {
-    TestUtil.printEndOfMethod();
-  }
-
-  private void printMethodName() {
-    TestUtil.printMethodName(1);
   }
 }
