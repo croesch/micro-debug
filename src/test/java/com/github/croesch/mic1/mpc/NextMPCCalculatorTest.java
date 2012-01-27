@@ -20,7 +20,6 @@ package com.github.croesch.mic1.mpc;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
@@ -38,8 +37,8 @@ public class NextMPCCalculatorTest extends DefaultTestCase {
 
   private NextMPCCalculator nMPCC;
 
-  @Before
-  public void setUp() {
+  @Override
+  protected void setUpDetails() {
     this.nMPCC = new NextMPCCalculator();
   }
 

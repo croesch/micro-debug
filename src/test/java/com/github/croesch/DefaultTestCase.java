@@ -53,7 +53,7 @@ public class DefaultTestCase {
   }
 
   @Before
-  public void setUp() throws Exception {
+  public final void setUp() throws Exception {
     Printer.setPrintStream(new PrintStream(out));
     Output.setOut(new PrintStream(micOut));
     micOut.reset();

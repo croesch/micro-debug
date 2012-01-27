@@ -20,7 +20,6 @@ package com.github.croesch.mic1.controlstore;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
@@ -37,8 +36,8 @@ public class Mic1InstructionTest extends DefaultTestCase {
 
   private Mic1Instruction instruction;
 
-  @Before
-  public void setUp() {
+  @Override
+  protected void setUpDetails() {
     this.instruction = new Mic1Instruction(0,
                                            new Mic1JMPSignalSet(),
                                            new Mic1ALUSignalSet(),

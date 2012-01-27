@@ -20,7 +20,6 @@ package com.github.croesch.mic1.mem;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
@@ -38,8 +37,8 @@ public class IJVMCommandArgumentTest extends DefaultTestCase {
 
   private Memory mem;
 
-  @Before
-  public void setUp() throws FileFormatException {
+  @Override
+  protected void setUpDetails() throws FileFormatException {
     this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/test.ijvm"));
   }

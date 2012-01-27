@@ -23,7 +23,6 @@ import static org.fest.assertions.Assertions.assertThat;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
@@ -43,8 +42,8 @@ public class TraceManagerTest extends DefaultTestCase {
 
   private TraceManager tm;
 
-  @Before
-  public void setUp() {
+  @Override
+  protected void setUpDetails() {
     this.tm = new TraceManager();
   }
 
@@ -117,16 +116,26 @@ public class TraceManagerTest extends DefaultTestCase {
     this.tm.update(null);
 
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF") + TestUtil.getLineSeparator()
-                                         + Text.REGISTER_VALUE.text("MDR ", "0x0") + TestUtil.getLineSeparator()
-                                         + Text.REGISTER_VALUE.text("PC  ", "0x1") + TestUtil.getLineSeparator()
-                                         + Text.REGISTER_VALUE.text("MBR ", "0x73") + TestUtil.getLineSeparator()
-                                         + Text.REGISTER_VALUE.text("MBRU", "0x73") + TestUtil.getLineSeparator()
-                                         + Text.REGISTER_VALUE.text("SP  ", "0x8BC") + TestUtil.getLineSeparator()
-                                         + Text.REGISTER_VALUE.text("LV  ", "0x8BD") + TestUtil.getLineSeparator()
-                                         + Text.REGISTER_VALUE.text("CPP ", "0x8BE") + TestUtil.getLineSeparator()
-                                         + Text.REGISTER_VALUE.text("TOS ", "0x8BF") + TestUtil.getLineSeparator()
-                                         + Text.REGISTER_VALUE.text("OPC ", "0x8C0") + TestUtil.getLineSeparator()
-                                         + Text.REGISTER_VALUE.text("H   ", "0x8C1") + TestUtil.getLineSeparator());
+                                                 + Text.REGISTER_VALUE.text("MDR ", "0x0")
+                                                 + TestUtil.getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1")
+                                                 + TestUtil.getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("MBR ", "0x73")
+                                                 + TestUtil.getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("MBRU", "0x73")
+                                                 + TestUtil.getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("SP  ", "0x8BC")
+                                                 + TestUtil.getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("LV  ", "0x8BD")
+                                                 + TestUtil.getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("CPP ", "0x8BE")
+                                                 + TestUtil.getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("TOS ", "0x8BF")
+                                                 + TestUtil.getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("OPC ", "0x8C0")
+                                                 + TestUtil.getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("H   ", "0x8C1")
+                                                 + TestUtil.getLineSeparator());
 
     Printer.setPrintStream(System.out);
   }

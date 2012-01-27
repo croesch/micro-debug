@@ -20,7 +20,6 @@ package com.github.croesch.mic1.controlstore;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
@@ -41,8 +40,8 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
 
   private static final boolean[] BOOLEAN_POSSIBILITIES = new boolean[] { true, false };
 
-  @Before
-  public void setUp() {
+  @Override
+  protected void setUpDetails() {
     this.instruction = new Mic1Instruction(0,
                                            new Mic1JMPSignalSet(),
                                            new Mic1ALUSignalSet(),

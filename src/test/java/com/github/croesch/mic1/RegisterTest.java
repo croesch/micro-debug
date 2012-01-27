@@ -20,7 +20,6 @@ package com.github.croesch.mic1;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
@@ -47,8 +46,8 @@ public class RegisterTest extends DefaultTestCase {
                                                 127380127,
                                                 Integer.MAX_VALUE };
 
-  @Before
-  public void setUp() {
+  @Override
+  protected void setUpDetails() {
     for (final Register r : Register.values()) {
       r.setValue(0);
     }
