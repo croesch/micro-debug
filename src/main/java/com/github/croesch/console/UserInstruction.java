@@ -37,6 +37,21 @@ import com.github.croesch.misc.Utils;
  */
 enum UserInstruction {
 
+  /** creates a break point - debugger will stop if the given register has the given value */
+  BREAK {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      if (getSize(params) == 2) {
+        final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
+        final Integer i = (Integer) Parameter.NUMBER.getValue(params[1]);
+        if (i != null && r != null) {
+          processor.addBreakpoint(r, i);
+        }
+      }
+      return true;
+    }
+  },
+
   /** ends the debugger */
   EXIT {
     @Override

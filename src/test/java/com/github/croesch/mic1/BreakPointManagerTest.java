@@ -44,7 +44,8 @@ public class BreakPointManagerTest extends DefaultTestCase {
   @Test
   public void testAddBreakPoint() {
     // shouldn't throw any exception
-    this.bpm.addBreakPoint(null, 0);
+    this.bpm.addBreakPoint(null, Integer.valueOf(0));
+    this.bpm.addBreakPoint(Register.CPP, null);
   }
 
   @Test
@@ -56,7 +57,7 @@ public class BreakPointManagerTest extends DefaultTestCase {
     }
     assertThat(this.bpm.isBreakPoint()).isFalse();
     for (final Register r : Register.values()) {
-      this.bpm.addBreakPoint(r, 1);
+      this.bpm.addBreakPoint(r, Integer.valueOf(1));
       assertThat(this.bpm.isBreakPoint()).isFalse();
       r.setValue(1);
       assertThat(this.bpm.isBreakPoint()).isTrue();
@@ -65,7 +66,7 @@ public class BreakPointManagerTest extends DefaultTestCase {
     }
     TestUtil.printLoopEnd();
     for (final Register r : Register.values()) {
-      this.bpm.addBreakPoint(r, 2);
+      this.bpm.addBreakPoint(r, Integer.valueOf(2));
       assertThat(this.bpm.isBreakPoint()).isFalse();
       r.setValue(1);
       assertThat(this.bpm.isBreakPoint()).isTrue();

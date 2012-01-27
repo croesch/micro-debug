@@ -126,3 +126,6 @@ Und dann muss der Wert von PC statt von MBR geladen werden?
 
 
 Beim reset des Debuggers, reicht es den Prozessor zurücksetzen und Breakpoints zu behalten?
+
+
+Breakpoint bei Register, nur wenn Wert gesetzt wird, oder jedes Mal, wenn das Register den Wert hat?

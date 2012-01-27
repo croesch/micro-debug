@@ -1,11 +1,15 @@
 DESCRIPTION
 	Possible instructions are:
 
-	help
-		displays this help.
+	break REG VAL
+		Constructs a break point: The debugger will stop if the register REG has the
+		value VAL.
 
 	exit
 		exits the debugger.
+
+	help
+		displays this help.
 
 	ls-macro-code [NUM1 [NUM2]]
 		Prints the assembler code to the user, trying to disassemble it.

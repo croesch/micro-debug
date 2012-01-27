@@ -76,6 +76,9 @@ public final class Mic1 {
   /** the view that is able to present details of this processor to the user */
   private final Mic1View view = new TraceManager();
 
+  /** the manager for break points */
+  private final BreakPointManager bpm = new BreakPointManager();
+
   /** counter for ticks that have been executed */
   private int ticks;
 
@@ -217,10 +220,21 @@ public final class Mic1 {
    */
   public void microStep(final int number) {
     resetTicks();
-    while (this.ticks < number && !isHaltInstruction()) {
+    while (this.ticks < number && canContinue()) {
       doTick();
     }
     printTicks();
+  }
+
+  /**
+   * Returns whether the debugger can continue executing instructions or if it should stop.
+   * 
+   * @since Date: Jan 27, 2012
+   * @return <code>true</code>, if the debugger can continue executing instructions,<br>
+   *         <code>false</code> otherwise
+   */
+  private boolean canContinue() {
+    return !isHaltInstruction() && (this.ticks == 0 || !this.bpm.isBreakPoint());
   }
 
   /**
@@ -357,7 +371,7 @@ public final class Mic1 {
    */
   public int run() {
     resetTicks();
-    while (!isHaltInstruction()) {
+    while (canContinue()) {
       doTick();
     }
     printTicks();
@@ -561,5 +575,17 @@ public final class Mic1 {
    */
   public void printMacroCode(final int from, final int to) {
     this.memory.printCode(from, to);
+  }
+
+  /**
+   * Adds a breakpoint for the given {@link Register} and the given value. Debugger will break, if the given
+   * {@link Register} has the given value.
+   * 
+   * @since Date: Jan 27, 2012
+   * @param r the {@link Register} to watch for the given value
+   * @param value the value that should be a break point if the given {@link Register} has it.
+   */
+  public void addBreakpoint(final Register r, final Integer value) {
+    this.bpm.addBreakPoint(r, value);
   }
 }

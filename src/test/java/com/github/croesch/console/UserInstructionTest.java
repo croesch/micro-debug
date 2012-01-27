@@ -870,4 +870,28 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(8) + TestUtil.getLineSeparator() + "     0x2: [0x59] DUP"
                                                  + TestUtil.getLineSeparator());
   }
+
+  @Test
+  public void testRegisterBreakPoint() {
+    assertThat(UserInstruction.BREAK.execute(this.processor, Register.H.name(), "-1")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + TestUtil.getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
+  }
 }

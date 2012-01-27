@@ -544,4 +544,28 @@ public class Mic1Test extends DefaultTestCase {
     this.processor.run();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(13) + TestUtil.getLineSeparator());
   }
+
+  @Test
+  public void testRegisterBreakPoint() {
+    this.processor.addBreakpoint(Register.H, Integer.valueOf(-1));
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + TestUtil.getLineSeparator());
+
+    out.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
+
+    out.reset();
+    this.processor.reset();
+    this.processor.microStep();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
+
+    out.reset();
+    this.processor.microStep();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
+
+    out.reset();
+    this.processor.microStep();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + TestUtil.getLineSeparator());
+  }
 }
