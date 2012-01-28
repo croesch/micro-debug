@@ -89,3 +89,7 @@
 	- RESET und BREAK reg val implementiert
 	- Teststruktur verbessert
 	- UserInstruction Abbruch bei falscher Parameterzahl eingeführt
+28.01.2012 (2,5 h)
+	- LS-BREAK implementiert
+	- Issues auf github angelegt, für die besprochenen noch zu erledigenden Aufgaben
+	- #1 (Argument.ERROR_UNKNOWN show help), #3 (Parameter.NUMBER change format) erledigt
