@@ -76,6 +76,15 @@ enum UserInstruction {
     }
   },
 
+  /** lists all breakpoints */
+  LS_BREAK {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      processor.listBreakpoints();
+      return true;
+    }
+  },
+
   /** instruction to print the ijvm code to the user */
   LS_MACRO_CODE {
     @Override

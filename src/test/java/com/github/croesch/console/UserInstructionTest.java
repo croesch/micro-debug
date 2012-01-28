@@ -774,4 +774,41 @@ public class UserInstructionTest extends DefaultTestCase {
   public void testExecuteLsMacroCode_WrongNumberOfParameters() {
     assertThatThreeParametersAreWrong(UserInstruction.LS_MACRO_CODE, 2);
   }
+
+  @Test
+  public void testListBreakpoints() {
+    printMethodName();
+
+    assertThat(UserInstruction.BREAK.execute(this.processor, "H", "2")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.processor, "H", "0x2")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.processor, "H", "2_11")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.processor, "H", "1")).isTrue();
+
+    assertThat(UserInstruction.BREAK.execute(this.processor, "CPP", "-1")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.processor, "CPP", "0x7FfFfFfF")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.processor, "CPP", "-2147483648")).isTrue();
+
+    assertThat(UserInstruction.BREAK.execute(this.processor, "MBRU", "16")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.processor, "MBRU", "-48")).isTrue();
+
+    assertThat(out.toString()).isEmpty();
+    assertThat(UserInstruction.LS_BREAK.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.BREAKPOINT_REGISTER.text(Register.MBRU, "0x10") + getLineSeparator()
+                                                 + Text.BREAKPOINT_REGISTER.text(Register.MBRU, "0xFFFFFFD0")
+                                                 + getLineSeparator()
+                                                 + Text.BREAKPOINT_REGISTER.text(Register.CPP, "0xFFFFFFFF")
+                                                 + getLineSeparator()
+                                                 + Text.BREAKPOINT_REGISTER.text(Register.CPP, "0x7FFFFFFF")
+                                                 + getLineSeparator()
+                                                 + Text.BREAKPOINT_REGISTER.text(Register.CPP, "0x80000000")
+                                                 + getLineSeparator()
+                                                 + Text.BREAKPOINT_REGISTER.text(Register.H, "0x2")
+                                                 + getLineSeparator()
+                                                 + Text.BREAKPOINT_REGISTER.text(Register.H, "0x3")
+                                                 + getLineSeparator()
+                                                 + Text.BREAKPOINT_REGISTER.text(Register.H, "0x1")
+                                                 + getLineSeparator());
+
+    printEndOfMethod();
+  }
 }

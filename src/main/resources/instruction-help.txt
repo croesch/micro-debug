@@ -11,6 +11,9 @@ DESCRIPTION
 	help
 		displays this help.
 
+	ls-break
+		Lists all breakpoints that are available.
+
 	ls-macro-code [NUM1 [NUM2]]
 		Prints the assembler code to the user, trying to disassemble it.
 		If parameters are omitted, then the whole code will be printed to the user.
