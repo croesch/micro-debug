@@ -168,7 +168,7 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(Register.H.getValue()).isEqualTo(0xF1);
     assertThat(out.toString()).isEmpty();
 
-    assertThat(UserInstruction.SET.execute(null, Register.CPP.name(), "2_1010")).isTrue();
+    assertThat(UserInstruction.SET.execute(null, Register.CPP.name(), "0b1010")).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa);
     assertThat(out.toString()).isEmpty();
   }
@@ -192,9 +192,9 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text(" h ")) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET.execute(null, Register.CPP.name(), "2_14")).isTrue();
+    assertThat(UserInstruction.SET.execute(null, Register.CPP.name(), "14_2")).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("2_14")) + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("14_2")) + getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET.execute(null, Register.CPP.name(), "0xXY")).isTrue();
@@ -207,10 +207,10 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("H")) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET.execute(null, "abc", "2_14")).isTrue();
+    assertThat(UserInstruction.SET.execute(null, "abc", "14_2")).isTrue();
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("abc")) + getLineSeparator()
-                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("2_14"))
+                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("14_2"))
                                                  + getLineSeparator());
     out.reset();
 
@@ -505,7 +505,7 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(this.processor.getMemoryValue(12)).isEqualTo(0xf1);
     assertThat(out.toString()).isEmpty();
 
-    assertThat(UserInstruction.SET_MEM.execute(this.processor, "2_10", "2_1010")).isTrue();
+    assertThat(UserInstruction.SET_MEM.execute(this.processor, "0b10", "0b1010")).isTrue();
     assertThat(this.processor.getMemoryValue(2)).isEqualTo(10);
     assertThat(out.toString()).isEmpty();
   }
@@ -524,8 +524,8 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text(" h ")) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET_MEM.execute(this.processor, "23", "2_14")).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("2_14")) + getLineSeparator());
+    assertThat(UserInstruction.SET_MEM.execute(this.processor, "23", "0b14")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0b14")) + getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.SET_MEM.execute(this.processor, "0", "0xXY")).isTrue();
@@ -536,9 +536,9 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("H")) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET_MEM.execute(this.processor, "abc", "2_14")).isTrue();
+    assertThat(UserInstruction.SET_MEM.execute(this.processor, "abc", "14_2")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("abc")) + getLineSeparator()
-                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("2_14"))
+                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("14_2"))
                                                  + getLineSeparator());
     out.reset();
 
@@ -548,8 +548,8 @@ public class UserInstructionTest extends DefaultTestCase {
                                                  + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET_MEM.execute(this.processor, "0X12", "H")).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0X12")) + getLineSeparator()
+    assertThat(UserInstruction.SET_MEM.execute(this.processor, "0X", "H")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0X")) + getLineSeparator()
                                                  + Text.ERROR.text(Text.INVALID_NUMBER.text("H")) + getLineSeparator());
   }
 
@@ -569,7 +569,7 @@ public class UserInstructionTest extends DefaultTestCase {
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     final StringBuilder sb = readFile("mic1/add_part1.ijvm.dis");
 
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "2_0", "0x1d")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0_2", "0x1d")).isTrue();
     assertThat(out.toString()).isEqualTo(sb.toString());
     out.reset();
 
@@ -578,7 +578,7 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(out.toString()).isEqualTo(sb.toString());
     out.reset();
 
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "19_-20", "0x1e")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "-20_19", "0x1e")).isTrue();
 
     assertThat(out.toString()).isEqualTo(sb.toString());
   }
@@ -781,7 +781,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
     assertThat(UserInstruction.BREAK.execute(this.processor, "H", "2")).isTrue();
     assertThat(UserInstruction.BREAK.execute(this.processor, "H", "0x2")).isTrue();
-    assertThat(UserInstruction.BREAK.execute(this.processor, "H", "2_11")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.processor, "H", "11_2")).isTrue();
     assertThat(UserInstruction.BREAK.execute(this.processor, "H", "1")).isTrue();
 
     assertThat(UserInstruction.BREAK.execute(this.processor, "CPP", "-1")).isTrue();

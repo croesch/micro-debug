@@ -40,15 +40,22 @@ public class ParameterTest extends DefaultTestCase {
   public void testNumber_Valid() {
     assertThat(Parameter.NUMBER.getValue("12")).isEqualTo(12);
     assertThat(Parameter.NUMBER.getValue("0x12")).isEqualTo(0x12);
-    assertThat(Parameter.NUMBER.getValue("16_12")).isEqualTo(0x12);
-    assertThat(Parameter.NUMBER.getValue("10_1234")).isEqualTo(1234);
-    assertThat(Parameter.NUMBER.getValue("2_1010")).isEqualTo(10);
-    assertThat(Parameter.NUMBER.getValue("02_11010")).isEqualTo(26);
-    assertThat(Parameter.NUMBER.getValue("17_1g")).isEqualTo(33);
-    assertThat(Parameter.NUMBER.getValue("17_-1g")).isEqualTo(-33);
-    assertThat(Parameter.NUMBER.getValue("17_-1G")).isEqualTo(-33);
+    assertThat(Parameter.NUMBER.getValue("12_16")).isEqualTo(0x12);
+    assertThat(Parameter.NUMBER.getValue("1234_10")).isEqualTo(1234);
+    assertThat(Parameter.NUMBER.getValue("1010_2")).isEqualTo(10);
+    assertThat(Parameter.NUMBER.getValue("0b1010")).isEqualTo(10);
+    assertThat(Parameter.NUMBER.getValue("11010_002")).isEqualTo(26);
+    assertThat(Parameter.NUMBER.getValue("1g_17")).isEqualTo(33);
+    assertThat(Parameter.NUMBER.getValue("-1g_17")).isEqualTo(-33);
+    assertThat(Parameter.NUMBER.getValue("-1G_17")).isEqualTo(-33);
     assertThat(Parameter.NUMBER.getValue("-011")).isEqualTo(-11);
     assertThat(Parameter.NUMBER.getValue("-0000")).isEqualTo(0);
+    assertThat(Parameter.NUMBER.getValue("0o0")).isEqualTo(0);
+    assertThat(Parameter.NUMBER.getValue("0o27")).isEqualTo(23);
+    assertThat(Parameter.NUMBER.getValue("27_8")).isEqualTo(23);
+    assertThat(Parameter.NUMBER.getValue("0B0")).isEqualTo(0);
+    assertThat(Parameter.NUMBER.getValue("0O0")).isEqualTo(0);
+    assertThat(Parameter.NUMBER.getValue("0X0")).isEqualTo(0);
 
     assertThat(out.toString()).isEmpty();
   }
@@ -97,15 +104,25 @@ public class ParameterTest extends DefaultTestCase {
 
   @Test
   public void testNumber_Invalid() {
-    testInvalidNumber("a_1010", out);
-    testInvalidNumber("a_1010", out);
-    testInvalidNumber("2_2010", out);
-    testInvalidNumber("2_a010", out);
+    testInvalidNumber("", out);
+    testInvalidNumber(" ", out);
+    testInvalidNumber("\t", out);
+    testInvalidNumber("A", out);
+    testInvalidNumber("1010_a", out);
+    testInvalidNumber("2010_2", out);
+    testInvalidNumber("a010_2", out);
     testInvalidNumber("a010", out);
     testInvalidNumber("0 10", out);
     testInvalidNumber("010.1", out);
     testInvalidNumber("010,1", out);
     testInvalidNumber("--12", out);
+    testInvalidNumber("0b12", out);
+    testInvalidNumber("0o19", out);
+    testInvalidNumber("0x1G", out);
+    testInvalidNumber("0b1_2", out);
+    testInvalidNumber("0o1_8", out);
+    testInvalidNumber("0x1_16", out);
+    testInvalidNumber("1_1_6", out);
     assertThat(Parameter.NUMBER.getValue(null)).isNull();
   }
 

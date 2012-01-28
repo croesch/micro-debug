@@ -33,6 +33,30 @@ public enum Parameter {
 
   /** the numerical argument, can be decimal or every other basis */
   NUMBER {
+
+    /**
+     * Converts valid aliases like <code>0x</code> to their representation in the notation.
+     * 
+     * @since Date: Jan 28, 2012
+     * @param num the number that might contain aliases
+     * @return the number with aliases converted to notation
+     */
+    private String convertAliases(final String num) {
+      if (num.length() > 1 && num.charAt(0) == '0') {
+        switch (Character.toLowerCase(num.charAt(1))) {
+          case 'b':
+            return num.substring(2) + "_2";
+          case 'o':
+            return num.substring(2) + "_8";
+          case 'x':
+            return num.substring(2) + "_16";
+          default:
+            return num;
+        }
+      }
+      return num;
+    }
+
     @Override
     protected Object toValue(final String str) {
 
@@ -41,8 +65,8 @@ public enum Parameter {
         return Integer.valueOf(str);
       } catch (final NumberFormatException nfe) {
         // number might be 0x.. or .._.., so split the number in radix and the number
-        // replace 0x to 16_ because this is the notation here
-        final String[] num = str.replaceFirst("0x", "16_").split("_");
+        // convert aliases (0x,0b,..) to the correct notation
+        final String[] num = convertAliases(str).split("_");
         if (num.length != 2) {
           // not a valid number - no idea what to do
           Printer.printErrorln(Text.INVALID_NUMBER.text(str));
@@ -52,7 +76,7 @@ public enum Parameter {
         // number is a special number
         try {
           // try to parse the number with the specified radix
-          return Integer.valueOf(num[1], Integer.parseInt(num[0]));
+          return Integer.valueOf(num[0], Integer.parseInt(num[1]));
         } catch (final NumberFormatException nfe2) {
           // didn't work -> invalid number
           Printer.printErrorln(Text.INVALID_NUMBER.text(str));
