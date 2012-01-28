@@ -168,7 +168,7 @@ public final class MicroDebug {
 
     if (isValidAsOnlyArgument(arg)) {
       // if the help or version should be viewed it's okay to have only one argument
-      arg.execute(null);
+      arg.execute();
     } else {
       Printer.printErrorln(Text.MISSING_IJVM_FILE);
       printTryHelp();

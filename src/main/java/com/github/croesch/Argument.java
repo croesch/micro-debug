@@ -48,7 +48,7 @@ enum Argument {
     private static final String HELP_FILE = "help.txt";
 
     @Override
-    public boolean execute(final String[] params) {
+    public boolean execute(final String ... params) {
       final InputStream fileStream = Utils.class.getClassLoader().getResourceAsStream(HELP_FILE);
       Printer.printReader(new InputStreamReader(fileStream));
       return false;
@@ -58,7 +58,7 @@ enum Argument {
   /** argument that signalizes an unknown argument */
   ERROR_UNKNOWN {
     @Override
-    public boolean execute(final String[] params) {
+    public boolean execute(final String ... params) {
       return printError(params, Text.UNKNOWN_ARGUMENT, this);
     }
   },
@@ -66,7 +66,7 @@ enum Argument {
   /** argument that signalizes an argument with the wrong number of parameters */
   ERROR_PARAM_NUMBER {
     @Override
-    public boolean execute(final String[] params) {
+    public boolean execute(final String ... params) {
       return printError(params, Text.ARGUMENT_WITH_WRONG_PARAM_NUMBER, this);
     }
   },
@@ -74,7 +74,7 @@ enum Argument {
   /** argument to specify a file to append the output of the debugger to */
   OUTPUT_FILE (1) {
     @Override
-    public boolean execute(final String[] params) {
+    public boolean execute(final String ... params) {
       try {
         Output.setOut(new PrintStream(new FileOutputStream(new File(params[0]), true)));
       } catch (final FileNotFoundException e) {
@@ -87,7 +87,7 @@ enum Argument {
   /** argument that makes the output to be unbuffered */
   UNBUFFERED_OUTPUT {
     @Override
-    public boolean execute(final String[] params) {
+    public boolean execute(final String ... params) {
       Output.setBuffered(false);
       return true;
     }
@@ -96,7 +96,7 @@ enum Argument {
   /** argument to view the version of the debugger */
   VERSION {
     @Override
-    public boolean execute(final String[] params) {
+    public boolean execute(final String ... params) {
       Printer.println(Text.VERSION);
       return false;
     }
@@ -282,7 +282,7 @@ enum Argument {
    *        the causes for the error.
    * @return <code>false</code>, if the argument enforces the application to stop
    */
-  public abstract boolean execute(String[] params);
+  public abstract boolean execute(String ... params);
 
   /**
    * Prints the given array of arguments as an error. Returns whether the application can continue.
