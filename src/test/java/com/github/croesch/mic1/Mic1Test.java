@@ -555,4 +555,41 @@ public class Mic1Test extends DefaultTestCase {
     this.processor.microStep();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
   }
+
+  @Test
+  public void testListBreakpoints() {
+    printMethodName();
+
+    this.processor.addBreakpoint(Register.H, Integer.valueOf(2));
+    this.processor.addBreakpoint(Register.H, Integer.valueOf(2));
+    this.processor.addBreakpoint(Register.H, Integer.valueOf(3));
+    this.processor.addBreakpoint(Register.H, Integer.valueOf(1));
+
+    this.processor.addBreakpoint(Register.CPP, Integer.valueOf(-1));
+    this.processor.addBreakpoint(Register.CPP, Integer.valueOf(Integer.MAX_VALUE));
+    this.processor.addBreakpoint(Register.CPP, Integer.valueOf(Integer.MIN_VALUE));
+
+    this.processor.addBreakpoint(Register.MBRU, Integer.valueOf(16));
+    this.processor.addBreakpoint(Register.MBRU, Integer.valueOf(-48));
+
+    assertThat(out.toString()).isEmpty();
+    this.processor.listBreakpoints();
+    assertThat(out.toString()).isEqualTo(Text.BREAKPOINT_REGISTER.text(Register.MBRU, "0x10") + getLineSeparator()
+                                                 + Text.BREAKPOINT_REGISTER.text(Register.MBRU, "0xFFFFFFD0")
+                                                 + getLineSeparator()
+                                                 + Text.BREAKPOINT_REGISTER.text(Register.CPP, "0xFFFFFFFF")
+                                                 + getLineSeparator()
+                                                 + Text.BREAKPOINT_REGISTER.text(Register.CPP, "0x7FFFFFFF")
+                                                 + getLineSeparator()
+                                                 + Text.BREAKPOINT_REGISTER.text(Register.CPP, "0x80000000")
+                                                 + getLineSeparator()
+                                                 + Text.BREAKPOINT_REGISTER.text(Register.H, "0x2")
+                                                 + getLineSeparator()
+                                                 + Text.BREAKPOINT_REGISTER.text(Register.H, "0x3")
+                                                 + getLineSeparator()
+                                                 + Text.BREAKPOINT_REGISTER.text(Register.H, "0x1")
+                                                 + getLineSeparator());
+
+    printEndOfMethod();
+  }
 }

@@ -77,7 +77,7 @@ public final class Mic1 {
   private final Mic1View view = new TraceManager();
 
   /** the manager for break points */
-  private final BreakPointManager bpm = new BreakPointManager();
+  private final BreakpointManager bpm = new BreakpointManager();
 
   /** counter for ticks that have been executed */
   private int ticks;
@@ -234,7 +234,7 @@ public final class Mic1 {
    *         <code>false</code> otherwise
    */
   private boolean canContinue() {
-    return !isHaltInstruction() && (this.ticks == 0 || !this.bpm.isBreakPoint());
+    return !isHaltInstruction() && (this.ticks == 0 || !this.bpm.isBreakpoint());
   }
 
   /**
@@ -587,5 +587,14 @@ public final class Mic1 {
    */
   public void addBreakpoint(final Register r, final Integer value) {
     this.bpm.addBreakpoint(r, value);
+  }
+
+  /**
+   * Lists all breakpoints.
+   * 
+   * @since Date: Jan 28, 2012
+   */
+  public void listBreakpoints() {
+    this.bpm.listBreakpoints();
   }
 }

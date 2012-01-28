@@ -55,6 +55,9 @@ public enum Text {
   /** the text to print a single line of code */
   CODE_LINE,
 
+  /** the text to print the breakpoint for a specific register */
+  BREAKPOINT_REGISTER,
+
   /** the text that describes an unknown ijvm instruction */
   UNKNOWN_IJVM_INSTRUCTION,
 

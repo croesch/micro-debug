@@ -21,8 +21,12 @@ package com.github.croesch.mic1;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.logging.Logger;
 
+import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.register.Register;
+import com.github.croesch.misc.Printer;
+import com.github.croesch.misc.Utils;
 
 /**
  * A manager for break points in the debugger.
@@ -30,7 +34,10 @@ import com.github.croesch.mic1.register.Register;
  * @author croesch
  * @since Date: Jan 27, 2012
  */
-final class BreakPointManager {
+final class BreakpointManager {
+
+  /** the {@link Logger} for this class */
+  private static final Logger LOGGER = Logger.getLogger(Text.class.getName());
 
   /** contains a list of values for each register that are set to be a breakpoint */
   private final EnumMap<Register, List<Integer>> registerBreakPoints = new EnumMap<Register, List<Integer>>(Register.class);
@@ -40,7 +47,7 @@ final class BreakPointManager {
    * 
    * @since Date: Jan 27, 2012
    */
-  public BreakPointManager() {
+  public BreakpointManager() {
     for (final Register r : Register.values()) {
       this.registerBreakPoints.put(r, new ArrayList<Integer>());
     }
@@ -53,7 +60,7 @@ final class BreakPointManager {
    * @return <code>true</code> if a break point is met,<br>
    *         <code>false</code> otherwise
    */
-  boolean isBreakPoint() {
+  boolean isBreakpoint() {
     for (final Register r : Register.values()) {
       if (this.registerBreakPoints.get(r).contains(Integer.valueOf(r.getValue()))) {
         return true;
@@ -71,7 +78,24 @@ final class BreakPointManager {
    */
   void addBreakpoint(final Register r, final Integer val) {
     if (r != null && val != null) {
-      this.registerBreakPoints.get(r).add(Integer.valueOf(val));
+      if (this.registerBreakPoints.get(r).contains(val)) {
+        LOGGER.fine("adding '" + Text.BREAKPOINT_REGISTER.text(r, val) + "' that already exists..");
+      } else {
+        this.registerBreakPoints.get(r).add(Integer.valueOf(val));
+      }
+    }
+  }
+
+  /**
+   * Lists all breakpoints.
+   * 
+   * @since Date: Jan 28, 2012
+   */
+  void listBreakpoints() {
+    for (final Register r : Register.values()) {
+      for (final int i : this.registerBreakPoints.get(r)) {
+        Printer.println(Text.BREAKPOINT_REGISTER.text(r, Utils.toHexString(i)));
+      }
     }
   }
 }
