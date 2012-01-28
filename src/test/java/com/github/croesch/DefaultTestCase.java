@@ -2,6 +2,7 @@ package com.github.croesch;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
@@ -48,6 +49,8 @@ public class DefaultTestCase {
 
   protected static final ByteArrayOutputStream micOut = new ByteArrayOutputStream();
 
+  private static String helpFileText = null;
+
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     Locale.setDefault(new Locale("test", "tst", " "));
@@ -73,12 +76,24 @@ public class DefaultTestCase {
 
   protected final StringBuilder readFile(final String name) throws IOException {
     final StringBuilder sb = new StringBuilder();
-    final Reader r = new InputStreamReader(ClassLoader.getSystemResourceAsStream(name));
-    int c;
-    while ((c = r.read()) != -1) {
-      sb.append((char) c);
+    final InputStream stream = ClassLoader.getSystemResourceAsStream(name);
+    try {
+      final Reader r = new InputStreamReader(stream);
+      int c;
+      while ((c = r.read()) != -1) {
+        sb.append((char) c);
+      }
+    } finally {
+      stream.close();
     }
     return sb;
+  }
+
+  protected synchronized final String getHelpFileText() throws IOException {
+    if (helpFileText == null) {
+      helpFileText = readFile("help.txt").toString();
+    }
+    return helpFileText;
   }
 
   protected final void printMethodName() {

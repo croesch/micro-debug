@@ -311,6 +311,9 @@ enum Argument {
         argumentFound = true;
       }
     }
+    if (argumentFound) {
+      HELP.execute();
+    }
     return !argumentFound;
   }
 }

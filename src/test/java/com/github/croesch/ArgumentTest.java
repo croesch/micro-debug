@@ -20,9 +20,7 @@ package com.github.croesch;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import org.junit.Test;
 
@@ -167,50 +165,35 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteVersion() {
-    assertThat(Argument.VERSION.execute(null)).isFalse();
+    assertThat(Argument.VERSION.execute()).isFalse();
     assertThat(out.toString()).isEqualTo(Text.VERSION.text() + getLineSeparator());
   }
 
   @Test
   public final void testExecuteHelp() throws IOException {
-    assertThat(Argument.HELP.execute(null)).isFalse();
-
-    final StringBuilder sb = new StringBuilder();
-    BufferedReader reader = null;
-    try {
-      reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("help.txt")));
-      String line;
-      while ((line = reader.readLine()) != null) {
-        sb.append(line).append(getLineSeparator());
-      }
-    } finally {
-      if (reader != null) {
-        reader.close();
-      }
-    }
-
-    assertThat(out.toString()).isEqualTo(sb.toString());
+    assertThat(Argument.HELP.execute()).isFalse();
+    assertThat(out.toString()).isEqualTo(getHelpFileText());
   }
 
   @Test
   public final void testExecuteUnbufferedOutput() {
-    assertThat(Argument.UNBUFFERED_OUTPUT.execute(null)).isTrue();
+    assertThat(Argument.UNBUFFERED_OUTPUT.execute()).isTrue();
     assertThat(Output.isBuffered()).isFalse();
 
     Output.setBuffered(true);
     assertThat(Output.isBuffered()).isTrue();
-    assertThat(Argument.UNBUFFERED_OUTPUT.execute(null)).isTrue();
+    assertThat(Argument.UNBUFFERED_OUTPUT.execute()).isTrue();
     assertThat(Output.isBuffered()).isFalse();
 
-    assertThat(Argument.UNBUFFERED_OUTPUT.execute(null)).isTrue();
+    assertThat(Argument.UNBUFFERED_OUTPUT.execute()).isTrue();
     assertThat(Output.isBuffered()).isFalse();
 
     Output.setBuffered(true);
   }
 
   @Test
-  public final void testExecuteUnknownArgument() {
-    assertThat(Argument.ERROR_UNKNOWN.execute(null)).isTrue();
+  public final void testExecuteUnknownArgument() throws IOException {
+    assertThat(Argument.ERROR_UNKNOWN.execute()).isTrue();
     assertThat(out.toString()).isEmpty();
 
     assertThat(Argument.ERROR_UNKNOWN.execute(new String[] {})).isTrue();
@@ -220,7 +203,8 @@ public class ArgumentTest extends DefaultTestCase {
     assertThat(out.toString()).isEmpty();
 
     assertThat(Argument.ERROR_UNKNOWN.execute(new String[] { "bla" })).isFalse();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("bla")) + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("bla")) + getLineSeparator()
+                                                 + getHelpFileText());
 
     out.reset();
 
@@ -229,12 +213,12 @@ public class ArgumentTest extends DefaultTestCase {
                                                  + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("--bla"))
                                                  + getLineSeparator()
                                                  + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("-wow"))
-                                                 + getLineSeparator());
+                                                 + getLineSeparator() + getHelpFileText());
   }
 
   @Test
-  public final void testExecuteParameterNumber() {
-    assertThat(Argument.ERROR_PARAM_NUMBER.execute(null)).isTrue();
+  public final void testExecuteParameterNumber() throws IOException {
+    assertThat(Argument.ERROR_PARAM_NUMBER.execute()).isTrue();
     assertThat(out.toString()).isEmpty();
 
     assertThat(Argument.ERROR_PARAM_NUMBER.execute(new String[] {})).isTrue();
@@ -245,7 +229,7 @@ public class ArgumentTest extends DefaultTestCase {
 
     assertThat(Argument.ERROR_PARAM_NUMBER.execute(new String[] { "-o" })).isFalse();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.ARGUMENT_WITH_WRONG_PARAM_NUMBER.text("-o"))
-                                                 + getLineSeparator());
+                                                 + getLineSeparator() + getHelpFileText());
   }
 
   @Test

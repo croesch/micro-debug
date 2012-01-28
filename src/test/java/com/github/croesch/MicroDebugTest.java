@@ -112,11 +112,11 @@ public class MicroDebugTest extends DefaultTestCase {
   }
 
   @Test
-  public final void testMain_Unknown() {
+  public final void testMain_Unknown() throws IOException {
     MicroDebug.main(new String[] { "-xxx", "", "" });
     assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME
                                                  + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("-xxx"))
-                                                 + getLineSeparator());
+                                                 + getLineSeparator() + getHelpFileText());
 
     out.reset();
 
@@ -125,7 +125,7 @@ public class MicroDebugTest extends DefaultTestCase {
                                                  + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("asd"))
                                                  + getLineSeparator()
                                                  + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("efgh"))
-                                                 + getLineSeparator());
+                                                 + getLineSeparator() + getHelpFileText());
   }
 
   @Test
