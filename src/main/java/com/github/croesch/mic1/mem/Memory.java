@@ -423,8 +423,8 @@ public final class Memory {
    * @since Date: Jan 22, 2012
    */
   public void printCode() {
-    final int start = getFirstPossibleCodeAddress();
-    final int end = refineEndOfCode(getLastPossibleCodeAddress());
+    final int start = 4 * getFirstPossibleCodeAddress();
+    final int end = refineEndOfCode(4 * getLastPossibleCodeAddress());
     printCode(start, end);
   }
 
@@ -448,8 +448,8 @@ public final class Memory {
    */
   public void printCode(final int pos1, final int pos2) {
     // correct arguments
-    final int start = Math.max(getFirstPossibleCodeAddress(), Math.min(pos1, pos2));
-    final int end = Math.min(refineEndOfCode(getLastPossibleCodeAddress()), Math.max(pos1, pos2));
+    final int start = Math.max(4 * getFirstPossibleCodeAddress(), Math.min(pos1, pos2));
+    final int end = Math.min(refineEndOfCode(4 * getLastPossibleCodeAddress()), Math.max(pos1, pos2));
 
     for (int i = start; i <= end; ++i) {
       i += printCodeLine(i);
