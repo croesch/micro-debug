@@ -93,3 +93,5 @@
 	- LS-BREAK implementiert
 	- Issues auf github angelegt, für die besprochenen noch zu erledigenden Aufgaben
 	- #1 (Argument.ERROR_UNKNOWN show help), #3 (Parameter.NUMBER change format) erledigt
+29.01.2012 (3 h)
+	- STEP und LS-MEM implementiert
