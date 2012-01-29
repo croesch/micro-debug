@@ -1,5 +1,7 @@
 package com.github.croesch;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +15,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 
+import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.misc.Printer;
 import com.github.croesch.misc.Utils;
@@ -129,5 +132,10 @@ public class DefaultTestCase {
 
   protected final String getLineSeparator() {
     return Utils.getLineSeparator();
+  }
+
+  protected void assertTicksDoneAndResetPrintStream(final int ticks) {
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(ticks) + getLineSeparator());
+    out.reset();
   }
 }

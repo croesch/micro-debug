@@ -350,11 +350,6 @@ public class Mic1Test extends DefaultTestCase {
     Output.setOut(System.out);
   }
 
-  private void assertTicksDoneAndResetPrintStream(final int ticks) {
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(ticks) + getLineSeparator());
-    out.reset();
-  }
-
   @Test
   public void testErrorTexts() {
     // less than four bytes
@@ -688,8 +683,8 @@ public class Mic1Test extends DefaultTestCase {
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
-    Output.setOut(new PrintStream(out));
     Output.setBuffered(true);
+    Output.setOut(new PrintStream(out));
     assertThat(Register.PC.getValue()).isEqualTo(Settings.MIC1_REGISTER_PC_DEFVAL.getValue());
 
     this.processor.step(0);

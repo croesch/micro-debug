@@ -24,6 +24,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 
 import org.junit.Test;
 
@@ -32,7 +33,9 @@ import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.Mic1;
 import com.github.croesch.mic1.io.Input;
+import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.register.Register;
+import com.github.croesch.misc.Settings;
 
 /**
  * Provides test cases for {@link UserInstruction}.
@@ -879,5 +882,113 @@ public class UserInstructionTest extends DefaultTestCase {
       .isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator()
                          + Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
     out.reset();
+  }
+
+  @Test
+  public void testExecuteStep() throws FileFormatException {
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    assertThat(Register.PC.getValue()).isEqualTo(Settings.MIC1_REGISTER_PC_DEFVAL.getValue());
+
+    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(0);
+    assertTicksDoneAndResetPrintStream(3);
+
+    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(2);
+    assertTicksDoneAndResetPrintStream(4);
+
+    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(3);
+    assertTicksDoneAndResetPrintStream(3);
+
+    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(5);
+    assertTicksDoneAndResetPrintStream(7);
+
+    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(7);
+    assertTicksDoneAndResetPrintStream(7);
+
+    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(9);
+    assertTicksDoneAndResetPrintStream(4);
+
+    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(10);
+    assertTicksDoneAndResetPrintStream(9);
+
+    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(13);
+    assertTicksDoneAndResetPrintStream(8);
+
+    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(71);
+    assertTicksDoneAndResetPrintStream(23);
+  }
+
+  @Test
+  public void testExecuteStepN() throws FileFormatException {
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
+    Output.setBuffered(true);
+    Output.setOut(new PrintStream(out));
+    assertThat(Register.PC.getValue()).isEqualTo(Settings.MIC1_REGISTER_PC_DEFVAL.getValue());
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "0")).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(Settings.MIC1_REGISTER_PC_DEFVAL.getValue());
+    assertThat(out.toString()).isEmpty();
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "1")).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(0);
+    assertTicksDoneAndResetPrintStream(3);
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "2")).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(3);
+    assertTicksDoneAndResetPrintStream(7);
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "3")).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(9);
+    assertTicksDoneAndResetPrintStream(18);
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "-1")).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(9);
+    assertThat(out.toString()).isEmpty();
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "0")).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(9);
+    assertThat(out.toString()).isEmpty();
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "1")).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(10);
+    assertTicksDoneAndResetPrintStream(9);
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "2")).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(71);
+    assertTicksDoneAndResetPrintStream(31);
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "560")).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(0x11D);
+    assertThat(out.toString()).isEqualTo(" 2" + getLineSeparator() + "+2" + getLineSeparator() + "========"
+                                                 + getLineSeparator() + "00000004" + getLineSeparator()
+                                                 + Text.TICKS.text(3213) + getLineSeparator());
+    out.reset();
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "560")).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(0x41);
+    assertTicksDoneAndResetPrintStream(11);
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "0x7fe5")).isTrue();
+    assertThat(Register.PC.getValue()).isEqualTo(0x41);
+    assertThat(out.toString()).isEmpty();
+
+    Output.setOut(System.out);
+  }
+
+  @Test
+  public void testExecuteStep_WrongNumberOfParameters() {
+    assertThatTwoParametersAreWrong(UserInstruction.STEP);
+    assertThatThreeParametersAreWrong(UserInstruction.STEP, 0);
   }
 }

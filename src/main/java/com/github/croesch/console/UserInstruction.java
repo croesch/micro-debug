@@ -234,6 +234,29 @@ enum UserInstruction {
     }
   },
 
+  /** executes the given number of macro instructions - or by default one, if no number is given */
+  STEP {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      switch (getSize(params)) {
+        case 0:
+          processor.step();
+          break;
+        case 1:
+          final Integer i = (Integer) Parameter.NUMBER.getValue(params[0]);
+          if (i != null) {
+            processor.step(i);
+          }
+          break;
+        default:
+          Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(0, getSize(params)));
+          break;
+      }
+
+      return true;
+    }
+  },
+
   /** instruction to trace the micro code */
   TRACE_MIC {
     @Override
