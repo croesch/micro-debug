@@ -423,9 +423,7 @@ public final class Memory {
    * @since Date: Jan 22, 2012
    */
   public void printCode() {
-    final int start = 4 * getFirstPossibleCodeAddress();
-    final int end = refineEndOfCode(4 * getLastPossibleCodeAddress());
-    printCode(start, end);
+    printCode(Integer.MIN_VALUE, Integer.MAX_VALUE);
   }
 
   /**
