@@ -34,6 +34,7 @@ public class TextTest extends DefaultTestCase {
 
   @Test
   public void test() {
+    printlnMethodName();
     assertThat(Text.BORDER.text()).isEqualTo("b o r d e r");
     assertThat(Text.TRY_HELP.text()).isEqualTo("OVERRIDDEN");
   }

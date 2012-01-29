@@ -36,6 +36,7 @@ public class TextPropertiesTest extends DefaultTestCase {
 
   @Test
   public void test() {
+    printlnMethodName();
     assertThat(new TextProperties(new Locale("test", "tst", "asd")).getProperty("border")).isEqualTo("b o r d e r");
     assertThat(new TextProperties(new Locale("test")).getProperty("try-help")).isEqualTo("..no one will ever see..");
     assertThat(new TextProperties(new Locale("test", "tst")).getProperty("try-help")).isEqualTo("OVERRIDDEN");

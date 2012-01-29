@@ -77,6 +77,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testGetSize() {
+    printlnMethodName();
     assertThat(UserInstruction.getSize(null)).isZero();
     assertThat(UserInstruction.getSize(new String[] {})).isZero();
     assertThat(UserInstruction.getSize(new String[] { null })).isEqualTo(1);
@@ -90,6 +91,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteExit() throws IOException {
+    printlnMethodName();
     assertThat(UserInstruction.EXIT.execute(null)).isFalse();
     assertThat(UserInstruction.EXIT.execute(null, "asd")).isFalse();
     assertThat(UserInstruction.EXIT.execute(null, "asd", "asd")).isFalse();
@@ -99,6 +101,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteHelp() throws IOException {
+    printlnMethodName();
     assertThat(UserInstruction.HELP.execute(null, "asd")).isTrue();
     assertThat(UserInstruction.HELP.execute(null, "asd", "asd")).isTrue();
     out.reset();
@@ -125,11 +128,13 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test(expected = NullPointerException.class)
   public final void testExecuteRun_NPE() throws IOException {
+    printlnMethodName();
     UserInstruction.RUN.execute(null, "asd");
   }
 
   @Test
   public final void testExecuteRun() throws IOException {
+    printlnMethodName();
     assertThat(UserInstruction.RUN.execute(this.processor, "asd")).isTrue();
     assertThat(UserInstruction.RUN.execute(this.processor, "asd", "asd")).isTrue();
     out.reset();
@@ -146,6 +151,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteSet_WrongNumberOfParameters() {
+    printlnMethodName();
     Register.CPP.setValue(0xa1234);
     assertThatNoParameterIsWrong(UserInstruction.SET);
     assertThatOneParameterIsWrong(UserInstruction.SET);
@@ -160,6 +166,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testExecuteSet_Valid() {
+    printlnMethodName();
     Register.CPP.setValue(0xa1234);
 
     assertThat(UserInstruction.SET.execute(null, Register.CPP.name(), "14")).isTrue();
@@ -178,6 +185,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testExecuteSet_Invalid() {
+    printlnMethodName();
     Register.CPP.setValue(0xa1234);
 
     assertThat(UserInstruction.SET.execute(null, "abc", "14")).isTrue();
@@ -233,6 +241,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteMicroStep() throws IOException {
+    printlnMethodName();
     assertThat(UserInstruction.MICRO_STEP.execute(this.processor)).isTrue();
     assertThat(Register.MAR.getValue()).isZero();
     assertThat(Register.PC.getValue()).isZero();
@@ -300,12 +309,14 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testExecuteMicroStep_WrongNumberOfParameters() {
+    printlnMethodName();
     assertThatTwoParametersAreWrong(UserInstruction.MICRO_STEP);
     assertThatThreeParametersAreWrong(UserInstruction.MICRO_STEP, 0);
   }
 
   @Test
   public final void testExecuteLsReg_NoArg() throws IOException {
+    printlnMethodName();
     Register.MAR.setValue(1);
     Register.MDR.setValue(2);
     Register.PC.setValue(3);
@@ -336,6 +347,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteLsReg_NullArg() throws IOException {
+    printlnMethodName();
     assertThat(out.toString()).isEmpty();
     assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { null })).isTrue();
     assertThat(out.toString()).isEmpty();
@@ -343,6 +355,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteLsReg_FalseArg() throws IOException {
+    printlnMethodName();
     assertThat(out.toString()).isEmpty();
     assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { "Bernd" })).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("Bernd")) + getLineSeparator());
@@ -350,12 +363,14 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteLsReg_WrongNumberOfParameters() {
+    printlnMethodName();
     assertThatTwoParametersAreWrong(UserInstruction.LS_REG);
     assertThatThreeParametersAreWrong(UserInstruction.LS_REG, 0);
   }
 
   @Test
   public final void testExecuteLsReg_OneArg() throws IOException {
+    printlnMethodName();
     Register.MAR.setValue(0x4711);
     assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { "MAR" })).isTrue();
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x4711") + getLineSeparator());
@@ -369,66 +384,85 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testExecuteTraceReg() {
+    printMethodName();
     for (final Register r : Register.values()) {
       assertThat(this.processor.isTracing(r)).isFalse();
       assertThat(UserInstruction.TRACE_REG.execute(this.processor, r.name())).isTrue();
       assertThat(this.processor.isTracing(r)).isTrue();
+      printStep();
     }
+    printEndOfMethod();
   }
 
   @Test
   public void testExecuteTraceReg_All() {
+    printMethodName();
     for (final Register r : Register.values()) {
       assertThat(this.processor.isTracing(r)).isFalse();
+      printStep();
     }
+    printLoopEnd();
 
     assertThat(UserInstruction.TRACE_REG.execute(this.processor, (String[]) null)).isTrue();
 
     for (final Register r : Register.values()) {
       assertThat(this.processor.isTracing(r)).isTrue();
+      printStep();
     }
+    printEndOfMethod();
   }
 
   @Test
   public final void testExecuteTraceReg_WrongNumberOfParameters() {
+    printlnMethodName();
     assertThatTwoParametersAreWrong(UserInstruction.TRACE_REG);
     assertThatThreeParametersAreWrong(UserInstruction.TRACE_REG, 0);
   }
 
   @Test
   public final void testExecuteUntraceReg_WrongNumberOfParameters() {
+    printlnMethodName();
     assertThatTwoParametersAreWrong(UserInstruction.UNTRACE_REG);
     assertThatThreeParametersAreWrong(UserInstruction.UNTRACE_REG, 0);
   }
 
   @Test
   public void testExecuteUntraceReg_All() {
+    printMethodName();
     assertThat(UserInstruction.TRACE_REG.execute(this.processor, (String[]) null)).isTrue();
 
     for (final Register r : Register.values()) {
       assertThat(this.processor.isTracing(r)).isTrue();
+      printStep();
     }
+    printLoopEnd();
 
     assertThat(UserInstruction.UNTRACE_REG.execute(this.processor, (String[]) null)).isTrue();
 
     for (final Register r : Register.values()) {
       assertThat(this.processor.isTracing(r)).isFalse();
+      printStep();
     }
+    printEndOfMethod();
   }
 
   @Test
   public void testExecuteUntraceReg() {
+    printMethodName();
     assertThat(UserInstruction.TRACE_REG.execute(this.processor, (String[]) null)).isTrue();
 
     for (final Register r : Register.values()) {
       assertThat(this.processor.isTracing(r)).isTrue();
       assertThat(UserInstruction.UNTRACE_REG.execute(this.processor, r.name())).isTrue();
       assertThat(this.processor.isTracing(r)).isFalse();
+      printStep();
     }
+    printEndOfMethod();
   }
 
   @Test
   public void testUpdateTracedRegisters() {
+    printlnMethodName();
     assertThat(UserInstruction.TRACE_REG.execute(this.processor, Register.PC.name())).isTrue();
     assertThat(out.toString()).isEmpty();
     assertThat(UserInstruction.RUN.execute(this.processor, (String[]) null)).isTrue();
@@ -452,6 +486,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testTraceMicro() throws IOException {
+    printlnMethodName();
     final String firstLine = Text.EXECUTED_CODE.text("PC=MAR=0;rd;goto 0x1") + getLineSeparator();
     final String expected = firstLine + Text.EXECUTED_CODE.text("H=LV=-1;goto 0x2") + getLineSeparator()
                             + Text.EXECUTED_CODE.text("LV=H+LV;wr;goto 0x3") + getLineSeparator()
@@ -493,6 +528,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteSetMem_WrongNumberOfParameters() {
+    printlnMethodName();
     assertThatNoParameterIsWrong(UserInstruction.SET_MEM);
     assertThatOneParameterIsWrong(UserInstruction.SET_MEM);
     assertThatThreeParametersAreWrong(UserInstruction.SET_MEM, 2);
@@ -500,6 +536,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testExecuteSetMem_Valid() {
+    printlnMethodName();
     assertThat(UserInstruction.SET_MEM.execute(this.processor, "0xA", "14")).isTrue();
     assertThat(this.processor.getMemoryValue(0xa)).isEqualTo(14);
     assertThat(out.toString()).isEmpty();
@@ -515,6 +552,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testExecuteSetMem_Invalid() {
+    printlnMethodName();
     assertThat(UserInstruction.SET_MEM.execute(this.processor, "abc", "14")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("abc")) + getLineSeparator());
     out.reset();
@@ -558,6 +596,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testPrintCode_All() throws IOException {
+    printlnMethodName();
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     final StringBuilder sb = readFile("mic1/add.ijvm.dis");
@@ -568,6 +607,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testPrintCode_Part1() throws IOException {
+    printlnMethodName();
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     final StringBuilder sb = readFile("mic1/add_part1.ijvm.dis");
@@ -588,6 +628,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testPrintCode_Around1() throws IOException {
+    printlnMethodName();
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     final StringBuilder sb = readFile("mic1/add_part1.ijvm.dis");
@@ -614,6 +655,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testPrintCode_Part2() throws IOException {
+    printlnMethodName();
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     final StringBuilder sb = readFile("mic1/add_part2.ijvm.dis");
@@ -638,6 +680,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testPrintCode_Around2() throws IOException {
+    printlnMethodName();
     Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
 
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
@@ -659,6 +702,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testPrintCode_Part3() throws IOException {
+    printlnMethodName();
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     final StringBuilder sb = readFile("mic1/add_part3.ijvm.dis");
@@ -682,6 +726,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testPrintCode_Around() throws IOException {
+    printlnMethodName();
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
 
@@ -700,6 +745,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testExecuteBreak() {
+    printlnMethodName();
     assertThat(UserInstruction.BREAK.execute(this.processor, Register.H.name(), "-1")).isTrue();
     assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
@@ -724,6 +770,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteBreak_WrongNumberOfParameters() {
+    printlnMethodName();
     assertThatNoParameterIsWrong(UserInstruction.BREAK);
     assertThatOneParameterIsWrong(UserInstruction.BREAK);
     assertThatThreeParametersAreWrong(UserInstruction.BREAK, 2);
@@ -775,13 +822,13 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testExecuteLsMacroCode_WrongNumberOfParameters() {
+    printlnMethodName();
     assertThatThreeParametersAreWrong(UserInstruction.LS_MACRO_CODE, 2);
   }
 
   @Test
   public void testLsBreakpoints() {
-    printMethodName();
-
+    printlnMethodName();
     assertThat(UserInstruction.BREAK.execute(this.processor, "H", "2")).isTrue();
     assertThat(UserInstruction.BREAK.execute(this.processor, "H", "0x2")).isTrue();
     assertThat(UserInstruction.BREAK.execute(this.processor, "H", "11_2")).isTrue();
@@ -811,12 +858,11 @@ public class UserInstructionTest extends DefaultTestCase {
                                                  + getLineSeparator()
                                                  + Text.BREAKPOINT_REGISTER.text(Register.H, "0x1")
                                                  + getLineSeparator());
-
-    printEndOfMethod();
   }
 
   @Test
   public void testExecuteLsMem() throws FileFormatException {
+    printlnMethodName();
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/test.ijvm"));
 
@@ -862,6 +908,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteLsMem_WrongNumberOfParameters() {
+    printlnMethodName();
     assertThatNoParameterIsWrong(UserInstruction.LS_MEM);
     assertThatOneParameterIsWrong(UserInstruction.LS_MEM);
     assertThatThreeParametersAreWrong(UserInstruction.LS_MEM, 2);
@@ -869,6 +916,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteLsMem_Invalid() {
+    printlnMethodName();
     assertThat(UserInstruction.LS_MEM.execute(this.processor, "0x", "0x7C")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
     out.reset();
@@ -886,6 +934,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testExecuteStep() throws FileFormatException {
+    printlnMethodName();
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     assertThat(Register.PC.getValue()).isEqualTo(Settings.MIC1_REGISTER_PC_DEFVAL.getValue());
@@ -929,6 +978,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testExecuteStepN() throws FileFormatException {
+    printlnMethodName();
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
@@ -988,6 +1038,7 @@ public class UserInstructionTest extends DefaultTestCase {
 
   @Test
   public void testExecuteStep_WrongNumberOfParameters() {
+    printlnMethodName();
     assertThatTwoParametersAreWrong(UserInstruction.STEP);
     assertThatThreeParametersAreWrong(UserInstruction.STEP, 0);
   }

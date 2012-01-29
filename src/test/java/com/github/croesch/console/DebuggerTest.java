@@ -20,9 +20,7 @@ package com.github.croesch.console;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 
 import org.junit.Test;
@@ -41,6 +39,7 @@ public class DebuggerTest extends DefaultTestCase {
 
   @Test
   public void testRun_Exit() {
+    printlnMethodName();
     final Debugger debugger = new Debugger(null);
 
     Reader.setReader(new StringReader("exit"));
@@ -57,6 +56,7 @@ public class DebuggerTest extends DefaultTestCase {
 
   @Test
   public void testRun_WrongCommand() {
+    printlnMethodName();
     final Debugger debugger = new Debugger(null);
 
     Reader.setReader(new StringReader("excel\nexit"));
@@ -73,9 +73,10 @@ public class DebuggerTest extends DefaultTestCase {
 
   @Test
   public void testRun_Help() throws IOException {
+    printlnMethodName();
     final Debugger debugger = new Debugger(null);
 
-    final StringBuilder sb = readHelpFile();
+    final StringBuilder sb = readFile("instruction-help.txt");
 
     Reader.setReader(new StringReader("help\nexit"));
     debugger.run();
@@ -92,23 +93,4 @@ public class DebuggerTest extends DefaultTestCase {
     assertThat(out.toString()).isEqualTo(sb.toString());
     out.reset();
   }
-
-  private StringBuilder readHelpFile() throws IOException {
-    final StringBuilder sb = new StringBuilder();
-    BufferedReader reader = null;
-    try {
-      reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader()
-        .getResourceAsStream("instruction-help.txt")));
-      String line;
-      while ((line = reader.readLine()) != null) {
-        sb.append(line).append(getLineSeparator());
-      }
-    } finally {
-      if (reader != null) {
-        reader.close();
-      }
-    }
-    return sb;
-  }
-
 }

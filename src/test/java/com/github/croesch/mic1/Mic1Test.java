@@ -54,6 +54,7 @@ public class Mic1Test extends DefaultTestCase {
 
   @Test(timeout = 1000)
   public void testPerformanceOfProcessor() throws FileFormatException {
+    printlnMethodName();
     final Mic1 processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/performance.mic1"),
                                     ClassLoader.getSystemResourceAsStream("mic1/empty.ijvm"));
 
@@ -69,6 +70,7 @@ public class Mic1Test extends DefaultTestCase {
 
   @Test(timeout = 4000)
   public void testDivide() throws FileFormatException {
+    printlnMethodName();
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Output.setOut(new PrintStream(out));
 
@@ -82,6 +84,7 @@ public class Mic1Test extends DefaultTestCase {
 
   @Test
   public void testIJVM() throws FileFormatException {
+    printlnMethodName();
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     Output.setOut(new PrintStream(out));
     Output.setBuffered(false);
@@ -96,6 +99,7 @@ public class Mic1Test extends DefaultTestCase {
 
   @Test
   public void testMicroStepN() {
+    printlnMethodName();
     this.processor.microStep(200);
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + getLineSeparator());
 
@@ -107,11 +111,14 @@ public class Mic1Test extends DefaultTestCase {
 
   @Test
   public void testMicroStepOne() {
+    printMethodName();
     for (int i = 0; i < 14; ++i) {
       this.processor.microStep();
       assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
       out.reset();
+      printStep();
     }
+    printLoopEnd();
     this.processor.microStep();
     assertThat(out.toString()).isEmpty();
 
@@ -120,14 +127,16 @@ public class Mic1Test extends DefaultTestCase {
       this.processor.microStep();
       assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
       out.reset();
+      printStep();
     }
     this.processor.microStep();
     assertThat(out.toString()).isEmpty();
+    printEndOfMethod();
   }
 
   @Test
   public void testHi() throws FileFormatException {
-
+    printlnMethodName();
     testHi(this.processor);
 
     this.processor.reset();
@@ -139,6 +148,7 @@ public class Mic1Test extends DefaultTestCase {
 
   @Test
   public void testHaltPerUndefinedAddress() throws FileFormatException {
+    printlnMethodName();
     final Mic1 processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi-halt-per-null.mic1"),
                                     ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
     testHi(processor);
@@ -352,6 +362,7 @@ public class Mic1Test extends DefaultTestCase {
 
   @Test
   public void testErrorTexts() {
+    printlnMethodName();
     // less than four bytes
     try {
       new Mic1(new ByteArrayInputStream(new byte[] {}), new ByteArrayInputStream(new byte[] {}));
@@ -448,6 +459,7 @@ public class Mic1Test extends DefaultTestCase {
 
   @Test
   public final void testListAllRegisters() throws IOException {
+    printlnMethodName();
     Register.MAR.setValue(-1);
     Register.MDR.setValue(0);
     Register.PC.setValue(1);
@@ -477,6 +489,7 @@ public class Mic1Test extends DefaultTestCase {
 
   @Test
   public final void testListSingleRegister() throws IOException {
+    printlnMethodName();
     Register.MAR.setValue(0x4711);
     this.processor.listSingleRegister(Register.MAR);
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x4711") + getLineSeparator());
@@ -490,6 +503,7 @@ public class Mic1Test extends DefaultTestCase {
 
   @Test
   public final void testTraceMicro() throws IOException {
+    printlnMethodName();
     final String firstLine = Text.EXECUTED_CODE.text("PC=MAR=0;rd;goto 0x1") + getLineSeparator();
     final String expected = firstLine + Text.EXECUTED_CODE.text("H=LV=-1;goto 0x2") + getLineSeparator()
                             + Text.EXECUTED_CODE.text("LV=H+LV;wr;goto 0x3") + getLineSeparator()
@@ -531,6 +545,7 @@ public class Mic1Test extends DefaultTestCase {
 
   @Test
   public void testRegisterBreakPoint() {
+    printlnMethodName();
     this.processor.addBreakpoint(Register.H, Integer.valueOf(-1));
     this.processor.run();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
@@ -592,6 +607,7 @@ public class Mic1Test extends DefaultTestCase {
 
   @Test
   public void testPrintContent() throws FileFormatException {
+    printlnMethodName();
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/test.ijvm"));
 
@@ -637,6 +653,7 @@ public class Mic1Test extends DefaultTestCase {
 
   @Test
   public void testStep() throws FileFormatException {
+    printlnMethodName();
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     assertThat(Register.PC.getValue()).isEqualTo(Settings.MIC1_REGISTER_PC_DEFVAL.getValue());
@@ -680,6 +697,7 @@ public class Mic1Test extends DefaultTestCase {
 
   @Test
   public void testStepN() throws FileFormatException {
+    printlnMethodName();
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
