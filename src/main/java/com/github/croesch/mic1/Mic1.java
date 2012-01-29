@@ -192,12 +192,29 @@ public final class Mic1 {
    * @since Date: Nov 21, 2011
    */
   void doTick() {
+    if (isAssemblerCodeFetchingInstruction()) {
+      this.currentMacroAddress = Register.PC.getValue();
+    }
+
     doClock1();
     doClock2();
     doClock3();
 
     update();
     ++this.ticks;
+  }
+
+  /**
+   * Returns whether the current instruction is the assembler code fetching instruction that invokes a micro method.
+   * 
+   * @since Date: Jan 29, 2012
+   * @return <code>true</code> if this instruction fetches the next assembler byte command to invoke the next micro
+   *         method.
+   */
+  private boolean isAssemblerCodeFetchingInstruction() {
+    return this.mpcCalculator.getMpc() == Settings.MIC1_MICRO_ADDRESS_IJVM.getValue()
+    // Going to first instruction needs two invocations of this instruction so check if it's the first one
+           && Register.PC.getValue() != Settings.MIC1_REGISTER_PC_DEFVAL.getValue();
   }
 
   /**
@@ -227,6 +244,47 @@ public final class Mic1 {
   }
 
   /**
+   * If the processor hasn't reached the halt instruction this executes one macro instruction.<br>
+   * The number of effectively executed micro instructions is printed to the user.
+   * 
+   * @since Date: Jan 29, 2012
+   */
+  public void step() {
+    step(1);
+  }
+
+  /**
+   * Executes the given number of macro instructions. If one of the executed micro instructions is the halt-instruction,
+   * it'll execute less than the given number of macro instructions.<br>
+   * The number of effectively executed micro instructions is printed to the user.
+   * 
+   * @since Date: Jan 29, 2012
+   * @param steps the number of macro instructions to execute
+   */
+  public void step(final int steps) {
+    int step = 0;
+
+    resetTicks();
+    while (step < steps && canContinue()) {
+      doTick();
+      if (!isFirstTick() && isAssemblerCodeFetchingInstruction()) {
+        ++step;
+      }
+    }
+    printTicks();
+  }
+
+  /**
+   * Returns whether the processor is executing its first tick.
+   * 
+   * @since Date: Jan 29, 2012
+   * @return <code>true</code> if the current tick is the first tick
+   */
+  private boolean isFirstTick() {
+    return this.ticks == 0;
+  }
+
+  /**
    * Returns whether the debugger can continue executing instructions or if it should stop.
    * 
    * @since Date: Jan 27, 2012
@@ -234,7 +292,7 @@ public final class Mic1 {
    *         <code>false</code> otherwise
    */
   private boolean canContinue() {
-    return !isHaltInstruction() && (this.ticks == 0 || !this.bpm.isBreakpoint());
+    return !isHaltInstruction() && (isFirstTick() || !this.bpm.isBreakpoint());
   }
 
   /**
@@ -274,9 +332,6 @@ public final class Mic1 {
   private void fetchNextInstruction() {
     this.instruction = this.controlStore.getInstruction(this.mpcCalculator.getMpc());
     this.oldMpc = this.mpcCalculator.getMpc();
-    if (this.oldMpc == Settings.MIC1_MICRO_ADDRESS_IJVM.getValue()) {
-      this.currentMacroAddress = Register.PC.getValue();
-    }
   }
 
   /**

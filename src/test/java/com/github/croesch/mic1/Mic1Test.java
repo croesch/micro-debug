@@ -30,9 +30,11 @@ import org.junit.Test;
 import com.github.croesch.DefaultTestCase;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
+import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.register.Register;
 import com.github.croesch.misc.Printer;
+import com.github.croesch.misc.Settings;
 
 /**
  * Provides test cases for {@link Mic1}.
@@ -93,7 +95,7 @@ public class Mic1Test extends DefaultTestCase {
   }
 
   @Test
-  public void testStepN() {
+  public void testMicroStepN() {
     this.processor.microStep(200);
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + getLineSeparator());
 
@@ -104,7 +106,7 @@ public class Mic1Test extends DefaultTestCase {
   }
 
   @Test
-  public void testStepOne() {
+  public void testMicroStepOne() {
     for (int i = 0; i < 14; ++i) {
       this.processor.microStep();
       assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
@@ -168,7 +170,7 @@ public class Mic1Test extends DefaultTestCase {
     Printer.setPrintStream(new PrintStream(out));
 
     processor.microStep(1);
-    assertOneTickDoneAndResetPrintStream(out);
+    assertTicksDoneAndResetPrintStream(1);
     processor.microStep(3);
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(3) + getLineSeparator());
     out.reset();
@@ -195,7 +197,7 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(Register.PC.getValue()).isEqualTo(0);
     assertThat(micOut.toString()).isEmpty();
     assertThat(processor.isHaltInstruction()).isFalse();
-    assertOneTickDoneAndResetPrintStream(out);
+    assertTicksDoneAndResetPrintStream(1);
 
     // 01: LV = H = -1; goto 2;
     processor.microStep();
@@ -205,7 +207,7 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(micOut.toString()).isEmpty();
     assertThat(processor.isHaltInstruction()).isFalse();
-    assertOneTickDoneAndResetPrintStream(out);
+    assertTicksDoneAndResetPrintStream(1);
 
     // 02: LV = H + LV; goto 3;
     processor.microStep();
@@ -216,7 +218,7 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(micOut.toString()).isEmpty();
     assertThat(processor.isHaltInstruction()).isFalse();
-    assertOneTickDoneAndResetPrintStream(out);
+    assertTicksDoneAndResetPrintStream(1);
 
     // 03: MAR = LV - 1; wr; goto 4;
     processor.microStep();
@@ -227,7 +229,7 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(micOut.toString()).isEqualTo("H");
     assertThat(processor.isHaltInstruction()).isFalse();
-    assertOneTickDoneAndResetPrintStream(out);
+    assertTicksDoneAndResetPrintStream(1);
 
     // 04: MAR = PC = PC + 1; rd; goto 5;
     processor.microStep();
@@ -238,7 +240,7 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(micOut.toString()).isEqualTo("H");
     assertThat(processor.isHaltInstruction()).isFalse();
-    assertOneTickDoneAndResetPrintStream(out);
+    assertTicksDoneAndResetPrintStream(1);
 
     // 05: MAR = LV - 1; goto 6;
     processor.microStep();
@@ -249,7 +251,7 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(micOut.toString()).isEqualTo("H");
     assertThat(processor.isHaltInstruction()).isFalse();
-    assertOneTickDoneAndResetPrintStream(out);
+    assertTicksDoneAndResetPrintStream(1);
 
     // 06: wr; goto 7;
     processor.microStep();
@@ -260,7 +262,7 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(micOut.toString()).isEqualTo("Hi");
     assertThat(processor.isHaltInstruction()).isFalse();
-    assertOneTickDoneAndResetPrintStream(out);
+    assertTicksDoneAndResetPrintStream(1);
 
     // 07: MAR = PC = PC + 1; rd; goto 8;
     processor.microStep();
@@ -271,7 +273,7 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(micOut.toString()).isEqualTo("Hi");
     assertThat(processor.isHaltInstruction()).isFalse();
-    assertOneTickDoneAndResetPrintStream(out);
+    assertTicksDoneAndResetPrintStream(1);
 
     // 08: MAR = LV - 1; goto 9;
     processor.microStep();
@@ -282,7 +284,7 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(micOut.toString()).isEqualTo("Hi");
     assertThat(processor.isHaltInstruction()).isFalse();
-    assertOneTickDoneAndResetPrintStream(out);
+    assertTicksDoneAndResetPrintStream(1);
 
     // 09: wr; goto 10;
     processor.microStep();
@@ -293,7 +295,7 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(micOut.toString()).isEqualTo("Hi!");
     assertThat(processor.isHaltInstruction()).isFalse();
-    assertOneTickDoneAndResetPrintStream(out);
+    assertTicksDoneAndResetPrintStream(1);
 
     // 10: MAR = PC = PC + 1; rd; goto 11;
     processor.microStep();
@@ -304,7 +306,7 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(micOut.toString()).isEqualTo("Hi!");
     assertThat(processor.isHaltInstruction()).isFalse();
-    assertOneTickDoneAndResetPrintStream(out);
+    assertTicksDoneAndResetPrintStream(1);
 
     // 11: MAR = LV - 1; goto 12;
     processor.microStep();
@@ -315,7 +317,7 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(micOut.toString()).isEqualTo("Hi!");
     assertThat(processor.isHaltInstruction()).isFalse();
-    assertOneTickDoneAndResetPrintStream(out);
+    assertTicksDoneAndResetPrintStream(1);
 
     // 12: wr; goto 13;
     processor.microStep();
@@ -326,7 +328,7 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(micOut.toString()).isEqualTo("Hi!\n");
     assertThat(processor.isHaltInstruction()).isFalse();
-    assertOneTickDoneAndResetPrintStream(out);
+    assertTicksDoneAndResetPrintStream(1);
 
     // 13: halt;
     processor.microStep();
@@ -337,7 +339,7 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(Register.H.getValue()).isEqualTo(-1);
     assertThat(micOut.toString()).isEqualTo("Hi!\n");
     assertThat(processor.isHaltInstruction()).isTrue();
-    assertOneTickDoneAndResetPrintStream(out);
+    assertTicksDoneAndResetPrintStream(1);
 
     processor.microStep();
     assertThat(out.toString()).isEmpty();
@@ -348,9 +350,9 @@ public class Mic1Test extends DefaultTestCase {
     Output.setOut(System.out);
   }
 
-  private void assertOneTickDoneAndResetPrintStream(final ByteArrayOutputStream stdOut) {
-    assertThat(stdOut.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
-    stdOut.reset();
+  private void assertTicksDoneAndResetPrintStream(final int ticks) {
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(ticks) + getLineSeparator());
+    out.reset();
   }
 
   @Test
@@ -636,5 +638,107 @@ public class Mic1Test extends DefaultTestCase {
                                                  + Text.MEMORY_CONTENT.text("    0x7E", "0x0") + getLineSeparator()
                                                  + Text.MEMORY_CONTENT.text("    0x7F", "0x0") + getLineSeparator());
     out.reset();
+  }
+
+  @Test
+  public void testStep() throws FileFormatException {
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    assertThat(Register.PC.getValue()).isEqualTo(Settings.MIC1_REGISTER_PC_DEFVAL.getValue());
+
+    this.processor.step();
+    assertThat(Register.PC.getValue()).isEqualTo(0);
+    assertTicksDoneAndResetPrintStream(3);
+
+    this.processor.step();
+    assertThat(Register.PC.getValue()).isEqualTo(2);
+    assertTicksDoneAndResetPrintStream(4);
+
+    this.processor.step();
+    assertThat(Register.PC.getValue()).isEqualTo(3);
+    assertTicksDoneAndResetPrintStream(3);
+
+    this.processor.step();
+    assertThat(Register.PC.getValue()).isEqualTo(5);
+    assertTicksDoneAndResetPrintStream(7);
+
+    this.processor.step();
+    assertThat(Register.PC.getValue()).isEqualTo(7);
+    assertTicksDoneAndResetPrintStream(7);
+
+    this.processor.step();
+    assertThat(Register.PC.getValue()).isEqualTo(9);
+    assertTicksDoneAndResetPrintStream(4);
+
+    this.processor.step();
+    assertThat(Register.PC.getValue()).isEqualTo(10);
+    assertTicksDoneAndResetPrintStream(9);
+
+    this.processor.step();
+    assertThat(Register.PC.getValue()).isEqualTo(13);
+    assertTicksDoneAndResetPrintStream(8);
+
+    this.processor.step();
+    assertThat(Register.PC.getValue()).isEqualTo(71);
+    assertTicksDoneAndResetPrintStream(23);
+  }
+
+  @Test
+  public void testStepN() throws FileFormatException {
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
+    Output.setOut(new PrintStream(out));
+    Output.setBuffered(true);
+    assertThat(Register.PC.getValue()).isEqualTo(Settings.MIC1_REGISTER_PC_DEFVAL.getValue());
+
+    this.processor.step(0);
+    assertThat(Register.PC.getValue()).isEqualTo(Settings.MIC1_REGISTER_PC_DEFVAL.getValue());
+    assertThat(out.toString()).isEmpty();
+
+    this.processor.step(1);
+    assertThat(Register.PC.getValue()).isEqualTo(0);
+    assertTicksDoneAndResetPrintStream(3);
+
+    this.processor.step(2);
+    assertThat(Register.PC.getValue()).isEqualTo(3);
+    assertTicksDoneAndResetPrintStream(7);
+
+    this.processor.step(3);
+    assertThat(Register.PC.getValue()).isEqualTo(9);
+    assertTicksDoneAndResetPrintStream(18);
+
+    this.processor.step(-1);
+    assertThat(Register.PC.getValue()).isEqualTo(9);
+    assertThat(out.toString()).isEmpty();
+
+    this.processor.step(0);
+    assertThat(Register.PC.getValue()).isEqualTo(9);
+    assertThat(out.toString()).isEmpty();
+
+    this.processor.step(1);
+    assertThat(Register.PC.getValue()).isEqualTo(10);
+    assertTicksDoneAndResetPrintStream(9);
+
+    this.processor.step(2);
+    assertThat(Register.PC.getValue()).isEqualTo(71);
+    assertTicksDoneAndResetPrintStream(31);
+
+    this.processor.step(560);
+    assertThat(Register.PC.getValue()).isEqualTo(0x11D);
+    assertThat(out.toString()).isEqualTo(" 2" + getLineSeparator() + "+2" + getLineSeparator() + "========"
+                                                 + getLineSeparator() + "00000004" + getLineSeparator()
+                                                 + Text.TICKS.text(3213) + getLineSeparator());
+    out.reset();
+
+    this.processor.step(560);
+    assertThat(Register.PC.getValue()).isEqualTo(0x41);
+    assertTicksDoneAndResetPrintStream(11);
+
+    this.processor.step(560000);
+    assertThat(Register.PC.getValue()).isEqualTo(0x41);
+    assertThat(out.toString()).isEmpty();
+
+    Output.setOut(System.out);
   }
 }
