@@ -592,4 +592,49 @@ public class Mic1Test extends DefaultTestCase {
 
     printEndOfMethod();
   }
+
+  @Test
+  public void testPrintContent() throws FileFormatException {
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/test.ijvm"));
+
+    this.processor.printContent(0, 1);
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("     0x1", "0x4050607")
+                                                 + getLineSeparator());
+    out.reset();
+
+    this.processor.printContent(1, 0);
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("     0x1", "0x4050607")
+                                                 + getLineSeparator());
+    out.reset();
+
+    this.processor.printContent(0, 0);
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator());
+    out.reset();
+
+    this.processor.printContent(2, -13);
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("     0x1", "0x4050607")
+                                                 + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("     0x2", "0x8090A0B")
+                                                 + getLineSeparator());
+    out.reset();
+
+    this.processor.printContent(3, 1);
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x1", "0x4050607") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("     0x2", "0x8090A0B")
+                                                 + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("     0x3", "0xC0D0E0F")
+                                                 + getLineSeparator());
+    out.reset();
+
+    this.processor.printContent(Byte.MAX_VALUE, Byte.MAX_VALUE - 3);
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("    0x7C", "0x0") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("    0x7D", "0x0") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("    0x7E", "0x0") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("    0x7F", "0x0") + getLineSeparator());
+    out.reset();
+  }
 }

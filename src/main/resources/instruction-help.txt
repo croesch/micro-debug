@@ -23,6 +23,11 @@ DESCRIPTION
 		and NUM2 the number of the last line to print. Lines are numbered according
 		to the output of this function without parameters.
 
+	ls-mem FROM TO
+		Prints the content of the memory between the given addresses.
+		FROM is the address of the first word to print and TO the address of the last
+		word to print.
+
 	ls-reg [REG]
 		Lists the value of a register, where REG is the name of that register.
 		If REG is omitted then the values of all registers are listed.

@@ -776,7 +776,7 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
-  public void testListBreakpoints() {
+  public void testLsBreakpoints() {
     printMethodName();
 
     assertThat(UserInstruction.BREAK.execute(this.processor, "H", "2")).isTrue();
@@ -810,5 +810,74 @@ public class UserInstructionTest extends DefaultTestCase {
                                                  + getLineSeparator());
 
     printEndOfMethod();
+  }
+
+  @Test
+  public void testExecuteLsMem() throws FileFormatException {
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/test.ijvm"));
+
+    assertThat(UserInstruction.LS_MEM.execute(this.processor, "0x0", "0b1")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("     0x1", "0x4050607")
+                                                 + getLineSeparator());
+    out.reset();
+
+    assertThat(UserInstruction.LS_MEM.execute(this.processor, "0x1", "0o0")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("     0x1", "0x4050607")
+                                                 + getLineSeparator());
+    out.reset();
+
+    assertThat(UserInstruction.LS_MEM.execute(this.processor, "0x0", "0b0")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator());
+    out.reset();
+
+    assertThat(UserInstruction.LS_MEM.execute(this.processor, "2", "-13")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("     0x1", "0x4050607")
+                                                 + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("     0x2", "0x8090A0B")
+                                                 + getLineSeparator());
+    out.reset();
+
+    assertThat(UserInstruction.LS_MEM.execute(this.processor, "0x3", "0b1")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x1", "0x4050607") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("     0x2", "0x8090A0B")
+                                                 + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("     0x3", "0xC0D0E0F")
+                                                 + getLineSeparator());
+    out.reset();
+
+    assertThat(UserInstruction.LS_MEM.execute(this.processor, "0x7F", "0x7C")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("    0x7C", "0x0") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("    0x7D", "0x0") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("    0x7E", "0x0") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("    0x7F", "0x0") + getLineSeparator());
+    out.reset();
+  }
+
+  @Test
+  public final void testExecuteLsMem_WrongNumberOfParameters() {
+    assertThatNoParameterIsWrong(UserInstruction.LS_MEM);
+    assertThatOneParameterIsWrong(UserInstruction.LS_MEM);
+    assertThatThreeParametersAreWrong(UserInstruction.LS_MEM, 2);
+  }
+
+  @Test
+  public final void testExecuteLsMem_Invalid() {
+    assertThat(UserInstruction.LS_MEM.execute(this.processor, "0x", "0x7C")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
+    out.reset();
+
+    assertThat(UserInstruction.LS_MEM.execute(this.processor, "0x7F", "0x")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
+    out.reset();
+
+    assertThat(UserInstruction.LS_MEM.execute(this.processor, "1x", "0x")).isTrue();
+    assertThat(out.toString())
+      .isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator()
+                         + Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
+    out.reset();
   }
 }

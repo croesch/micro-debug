@@ -114,6 +114,23 @@ enum UserInstruction {
     }
   },
 
+  /** lists the content of the memory between the given addresses (inclusive) */
+  LS_MEM {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      if (getSize(params) == 2) {
+        final Integer from = (Integer) Parameter.NUMBER.getValue(params[0]);
+        final Integer to = (Integer) Parameter.NUMBER.getValue(params[1]);
+        if (from != null && to != null) {
+          processor.printContent(from, to);
+        }
+      } else {
+        Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(2, getSize(params)));
+      }
+      return true;
+    }
+  },
+
   /** list the values of all or a single register */
   LS_REG {
     @Override

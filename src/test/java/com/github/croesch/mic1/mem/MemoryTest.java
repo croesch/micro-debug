@@ -665,26 +665,34 @@ public class MemoryTest extends DefaultTestCase {
   @Test
   public void testPrintContent() {
     this.mem.printContent(0, 1);
-    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("     0x1", "0x4050607")
+                                                 + getLineSeparator());
     out.reset();
 
     this.mem.printContent(1, 0);
-    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("     0x1", "0x4050607")
+                                                 + getLineSeparator());
     out.reset();
 
     this.mem.printContent(0, 0);
-    assertThat(out.toString()).isEmpty();
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator());
     out.reset();
 
     this.mem.printContent(2, -13);
     assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator()
                                                  + Text.MEMORY_CONTENT.text("     0x1", "0x4050607")
+                                                 + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("     0x2", "0x8090A0B")
                                                  + getLineSeparator());
     out.reset();
 
     this.mem.printContent(3, 1);
     assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x1", "0x4050607") + getLineSeparator()
                                                  + Text.MEMORY_CONTENT.text("     0x2", "0x8090A0B")
+                                                 + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("     0x3", "0xC0D0E0F")
                                                  + getLineSeparator());
     out.reset();
 

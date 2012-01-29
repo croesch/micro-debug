@@ -601,18 +601,18 @@ public final class Memory {
   }
 
   /**
-   * Prints the content of the memory.
+   * Prints the content of the memory between the given addresses.
    * 
    * @since Date: Jan 29, 2012
-   * @param pos1 the position to start (inclusive)
-   * @param pos2 the position to end (exclusive)
+   * @param pos1 the address to start (inclusive)
+   * @param pos2 the address to end (inclusive)
    */
   public void printContent(final int pos1, final int pos2) {
     // correct arguments
     final int start = Math.max(0, Math.min(pos1, pos2));
-    final int end = Math.min(this.memory.length, Math.max(pos1, pos2));
+    final int end = Math.min(this.memory.length - 1, Math.max(pos1, pos2));
 
-    for (int i = start; i < end; ++i) {
+    for (int i = start; i <= end; ++i) {
       Printer.println(Text.MEMORY_CONTENT.text(formatIntToHex(i, Settings.MIC1_MEM_MACRO_ADDR_WIDTH.getValue()),
                                                Utils.toHexString(getWord(i))));
     }

@@ -597,4 +597,15 @@ public final class Mic1 {
   public void listBreakpoints() {
     this.bpm.listBreakpoints();
   }
+
+  /**
+   * Prints the content of the memory between the given addresses.
+   * 
+   * @since Date: Jan 29, 2012
+   * @param pos1 the address to start (inclusive)
+   * @param pos2 the address to end (inclusive)
+   */
+  public void printContent(final int pos1, final int pos2) {
+    this.memory.printContent(pos1, pos2);
+  }
 }
