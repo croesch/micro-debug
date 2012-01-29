@@ -496,7 +496,7 @@ public class MemoryTest extends DefaultTestCase {
 
   @Test
   public void testPrintCode_All() throws IOException {
-    this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
+    this.mem = new Memory(Settings.MIC1_MEM_MACRO_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     this.mem.printCode();
     final StringBuilder sb = readFile("mic1/add.ijvm.dis");
@@ -507,7 +507,7 @@ public class MemoryTest extends DefaultTestCase {
 
   @Test
   public void testPrintCode_Part1() throws IOException {
-    this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
+    this.mem = new Memory(Settings.MIC1_MEM_MACRO_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     this.mem.printCode(0, 0x1D);
     final StringBuilder sb = readFile("mic1/add_part1.ijvm.dis");
@@ -528,7 +528,7 @@ public class MemoryTest extends DefaultTestCase {
 
   @Test
   public void testPrintCode_Around1() throws IOException {
-    this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
+    this.mem = new Memory(Settings.MIC1_MEM_MACRO_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     this.mem.printCodeAroundLine(0, 0x1D);
     final StringBuilder sb = readFile("mic1/add_part1.ijvm.dis");
@@ -549,7 +549,7 @@ public class MemoryTest extends DefaultTestCase {
 
   @Test
   public void testPrintCode_Part2() throws IOException {
-    this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
+    this.mem = new Memory(Settings.MIC1_MEM_MACRO_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     this.mem.printCode(0x18, 0x2E);
     final StringBuilder sb = readFile("mic1/add_part2.ijvm.dis");
@@ -574,7 +574,7 @@ public class MemoryTest extends DefaultTestCase {
 
   @Test
   public void testPrintCode_Around2() throws IOException {
-    this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
+    this.mem = new Memory(Settings.MIC1_MEM_MACRO_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     this.mem.printCodeAroundLine(35, 11);
     final StringBuilder sb = readFile("mic1/add_part2.ijvm.dis");
@@ -586,7 +586,7 @@ public class MemoryTest extends DefaultTestCase {
 
   @Test
   public void testPrintCode_Part3() throws IOException {
-    this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
+    this.mem = new Memory(Settings.MIC1_MEM_MACRO_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     final StringBuilder sb = readFile("mic1/add_part3.ijvm.dis");
     this.mem.printCode(0xff, 0x11d);
@@ -610,7 +610,7 @@ public class MemoryTest extends DefaultTestCase {
 
   @Test
   public void testPrintCode_Around() throws IOException {
-    this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
+    this.mem = new Memory(Settings.MIC1_MEM_MACRO_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     this.mem.printCodeAroundLine(2, 0);
 
@@ -620,7 +620,7 @@ public class MemoryTest extends DefaultTestCase {
 
   @Test
   public void testPrintCode_Around3() throws IOException {
-    this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
+    this.mem = new Memory(Settings.MIC1_MEM_MACRO_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     final StringBuilder sb = readFile("mic1/add_part3.ijvm.dis");
     this.mem.printCodeAroundLine(0x10E, 15);
@@ -660,5 +660,44 @@ public class MemoryTest extends DefaultTestCase {
     }
 
     printEndOfMethod();
+  }
+
+  @Test
+  public void testPrintContent() {
+    this.mem.printContent(0, 1);
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator());
+    out.reset();
+
+    this.mem.printContent(1, 0);
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator());
+    out.reset();
+
+    this.mem.printContent(0, 0);
+    assertThat(out.toString()).isEmpty();
+    out.reset();
+
+    this.mem.printContent(2, -13);
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("     0x1", "0x4050607")
+                                                 + getLineSeparator());
+    out.reset();
+
+    this.mem.printContent(3, 1);
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x1", "0x4050607") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("     0x2", "0x8090A0B")
+                                                 + getLineSeparator());
+    out.reset();
+
+    this.mem.printContent(Byte.MAX_VALUE, Byte.MAX_VALUE - 3);
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("    0x7C", "0x0") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("    0x7D", "0x0") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("    0x7E", "0x0") + getLineSeparator());
+    out.reset();
+
+    this.mem.printContent(Integer.MAX_VALUE, Byte.MAX_VALUE - 3);
+    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("    0x7C", "0x0") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("    0x7D", "0x0") + getLineSeparator()
+                                                 + Text.MEMORY_CONTENT.text("    0x7E", "0x0") + getLineSeparator());
+    out.reset();
   }
 }

@@ -39,7 +39,7 @@ public class IJVMCommandArgumentTest extends DefaultTestCase {
 
   @Override
   protected void setUpDetails() throws FileFormatException {
-    this.mem = new Memory(Settings.MIC1_MEMORY_MAXSIZE.getValue(),
+    this.mem = new Memory(Settings.MIC1_MEM_MACRO_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/test.ijvm"));
   }
 

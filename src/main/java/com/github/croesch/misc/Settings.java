@@ -52,13 +52,12 @@ public enum Settings {
   /** contains the default value for the {@link com.github.croesch.mic1.register.Register#TOS} */
   MIC1_REGISTER_TOS_DEFVAL,
 
-  /** contains the maximum size of the {@link com.github.croesch.mic1.mem.Memory} */
-  MIC1_MEMORY_MAXSIZE,
-
   /** the width of a formatted address of a micro code instruction */
-  MIC1_CODE_MICRO_HEX_WIDTH,
+  MIC1_MEM_MICRO_ADDR_WIDTH,
   /** the width of a formatted address of a macro/ijvm code instruction */
-  MIC1_CODE_MACRO_HEX_WIDTH,
+  MIC1_MEM_MACRO_ADDR_WIDTH,
+  /** contains the maximum size of the {@link com.github.croesch.mic1.mem.Memory} */
+  MIC1_MEM_MACRO_MAXSIZE,
 
   /** the address of micro assembler code that reads the next ijvm instruction */
   MIC1_MICRO_ADDRESS_IJVM;

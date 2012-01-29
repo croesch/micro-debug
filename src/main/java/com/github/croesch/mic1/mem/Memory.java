@@ -462,8 +462,7 @@ public final class Memory {
    */
   private int getLastPossibleCodeAddress() {
     return Utils.getNextHigherValue(getFirstPossibleCodeAddress(), Settings.MIC1_REGISTER_CPP_DEFVAL.getValue(),
-                                    Settings.MIC1_REGISTER_SP_DEFVAL.getValue(),
-                                    Settings.MIC1_MEMORY_MAXSIZE.getValue(),
+                                    Settings.MIC1_REGISTER_SP_DEFVAL.getValue(), this.memory.length,
                                     Settings.MIC1_REGISTER_LV_DEFVAL.getValue()) - 1;
   }
 
@@ -509,8 +508,8 @@ public final class Memory {
     final String name = buildNameForCommand(cmd);
     final int bytesRead = readArgumentsIfAny(addr, cmd, formattedArgs);
 
-    final String formattedAddr = formatIntToHex(addr, Settings.MIC1_CODE_MACRO_HEX_WIDTH.getValue());
-    final String formattedCmdCode = formatIntToHex(cmdCode, Settings.MIC1_CODE_MICRO_HEX_WIDTH.getValue());
+    final String formattedAddr = formatIntToHex(addr, Settings.MIC1_MEM_MACRO_ADDR_WIDTH.getValue());
+    final String formattedCmdCode = formatIntToHex(cmdCode, Settings.MIC1_MEM_MICRO_ADDR_WIDTH.getValue());
 
     Printer.println(Text.CODE_LINE.text(formattedAddr, formattedCmdCode, name, formattedArgs.toString()));
 
@@ -599,5 +598,23 @@ public final class Memory {
       this.commands = new IJVMConfigReader().readConfig(in);
     }
     return this.commands.get(Integer.valueOf(addr));
+  }
+
+  /**
+   * Prints the content of the memory.
+   * 
+   * @since Date: Jan 29, 2012
+   * @param pos1 the position to start (inclusive)
+   * @param pos2 the position to end (exclusive)
+   */
+  public void printContent(final int pos1, final int pos2) {
+    // correct arguments
+    final int start = Math.max(0, Math.min(pos1, pos2));
+    final int end = Math.min(this.memory.length, Math.max(pos1, pos2));
+
+    for (int i = start; i < end; ++i) {
+      Printer.println(Text.MEMORY_CONTENT.text(formatIntToHex(i, Settings.MIC1_MEM_MACRO_ADDR_WIDTH.getValue()),
+                                               Utils.toHexString(getWord(i))));
+    }
   }
 }
