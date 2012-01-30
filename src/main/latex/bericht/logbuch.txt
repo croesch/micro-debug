@@ -95,3 +95,5 @@
 	- #1 (Argument.ERROR_UNKNOWN show help), #3 (Parameter.NUMBER change format) erledigt
 29.01.2012 (3 h)
 	- STEP und LS-MEM implementiert
+30.01.2012 (2 h)
+	- RM-BREAK implementiert
