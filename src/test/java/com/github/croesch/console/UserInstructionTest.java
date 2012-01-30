@@ -829,35 +829,37 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testLsBreakpoints() {
     printlnMethodName();
-    assertThat(UserInstruction.BREAK.execute(this.processor, "H", "2")).isTrue();
-    assertThat(UserInstruction.BREAK.execute(this.processor, "H", "0x2")).isTrue();
-    assertThat(UserInstruction.BREAK.execute(this.processor, "H", "11_2")).isTrue();
-    assertThat(UserInstruction.BREAK.execute(this.processor, "H", "1")).isTrue();
+
+    assertThat(UserInstruction.BREAK.execute(this.processor, "MBRU", "16")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.processor, "MBRU", "-48")).isTrue();
 
     assertThat(UserInstruction.BREAK.execute(this.processor, "CPP", "-1")).isTrue();
     assertThat(UserInstruction.BREAK.execute(this.processor, "CPP", "0x7FfFfFfF")).isTrue();
     assertThat(UserInstruction.BREAK.execute(this.processor, "CPP", "-2147483648")).isTrue();
 
-    assertThat(UserInstruction.BREAK.execute(this.processor, "MBRU", "16")).isTrue();
-    assertThat(UserInstruction.BREAK.execute(this.processor, "MBRU", "-48")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.processor, "H", "2")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.processor, "H", "0x2")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.processor, "H", "11_2")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.processor, "H", "1")).isTrue();
 
     assertThat(out.toString()).isEmpty();
     assertThat(UserInstruction.LS_BREAK.execute(this.processor)).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.BREAKPOINT_REGISTER.text(Register.MBRU, "0x10") + getLineSeparator()
-                                                 + Text.BREAKPOINT_REGISTER.text(Register.MBRU, "0xFFFFFFD0")
-                                                 + getLineSeparator()
-                                                 + Text.BREAKPOINT_REGISTER.text(Register.CPP, "0xFFFFFFFF")
-                                                 + getLineSeparator()
-                                                 + Text.BREAKPOINT_REGISTER.text(Register.CPP, "0x7FFFFFFF")
-                                                 + getLineSeparator()
-                                                 + Text.BREAKPOINT_REGISTER.text(Register.CPP, "0x80000000")
-                                                 + getLineSeparator()
-                                                 + Text.BREAKPOINT_REGISTER.text(Register.H, "0x2")
-                                                 + getLineSeparator()
-                                                 + Text.BREAKPOINT_REGISTER.text(Register.H, "0x3")
-                                                 + getLineSeparator()
-                                                 + Text.BREAKPOINT_REGISTER.text(Register.H, "0x1")
-                                                 + getLineSeparator());
+    assertThat(out.toString()).matches(Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.MBRU, "0x10")
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.MBRU, "0xFFFFFFD0")
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.CPP, "0xFFFFFFFF")
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.CPP, "0x7FFFFFFF")
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.CPP, "0x80000000")
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.H, "0x2")
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.H, "0x3")
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.H, "0x1")
+                                               + getLineSeparator());
   }
 
   @Test

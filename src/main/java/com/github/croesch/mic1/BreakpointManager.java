@@ -19,14 +19,14 @@
 package com.github.croesch.mic1;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.github.croesch.debug.Breakpoint;
+import com.github.croesch.debug.RegisterBreakpoint;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.register.Register;
 import com.github.croesch.misc.Printer;
-import com.github.croesch.misc.Utils;
 
 /**
  * A manager for break points in the debugger.
@@ -40,18 +40,7 @@ final class BreakpointManager {
   private static final Logger LOGGER = Logger.getLogger(Text.class.getName());
 
   /** contains a list of values for each register that are set to be a breakpoint */
-  private final EnumMap<Register, List<Integer>> registerBreakPoints = new EnumMap<Register, List<Integer>>(Register.class);
-
-  /**
-   * Constructs the break point manager.
-   * 
-   * @since Date: Jan 27, 2012
-   */
-  public BreakpointManager() {
-    for (final Register r : Register.values()) {
-      this.registerBreakPoints.put(r, new ArrayList<Integer>());
-    }
-  }
+  private final List<Breakpoint> breakPoints = new ArrayList<Breakpoint>();
 
   /**
    * Returns whether any break point condition is met.
@@ -61,8 +50,8 @@ final class BreakpointManager {
    *         <code>false</code> otherwise
    */
   boolean isBreakpoint() {
-    for (final Register r : Register.values()) {
-      if (this.registerBreakPoints.get(r).contains(Integer.valueOf(r.getValue()))) {
+    for (final Breakpoint bp : this.breakPoints) {
+      if (bp.isConditionMet()) {
         return true;
       }
     }
@@ -78,10 +67,11 @@ final class BreakpointManager {
    */
   void addBreakpoint(final Register r, final Integer val) {
     if (r != null && val != null) {
-      if (this.registerBreakPoints.get(r).contains(val)) {
+      final Breakpoint bp = new RegisterBreakpoint(r, val);
+      if (this.breakPoints.contains(bp)) {
         LOGGER.fine("adding '" + Text.BREAKPOINT_REGISTER.text(r, val) + "' that already exists..");
       } else {
-        this.registerBreakPoints.get(r).add(Integer.valueOf(val));
+        this.breakPoints.add(bp);
       }
     }
   }
@@ -92,10 +82,8 @@ final class BreakpointManager {
    * @since Date: Jan 28, 2012
    */
   void listBreakpoints() {
-    for (final Register r : Register.values()) {
-      for (final int i : this.registerBreakPoints.get(r)) {
-        Printer.println(Text.BREAKPOINT_REGISTER.text(r, Utils.toHexString(i)));
-      }
+    for (final Breakpoint bp : this.breakPoints) {
+      Printer.println(bp);
     }
   }
 }

@@ -36,7 +36,7 @@
 	<entry key="executed-code">Executed: {0}</entry>
 	<entry key="memory-content">Value of memory at {0} = {1}</entry>
 	<entry key="code-line">{0}: [{1}] {2} {3}</entry>
-	<entry key="breakpoint-register">Breakpoint for register {0} having value {1}</entry>
+	<entry key="breakpoint-register">Breakpoint #{0}: when Register {1} == {2}</entry>
 
 	<entry key="unknown-ijvm-instruction">---</entry>
 
