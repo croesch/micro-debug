@@ -645,6 +645,16 @@ public final class Mic1 {
   }
 
   /**
+   * Removes the breakpoint with the given unique id.
+   * 
+   * @since Date: Jan 30, 2012
+   * @param id the unique id of the breakpoint to remove
+   */
+  public void removeBreakpoint(final int id) {
+    this.bpm.removeBreakpoint(id);
+  }
+
+  /**
    * Lists all breakpoints.
    * 
    * @since Date: Jan 28, 2012

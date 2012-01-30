@@ -185,6 +185,20 @@ enum UserInstruction {
     }
   },
 
+  /** Removes the breakpoint with the given number */
+  RM_BREAK {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      if (getSize(params) != 1) {
+        Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(1, getSize(params)));
+      } else {
+        final Integer i = (Integer) Parameter.NUMBER.getValue(params[0]);
+        processor.removeBreakpoint(i);
+      }
+      return true;
+    }
+  },
+
   /** runs the program to the end */
   RUN {
     @Override

@@ -27,10 +27,10 @@ package com.github.croesch.debug;
 public abstract class Breakpoint {
 
   /** the unique id of this breakpoint */
-  private long id = 0;
+  private int id = 0;
 
   /** the currently highest unique id .. to calculate the next id */
-  private static long highestId = 0;
+  private static int highestId = 0;
 
   /**
    * Constructs a new {@link Breakpoint} with a unique id.
@@ -47,7 +47,7 @@ public abstract class Breakpoint {
    * @since Date: Jan 30, 2012
    * @return the unique id of this breakpoint.
    */
-  public final long getId() {
+  public final int getId() {
     return this.id;
   }
 

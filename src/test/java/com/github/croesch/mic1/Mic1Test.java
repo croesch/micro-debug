@@ -24,6 +24,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.Test;
 
@@ -544,7 +546,7 @@ public class Mic1Test extends DefaultTestCase {
   }
 
   @Test
-  public void testRegisterBreakPoint() {
+  public void testAddRegisterBreakPoint() {
     printlnMethodName();
     this.processor.addBreakpoint(Register.H, Integer.valueOf(-1));
     this.processor.run();
@@ -566,6 +568,32 @@ public class Mic1Test extends DefaultTestCase {
     out.reset();
     this.processor.microStep();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+  }
+
+  @Test
+  public void testRemoveRegisterBreakPoint() {
+    printlnMethodName();
+    this.processor.addBreakpoint(Register.H, Integer.valueOf(-1));
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
+    out.reset();
+
+    this.processor.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
+    out.reset();
+
+    this.processor.listBreakpoints();
+    final Matcher m = Pattern.compile(".*#([0-9]+).*" + getLineSeparator()).matcher(out.toString());
+
+    assertThat(m.matches()).isTrue();
+    this.processor.removeBreakpoint(Integer.parseInt(m.group(1)));
+    out.reset();
+
+    this.processor.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + getLineSeparator());
+    out.reset();
   }
 
   @Test

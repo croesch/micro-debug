@@ -41,6 +41,10 @@ DESCRIPTION
 		Resets the processor to its initial state. Current instruction and position
 		in code will be set to the initial state.
 
+	rm-break NUM
+		Removes the breakpoint with the id NUM. The NUM can be fetched with the
+		'ls-break' command.
+
 	run
 		runs the program until its end or until a breakpoint is hit.
 

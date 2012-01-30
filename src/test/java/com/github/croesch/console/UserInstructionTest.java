@@ -25,6 +25,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.Test;
 
@@ -153,7 +155,7 @@ public class UserInstructionTest extends DefaultTestCase {
   public final void testExecuteSet_WrongNumberOfParameters() {
     printlnMethodName();
     Register.CPP.setValue(0xa1234);
-    assertThatNoParameterIsWrong(UserInstruction.SET);
+    assertThatNoParameterIsWrong(UserInstruction.SET, 2);
     assertThatOneParameterIsWrong(UserInstruction.SET);
     assertThatThreeParametersAreWrong(UserInstruction.SET, 2);
     assertThat(Register.CPP.getValue()).isEqualTo(0xa1234);
@@ -310,7 +312,7 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteMicroStep_WrongNumberOfParameters() {
     printlnMethodName();
-    assertThatTwoParametersAreWrong(UserInstruction.MICRO_STEP);
+    assertThatTwoParametersAreWrong(UserInstruction.MICRO_STEP, 0);
     assertThatThreeParametersAreWrong(UserInstruction.MICRO_STEP, 0);
   }
 
@@ -364,7 +366,7 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public final void testExecuteLsReg_WrongNumberOfParameters() {
     printlnMethodName();
-    assertThatTwoParametersAreWrong(UserInstruction.LS_REG);
+    assertThatTwoParametersAreWrong(UserInstruction.LS_REG, 0);
     assertThatThreeParametersAreWrong(UserInstruction.LS_REG, 0);
   }
 
@@ -415,14 +417,14 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public final void testExecuteTraceReg_WrongNumberOfParameters() {
     printlnMethodName();
-    assertThatTwoParametersAreWrong(UserInstruction.TRACE_REG);
+    assertThatTwoParametersAreWrong(UserInstruction.TRACE_REG, 0);
     assertThatThreeParametersAreWrong(UserInstruction.TRACE_REG, 0);
   }
 
   @Test
   public final void testExecuteUntraceReg_WrongNumberOfParameters() {
     printlnMethodName();
-    assertThatTwoParametersAreWrong(UserInstruction.UNTRACE_REG);
+    assertThatTwoParametersAreWrong(UserInstruction.UNTRACE_REG, 0);
     assertThatThreeParametersAreWrong(UserInstruction.UNTRACE_REG, 0);
   }
 
@@ -529,7 +531,7 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public final void testExecuteSetMem_WrongNumberOfParameters() {
     printlnMethodName();
-    assertThatNoParameterIsWrong(UserInstruction.SET_MEM);
+    assertThatNoParameterIsWrong(UserInstruction.SET_MEM, 2);
     assertThatOneParameterIsWrong(UserInstruction.SET_MEM);
     assertThatThreeParametersAreWrong(UserInstruction.SET_MEM, 2);
   }
@@ -771,20 +773,54 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public final void testExecuteBreak_WrongNumberOfParameters() {
     printlnMethodName();
-    assertThatNoParameterIsWrong(UserInstruction.BREAK);
+    assertThatNoParameterIsWrong(UserInstruction.BREAK, 2);
     assertThatOneParameterIsWrong(UserInstruction.BREAK);
     assertThatThreeParametersAreWrong(UserInstruction.BREAK, 2);
   }
 
-  private void assertThatNoParameterIsWrong(final UserInstruction instr) {
+  @Test
+  public void testExecuteRmBreak() {
+    printlnMethodName();
+    assertThat(UserInstruction.BREAK.execute(this.processor, Register.H.name(), "-1")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
+    out.reset();
+
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
+    out.reset();
+
+    assertThat(UserInstruction.LS_BREAK.execute(this.processor)).isTrue();
+    final Matcher m = Pattern.compile(".*#([0-9]+).*" + getLineSeparator()).matcher(out.toString());
+
+    assertThat(m.matches()).isTrue();
+    assertThat(UserInstruction.RM_BREAK.execute(this.processor, m.group(1))).isTrue();
+    out.reset();
+
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + getLineSeparator());
+    out.reset();
+  }
+
+  @Test
+  public final void testExecuteRmBreak_WrongNumberOfParameters() {
+    printlnMethodName();
+    assertThatNoParameterIsWrong(UserInstruction.RM_BREAK, 1);
+    assertThatTwoParametersAreWrong(UserInstruction.RM_BREAK, 1);
+    assertThatThreeParametersAreWrong(UserInstruction.RM_BREAK, 1);
+  }
+
+  private void assertThatNoParameterIsWrong(final UserInstruction instr, final int expected) {
     assertThat(instr.execute(null)).isTrue();
-    assertThatWrongNumberOfParametersIsPrintedAndResetOut(2, 0);
+    assertThatWrongNumberOfParametersIsPrintedAndResetOut(expected, 0);
 
     assertThat(instr.execute(null, (String[]) null)).isTrue();
-    assertThatWrongNumberOfParametersIsPrintedAndResetOut(2, 0);
+    assertThatWrongNumberOfParametersIsPrintedAndResetOut(expected, 0);
 
     assertThat(instr.execute(null, new String[] {})).isTrue();
-    assertThatWrongNumberOfParametersIsPrintedAndResetOut(2, 0);
+    assertThatWrongNumberOfParametersIsPrintedAndResetOut(expected, 0);
   }
 
   private void assertThatOneParameterIsWrong(final UserInstruction instr) {
@@ -809,15 +845,15 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThatWrongNumberOfParametersIsPrintedAndResetOut(exp, 3);
   }
 
-  private void assertThatTwoParametersAreWrong(final UserInstruction instr) {
+  private void assertThatTwoParametersAreWrong(final UserInstruction instr, final int expected) {
     assertThat(instr.execute(null, new String[] { null, "asd" })).isTrue();
-    assertThatWrongNumberOfParametersIsPrintedAndResetOut(0, 2);
+    assertThatWrongNumberOfParametersIsPrintedAndResetOut(expected, 2);
 
     assertThat(instr.execute(null, new String[] { "H", " " })).isTrue();
-    assertThatWrongNumberOfParametersIsPrintedAndResetOut(0, 2);
+    assertThatWrongNumberOfParametersIsPrintedAndResetOut(expected, 2);
 
     assertThat(instr.execute(null, new String[] { "2", null })).isTrue();
-    assertThatWrongNumberOfParametersIsPrintedAndResetOut(0, 2);
+    assertThatWrongNumberOfParametersIsPrintedAndResetOut(expected, 2);
   }
 
   @Test
@@ -911,7 +947,7 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public final void testExecuteLsMem_WrongNumberOfParameters() {
     printlnMethodName();
-    assertThatNoParameterIsWrong(UserInstruction.LS_MEM);
+    assertThatNoParameterIsWrong(UserInstruction.LS_MEM, 2);
     assertThatOneParameterIsWrong(UserInstruction.LS_MEM);
     assertThatThreeParametersAreWrong(UserInstruction.LS_MEM, 2);
   }
@@ -1041,7 +1077,7 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteStep_WrongNumberOfParameters() {
     printlnMethodName();
-    assertThatTwoParametersAreWrong(UserInstruction.STEP);
+    assertThatTwoParametersAreWrong(UserInstruction.STEP, 0);
     assertThatThreeParametersAreWrong(UserInstruction.STEP, 0);
   }
 }

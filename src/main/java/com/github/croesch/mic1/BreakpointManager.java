@@ -69,10 +69,30 @@ final class BreakpointManager {
     if (r != null && val != null) {
       final Breakpoint bp = new RegisterBreakpoint(r, val);
       if (this.breakPoints.contains(bp)) {
-        LOGGER.fine("adding '" + Text.BREAKPOINT_REGISTER.text(r, val) + "' that already exists..");
+        LOGGER.fine("adding '" + Text.BREAKPOINT_REGISTER.text("", r, val) + "' that already exists..");
       } else {
         this.breakPoints.add(bp);
       }
+    }
+  }
+
+  /**
+   * Removes the breakpoint with the given unique id.
+   * 
+   * @since Date: Jan 30, 2012
+   * @param id the unique id of the breakpoint to remove
+   */
+  void removeBreakpoint(final int id) {
+    boolean removed = false;
+    for (final Breakpoint bp : this.breakPoints) {
+      if (bp.getId() == id) {
+        removed = this.breakPoints.remove(bp);
+        break;
+      }
+    }
+
+    if (!removed) {
+      LOGGER.fine("couldn't remove breakpoint #" + id);
     }
   }
 
