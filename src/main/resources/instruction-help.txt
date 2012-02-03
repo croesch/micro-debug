@@ -61,15 +61,21 @@ DESCRIPTION
 		omitted then one instruction will be executed.
 		The processor executes only instructions until the halt-instruction is found.
 
+	trace-mac
+		Traces the executed macro instructions.
+
 	trace-mic
 		Traces the executed micro instructions.
-
-	untrace-mic
-		Ends tracing the executed micro instructions.
 
 	trace-reg [REG]
 		Traces the value of a register after each instruction, where REG is the name
 		of that register. If REG is omitted then all registers are traced.
+
+	untrace-mac
+		Ends tracing the executed macro instructions.
+
+	untrace-mic
+		Ends tracing the executed micro instructions.
 
 	untrace-reg [REG]
 		Ends tracing the value of a register after each instruction, where REG is

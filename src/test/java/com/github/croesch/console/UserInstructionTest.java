@@ -487,7 +487,7 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
-  public final void testTraceMicro() throws IOException {
+  public final void testExecuteTraceMicro() throws IOException {
     printlnMethodName();
     final String firstLine = Text.EXECUTED_CODE.text("PC=MAR=0;rd;goto 0x1") + getLineSeparator();
     final String expected = firstLine + Text.EXECUTED_CODE.text("H=LV=-1;goto 0x2") + getLineSeparator()
@@ -526,6 +526,50 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.UNTRACE_MIC.execute(this.processor)).isTrue();
     assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(13) + getLineSeparator());
+  }
+
+  @Test
+  public final void testExecuteTraceMacro() throws IOException {
+    printlnMethodName();
+    Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
+
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+
+    final String firstLine = Text.EXECUTED_CODE.text("     0x0: [0x10] BIPUSH 0x0") + getLineSeparator();
+    final String expected = firstLine + Text.EXECUTED_CODE.text("     0x2: [0x59] DUP") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("     0x3: [0x36] ISTORE 0") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("     0x5: [0x36] ISTORE 1") + getLineSeparator()
+                            + Text.TICKS.text(24) + getLineSeparator();
+
+    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3292) + getLineSeparator());
+    out.reset();
+
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+
+    assertThat(UserInstruction.TRACE_MAC.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.processor, "5")).isTrue();
+    assertThat(out.toString()).isEqualTo(expected);
+
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    out.reset();
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "0b10")).isTrue();
+    assertThat(out.toString()).isEqualTo(firstLine + Text.TICKS.text(7) + getLineSeparator());
+    out.reset();
+
+    assertThat(UserInstruction.UNTRACE_MAC.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3285) + getLineSeparator());
+
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    out.reset();
+
+    assertThat(UserInstruction.TRACE_MAC.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "7")).isTrue();
+    assertThat(out.toString()).isEqualTo(firstLine + Text.TICKS.text(7) + getLineSeparator());
+    out.reset();
   }
 
   @Test

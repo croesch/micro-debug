@@ -272,6 +272,15 @@ enum UserInstruction {
   },
 
   /** instruction to trace the micro code */
+  TRACE_MAC {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      processor.traceMacro();
+      return true;
+    }
+  },
+
+  /** instruction to trace the micro code */
   TRACE_MIC {
     @Override
     public boolean execute(final Mic1 processor, final String ... params) {
@@ -298,6 +307,15 @@ enum UserInstruction {
           Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(0, getSize(params)));
           break;
       }
+      return true;
+    }
+  },
+
+  /** instruction to not trace the macro code anymore */
+  UNTRACE_MAC {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      processor.untraceMacro();
       return true;
     }
   },
