@@ -19,6 +19,7 @@
 package com.github.croesch.i18n;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Locale;
 import java.util.Properties;
@@ -51,37 +52,55 @@ public class TextProperties extends Properties {
     final String country = loc.getCountry();
     final String variant = loc.getVariant();
 
-    final StringBuffer temp = new StringBuffer();
-    loadProperties(temp);
+    final StringBuilder temp = new StringBuilder();
+    loadProperties(buildResourceName(temp));
 
     if (language.length() == 0) {
       return;
     }
     temp.append('_').append(language);
-    loadProperties(temp);
+    loadProperties(buildResourceName(temp));
 
     if (country.length() == 0) {
       return;
     }
     temp.append('_').append(country);
-    loadProperties(temp);
+    loadProperties(buildResourceName(temp));
 
     if (variant.length() == 0) {
       return;
     }
     temp.append('_').append(variant);
-    loadProperties(temp);
+    loadProperties(buildResourceName(temp));
   }
 
   /**
-   * Fills the given properties with the key value pairs fetched from the file with the fiven appendix.
+   * Builds the resource name with the given appendix. The name is built from the directory path + the file name + the
+   * file ending. The file name is built from a base name and the appendix. So the resource name will be:<br>
+   * <code>directory/baseNameAPPENDIX.end</code>
+   * 
+   * @since Date: Feb 3, 2012
+   * @param appendix the APPENDIX in the code above, or simply the string to append to the base file name
+   * @return the full resource name
+   */
+  private String buildResourceName(final StringBuilder appendix) {
+    return "lang/text" + appendix.toString() + ".xml";
+  }
+
+  /**
+   * Fills the given properties with the key value pairs fetched from the file with the given name.
    * 
    * @since Date: Jan 24, 2012
-   * @param appendix the appendix for the file that contains the key-value pairs
+   * @param resourceName the name of the resource file to load the properties from
    */
-  private void loadProperties(final StringBuffer appendix) {
+  private void loadProperties(final String resourceName) {
     try {
-      loadFromXML(getClass().getClassLoader().getResourceAsStream("lang/text" + appendix.toString() + ".xml"));
+      final InputStream resourceStream = getClass().getClassLoader().getResourceAsStream(resourceName);
+      if (resourceStream != null) {
+        loadFromXML(resourceStream);
+      } else {
+        LOGGER.fine("resource not found: " + resourceName);
+      }
     } catch (final InvalidPropertiesFormatException e) {
       logException(e);
     } catch (final IOException e) {
