@@ -22,8 +22,7 @@ import java.io.IOException;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Locale;
 import java.util.Properties;
-
-import com.github.croesch.misc.Utils;
+import java.util.logging.Logger;
 
 /**
  * Properties that are filled with the properties fetched from the lang/testX.xml files, where X is defined by the
@@ -36,6 +35,9 @@ public class TextProperties extends Properties {
 
   /** generated serial version uid */
   private static final long serialVersionUID = -4384001694719486867L;
+
+  /** logger for this class */
+  private static final Logger LOGGER = Logger.getLogger(TextProperties.class.getName());
 
   /**
    * Properties that are filled with the properties fetched from the lang/testX.xml files, where X is defined by the
@@ -81,13 +83,26 @@ public class TextProperties extends Properties {
     try {
       loadFromXML(getClass().getClassLoader().getResourceAsStream("lang/text" + appendix.toString() + ".xml"));
     } catch (final InvalidPropertiesFormatException e) {
-      Utils.logThrownThrowable(e);
+      logException(e);
     } catch (final IOException e) {
-      Utils.logThrownThrowable(e);
+      logException(e);
     } catch (final SecurityException e) {
-      Utils.logThrownThrowable(e);
+      logException(e);
     } catch (final RuntimeException e) {
-      Utils.logThrownThrowable(e);
+      logException(e);
     }
+  }
+
+  /**
+   * Logs the exception that happened in critical part of the program.
+   * 
+   * @since Date: Feb 3, 2012
+   * @param e the {@link Throwable} that was thrown
+   */
+  private void logException(final Throwable e) {
+    final String className = Thread.currentThread().getStackTrace()[2].getClassName();
+    final String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
+    LOGGER.severe(e.getMessage());
+    LOGGER.throwing(className, methodName, e);
   }
 }
