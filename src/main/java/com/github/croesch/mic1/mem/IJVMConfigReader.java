@@ -98,10 +98,6 @@ class IJVMConfigReader {
    * @param ln the line to parse
    */
   private void parseLine(final Map<Integer, IJVMCommand> map, final String ln) {
-    if (ln == null) {
-      return;
-    }
-
     final String line = removeComment(ln).trim();
 
     if (!line.equals("")) {

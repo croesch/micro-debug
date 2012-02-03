@@ -37,6 +37,20 @@ enum IJVMCommandArgument {
     String represent(final int value, final Memory mem) {
       return String.valueOf(signExtend(value));
     }
+
+    /**
+     * Returns the sign extended value of the given input number.
+     * 
+     * @since Date: Feb 3, 2012
+     * @param num the value to sign extend
+     * @return the sign extended number
+     */
+    private int signExtend(final int num) {
+      if ((num & (SIGN_MASK_2)) > 0) {
+        return num | ~BYTE_MASK_2;
+      }
+      return num;
+    }
   },
   /** represents a constant */
   CONST (1),
@@ -69,9 +83,6 @@ enum IJVMCommandArgument {
 
   /** mask to select two bytes */
   private static final int BYTE_MASK_2 = 0xFFFF;
-
-  /** mask to select sign bit of one byte */
-  private static final int SIGN_MASK_1 = 0x80;
 
   /** mask to select sign bit of two bytes */
   private static final int SIGN_MASK_2 = 0x8000;
@@ -127,33 +138,6 @@ enum IJVMCommandArgument {
       default:
         return value;
     }
-  }
-
-  /**
-   * Returns the sign extended value of the given input number using {@link #getNumberOfBytes()} to find the bit that
-   * defines the sign.
-   * 
-   * @since Date: Jan 23, 2012
-   * @param num the value to sign extend
-   * @return the sign extended number
-   */
-  final int signExtend(final int num) {
-    int ret = num;
-    switch (getNumberOfBytes()) {
-      case 1:
-        if ((ret & (SIGN_MASK_1)) > 0) {
-          ret |= ~BYTE_MASK_1;
-        }
-        break;
-      case 2:
-        if ((ret & (SIGN_MASK_2)) > 0) {
-          ret |= ~BYTE_MASK_2;
-        }
-        break;
-      default:
-        break;
-    }
-    return ret;
   }
 
   /**
