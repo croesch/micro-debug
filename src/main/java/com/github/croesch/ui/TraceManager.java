@@ -22,6 +22,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import com.github.croesch.i18n.Text;
+import com.github.croesch.mic1.api.IReadableMemory;
 import com.github.croesch.mic1.controlstore.Mic1Instruction;
 import com.github.croesch.mic1.controlstore.Mic1InstructionDecoder;
 import com.github.croesch.mic1.register.Register;
@@ -42,6 +43,9 @@ public final class TraceManager implements Mic1View {
 
   /** determines whether the micro code is currently traced */
   private boolean microTracing = false;
+
+  /** determines whether the macro code is currently traced */
+  private boolean macroTracing = false;
 
   /**
    * Lists the values of all {@link Register}s.
@@ -137,6 +141,24 @@ public final class TraceManager implements Mic1View {
   }
 
   /**
+   * Performs to trace the micro code.
+   * 
+   * @since Date: Jan 21, 2012
+   */
+  public void traceMacro() {
+    this.macroTracing = true;
+  }
+
+  /**
+   * Performs to not trace the macro code anymore.
+   * 
+   * @since Date: Feb 3, 2012
+   */
+  public void untraceMacro() {
+    this.macroTracing = false;
+  }
+
+  /**
    * Returns whether the micro code is currently traced.
    * 
    * @since Date: Jan 21, 2012
@@ -145,6 +167,17 @@ public final class TraceManager implements Mic1View {
    */
   public boolean isTracingMicro() {
     return this.microTracing;
+  }
+
+  /**
+   * Returns whether the macro code is currently traced.
+   * 
+   * @since Date: Feb 3, 2012
+   * @return <code>true</code>, if the macro code is currently traced<br>
+   *         <code>false</code> otherwise.
+   */
+  public boolean isTracingMacro() {
+    return this.macroTracing;
   }
 
   /**
@@ -164,6 +197,20 @@ public final class TraceManager implements Mic1View {
       if (isTracing(r)) {
         listRegister(r);
       }
+    }
+  }
+
+  /**
+   * Tells the view to update itself when executing macro code.
+   * 
+   * @since Date: Feb 3, 2012
+   * @param macroCodeNumber the line number of the macro instruction being executed
+   * @param mem the memory to read the line from
+   */
+  public void updateMacroCode(final int macroCodeNumber, final IReadableMemory mem) {
+    if (isTracingMacro()) {
+      // trace micro code
+      Printer.println(Text.EXECUTED_CODE.text(mem.getFormattedLine(macroCodeNumber)));
     }
   }
 }

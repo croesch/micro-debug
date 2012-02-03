@@ -18,6 +18,7 @@
  */
 package com.github.croesch.ui.api;
 
+import com.github.croesch.mic1.api.IReadableMemory;
 import com.github.croesch.mic1.controlstore.Mic1Instruction;
 import com.github.croesch.mic1.register.Register;
 
@@ -106,6 +107,29 @@ public interface Mic1View {
    * @since Date: Jan 21, 2012
    */
   void untraceMicro();
+
+  /**
+   * Performs to trace the macro code.
+   * 
+   * @since Date: Feb 03, 2012
+   */
+  void traceMacro();
+
+  /**
+   * Performs to not trace the macro code anymore.
+   * 
+   * @since Date: Feb 03, 2012
+   */
+  void untraceMacro();
+
+  /**
+   * Tells the view to update itself when executing macro code.
+   * 
+   * @since Date: Feb 3, 2012
+   * @param macroCodeNumber the line number of the macro instruction being executed
+   * @param mem the memory to read the line from
+   */
+  void updateMacroCode(int macroCodeNumber, IReadableMemory mem);
 
   /**
    * Tells the view to update itself.

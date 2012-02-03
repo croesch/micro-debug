@@ -83,7 +83,7 @@ public final class Mic1 {
   private int ticks;
 
   /** stores the current address of the ijvm-instruction being executed */
-  private int currentMacroAddress;
+  private int lastMacroAddress;
 
   /**
    * Constructs a new Mic1-processor, reading the given inputstreams as micro-program and assembler-program.
@@ -116,7 +116,7 @@ public final class Mic1 {
 
     this.mpcCalculator = new NextMPCCalculator();
     this.ticks = 0;
-    this.currentMacroAddress = 0;
+    this.lastMacroAddress = -1;
     this.oldMpc = -1;
     this.instruction = null;
   }
@@ -193,7 +193,8 @@ public final class Mic1 {
    */
   void doTick() {
     if (isAssemblerCodeFetchingInstruction()) {
-      this.currentMacroAddress = Register.PC.getValue();
+      this.lastMacroAddress = Register.PC.getValue();
+      this.view.updateMacroCode(this.lastMacroAddress, this.memory);
     }
 
     doClock1();
@@ -504,6 +505,24 @@ public final class Mic1 {
   }
 
   /**
+   * Performs to trace the macro code.
+   * 
+   * @since Date: Feb 3, 2012
+   */
+  public void traceMacro() {
+    this.view.traceMacro();
+  }
+
+  /**
+   * Performs to not trace the macro code.
+   * 
+   * @since Date: Feb 3, 2012
+   */
+  public void untraceMacro() {
+    this.view.untraceMacro();
+  }
+
+  /**
    * Performs to trace the micro code.
    * 
    * @since Date: Jan 21, 2012
@@ -618,7 +637,7 @@ public final class Mic1 {
    * @param scope the number of lines to print before and after the current line
    */
   public void printMacroCode(final int scope) {
-    this.memory.printCodeAroundLine(this.currentMacroAddress, scope);
+    this.memory.printCodeAroundLine(Math.max(0, this.lastMacroAddress), scope);
   }
 
   /**

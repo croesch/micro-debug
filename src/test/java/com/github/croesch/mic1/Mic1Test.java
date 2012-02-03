@@ -535,7 +535,6 @@ public class Mic1Test extends DefaultTestCase {
     this.processor.reset();
     out.reset();
 
-    this.processor.traceMicro();
     this.processor.microStep();
     assertThat(out.toString()).isEqualTo(firstLine + Text.TICKS.text(1) + getLineSeparator());
     out.reset();
@@ -782,5 +781,41 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(out.toString()).isEmpty();
 
     Output.setOut(System.out);
+  }
+
+  @Test
+  public final void testTraceMacro() throws IOException {
+    printlnMethodName();
+    Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
+
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+
+    final String firstLine = Text.EXECUTED_CODE.text("     0x0: [0x10] BIPUSH 0x0") + getLineSeparator();
+    final String expected = firstLine + Text.EXECUTED_CODE.text("     0x2: [0x59] DUP") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("     0x3: [0x36] ISTORE 0") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("     0x5: [0x36] ISTORE 1") + getLineSeparator()
+                            + Text.TICKS.text(24) + getLineSeparator();
+
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3292) + getLineSeparator());
+    out.reset();
+
+    this.processor.reset();
+
+    this.processor.traceMacro();
+    this.processor.step(5);
+    assertThat(out.toString()).isEqualTo(expected);
+
+    this.processor.reset();
+    out.reset();
+
+    this.processor.step(2);
+    assertThat(out.toString()).isEqualTo(firstLine + Text.TICKS.text(7) + getLineSeparator());
+    out.reset();
+
+    this.processor.untraceMacro();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3285) + getLineSeparator());
   }
 }

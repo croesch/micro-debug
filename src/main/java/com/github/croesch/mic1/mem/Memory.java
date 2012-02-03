@@ -25,6 +25,7 @@ import java.util.Map;
 
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
+import com.github.croesch.mic1.api.IReadableMemory;
 import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.register.Register;
@@ -38,7 +39,7 @@ import com.github.croesch.misc.Utils;
  * @author croesch
  * @since Date: Nov 21, 2011
  */
-public final class Memory {
+public final class Memory implements IReadableMemory {
 
   /** a mask to deselect byte 0 */
   private static final int MASK_BYTE_0 = 0xFFFFFF00;
@@ -500,6 +501,22 @@ public final class Memory {
    * @return the number of bytes read as arguments to the command byte
    */
   private int printCodeLine(final int addr) {
+    final StringBuilder sb = new StringBuilder();
+    final int bytesRead = getLineString(addr, sb);
+    Printer.println(sb.toString());
+
+    return bytesRead;
+  }
+
+  /**
+   * Returns the number of bytes read as arguments additional to the command byte.
+   * 
+   * @since Date: Feb 3, 2012
+   * @param addr the absolute address of the code instruction to fetch
+   * @param sb {@link StringBuilder} to append the formatted line to
+   * @return the number of bytes read as arguments to the command byte
+   */
+  private int getLineString(final int addr, final StringBuilder sb) {
     final StringBuilder formattedArgs = new StringBuilder();
 
     final int cmdCode = getByte(addr);
@@ -511,9 +528,25 @@ public final class Memory {
     final String formattedAddr = formatIntToHex(addr, Settings.MIC1_MEM_MACRO_ADDR_WIDTH.getValue());
     final String formattedCmdCode = formatIntToHex(cmdCode, Settings.MIC1_MEM_MICRO_ADDR_WIDTH.getValue());
 
-    Printer.println(Text.CODE_LINE.text(formattedAddr, formattedCmdCode, name, formattedArgs.toString()));
-
+    sb.append(Text.CODE_LINE.text(formattedAddr, formattedCmdCode, name, formattedArgs.toString()));
     return bytesRead;
+  }
+
+  /**
+   * Returns the formatted line.
+   * 
+   * @since Date: Feb 3, 2012
+   * @param line the number of line to fetch.
+   * @return the {@link String} representing the given line number
+   */
+  public String getFormattedLine(final int line) {
+    if (line < 0) {
+      return null;
+    }
+
+    final StringBuilder sb = new StringBuilder();
+    getLineString(line, sb);
+    return sb.toString();
   }
 
   /**

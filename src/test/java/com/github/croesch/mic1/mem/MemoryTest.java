@@ -708,4 +708,13 @@ public class MemoryTest extends DefaultTestCase {
                                                  + Text.MEMORY_CONTENT.text("    0x7E", "0x0") + getLineSeparator());
     out.reset();
   }
+
+  @Test
+  public void testGetFormattedLine() throws FileFormatException {
+    this.mem = new Memory(Settings.MIC1_MEM_MACRO_MAXSIZE.getValue(),
+                          ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+
+    assertThat(this.mem.getFormattedLine(-10)).isNullOrEmpty();
+    assertThat(this.mem.getFormattedLine(0)).isEqualTo("     0x0: [0x10] BIPUSH 0x0");
+  }
 }
