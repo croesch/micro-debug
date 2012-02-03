@@ -20,6 +20,9 @@ package com.github.croesch.mic1;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
@@ -43,6 +46,8 @@ public class BreakpointManagerTest extends DefaultTestCase {
 
   @Test
   public void testAddBreakPoint() {
+    printlnMethodName();
+
     // shouldn't throw any exception
     this.bpm.addBreakpoint(null, Integer.valueOf(0));
     this.bpm.addBreakpoint(Register.CPP, null);
@@ -80,7 +85,7 @@ public class BreakpointManagerTest extends DefaultTestCase {
 
   @Test
   public void testListBreakpoints() {
-    printMethodName();
+    printlnMethodName();
 
     this.bpm.addBreakpoint(Register.MBRU, Integer.valueOf(16));
     this.bpm.addBreakpoint(Register.MBRU, Integer.valueOf(-48));
@@ -112,7 +117,36 @@ public class BreakpointManagerTest extends DefaultTestCase {
                                                + getLineSeparator()
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.H, "0x1")
                                                + getLineSeparator());
+  }
 
-    printEndOfMethod();
+  @Test
+  public void testRemoveBreakpoint() {
+    printlnMethodName();
+
+    this.bpm.addBreakpoint(Register.MBR, Integer.valueOf(16));
+    this.bpm.addBreakpoint(Register.MBR, Integer.valueOf(-48));
+
+    assertThat(out.toString()).isEmpty();
+    this.bpm.listBreakpoints();
+    final Matcher m = Pattern.compile(Text.BREAKPOINT_REGISTER.text("([0-9]+)", Register.MBR, "0x10")
+                                              + getLineSeparator()
+                                              + Text.BREAKPOINT_REGISTER.text("([0-9]+)", Register.MBR, "0xFFFFFFD0")
+                                              + getLineSeparator()).matcher(out.toString());
+    assertThat(m.matches());
+    this.bpm.removeBreakpoint(Integer.parseInt(m.group(1)));
+    out.reset();
+
+    assertThat(out.toString()).isEmpty();
+    this.bpm.listBreakpoints();
+    assertThat(out.toString()).matches(Text.BREAKPOINT_REGISTER.text("([0-9]+)", Register.MBR, "0xFFFFFFD0")
+                                               + getLineSeparator());
+
+    this.bpm.removeBreakpoint(-11);
+    out.reset();
+
+    assertThat(out.toString()).isEmpty();
+    this.bpm.listBreakpoints();
+    assertThat(out.toString()).matches(Text.BREAKPOINT_REGISTER.text("([0-9]+)", Register.MBR, "0xFFFFFFD0")
+                                               + getLineSeparator());
   }
 }

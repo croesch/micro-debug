@@ -20,6 +20,7 @@ package com.github.croesch.misc;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.io.IOException;
 import java.io.StringReader;
 
 import org.junit.Test;
@@ -36,6 +37,8 @@ public class ReaderTest extends DefaultTestCase {
 
   @Test
   public void testSetReader() {
+    printlnMethodName();
+
     Reader.setReader(new StringReader("111111\n11111\n111111"));
     assertThat(Reader.readLine()).isEqualTo("111111");
 
@@ -48,6 +51,8 @@ public class ReaderTest extends DefaultTestCase {
 
   @Test
   public void testReadLine() {
+    printlnMethodName();
+
     Reader.setReader(new StringReader("asd"));
     assertThat(Reader.readLine()).isEqualTo("asd");
     assertThat(Reader.readLine()).isNull();
@@ -58,4 +63,19 @@ public class ReaderTest extends DefaultTestCase {
     assertThat(Reader.readLine()).isNull();
   }
 
+  @Test
+  public void testReadLine_IOException() {
+    printlnMethodName();
+
+    Reader.setReader(new java.io.Reader() {
+      @Override
+      public int read(final char[] cbuf, final int off, final int len) throws IOException {
+        throw new IOException();
+      }
+
+      @Override
+      public void close() throws IOException {}
+    });
+    assertThat(Reader.readLine()).isNull();
+  }
 }

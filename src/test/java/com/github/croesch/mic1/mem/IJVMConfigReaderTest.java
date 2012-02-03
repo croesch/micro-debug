@@ -41,21 +41,32 @@ public class IJVMConfigReaderTest extends DefaultTestCase {
 
   @Test
   public void testReadConfig_Empty_EmptyFile() {
+    printlnMethodName();
     assertThat(READER.readConfig(new ByteArrayInputStream("".getBytes()))).isEmpty();
   }
 
   @Test
   public void testReadConfig_Empty_OnlyComments() {
+    printlnMethodName();
     assertThat(READER.readConfig(new ByteArrayInputStream(" // nothing\n\n//also empty here".getBytes()))).isEmpty();
   }
 
   @Test
   public void testReadConfig_Empty_Null() {
+    printlnMethodName();
     assertThat(READER.readConfig(null)).isEmpty();
   }
 
   @Test
+  public void testReadConfig_Empty_LineDoesntMatchRegex() {
+    printlnMethodName();
+    assertThat(READER.readConfig(new ByteArrayInputStream("xyz? What is that?".getBytes()))).isEmpty();
+  }
+
+  @Test
   public void testReadConfig_SingleLine() {
+    printlnMethodName();
+
     final Map<Integer, IJVMCommand> expected = new HashMap<Integer, IJVMCommand>();
     expected.put(16, new IJVMCommand("BIPUSH", IJVMCommandArgument.BYTE));
     assertThat(READER.readConfig(new ByteArrayInputStream("0x10 BIPUSH byte // Push byte onto stack".getBytes())))
@@ -67,6 +78,8 @@ public class IJVMConfigReaderTest extends DefaultTestCase {
 
   @Test
   public void testReadConfig() throws FileNotFoundException {
+    printlnMethodName();
+
     final Map<Integer, IJVMCommand> expected = new HashMap<Integer, IJVMCommand>();
     expected.put(0x00, new IJVMCommand("NOP"));
     expected.put(0x10, new IJVMCommand("BIPUSH", IJVMCommandArgument.BYTE));

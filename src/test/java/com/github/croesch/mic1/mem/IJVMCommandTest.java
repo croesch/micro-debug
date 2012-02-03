@@ -52,6 +52,8 @@ public class IJVMCommandTest extends DefaultTestCase {
 
   @Test
   public void testGetName() {
+    printlnMethodName();
+
     assertThat(new IJVMCommand("abc").getName()).isEqualTo("abc");
     assertThat(new IJVMCommand(" abc as \t   ").getName()).isEqualTo("abc as");
     assertThat(new IJVMCommand("DUP").getName()).isEqualTo("DUP");
@@ -60,6 +62,8 @@ public class IJVMCommandTest extends DefaultTestCase {
 
   @Test
   public void testGetArgs() {
+    printlnMethodName();
+
     assertThat(
                new IJVMCommand("a", IJVMCommandArgument.BYTE, IJVMCommandArgument.BYTE, IJVMCommandArgument.INDEX)
                  .getArgs()).containsExactly(IJVMCommandArgument.BYTE, IJVMCommandArgument.BYTE,
@@ -93,6 +97,8 @@ public class IJVMCommandTest extends DefaultTestCase {
 
   @Test
   public void testGetArgsModifiability() {
+    printlnMethodName();
+
     List<IJVMCommandArgument> args = new ArrayList<IJVMCommandArgument>();
     final IJVMCommand cmd = new IJVMCommand("name", args.toArray(new IJVMCommandArgument[args.size()]));
     args.add(IJVMCommandArgument.LABEL);
@@ -111,6 +117,8 @@ public class IJVMCommandTest extends DefaultTestCase {
 
   @Test
   public void testToString() {
+    printlnMethodName();
+
     assertThat(
                new IJVMCommand("a",
                                IJVMCommandArgument.BYTE,
@@ -122,6 +130,7 @@ public class IJVMCommandTest extends DefaultTestCase {
 
   @Test
   public void testEquals() {
+    printlnMethodName();
 
     final IJVMCommand cmd = new IJVMCommand("a",
                                             IJVMCommandArgument.BYTE,
@@ -140,5 +149,51 @@ public class IJVMCommandTest extends DefaultTestCase {
                                IJVMCommandArgument.BYTE,
                                IJVMCommandArgument.INDEX,
                                IJVMCommandArgument.LABEL)).isEqualTo(cmd);
+
+    assertThat(cmd).isNotEqualTo(null);
+    assertThat(cmd).isNotEqualTo(new Object());
+    assertThat(cmd).isNotEqualTo(new IJVMCommand("b",
+                                                 IJVMCommandArgument.BYTE,
+                                                 IJVMCommandArgument.BYTE,
+                                                 IJVMCommandArgument.INDEX,
+                                                 IJVMCommandArgument.LABEL));
+    assertThat(cmd).isNotEqualTo(new IJVMCommand("a",
+                                                 IJVMCommandArgument.BYTE,
+                                                 IJVMCommandArgument.INDEX,
+                                                 IJVMCommandArgument.LABEL));
+  }
+
+  @Test
+  public void testHashCode() {
+    printlnMethodName();
+
+    final IJVMCommand cmd = new IJVMCommand("a",
+                                            IJVMCommandArgument.BYTE,
+                                            IJVMCommandArgument.BYTE,
+                                            IJVMCommandArgument.INDEX,
+                                            IJVMCommandArgument.LABEL);
+    assertThat(cmd.hashCode()).isEqualTo(cmd.hashCode());
+    assertThat(cmd.hashCode()).isEqualTo(new IJVMCommand("a",
+                                                         IJVMCommandArgument.BYTE,
+                                                         IJVMCommandArgument.BYTE,
+                                                         IJVMCommandArgument.INDEX,
+                                                         IJVMCommandArgument.LABEL).hashCode());
+    assertThat(
+               new IJVMCommand("a",
+                               IJVMCommandArgument.BYTE,
+                               IJVMCommandArgument.BYTE,
+                               IJVMCommandArgument.INDEX,
+                               IJVMCommandArgument.LABEL).hashCode()).isEqualTo(cmd.hashCode());
+
+    assertThat(cmd.hashCode()).isNotEqualTo(new Object().hashCode());
+    assertThat(cmd.hashCode()).isNotEqualTo(new IJVMCommand("b",
+                                                            IJVMCommandArgument.BYTE,
+                                                            IJVMCommandArgument.BYTE,
+                                                            IJVMCommandArgument.INDEX,
+                                                            IJVMCommandArgument.LABEL).hashCode());
+    assertThat(cmd.hashCode()).isNotEqualTo(new IJVMCommand("a",
+                                                            IJVMCommandArgument.BYTE,
+                                                            IJVMCommandArgument.INDEX,
+                                                            IJVMCommandArgument.LABEL).hashCode());
   }
 }
