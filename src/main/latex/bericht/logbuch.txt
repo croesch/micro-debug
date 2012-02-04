@@ -100,3 +100,5 @@
 03.02.2012 (3 h)
 	- TRACE-MAC und UNTRACE-MAC implementiert
 	- bisschen Kosmetik
+04.02.2012 (3 h)
+	- MACRO-BREAK und MICRO-BREAK implementiert
