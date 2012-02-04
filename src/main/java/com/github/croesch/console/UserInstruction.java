@@ -44,7 +44,7 @@ enum UserInstruction {
       if (getSize(params) == 2) {
         final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
         final Integer i = (Integer) Parameter.NUMBER.getValue(params[1]);
-        processor.addBreakpoint(r, i);
+        processor.addRegisterBreakpoint(r, i);
       } else {
         Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(2, getSize(params)));
       }

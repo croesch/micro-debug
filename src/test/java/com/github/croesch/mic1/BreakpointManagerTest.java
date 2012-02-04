@@ -50,8 +50,8 @@ public class BreakpointManagerTest extends DefaultTestCase {
     printlnMethodName();
 
     // shouldn't throw any exception
-    this.bpm.addBreakpoint(null, Integer.valueOf(0));
-    this.bpm.addBreakpoint(Register.CPP, null);
+    this.bpm.addRegisterBreakpoint(null, Integer.valueOf(0));
+    this.bpm.addRegisterBreakpoint(Register.CPP, null);
     this.bpm.addMicroBreakpoint(-12);
     this.bpm.addMacroBreakpoint(1273);
   }
@@ -65,7 +65,7 @@ public class BreakpointManagerTest extends DefaultTestCase {
     }
     assertThat(this.bpm.isBreakpoint(0, 0)).isFalse();
     for (final Register r : Register.values()) {
-      this.bpm.addBreakpoint(r, Integer.valueOf(1));
+      this.bpm.addRegisterBreakpoint(r, Integer.valueOf(1));
       assertThat(this.bpm.isBreakpoint(0, 0)).isFalse();
       r.setValue(1);
       assertThat(this.bpm.isBreakpoint(0, 0)).isTrue();
@@ -74,7 +74,7 @@ public class BreakpointManagerTest extends DefaultTestCase {
     }
     printLoopEnd();
     for (final Register r : Register.values()) {
-      this.bpm.addBreakpoint(r, Integer.valueOf(2));
+      this.bpm.addRegisterBreakpoint(r, Integer.valueOf(2));
       assertThat(this.bpm.isBreakpoint(0, 0)).isFalse();
       r.setValue(1);
       assertThat(this.bpm.isBreakpoint(0, 0)).isTrue();
@@ -106,21 +106,21 @@ public class BreakpointManagerTest extends DefaultTestCase {
   public void testListBreakpoints() {
     printlnMethodName();
 
-    this.bpm.addBreakpoint(Register.MBRU, Integer.valueOf(16));
-    this.bpm.addBreakpoint(Register.MBRU, Integer.valueOf(-48));
+    this.bpm.addRegisterBreakpoint(Register.MBRU, Integer.valueOf(16));
+    this.bpm.addRegisterBreakpoint(Register.MBRU, Integer.valueOf(-48));
 
     this.bpm.addMicroBreakpoint(37);
 
-    this.bpm.addBreakpoint(Register.CPP, Integer.valueOf(-1));
-    this.bpm.addBreakpoint(Register.CPP, Integer.valueOf(Integer.MAX_VALUE));
-    this.bpm.addBreakpoint(Register.CPP, Integer.valueOf(Integer.MIN_VALUE));
+    this.bpm.addRegisterBreakpoint(Register.CPP, Integer.valueOf(-1));
+    this.bpm.addRegisterBreakpoint(Register.CPP, Integer.valueOf(Integer.MAX_VALUE));
+    this.bpm.addRegisterBreakpoint(Register.CPP, Integer.valueOf(Integer.MIN_VALUE));
 
     this.bpm.addMicroBreakpoint(42);
 
-    this.bpm.addBreakpoint(Register.H, Integer.valueOf(2));
-    this.bpm.addBreakpoint(Register.H, Integer.valueOf(2));
-    this.bpm.addBreakpoint(Register.H, Integer.valueOf(3));
-    this.bpm.addBreakpoint(Register.H, Integer.valueOf(1));
+    this.bpm.addRegisterBreakpoint(Register.H, Integer.valueOf(2));
+    this.bpm.addRegisterBreakpoint(Register.H, Integer.valueOf(2));
+    this.bpm.addRegisterBreakpoint(Register.H, Integer.valueOf(3));
+    this.bpm.addRegisterBreakpoint(Register.H, Integer.valueOf(1));
 
     this.bpm.addMacroBreakpoint(37);
 
@@ -151,8 +151,8 @@ public class BreakpointManagerTest extends DefaultTestCase {
   public void testRemoveBreakpoint() {
     printlnMethodName();
 
-    this.bpm.addBreakpoint(Register.MBR, Integer.valueOf(16));
-    this.bpm.addBreakpoint(Register.MBR, Integer.valueOf(-48));
+    this.bpm.addRegisterBreakpoint(Register.MBR, Integer.valueOf(16));
+    this.bpm.addRegisterBreakpoint(Register.MBR, Integer.valueOf(-48));
     this.bpm.addMicroBreakpoint(12);
     this.bpm.addMacroBreakpoint(13);
 

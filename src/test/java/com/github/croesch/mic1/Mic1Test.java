@@ -547,7 +547,7 @@ public class Mic1Test extends DefaultTestCase {
   @Test
   public void testAddRegisterBreakPoint() {
     printlnMethodName();
-    this.processor.addBreakpoint(Register.H, Integer.valueOf(-1));
+    this.processor.addRegisterBreakpoint(Register.H, Integer.valueOf(-1));
     this.processor.run();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
 
@@ -632,7 +632,7 @@ public class Mic1Test extends DefaultTestCase {
   @Test
   public void testRemoveRegisterBreakPoint() {
     printlnMethodName();
-    this.processor.addBreakpoint(Register.H, Integer.valueOf(-1));
+    this.processor.addRegisterBreakpoint(Register.H, Integer.valueOf(-1));
     this.processor.run();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
     out.reset();
@@ -659,17 +659,17 @@ public class Mic1Test extends DefaultTestCase {
   public void testListBreakpoints() {
     printMethodName();
 
-    this.processor.addBreakpoint(Register.MBRU, Integer.valueOf(16));
-    this.processor.addBreakpoint(Register.MBRU, Integer.valueOf(-48));
+    this.processor.addRegisterBreakpoint(Register.MBRU, Integer.valueOf(16));
+    this.processor.addRegisterBreakpoint(Register.MBRU, Integer.valueOf(-48));
 
-    this.processor.addBreakpoint(Register.CPP, Integer.valueOf(-1));
-    this.processor.addBreakpoint(Register.CPP, Integer.valueOf(Integer.MAX_VALUE));
-    this.processor.addBreakpoint(Register.CPP, Integer.valueOf(Integer.MIN_VALUE));
+    this.processor.addRegisterBreakpoint(Register.CPP, Integer.valueOf(-1));
+    this.processor.addRegisterBreakpoint(Register.CPP, Integer.valueOf(Integer.MAX_VALUE));
+    this.processor.addRegisterBreakpoint(Register.CPP, Integer.valueOf(Integer.MIN_VALUE));
 
-    this.processor.addBreakpoint(Register.H, Integer.valueOf(2));
-    this.processor.addBreakpoint(Register.H, Integer.valueOf(2));
-    this.processor.addBreakpoint(Register.H, Integer.valueOf(3));
-    this.processor.addBreakpoint(Register.H, Integer.valueOf(1));
+    this.processor.addRegisterBreakpoint(Register.H, Integer.valueOf(2));
+    this.processor.addRegisterBreakpoint(Register.H, Integer.valueOf(2));
+    this.processor.addRegisterBreakpoint(Register.H, Integer.valueOf(3));
+    this.processor.addRegisterBreakpoint(Register.H, Integer.valueOf(1));
 
     assertThat(out.toString()).isEmpty();
     this.processor.listBreakpoints();

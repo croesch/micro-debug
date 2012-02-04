@@ -69,7 +69,7 @@ final class BreakpointManager {
    * @param r the {@link Register} to watch for the given value
    * @param val the value the debugger should break if the given {@link Register} has it.
    */
-  void addBreakpoint(final Register r, final Integer val) {
+  void addRegisterBreakpoint(final Register r, final Integer val) {
     if (r != null && val != null) {
       final Breakpoint bp = new RegisterBreakpoint(r, val);
       if (this.breakPoints.contains(bp)) {
