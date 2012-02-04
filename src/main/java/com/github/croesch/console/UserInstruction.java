@@ -399,12 +399,12 @@ enum UserInstruction {
    * called.
    * 
    * @since Date: Dec 3, 2011
-   * @param argStr the {@link String} to test if it's a possible call for this argument
+   * @param argStr the {@link String} to test if it's a possible call for this argument, mustn't be <code>null</code>
    * @return <code>true</code>, if this argument can be called with the given {@link String}.<br>
    *         For example <code>--argument</code> will return <code>true</code> for the argument <code>ARGUMENT</code>.
    */
   private boolean matches(final String argStr) {
-    return argStr != null && argStr.equals(this.instruction);
+    return argStr.equals(this.instruction);
   }
 
   /**

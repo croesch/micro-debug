@@ -157,11 +157,11 @@ public final class Mic1InstructionReader {
    * Decodes the value of b into the register that should be written on the B-Bus.
    * 
    * @since Date: Nov 12, 2011
-   * @param b the four-bit-value to decode
+   * @param b the four-bit-value to decode, must be greater than zero
    * @return the {@link Mic1BBusRegister} that should be written on the B-Bus.
    */
   private static Register decodeBBusBits(final int b) {
-    if (b < 0 || b >= B_BUS_REGISTER.length) {
+    if (b >= B_BUS_REGISTER.length) {
       return null;
     }
     return B_BUS_REGISTER[b];
