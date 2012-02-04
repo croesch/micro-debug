@@ -52,8 +52,8 @@ public class BreakpointManagerTest extends DefaultTestCase {
     // shouldn't throw any exception
     this.bpm.addRegisterBreakpoint(null, Integer.valueOf(0));
     this.bpm.addRegisterBreakpoint(Register.CPP, null);
-    this.bpm.addMicroBreakpoint(-12);
-    this.bpm.addMacroBreakpoint(1273);
+    this.bpm.addMicroBreakpoint(null);
+    this.bpm.addMacroBreakpoint(null);
   }
 
   @Test
@@ -116,6 +116,7 @@ public class BreakpointManagerTest extends DefaultTestCase {
     this.bpm.addRegisterBreakpoint(Register.CPP, Integer.valueOf(Integer.MIN_VALUE));
 
     this.bpm.addMicroBreakpoint(42);
+    this.bpm.addMicroBreakpoint(42);
 
     this.bpm.addRegisterBreakpoint(Register.H, Integer.valueOf(2));
     this.bpm.addRegisterBreakpoint(Register.H, Integer.valueOf(2));
@@ -154,6 +155,8 @@ public class BreakpointManagerTest extends DefaultTestCase {
     this.bpm.addRegisterBreakpoint(Register.MBR, Integer.valueOf(16));
     this.bpm.addRegisterBreakpoint(Register.MBR, Integer.valueOf(-48));
     this.bpm.addMicroBreakpoint(12);
+    this.bpm.addMacroBreakpoint(13);
+    this.bpm.addMacroBreakpoint(13);
     this.bpm.addMacroBreakpoint(13);
 
     assertThat(out.toString()).isEmpty();

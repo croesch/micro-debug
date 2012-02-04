@@ -449,8 +449,23 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
+  public void testExecuteTraceReg_Invalid() {
+    printlnMethodName();
+    assertThat(UserInstruction.TRACE_REG.execute(this.processor, "null")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("null")) + getLineSeparator());
+  }
+
+  @Test
+  public void testExecuteUntraceReg_Invalid() {
+    printlnMethodName();
+    assertThat(UserInstruction.UNTRACE_REG.execute(this.processor, "null")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("null")) + getLineSeparator());
+  }
+
+  @Test
   public void testExecuteUntraceReg() {
     printMethodName();
+    // trace all registers
     assertThat(UserInstruction.TRACE_REG.execute(this.processor, (String[]) null)).isTrue();
 
     for (final Register r : Register.values()) {
@@ -641,7 +656,7 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
-  public void testPrintCode_All() throws IOException {
+  public void testExecuteLsMacroCode_All() throws IOException {
     printlnMethodName();
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
@@ -652,7 +667,7 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
-  public void testPrintCode_Part1() throws IOException {
+  public void testExecuteLsMacroCode_Part1() throws IOException {
     printlnMethodName();
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
@@ -673,7 +688,7 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
-  public void testPrintCode_Around1() throws IOException {
+  public void testExecuteLsMacroCode_Around1() throws IOException {
     printlnMethodName();
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
@@ -700,7 +715,7 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
-  public void testPrintCode_Part2() throws IOException {
+  public void testExecuteLsMacroCode_Part2() throws IOException {
     printlnMethodName();
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
@@ -725,7 +740,7 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
-  public void testPrintCode_Around2() throws IOException {
+  public void testExecuteLsMacroCode_Around2() throws IOException {
     printlnMethodName();
     Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
 
@@ -747,7 +762,7 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
-  public void testPrintCode_Part3() throws IOException {
+  public void testExecuteLsMacroCode_Part3() throws IOException {
     printlnMethodName();
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
@@ -771,7 +786,7 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
-  public void testPrintCode_Around() throws IOException {
+  public void testExecuteLsMacroCode_Around() throws IOException {
     printlnMethodName();
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
@@ -991,7 +1006,37 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
-  public void testLsBreakpoints() {
+  public void testExecuteLsMacroCode_One_Invalid() {
+    printlnMethodName();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "1x")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator());
+  }
+
+  @Test
+  public void testExecuteLsMacroCode_Two_InvalidBoth() {
+    printlnMethodName();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "1x", "0x")).isTrue();
+    assertThat(out.toString())
+      .isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator()
+                         + Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
+  }
+
+  @Test
+  public void testExecuteLsMacroCode_Two_Invalid1() {
+    printlnMethodName();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "1x", "0")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator());
+  }
+
+  @Test
+  public void testExecuteLsMacroCode_Two_Invalid2() {
+    printlnMethodName();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0", "1x")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator());
+  }
+
+  @Test
+  public void testExecuteLsBreak() {
     printlnMethodName();
 
     assertThat(UserInstruction.BREAK.execute(this.processor, "MBRU", "16")).isTrue();
@@ -1096,6 +1141,13 @@ public class UserInstructionTest extends DefaultTestCase {
       .isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator()
                          + Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
     out.reset();
+  }
+
+  @Test
+  public void testExecuteStep_Invalid() {
+    printlnMethodName();
+    assertThat(UserInstruction.STEP.execute(this.processor, "null")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("null")) + getLineSeparator());
   }
 
   @Test

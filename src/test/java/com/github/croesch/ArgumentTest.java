@@ -221,6 +221,9 @@ public class ArgumentTest extends DefaultTestCase {
     assertThat(Argument.ERROR_PARAM_NUMBER.execute()).isTrue();
     assertThat(out.toString()).isEmpty();
 
+    assertThat(Argument.ERROR_PARAM_NUMBER.execute((String[]) null)).isTrue();
+    assertThat(out.toString()).isEmpty();
+
     assertThat(Argument.ERROR_PARAM_NUMBER.execute(new String[] {})).isTrue();
     assertThat(out.toString()).isEmpty();
 

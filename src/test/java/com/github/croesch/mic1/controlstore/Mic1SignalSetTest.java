@@ -33,6 +33,27 @@ import com.github.croesch.DefaultTestCase;
 public class Mic1SignalSetTest extends DefaultTestCase {
 
   @Test
+  public void testCopyOf() {
+    final Mic1SignalSet set1 = new Mic1SignalSet(12);
+    final Mic1SignalSet set2 = new Mic1SignalSet(11);
+    final Mic1SignalSet set3 = new Mic1SignalSet(11);
+    set1.set(0, true);
+    set2.set(1, true);
+
+    assertThat(set2.is(0)).isFalse();
+    assertThat(set3.is(0)).isFalse();
+    assertThat(set3.is(1)).isFalse();
+
+    // assert that this is no problem
+    set3.copyOf(null);
+    set3.copyOf(set1);
+    assertThat(set3.is(0)).isFalse();
+
+    set3.copyOf(set2);
+    assertThat(set3.is(1)).isTrue();
+  }
+
+  @Test
   public void testEqualsObject() {
     final Mic1SignalSet set1 = new Mic1SignalSet(12);
     final Mic1SignalSet set2 = new Mic1SignalSet(11);
