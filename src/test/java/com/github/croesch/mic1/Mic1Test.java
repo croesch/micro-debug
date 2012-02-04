@@ -570,6 +570,66 @@ public class Mic1Test extends DefaultTestCase {
   }
 
   @Test
+  public void testAddMicroBreakPoint() {
+    printlnMethodName();
+    this.processor.addMicroBreakpoint(Integer.valueOf(2));
+    this.processor.addMicroBreakpoint(Integer.valueOf(3));
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
+
+    out.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+    this.processor.reset();
+    this.processor.microStep(2);
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
+
+    out.reset();
+    this.processor.microStep(2);
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(11) + getLineSeparator());
+  }
+
+  @Test
+  public void testAddMacroBreakPoint() throws FileFormatException {
+    printlnMethodName();
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
+
+    this.processor.addMacroBreakpoint(Integer.valueOf(2));
+    this.processor.addMacroBreakpoint(Integer.valueOf(3));
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(7) + getLineSeparator());
+
+    out.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3) + getLineSeparator());
+
+    out.reset();
+    this.processor.reset();
+    this.processor.microStep(2);
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
+
+    out.reset();
+    this.processor.microStep(12);
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(5) + getLineSeparator());
+
+    out.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3) + getLineSeparator());
+
+    out.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3282) + getLineSeparator());
+  }
+
+  @Test
   public void testRemoveRegisterBreakPoint() {
     printlnMethodName();
     this.processor.addBreakpoint(Register.H, Integer.valueOf(-1));

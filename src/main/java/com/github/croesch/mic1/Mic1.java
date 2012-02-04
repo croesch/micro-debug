@@ -293,7 +293,8 @@ public final class Mic1 {
    *         <code>false</code> otherwise
    */
   private boolean canContinue() {
-    return !isHaltInstruction() && (isFirstTick() || !this.bpm.isBreakpoint(-1, -1));
+    return !isHaltInstruction()
+           && (isFirstTick() || !this.bpm.isBreakpoint(this.mpcCalculator.getMpc(), Register.PC.getValue()));
   }
 
   /**
@@ -661,6 +662,26 @@ public final class Mic1 {
    */
   public void addBreakpoint(final Register r, final Integer value) {
     this.bpm.addBreakpoint(r, value);
+  }
+
+  /**
+   * Adds a breakpoint for the given line number in the micro code.
+   * 
+   * @since Date: Feb 4, 2012
+   * @param line the line number in micro code the debugger should break at
+   */
+  public void addMicroBreakpoint(final Integer line) {
+    this.bpm.addMicroBreakpoint(line);
+  }
+
+  /**
+   * Adds a breakpoint for the given line number in the macro code.
+   * 
+   * @since Date: Feb 4, 2012
+   * @param line the line number in macro code the debugger should break at
+   */
+  public void addMacroBreakpoint(final Integer line) {
+    this.bpm.addMacroBreakpoint(line);
   }
 
   /**

@@ -32,6 +32,14 @@ DESCRIPTION
 		Lists the value of a register, where REG is the name of that register.
 		If REG is omitted then the values of all registers are listed.
 
+	macro-break LINE
+		Adds a breakpoint to the given line number (=LINE) in the macro code.
+		The line number refers to the line numbers fetched from ls-macro-code.
+
+	micro-break LINE
+		Adds a breakpoint to the given line number (=LINE) in the micro code.
+		The line number refers to the line numbers fetched from ls-micro-code.
+
 	micro-step [NUM]
 		Executes NUM micro instructions, where NUM is a natural number. If NUM is
 		omitted then one instruction will be executed.

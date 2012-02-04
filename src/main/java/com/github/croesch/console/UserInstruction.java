@@ -44,9 +44,7 @@ enum UserInstruction {
       if (getSize(params) == 2) {
         final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
         final Integer i = (Integer) Parameter.NUMBER.getValue(params[1]);
-        if (i != null && r != null) {
-          processor.addBreakpoint(r, i);
-        }
+        processor.addBreakpoint(r, i);
       } else {
         Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(2, getSize(params)));
       }
@@ -122,7 +120,7 @@ enum UserInstruction {
         final Integer from = (Integer) Parameter.NUMBER.getValue(params[0]);
         final Integer to = (Integer) Parameter.NUMBER.getValue(params[1]);
         if (from != null && to != null) {
-          processor.printContent(from, to);
+          processor.printContent(from.intValue(), to.intValue());
         }
       } else {
         Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(2, getSize(params)));
@@ -153,6 +151,34 @@ enum UserInstruction {
     }
   },
 
+  /** adds a breakpoint at the given line in the macro code */
+  MACRO_BREAK {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      if (getSize(params) == 1) {
+        final Integer l = (Integer) Parameter.NUMBER.getValue(params[0]);
+        processor.addMacroBreakpoint(l);
+      } else {
+        Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(1, getSize(params)));
+      }
+      return true;
+    }
+  },
+
+  /** adds a breakpoint at the given line in the micro code */
+  MICRO_BREAK {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      if (getSize(params) == 1) {
+        final Integer l = (Integer) Parameter.NUMBER.getValue(params[0]);
+        processor.addMicroBreakpoint(l);
+      } else {
+        Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(1, getSize(params)));
+      }
+      return true;
+    }
+  },
+
   /** executes one or the given number of micro instructions */
   MICRO_STEP {
     @Override
@@ -164,7 +190,7 @@ enum UserInstruction {
         case 1:
           final Integer i = (Integer) Parameter.NUMBER.getValue(params[0]);
           if (i != null) {
-            processor.microStep(i);
+            processor.microStep(i.intValue());
           }
           break;
         default:
@@ -193,7 +219,9 @@ enum UserInstruction {
         Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(1, getSize(params)));
       } else {
         final Integer i = (Integer) Parameter.NUMBER.getValue(params[0]);
-        processor.removeBreakpoint(i);
+        if (i != null) {
+          processor.removeBreakpoint(i.intValue());
+        }
       }
       return true;
     }
@@ -241,7 +269,7 @@ enum UserInstruction {
         final Integer a = (Integer) Parameter.NUMBER.getValue(params[0]);
         final Integer v = (Integer) Parameter.NUMBER.getValue(params[1]);
         if (a != null && v != null) {
-          processor.setMemoryValue(a, v);
+          processor.setMemoryValue(a.intValue(), v.intValue());
         }
       }
       return true;
@@ -259,7 +287,7 @@ enum UserInstruction {
         case 1:
           final Integer i = (Integer) Parameter.NUMBER.getValue(params[0]);
           if (i != null) {
-            processor.step(i);
+            processor.step(i.intValue());
           }
           break;
         default:

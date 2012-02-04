@@ -815,11 +815,87 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
+  public void testExecuteMicroBreak() {
+    printlnMethodName();
+    assertThat(UserInstruction.MICRO_BREAK.execute(this.processor, "0x2")).isTrue();
+    assertThat(UserInstruction.MICRO_BREAK.execute(this.processor, "0x3")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "0002")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "02")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(11) + getLineSeparator());
+  }
+
+  @Test
+  public void testExecuteMacroBreak() throws FileFormatException {
+    printlnMethodName();
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
+
+    assertThat(UserInstruction.MACRO_BREAK.execute(this.processor, "0x2")).isTrue();
+    assertThat(UserInstruction.MACRO_BREAK.execute(this.processor, "0x3")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(7) + getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3) + getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "0O2")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "0XC")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(5) + getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3) + getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3282) + getLineSeparator());
+  }
+
+  @Test
   public final void testExecuteBreak_WrongNumberOfParameters() {
     printlnMethodName();
     assertThatNoParameterIsWrong(UserInstruction.BREAK, 2);
     assertThatOneParameterIsWrong(UserInstruction.BREAK);
     assertThatThreeParametersAreWrong(UserInstruction.BREAK, 2);
+  }
+
+  @Test
+  public final void testExecuteMicroBreak_WrongNumberOfParameters() {
+    printlnMethodName();
+    assertThatNoParameterIsWrong(UserInstruction.MICRO_BREAK, 1);
+    assertThatTwoParametersAreWrong(UserInstruction.MICRO_BREAK, 1);
+    assertThatThreeParametersAreWrong(UserInstruction.MICRO_BREAK, 1);
+  }
+
+  @Test
+  public final void testExecuteMacroBreak_WrongNumberOfParameters() {
+    printlnMethodName();
+    assertThatNoParameterIsWrong(UserInstruction.MACRO_BREAK, 1);
+    assertThatTwoParametersAreWrong(UserInstruction.MACRO_BREAK, 1);
+    assertThatThreeParametersAreWrong(UserInstruction.MACRO_BREAK, 1);
   }
 
   @Test
@@ -854,6 +930,14 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThatNoParameterIsWrong(UserInstruction.RM_BREAK, 1);
     assertThatTwoParametersAreWrong(UserInstruction.RM_BREAK, 1);
     assertThatThreeParametersAreWrong(UserInstruction.RM_BREAK, 1);
+  }
+
+  @Test
+  public final void testExecuteRmBreak_Invalid() {
+    printlnMethodName();
+
+    assertThat(UserInstruction.RM_BREAK.execute(this.processor, "AA")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("AA")) + getLineSeparator());
   }
 
   private void assertThatNoParameterIsWrong(final UserInstruction instr, final int expected) {
