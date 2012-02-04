@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 1999, Prentice-Hall, Inc.
  * Copyright (C) 2011-2012  Christian Roesch
  * 
  * This file is part of micro-debug.
@@ -25,6 +26,7 @@ import com.github.croesch.mic1.register.Register;
 import com.github.croesch.misc.Utils;
 
 /**
+ * Based on the implementation of <em>Ray Ontko</em>. <br>
  * Is able to read bytes from {@link InputStream}s and to construct {@link Mic1Instruction}s with the given values.
  * 
  * @author croesch

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 1999, Prentice-Hall, Inc.
  * Copyright (C) 2011-2012  Christian Roesch
  * 
  * This file is part of micro-debug.
@@ -21,10 +22,10 @@ package com.github.croesch.mic1.controlstore;
 import com.github.croesch.mic1.register.Register;
 
 /**
- * TODO comment <br />
- * Mic1Instruction This class represents an instruction which might appear in the Mic-1 control store. To Do We should
- * probably create a separate class for Mic1Reader and move the read method from here to the Mic1Reader class.
- * Modification History Name Date Comment ---------------- ---------- ---------------------------------------- Ray Ontko
+ * Represents an instruction in the micro code. Based on the implementation of <em>Ray Ontko</em>. <br>
+ * <br>
+ * Mic1Instruction This class represents an instruction which might appear in the Mic-1 control store. <br>
+ * Ray Ontko<br>
  * 1998.09.01 Created
  */
 public final class Mic1Instruction {
