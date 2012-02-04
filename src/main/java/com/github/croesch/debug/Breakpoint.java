@@ -55,7 +55,9 @@ public abstract class Breakpoint {
    * Returns whether the condition of this breakpoint is met and the debugger should stop now.
    * 
    * @since Date: Jan 30, 2012
+   * @param microLine the number of the line in micro code being executed next
+   * @param macroLine the number of the line in macro code being executed next
    * @return <code>true</code>, if the condition of this breakpoint is met and the debugger should stop.
    */
-  public abstract boolean isConditionMet();
+  public abstract boolean isConditionMet(int microLine, int macroLine);
 }

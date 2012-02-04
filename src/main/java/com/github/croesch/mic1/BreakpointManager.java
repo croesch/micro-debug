@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.github.croesch.debug.Breakpoint;
+import com.github.croesch.debug.MacroBreakpoint;
+import com.github.croesch.debug.MicroBreakpoint;
 import com.github.croesch.debug.RegisterBreakpoint;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.register.Register;
@@ -46,12 +48,14 @@ final class BreakpointManager {
    * Returns whether any break point condition is met.
    * 
    * @since Date: Jan 27, 2012
+   * @param microLine the number of the line in micro code being executed next
+   * @param macroLine the number of the line in macro code being executed next
    * @return <code>true</code> if a break point is met,<br>
    *         <code>false</code> otherwise
    */
-  boolean isBreakpoint() {
+  boolean isBreakpoint(final int microLine, final int macroLine) {
     for (final Breakpoint bp : this.breakPoints) {
-      if (bp.isConditionMet()) {
+      if (bp.isConditionMet(microLine, macroLine)) {
         return true;
       }
     }
@@ -70,6 +74,40 @@ final class BreakpointManager {
       final Breakpoint bp = new RegisterBreakpoint(r, val);
       if (this.breakPoints.contains(bp)) {
         LOGGER.fine("adding '" + Text.BREAKPOINT_REGISTER.text("", r, val) + "' that already exists..");
+      } else {
+        this.breakPoints.add(bp);
+      }
+    }
+  }
+
+  /**
+   * Adds a breakpoint for the given line number in the micro code.
+   * 
+   * @since Date: Feb 4, 2012
+   * @param line the line number in micro code the debugger should break at
+   */
+  void addMicroBreakpoint(final Integer line) {
+    if (line != null) {
+      final Breakpoint bp = new MicroBreakpoint(line.intValue());
+      if (this.breakPoints.contains(bp)) {
+        LOGGER.fine("adding '" + Text.BREAKPOINT_MICRO.text("", line) + "' that already exists..");
+      } else {
+        this.breakPoints.add(bp);
+      }
+    }
+  }
+
+  /**
+   * Adds a breakpoint for the given line number in the macro code.
+   * 
+   * @since Date: Feb 4, 2012
+   * @param line the line number in macro code the debugger should break at
+   */
+  void addMacroBreakpoint(final Integer line) {
+    if (line != null) {
+      final Breakpoint bp = new MacroBreakpoint(line.intValue());
+      if (this.breakPoints.contains(bp)) {
+        LOGGER.fine("adding '" + Text.BREAKPOINT_MACRO.text("", line) + "' that already exists..");
       } else {
         this.breakPoints.add(bp);
       }

@@ -28,6 +28,7 @@ import org.junit.Test;
 import com.github.croesch.DefaultTestCase;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.register.Register;
+import com.github.croesch.misc.Settings;
 
 /**
  * Contains test cases for {@link BreakpointManager}.
@@ -51,6 +52,8 @@ public class BreakpointManagerTest extends DefaultTestCase {
     // shouldn't throw any exception
     this.bpm.addBreakpoint(null, Integer.valueOf(0));
     this.bpm.addBreakpoint(Register.CPP, null);
+    this.bpm.addMicroBreakpoint(-12);
+    this.bpm.addMacroBreakpoint(1273);
   }
 
   @Test
@@ -60,24 +63,40 @@ public class BreakpointManagerTest extends DefaultTestCase {
     for (final Register r : Register.values()) {
       r.setValue(0);
     }
-    assertThat(this.bpm.isBreakpoint()).isFalse();
+    assertThat(this.bpm.isBreakpoint(0, 0)).isFalse();
     for (final Register r : Register.values()) {
       this.bpm.addBreakpoint(r, Integer.valueOf(1));
-      assertThat(this.bpm.isBreakpoint()).isFalse();
+      assertThat(this.bpm.isBreakpoint(0, 0)).isFalse();
       r.setValue(1);
-      assertThat(this.bpm.isBreakpoint()).isTrue();
+      assertThat(this.bpm.isBreakpoint(0, 0)).isTrue();
       r.setValue(0);
       printStep();
     }
     printLoopEnd();
     for (final Register r : Register.values()) {
       this.bpm.addBreakpoint(r, Integer.valueOf(2));
-      assertThat(this.bpm.isBreakpoint()).isFalse();
+      assertThat(this.bpm.isBreakpoint(0, 0)).isFalse();
       r.setValue(1);
-      assertThat(this.bpm.isBreakpoint()).isTrue();
+      assertThat(this.bpm.isBreakpoint(0, 0)).isTrue();
       r.setValue(2);
-      assertThat(this.bpm.isBreakpoint()).isTrue();
+      assertThat(this.bpm.isBreakpoint(0, 0)).isTrue();
       r.setValue(0);
+      printStep();
+    }
+    printLoopEnd();
+    for (int i = -17; i < 43; ++i) {
+      this.bpm.addMicroBreakpoint(i);
+      assertThat(this.bpm.isBreakpoint(i + 1, 0)).isFalse();
+      assertThat(this.bpm.isBreakpoint(i, 0)).isTrue();
+      assertThat(this.bpm.isBreakpoint(i, i)).isTrue();
+      printStep();
+    }
+    printLoopEnd();
+    for (int i = -17; i < 43; ++i) {
+      this.bpm.addMacroBreakpoint(i);
+      assertThat(this.bpm.isBreakpoint(370, i)).isFalse();
+      assertThat(this.bpm.isBreakpoint(-41, i)).isFalse();
+      assertThat(this.bpm.isBreakpoint(Settings.MIC1_MICRO_ADDRESS_IJVM.getValue(), i)).isTrue();
       printStep();
     }
     printEndOfMethod();
@@ -90,32 +109,41 @@ public class BreakpointManagerTest extends DefaultTestCase {
     this.bpm.addBreakpoint(Register.MBRU, Integer.valueOf(16));
     this.bpm.addBreakpoint(Register.MBRU, Integer.valueOf(-48));
 
+    this.bpm.addMicroBreakpoint(37);
+
     this.bpm.addBreakpoint(Register.CPP, Integer.valueOf(-1));
     this.bpm.addBreakpoint(Register.CPP, Integer.valueOf(Integer.MAX_VALUE));
     this.bpm.addBreakpoint(Register.CPP, Integer.valueOf(Integer.MIN_VALUE));
+
+    this.bpm.addMicroBreakpoint(42);
 
     this.bpm.addBreakpoint(Register.H, Integer.valueOf(2));
     this.bpm.addBreakpoint(Register.H, Integer.valueOf(2));
     this.bpm.addBreakpoint(Register.H, Integer.valueOf(3));
     this.bpm.addBreakpoint(Register.H, Integer.valueOf(1));
 
+    this.bpm.addMacroBreakpoint(37);
+
     assertThat(out.toString()).isEmpty();
     this.bpm.listBreakpoints();
     assertThat(out.toString()).matches(Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.MBRU, "0x10")
                                                + getLineSeparator()
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.MBRU, "0xFFFFFFD0")
+                                               + getLineSeparator() + Text.BREAKPOINT_MICRO.text("[0-9]+", "0x25")
                                                + getLineSeparator()
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.CPP, "0xFFFFFFFF")
                                                + getLineSeparator()
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.CPP, "0x7FFFFFFF")
                                                + getLineSeparator()
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.CPP, "0x80000000")
+                                               + getLineSeparator() + Text.BREAKPOINT_MICRO.text("[0-9]+", "0x2A")
                                                + getLineSeparator()
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.H, "0x2")
                                                + getLineSeparator()
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.H, "0x3")
                                                + getLineSeparator()
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.H, "0x1")
+                                               + getLineSeparator() + Text.BREAKPOINT_MACRO.text("[0-9]+", "0x25")
                                                + getLineSeparator());
   }
 
@@ -125,20 +153,26 @@ public class BreakpointManagerTest extends DefaultTestCase {
 
     this.bpm.addBreakpoint(Register.MBR, Integer.valueOf(16));
     this.bpm.addBreakpoint(Register.MBR, Integer.valueOf(-48));
+    this.bpm.addMicroBreakpoint(12);
+    this.bpm.addMacroBreakpoint(13);
 
     assertThat(out.toString()).isEmpty();
     this.bpm.listBreakpoints();
     final Matcher m = Pattern.compile(Text.BREAKPOINT_REGISTER.text("([0-9]+)", Register.MBR, "0x10")
                                               + getLineSeparator()
                                               + Text.BREAKPOINT_REGISTER.text("([0-9]+)", Register.MBR, "0xFFFFFFD0")
+                                              + getLineSeparator() + Text.BREAKPOINT_MICRO.text("([0-9]+)", "0xC")
+                                              + getLineSeparator() + Text.BREAKPOINT_MACRO.text("[0-9]+", "0xD")
                                               + getLineSeparator()).matcher(out.toString());
-    assertThat(m.matches());
+    assertThat(m.matches()).isTrue();
     this.bpm.removeBreakpoint(Integer.parseInt(m.group(1)));
     out.reset();
 
     assertThat(out.toString()).isEmpty();
     this.bpm.listBreakpoints();
     assertThat(out.toString()).matches(Text.BREAKPOINT_REGISTER.text("([0-9]+)", Register.MBR, "0xFFFFFFD0")
+                                               + getLineSeparator() + Text.BREAKPOINT_MICRO.text("[0-9]+", "0xC")
+                                               + getLineSeparator() + Text.BREAKPOINT_MACRO.text("[0-9]+", "0xD")
                                                + getLineSeparator());
 
     this.bpm.removeBreakpoint(-11);
@@ -147,6 +181,15 @@ public class BreakpointManagerTest extends DefaultTestCase {
     assertThat(out.toString()).isEmpty();
     this.bpm.listBreakpoints();
     assertThat(out.toString()).matches(Text.BREAKPOINT_REGISTER.text("([0-9]+)", Register.MBR, "0xFFFFFFD0")
+                                               + getLineSeparator() + Text.BREAKPOINT_MICRO.text("[0-9]+", "0xC")
+                                               + getLineSeparator() + Text.BREAKPOINT_MACRO.text("[0-9]+", "0xD")
+                                               + getLineSeparator());
+
+    this.bpm.removeBreakpoint(Integer.parseInt(m.group(3)));
+    out.reset();
+    this.bpm.listBreakpoints();
+    assertThat(out.toString()).matches(Text.BREAKPOINT_REGISTER.text("([0-9]+)", Register.MBR, "0xFFFFFFD0")
+                                               + getLineSeparator() + Text.BREAKPOINT_MACRO.text("[0-9]+", "0xD")
                                                + getLineSeparator());
   }
 }

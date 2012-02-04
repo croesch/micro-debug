@@ -78,16 +78,16 @@ public class RegisterBreakpointTest {
     final RegisterBreakpoint rbp = new RegisterBreakpoint(Register.H, 12);
 
     Register.H.setValue(12);
-    assertThat(rbp.isConditionMet()).isTrue();
+    assertThat(rbp.isConditionMet(0, 0)).isTrue();
 
     Register.H.setValue(12);
-    assertThat(rbp.isConditionMet()).isTrue();
+    assertThat(rbp.isConditionMet(0, 0)).isTrue();
 
     Register.H.setValue(13);
-    assertThat(rbp.isConditionMet()).isFalse();
+    assertThat(rbp.isConditionMet(0, 0)).isFalse();
 
     Register.CPP.setValue(12);
-    assertThat(rbp.isConditionMet()).isFalse();
+    assertThat(rbp.isConditionMet(0, 0)).isFalse();
   }
 
   /**

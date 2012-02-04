@@ -52,7 +52,7 @@ public final class RegisterBreakpoint extends Breakpoint {
   }
 
   @Override
-  public boolean isConditionMet() {
+  public boolean isConditionMet(final int microLine, final int macroLine) {
     return this.register.getValue() == this.val;
   }
 

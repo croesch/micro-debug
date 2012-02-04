@@ -293,7 +293,7 @@ public final class Mic1 {
    *         <code>false</code> otherwise
    */
   private boolean canContinue() {
-    return !isHaltInstruction() && (isFirstTick() || !this.bpm.isBreakpoint());
+    return !isHaltInstruction() && (isFirstTick() || !this.bpm.isBreakpoint(-1, -1));
   }
 
   /**

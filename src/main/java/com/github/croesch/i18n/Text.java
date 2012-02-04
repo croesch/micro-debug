@@ -60,6 +60,10 @@ public enum Text {
 
   /** the text to print the breakpoint for a specific register */
   BREAKPOINT_REGISTER,
+  /** the text to print the breakpoint for a specific line in macro code */
+  BREAKPOINT_MACRO,
+  /** the text to print the breakpoint for a specific line in micro code */
+  BREAKPOINT_MICRO,
 
   /** the text that describes an unknown ijvm instruction */
   UNKNOWN_IJVM_INSTRUCTION,
