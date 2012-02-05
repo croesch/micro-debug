@@ -51,7 +51,8 @@ public class DebuggerTest extends DefaultTestCase {
     Reader.setReader(new StringReader("exit now or never!!!"));
     debugger.run();
 
-    assertThat(out.toString()).isEmpty();
+    assertThat(out.toString()).isEqualTo(Text.INPUT_DEBUGGER.text() + Text.INPUT_DEBUGGER.text()
+                                                 + Text.INPUT_DEBUGGER.text());
   }
 
   @Test
@@ -61,13 +62,16 @@ public class DebuggerTest extends DefaultTestCase {
 
     Reader.setReader(new StringReader("excel\nexit"));
     debugger.run();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_INSTRUCTION.text("excel")) + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.INPUT_DEBUGGER.text()
+                                                 + Text.ERROR.text(Text.UNKNOWN_INSTRUCTION.text("excel"))
+                                                 + getLineSeparator() + Text.INPUT_DEBUGGER.text());
     out.reset();
 
     Reader.setReader(new StringReader("schließe dich!\nEXIT"));
     debugger.run();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_INSTRUCTION.text("schließe"))
-                                                 + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.INPUT_DEBUGGER.text()
+                                                 + Text.ERROR.text(Text.UNKNOWN_INSTRUCTION.text("schließe"))
+                                                 + getLineSeparator() + Text.INPUT_DEBUGGER.text());
     out.reset();
   }
 
@@ -80,17 +84,17 @@ public class DebuggerTest extends DefaultTestCase {
 
     Reader.setReader(new StringReader("help\nexit"));
     debugger.run();
-    assertThat(out.toString()).isEqualTo(sb.toString());
+    assertThat(out.toString()).isEqualTo(Text.INPUT_DEBUGGER.text() + sb.toString() + Text.INPUT_DEBUGGER.text());
     out.reset();
 
     Reader.setReader(new StringReader("HELP\nexit"));
     debugger.run();
-    assertThat(out.toString()).isEqualTo(sb.toString());
+    assertThat(out.toString()).isEqualTo(Text.INPUT_DEBUGGER.text() + sb.toString() + Text.INPUT_DEBUGGER.text());
     out.reset();
 
     Reader.setReader(new StringReader("heLp me!!\nexit"));
     debugger.run();
-    assertThat(out.toString()).isEqualTo(sb.toString());
+    assertThat(out.toString()).isEqualTo(Text.INPUT_DEBUGGER.text() + sb.toString() + Text.INPUT_DEBUGGER.text());
     out.reset();
   }
 }

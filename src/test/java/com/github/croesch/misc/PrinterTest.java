@@ -40,6 +40,10 @@ public class PrinterTest extends DefaultTestCase {
 
   @Test
   public void testNullValues() {
+    printlnMethodName();
+    Printer.print(null);
+    assertThat(out.toString()).isEmpty();
+
     Printer.println(null);
     assertThat(out.toString()).isEmpty();
 
@@ -52,6 +56,7 @@ public class PrinterTest extends DefaultTestCase {
 
   @Test
   public void testPrintln() {
+    printlnMethodName();
     Printer.println("asd");
     assertThat(out.toString()).isEqualTo("asd" + getLineSeparator());
 
@@ -66,7 +71,23 @@ public class PrinterTest extends DefaultTestCase {
   }
 
   @Test
+  public void testPrint() {
+    printlnMethodName();
+    Printer.print("asd");
+    assertThat(out.toString()).isEqualTo("asd");
+
+    Printer.print("");
+    assertThat(out.toString()).isEqualTo("asd");
+
+    out.reset();
+
+    Printer.print("Dies ist eine neue Zeile" + getLineSeparator() + "und hier noch eine");
+    assertThat(out.toString()).isEqualTo("Dies ist eine neue Zeile" + getLineSeparator() + "und hier noch eine");
+  }
+
+  @Test
   public void testPrintln_Object() {
+    printlnMethodName();
     Printer.println(14);
     assertThat(out.toString()).isEqualTo("14" + getLineSeparator());
 
@@ -77,7 +98,25 @@ public class PrinterTest extends DefaultTestCase {
   }
 
   @Test
-  public void testPrint() {
+  public void testPrint_Object() {
+    printlnMethodName();
+    Printer.print(14);
+    assertThat(out.toString()).isEqualTo("14");
+
+    out.reset();
+
+    Printer.print(123);
+    assertThat(out.toString()).isEqualTo("123");
+
+    out.reset();
+
+    Printer.print(this);
+    assertThat(out.toString()).isEqualTo(this.toString());
+  }
+
+  @Test
+  public void testPrintErrorln() {
+    printlnMethodName();
     Printer.printErrorln("asd");
     assertThat(out.toString()).isEqualTo(Text.ERROR.text("asd") + getLineSeparator());
 
@@ -90,6 +129,7 @@ public class PrinterTest extends DefaultTestCase {
 
   @Test
   public void testSetPrintStream() {
+    printlnMethodName();
     final ByteArrayOutputStream out1 = new ByteArrayOutputStream();
     final ByteArrayOutputStream out2 = new ByteArrayOutputStream();
     Printer.setPrintStream(new PrintStream(out1));
@@ -117,6 +157,7 @@ public class PrinterTest extends DefaultTestCase {
 
   @Test
   public void testPrintReaderToPrinter_Null() {
+    printlnMethodName();
     Printer.printReader(null);
     assertThat(out.toString()).isEmpty();
   }
@@ -131,6 +172,7 @@ public class PrinterTest extends DefaultTestCase {
 
   @Test
   public void testPrintReaderToPrinter_ClosedBefore() throws IOException {
+    printlnMethodName();
     final StringReader r = new StringReader("xy");
     r.close();
     Printer.printReader(r);
@@ -139,6 +181,7 @@ public class PrinterTest extends DefaultTestCase {
 
   @Test
   public void testPrintReaderToPrinter() {
+    printlnMethodName();
     String text = "aaa" + getLineSeparator() + "bb" + getLineSeparator() + "ccc" + getLineSeparator();
     Printer.printReader(new StringReader(text));
     assertThat(out.toString()).isEqualTo(text);

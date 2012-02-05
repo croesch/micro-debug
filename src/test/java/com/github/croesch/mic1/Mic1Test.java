@@ -626,7 +626,8 @@ public class Mic1Test extends DefaultTestCase {
 
     out.reset();
     this.processor.run();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3282) + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.INPUT_MIC1.text() + Text.TICKS.text(3282)
+                                                 + getLineSeparator());
   }
 
   @Test
@@ -827,9 +828,10 @@ public class Mic1Test extends DefaultTestCase {
 
     this.processor.step(560);
     assertThat(Register.PC.getValue()).isEqualTo(0x11D);
-    assertThat(out.toString()).isEqualTo(" 2" + getLineSeparator() + "+2" + getLineSeparator() + "========"
-                                                 + getLineSeparator() + "00000004" + getLineSeparator()
-                                                 + Text.TICKS.text(3213) + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + " 2" + getLineSeparator() + Text.INPUT_MIC1.text()
+                                                 + "+2" + getLineSeparator() + "========" + getLineSeparator()
+                                                 + "00000004" + getLineSeparator() + Text.TICKS.text(3213)
+                                                 + getLineSeparator());
     out.reset();
 
     this.processor.step(560);
@@ -858,7 +860,8 @@ public class Mic1Test extends DefaultTestCase {
                             + Text.TICKS.text(24) + getLineSeparator();
 
     this.processor.run();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3292) + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.INPUT_MIC1.text() + Text.TICKS.text(3292)
+                                                 + getLineSeparator());
     out.reset();
 
     this.processor.reset();
@@ -876,7 +879,8 @@ public class Mic1Test extends DefaultTestCase {
 
     this.processor.untraceMacro();
     this.processor.run();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3285) + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.INPUT_MIC1.text() + Text.TICKS.text(3285)
+                                                 + getLineSeparator());
   }
 
   @Test

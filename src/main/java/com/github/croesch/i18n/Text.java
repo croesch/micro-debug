@@ -39,9 +39,13 @@ public enum Text {
 
   /** the text that is printed when the program is started, before any error message */
   GREETING,
-
   /** the text that is printed, when the program is starting. Only if no error occured */
   WELCOME,
+
+  /** the text that should be printed before user input is requested from debugger */
+  INPUT_DEBUGGER,
+  /** the text that should be printed before user input is requested from the mic1-processor */
+  INPUT_MIC1,
 
   /** the text to view how many ticks have been executed by the processor */
   TICKS,

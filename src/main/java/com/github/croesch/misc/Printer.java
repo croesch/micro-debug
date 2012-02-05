@@ -71,6 +71,19 @@ public final class Printer {
   }
 
   /**
+   * Writes the text representation of the given object to the {@link PrintStream}.
+   * 
+   * @since Date: Feb 5, 2011
+   * @param obj the object, whose text representation should be printed to the {@link PrintStream}. <code>null</code>
+   *        -values will be ignored.
+   */
+  public static void print(final Object obj) {
+    if (obj != null) {
+      out.print(obj);
+    }
+  }
+
+  /**
    * Writes the text representation of the given object as an error to the {@link PrintStream} and adds a LF. If the
    * text representation of the object contains LFs, this will produce several different lines as output.
    * 

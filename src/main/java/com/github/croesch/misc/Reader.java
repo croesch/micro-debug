@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import com.github.croesch.i18n.Text;
 
 /**
  * The interface to read information from the console (or from the given {@link java.io.Reader}).
@@ -65,6 +66,7 @@ public final class Reader {
    *         <code>null</code>, if an {@link IOException} occurred.
    */
   public static String readLine() {
+    Printer.print(Text.INPUT_DEBUGGER);
     try {
       return in.readLine();
     } catch (final IOException e) {

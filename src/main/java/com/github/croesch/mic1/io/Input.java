@@ -21,6 +21,8 @@ package com.github.croesch.mic1.io;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.github.croesch.i18n.Text;
+import com.github.croesch.misc.Printer;
 import com.github.croesch.misc.Utils;
 
 /**
@@ -90,6 +92,7 @@ public final class Input {
    * @since Date: Nov 27, 2011
    */
   private static void readLine() {
+    Printer.print(Text.INPUT_MIC1);
     try {
       final StringBuilder sb = new StringBuilder();
 

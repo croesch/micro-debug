@@ -30,6 +30,9 @@
 	<entry key="greeting">MicroDebug - Copyright (C) 2011-2012 Christian Rösch AND 1999 Prentice-Hall, Inc.</entry>
 	<entry key="welcome">Welcome! Please type 'help' for a list of valid commands</entry>
 
+	<entry key="input-debugger">micro-debug> </entry>
+	<entry key="input-mic1">mic1> </entry>
+
 	<entry key="ticks">Processor executed {0} ticks.</entry>
 	
 	<entry key="register-value">Register {0}: {1}</entry>

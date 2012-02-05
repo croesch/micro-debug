@@ -174,8 +174,9 @@ public class MicroDebugTest extends DefaultTestCase {
     MicroDebug.main(new String[] { "--unbuffered-output",
                                   "src/test/resources/mic1/hi.mic1",
                                   "src/test/resources/mic1/hi.ijvm" });
-    assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME + "Hi!\n" + Text.TICKS.text(14)
-                                                 + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME + Text.INPUT_DEBUGGER.text() + "Hi!\n"
+                                                 + Text.TICKS.text(14) + getLineSeparator()
+                                                 + Text.INPUT_DEBUGGER.text());
   }
 
   @Test
@@ -188,7 +189,9 @@ public class MicroDebugTest extends DefaultTestCase {
                                   filePath,
                                   "src/test/resources/mic1/hi.mic1",
                                   "src/test/resources/mic1/hi.ijvm" });
-    assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME + Text.TICKS.text(14) + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME + Text.INPUT_DEBUGGER.text()
+                                                 + Text.TICKS.text(14) + getLineSeparator()
+                                                 + Text.INPUT_DEBUGGER.text());
 
     BufferedReader in = null;
     FileInputStream fileInputStream = null;
@@ -204,8 +207,7 @@ public class MicroDebugTest extends DefaultTestCase {
       if (fileInputStream != null) {
         fileInputStream.close();
       }
+      new File(filePath).delete();
     }
-
-    new File(filePath).delete();
   }
 }
