@@ -108,7 +108,11 @@ public final class Mic1ControlStore extends AbstractCodeContainer {
 
   @Override
   protected int getLastPossibleCodeAddress() {
-    return this.store.length - 1;
+    int addr = this.store.length - 1;
+    while (this.store[addr] == null) {
+      --addr;
+    }
+    return addr;
   }
 
   @Override

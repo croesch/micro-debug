@@ -292,4 +292,29 @@ public class Mic1ControlStoreTest extends DefaultTestCase {
     assertThat(out.toString()).isEqualTo(expected);
     out.reset();
   }
+
+  @Test
+  public void testPrintCode_Hi() throws IOException {
+    printlnMethodName();
+    this.store = new Mic1ControlStore(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"));
+
+    this.store.printCode();
+    assertThat(out.toString()).isEqualTo(readFile("mic1/hi.mic1.dis").toString());
+    out.reset();
+
+    this.store.printCode(0x10, 0x20);
+    assertThat(out.toString()).isEmpty();
+
+    this.store.printCodeAroundLine(0x20, 0x5);
+    assertThat(out.toString()).isEmpty();
+  }
+
+  @Test
+  public void testPrintCode_WithNullValues() throws IOException {
+    printlnMethodName();
+    this.store = new Mic1ControlStore(ClassLoader.getSystemResourceAsStream("mic1/hi-with-null.mic1"));
+
+    this.store.printCode();
+    assertThat(out.toString()).isEqualTo(readFile("mic1/hi-with-null.mic1.dis").toString());
+  }
 }
