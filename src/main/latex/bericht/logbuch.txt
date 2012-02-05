@@ -102,3 +102,6 @@
 	- bisschen Kosmetik
 04.02.2012 (3 h)
 	- MACRO-BREAK und MICRO-BREAK implementiert
+05.02.2012 (4 h)
+	- LS-STACK und LS-MICRO-CODE implementiert
+	- #8 Ausgabe vor dem Lesen einer Eingabe hinzugefügt -> Unterscheidung Prozessor, Debugger
