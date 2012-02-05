@@ -22,6 +22,7 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.Test;
 
+import com.github.croesch.DefaultTestCase;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.register.Register;
 
@@ -31,7 +32,7 @@ import com.github.croesch.mic1.register.Register;
  * @author croesch
  * @since Date: Jan 30, 2012
  */
-public class RegisterBreakpointTest {
+public class RegisterBreakpointTest extends DefaultTestCase {
 
   /**
    * Test method for {@link RegisterBreakpoint#hashCode()}.
