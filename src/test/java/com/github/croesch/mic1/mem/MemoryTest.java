@@ -717,4 +717,13 @@ public class MemoryTest extends DefaultTestCase {
     assertThat(this.mem.getFormattedLine(-10)).isNullOrEmpty();
     assertThat(this.mem.getFormattedLine(0)).isEqualTo("     0x0: [ 0x10] BIPUSH 0x0");
   }
+
+  @Test
+  public void testPrintStack() throws FileFormatException {
+    this.mem = new Memory(Settings.MIC1_MEM_MACRO_MAXSIZE.getValue(),
+                          ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+
+    this.mem.printStack();
+    assertThat(out.toString()).isEmpty();
+  }
 }

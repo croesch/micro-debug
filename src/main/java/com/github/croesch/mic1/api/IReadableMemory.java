@@ -62,4 +62,11 @@ public interface IReadableMemory {
    */
   int getByte(final int addr);
 
+  /**
+   * Prints the content of the stack. Technical speaking it prints the content of the memory between the initial stack
+   * pointer value and the current value of the stack (inclusive edges).
+   * 
+   * @since Date: Feb 5, 2012
+   */
+  void printStack();
 }

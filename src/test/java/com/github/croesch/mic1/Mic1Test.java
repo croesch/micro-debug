@@ -878,4 +878,90 @@ public class Mic1Test extends DefaultTestCase {
     this.processor.run();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(3285) + getLineSeparator());
   }
+
+  @Test
+  public final void testPrintStack() throws IOException {
+    printlnMethodName();
+    Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
+
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+
+    this.processor.step(15);
+    out.reset();
+    this.processor.printStack();
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
+                                                 + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
+                                                 + getLineSeparator());
+
+    this.processor.step();
+    out.reset();
+    this.processor.printStack();
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
+                                                 + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x32")
+                                                 + getLineSeparator());
+
+    this.processor.step();
+    out.reset();
+    this.processor.printStack();
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
+                                                 + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x32")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(7, "  0xC007", "0x30")
+                                                 + getLineSeparator());
+
+    this.processor.step();
+    out.reset();
+    this.processor.printStack();
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
+                                                 + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x2")
+                                                 + getLineSeparator());
+
+    this.processor.step();
+    out.reset();
+    this.processor.printStack();
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
+                                                 + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
+                                                 + getLineSeparator());
+
+    this.processor.step();
+    out.reset();
+    this.processor.printStack();
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
+                                                 + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x32")
+                                                 + getLineSeparator());
+  }
 }

@@ -54,6 +54,8 @@ public enum Text {
 
   /** the text to print the content of the memory */
   MEMORY_CONTENT,
+  /** the text to print an entry of the stack */
+  STACK_CONTENT,
 
   /** the text to print a single line of macro code */
   MACRO_CODE_LINE,

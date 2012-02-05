@@ -743,4 +743,14 @@ public final class Mic1 {
   public void printContent(final int pos1, final int pos2) {
     this.memory.printContent(pos1, pos2);
   }
+
+  /**
+   * Prints the content of the stack. Technical speaking it prints the content of the memory between the initial stack
+   * pointer value and the current value of the stack (inclusive edges).
+   * 
+   * @since Date: Feb 5, 2012
+   */
+  public void printStack() {
+    this.memory.printStack();
+  }
 }

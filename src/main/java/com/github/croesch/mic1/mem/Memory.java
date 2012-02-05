@@ -586,4 +586,23 @@ public final class Memory extends AbstractCodeContainer implements IReadableMemo
                                                Utils.toHexString(getWord(i))));
     }
   }
+
+  /**
+   * Prints the content of the stack. Technical speaking it prints the content of the memory between the initial stack
+   * pointer value and the current value of the stack (inclusive edges).
+   * 
+   * @since Date: Feb 5, 2012
+   */
+  public void printStack() {
+    // fetch initial and current stack pointer values
+    final int initialStackPointer = Settings.MIC1_REGISTER_SP_DEFVAL.getValue();
+    final int currentStackPointer = Register.SP.getValue();
+
+    // iterate over the memory and print the content of the stack
+    for (int addr = initialStackPointer, stackElement = 0; addr <= currentStackPointer; ++addr, ++stackElement) {
+      final String formattedAddress = formatIntToHex(addr, Settings.MIC1_MEM_MACRO_ADDR_WIDTH.getValue());
+      final String formattedValue = Utils.toHexString(getWord(addr));
+      Printer.println(Text.STACK_CONTENT.text(stackElement, formattedAddress, formattedValue));
+    }
+  }
 }
