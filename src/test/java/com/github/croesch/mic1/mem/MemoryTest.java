@@ -614,7 +614,7 @@ public class MemoryTest extends DefaultTestCase {
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     this.mem.printCodeAroundLine(2, 0);
 
-    assertThat(out.toString()).isEqualTo("     0x2: [0x59] DUP" + getLineSeparator());
+    assertThat(out.toString()).isEqualTo("     0x2: [ 0x59] DUP" + getLineSeparator());
 
   }
 
@@ -715,6 +715,6 @@ public class MemoryTest extends DefaultTestCase {
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
 
     assertThat(this.mem.getFormattedLine(-10)).isNullOrEmpty();
-    assertThat(this.mem.getFormattedLine(0)).isEqualTo("     0x0: [0x10] BIPUSH 0x0");
+    assertThat(this.mem.getFormattedLine(0)).isEqualTo("     0x0: [ 0x10] BIPUSH 0x0");
   }
 }

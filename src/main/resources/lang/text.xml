@@ -35,7 +35,9 @@
 	<entry key="register-value">Register {0}: {1}</entry>
 	<entry key="executed-code">Executed: {0}</entry>
 	<entry key="memory-content">Value of memory at {0} = {1}</entry>
-	<entry key="code-line">{0}: [{1}] {2} {3}</entry>
+
+	<entry key="macro-code-line">{0}: [{1}] {2} {3}</entry>
+	<entry key="micro-code-line">{0}: {1}</entry>
 	
 	<entry key="breakpoint-register">Breakpoint #{0}: when Register {1} == {2}</entry>
 	<entry key="breakpoint-macro">Breakpoint #{0}: at macro code line {1}</entry>

@@ -55,8 +55,10 @@ public enum Text {
   /** the text to print the content of the memory */
   MEMORY_CONTENT,
 
-  /** the text to print a single line of code */
-  CODE_LINE,
+  /** the text to print a single line of macro code */
+  MACRO_CODE_LINE,
+  /** the text to print a single line of micro code */
+  MICRO_CODE_LINE,
 
   /** the text to print the breakpoint for a specific register */
   BREAKPOINT_REGISTER,

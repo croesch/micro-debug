@@ -551,10 +551,10 @@ public class UserInstructionTest extends DefaultTestCase {
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
 
-    final String firstLine = Text.EXECUTED_CODE.text("     0x0: [0x10] BIPUSH 0x0") + getLineSeparator();
-    final String expected = firstLine + Text.EXECUTED_CODE.text("     0x2: [0x59] DUP") + getLineSeparator()
-                            + Text.EXECUTED_CODE.text("     0x3: [0x36] ISTORE 0") + getLineSeparator()
-                            + Text.EXECUTED_CODE.text("     0x5: [0x36] ISTORE 1") + getLineSeparator()
+    final String firstLine = Text.EXECUTED_CODE.text("     0x0: [ 0x10] BIPUSH 0x0") + getLineSeparator();
+    final String expected = firstLine + Text.EXECUTED_CODE.text("     0x2: [ 0x59] DUP") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("     0x3: [ 0x36] ISTORE 0") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("     0x5: [ 0x36] ISTORE 1") + getLineSeparator()
                             + Text.TICKS.text(24) + getLineSeparator();
 
     assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
@@ -793,14 +793,14 @@ public class UserInstructionTest extends DefaultTestCase {
 
     assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "8")).isTrue();
     assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0")).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(8) + getLineSeparator() + "     0x2: [0x59] DUP"
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(8) + getLineSeparator() + "     0x2: [ 0x59] DUP"
                                                  + getLineSeparator());
 
     out.reset();
     assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
     assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "8")).isTrue();
     assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0")).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.TICKS.text(8) + getLineSeparator() + "     0x2: [0x59] DUP"
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(8) + getLineSeparator() + "     0x2: [ 0x59] DUP"
                                                  + getLineSeparator());
   }
 

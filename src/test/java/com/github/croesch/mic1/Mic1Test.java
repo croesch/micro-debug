@@ -851,10 +851,10 @@ public class Mic1Test extends DefaultTestCase {
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
 
-    final String firstLine = Text.EXECUTED_CODE.text("     0x0: [0x10] BIPUSH 0x0") + getLineSeparator();
-    final String expected = firstLine + Text.EXECUTED_CODE.text("     0x2: [0x59] DUP") + getLineSeparator()
-                            + Text.EXECUTED_CODE.text("     0x3: [0x36] ISTORE 0") + getLineSeparator()
-                            + Text.EXECUTED_CODE.text("     0x5: [0x36] ISTORE 1") + getLineSeparator()
+    final String firstLine = Text.EXECUTED_CODE.text("     0x0: [ 0x10] BIPUSH 0x0") + getLineSeparator();
+    final String expected = firstLine + Text.EXECUTED_CODE.text("     0x2: [ 0x59] DUP") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("     0x3: [ 0x36] ISTORE 0") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("     0x5: [ 0x36] ISTORE 1") + getLineSeparator()
                             + Text.TICKS.text(24) + getLineSeparator();
 
     this.processor.run();
