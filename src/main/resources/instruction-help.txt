@@ -23,6 +23,15 @@ DESCRIPTION
 		and NUM2 the number of the last line to print. Lines are numbered according
 		to the output of this function without parameters.
 
+	ls-micro-code [NUM1 [NUM2]]
+		Prints the micro code to the user, trying to disassemble it.
+		If parameters are omitted, then the whole code will be printed to the user.
+		If only NUM1 is given, then NUM1 lines of code before and after the current
+		micro code instruction will be printed.
+		If also NUM2 is given, NUM1 is a number referring the first line to print
+		and NUM2 the number of the last line to print. Lines are numbered according
+		to the output of this function without parameters.
+
 	ls-mem FROM TO
 		Prints the content of the memory between the given addresses.
 		FROM is the address of the first word to print and TO the address of the last

@@ -1260,4 +1260,177 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThatTwoParametersAreWrong(UserInstruction.STEP, 0);
     assertThatThreeParametersAreWrong(UserInstruction.STEP, 0);
   }
+
+  @Test
+  public void testExecuteLsMicroCode_WrongNumberOfParameters() {
+    printlnMethodName();
+    assertThatThreeParametersAreWrong(UserInstruction.LS_MICRO_CODE, 2);
+  }
+
+  @Test
+  public void testExecuteLsMicroCode_One_Invalid() {
+    printlnMethodName();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "1x")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator());
+  }
+
+  @Test
+  public void testExecuteLsMicroCode_Two_InvalidBoth() {
+    printlnMethodName();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "1x", "0x")).isTrue();
+    assertThat(out.toString())
+      .isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator()
+                         + Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
+  }
+
+  @Test
+  public void testExecuteLsMicroCode_Two_Invalid1() {
+    printlnMethodName();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "1x", "0")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator());
+  }
+
+  @Test
+  public void testExecuteLsMicroCode_Two_Invalid2() {
+    printlnMethodName();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "0", "1x")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator());
+  }
+
+  @Test
+  public void testExecuteLsMicroCode_PrintCode_All() throws IOException {
+    printlnMethodName();
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(readFile("mic1/mic1ijvm.mic1.dis").toString());
+  }
+
+  @Test
+  public void testExecuteLsMicroCode_PrintCode_Part1() throws IOException {
+    printlnMethodName();
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+
+    final String expected = readFile("mic1/mic1ijvm_part1.mic1.dis").toString();
+    final int end = 0x20;
+
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "0", String.valueOf(end))).isTrue();
+    assertThat(out.toString()).isEqualTo(expected);
+    out.reset();
+
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, String.valueOf(end), "0")).isTrue();
+    assertThat(out.toString()).isEqualTo(expected);
+    out.reset();
+
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, String.valueOf(end), "-42")).isTrue();
+    assertThat(out.toString()).isEqualTo(expected);
+    out.reset();
+
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "-42", String.valueOf(end))).isTrue();
+    assertThat(out.toString()).isEqualTo(expected);
+    out.reset();
+  }
+
+  @Test
+  public void testExecuteLsMicroCode_PrintCode_Part2() throws IOException {
+    printlnMethodName();
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+
+    final String expected = readFile("mic1/mic1ijvm_part2.mic1.dis").toString();
+
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "0x35", "0x63")).isTrue();
+    assertThat(out.toString()).isEqualTo(expected);
+    out.reset();
+
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "0x63", "0x35")).isTrue();
+    assertThat(out.toString()).isEqualTo(expected);
+    out.reset();
+  }
+
+  @Test
+  public void testExecuteLsMicroCode_PrintCode_Part3() throws IOException {
+    printlnMethodName();
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+
+    final String expected = readFile("mic1/mic1ijvm_part3.mic1.dis").toString();
+    final int start = 0x87;
+
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, String.valueOf(start), "0x1fF")).isTrue();
+    assertThat(out.toString()).isEqualTo(expected);
+    out.reset();
+
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "0x1FF", String.valueOf(start))).isTrue();
+    assertThat(out.toString()).isEqualTo(expected);
+    out.reset();
+
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, String.valueOf(start), "4711")).isTrue();
+    assertThat(out.toString()).isEqualTo(expected);
+    out.reset();
+
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "0x4711", String.valueOf(start))).isTrue();
+    assertThat(out.toString()).isEqualTo(expected);
+    out.reset();
+  }
+
+  @Test
+  public void testExecuteLsMicroCode_PrintCode_Around_Part1() throws IOException {
+    printlnMethodName();
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+
+    final String expected = readFile("mic1/mic1ijvm_part1.mic1.dis").toString();
+
+    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "5")).isTrue();
+    out.reset();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "0x10")).isTrue();
+    assertThat(out.toString()).isEqualTo(expected);
+    out.reset();
+
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "0x20")).isTrue();
+    assertThat(out.toString()).isEqualTo(expected);
+    out.reset();
+  }
+
+  @Test
+  public void testExecuteLsMicroCode_PrintCode_Around_Part2() throws IOException {
+    printlnMethodName();
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+
+    final String expected = readFile("mic1/mic1ijvm_part2.mic1.dis").toString();
+
+    UserInstruction.MICRO_STEP.execute(this.processor, "7");
+    out.reset();
+    UserInstruction.LS_MICRO_CODE.execute(this.processor, "0x4C");
+    assertThat(out.toString()).isNotEqualTo(expected);
+    out.reset();
+  }
+
+  @Test
+  public void testExecuteLsMicroCode_PrintCode_Hi() throws IOException {
+    printlnMethodName();
+
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(readFile("mic1/hi.mic1.dis").toString());
+    out.reset();
+
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "0x10", "0x20")).isTrue();
+    assertThat(out.toString()).isEmpty();
+  }
+
+  @Test
+  public void testExecuteLsMicroCode_PrintCode_WithNullValues() throws IOException {
+    printlnMethodName();
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi-with-null.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
+
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(readFile("mic1/hi-with-null.mic1.dis").toString());
+  }
 }

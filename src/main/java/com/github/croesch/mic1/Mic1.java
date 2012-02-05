@@ -653,6 +653,36 @@ public final class Mic1 {
   }
 
   /**
+   * Prints the whole micro code to the user.
+   * 
+   * @since Date: Feb 5, 2012
+   */
+  public void printMicroCode() {
+    this.controlStore.printCode();
+  }
+
+  /**
+   * Prints the given number of lines of micro code around the current line to the user.
+   * 
+   * @since Date: Feb 5, 2012
+   * @param scope the number of lines to print before and after the current line
+   */
+  public void printMicroCode(final int scope) {
+    this.controlStore.printCodeAroundLine(Math.max(0, this.oldMpc), scope);
+  }
+
+  /**
+   * Prints the micro code to the user. Between the given line numbers.
+   * 
+   * @since Date: Feb 5, 2012
+   * @param from the first line to print
+   * @param to the last line to print
+   */
+  public void printMicroCode(final int from, final int to) {
+    this.controlStore.printCode(from, to);
+  }
+
+  /**
    * Adds a breakpoint for the given {@link Register} and the given value. Debugger will break, if the given
    * {@link Register} has the given value.
    * 
