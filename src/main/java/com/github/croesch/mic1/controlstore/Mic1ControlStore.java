@@ -23,6 +23,9 @@ import java.io.InputStream;
 
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
+import com.github.croesch.mic1.api.AbstractCodeContainer;
+import com.github.croesch.misc.Printer;
+import com.github.croesch.misc.Settings;
 import com.github.croesch.misc.Utils;
 
 /**
@@ -31,7 +34,7 @@ import com.github.croesch.misc.Utils;
  * @author croesch
  * @since Date: Nov 19, 2011
  */
-public final class Mic1ControlStore {
+public final class Mic1ControlStore extends AbstractCodeContainer {
 
   /** the number of micro code instructions that are stored in this store */
   private static final int INSTRUCTIONS_PER_STORE = 512;
@@ -96,5 +99,22 @@ public final class Mic1ControlStore {
   public Mic1Instruction getInstruction(final int mpc) {
     final int nineBitMask = 0x1FF;
     return this.store[mpc & nineBitMask];
+  }
+
+  @Override
+  protected int getFirstPossibleCodeAddress() {
+    return 0;
+  }
+
+  @Override
+  protected int getLastPossibleCodeAddress() {
+    return this.store.length - 1;
+  }
+
+  @Override
+  protected int printCodeLine(final int i) {
+    final String formattedAddress = formatIntToHex(i, Settings.MIC1_MEM_MICRO_ADDR_WIDTH.getValue());
+    Printer.println(Text.MICRO_CODE_LINE.text(formattedAddress, Mic1InstructionDecoder.decode(this.store[i])));
+    return 0;
   }
 }

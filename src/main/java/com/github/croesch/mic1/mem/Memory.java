@@ -25,6 +25,7 @@ import java.util.Map;
 
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
+import com.github.croesch.mic1.api.AbstractCodeContainer;
 import com.github.croesch.mic1.api.IReadableMemory;
 import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.io.Output;
@@ -39,7 +40,7 @@ import com.github.croesch.misc.Utils;
  * @author croesch
  * @since Date: Nov 21, 2011
  */
-public final class Memory implements IReadableMemory {
+public final class Memory extends AbstractCodeContainer implements IReadableMemory {
 
   /** a mask to deselect byte 0 */
   private static final int MASK_BYTE_0 = 0xFFFFFF00;
@@ -418,63 +419,18 @@ public final class Memory implements IReadableMemory {
     return valid;
   }
 
-  /**
-   * Prints the assembler code stored in the memory to the user.
-   * 
-   * @since Date: Jan 22, 2012
-   */
-  public void printCode() {
-    printCode(Integer.MIN_VALUE, Integer.MAX_VALUE);
+  @Override
+  protected int getLastPossibleCodeAddress() {
+    return refineEndOfCode(4 * (Utils.getNextHigherValue(getFirstPossibleCodeAddress(),
+                                                         Settings.MIC1_REGISTER_CPP_DEFVAL.getValue(),
+                                                         Settings.MIC1_REGISTER_SP_DEFVAL.getValue(),
+                                                         this.memory.length,
+                                                         Settings.MIC1_REGISTER_LV_DEFVAL.getValue()) - 1));
   }
 
-  /**
-   * Prints the given number lines of assembler code stored in the memory to the user around the given line.
-   * 
-   * @since Date: Jan 26, 2012
-   * @param line the line around to print the code
-   * @param scope the number of lines to print before and after the given line
-   */
-  public void printCodeAroundLine(final int line, final int scope) {
-    printCode(line - scope, line + scope);
-  }
-
-  /**
-   * Prints the assembler code stored in the memory to the user between the given lines.
-   * 
-   * @since Date: Jan 26, 2012
-   * @param pos1 the first line to print
-   * @param pos2 the last line to print
-   */
-  public void printCode(final int pos1, final int pos2) {
-    // correct arguments
-    final int start = Math.max(4 * getFirstPossibleCodeAddress(), Math.min(pos1, pos2));
-    final int end = Math.min(refineEndOfCode(4 * getLastPossibleCodeAddress()), Math.max(pos1, pos2));
-
-    for (int i = start; i <= end; ++i) {
-      i += printCodeLine(i);
-    }
-  }
-
-  /**
-   * Returns the address where the last possible code is stored.
-   * 
-   * @since Date: Jan 26, 2012
-   * @return the address of the last byte in the code section of the memory.
-   */
-  private int getLastPossibleCodeAddress() {
-    return Utils.getNextHigherValue(getFirstPossibleCodeAddress(), Settings.MIC1_REGISTER_CPP_DEFVAL.getValue(),
-                                    Settings.MIC1_REGISTER_SP_DEFVAL.getValue(), this.memory.length,
-                                    Settings.MIC1_REGISTER_LV_DEFVAL.getValue()) - 1;
-  }
-
-  /**
-   * Returns the address where the first possible code is stored.
-   * 
-   * @since Date: Jan 26, 2012
-   * @return the address of the first byte in the code section of the memory.
-   */
-  private int getFirstPossibleCodeAddress() {
-    return Settings.MIC1_REGISTER_PC_DEFVAL.getValue() + 1;
+  @Override
+  protected int getFirstPossibleCodeAddress() {
+    return 4 * (Settings.MIC1_REGISTER_PC_DEFVAL.getValue() + 1);
   }
 
   /**
@@ -492,15 +448,8 @@ public final class Memory implements IReadableMemory {
     return refEnd;
   }
 
-  /**
-   * Reads the value of the memory at the given address, builds the representing {@link String} and prints it to the
-   * user.
-   * 
-   * @since Date: Jan 22, 2012
-   * @param addr the absolute address of the code instruction to print
-   * @return the number of bytes read as arguments to the command byte
-   */
-  private int printCodeLine(final int addr) {
+  @Override
+  protected int printCodeLine(final int addr) {
     final StringBuilder sb = new StringBuilder();
     final int bytesRead = getLineString(addr, sb);
     Printer.println(sb.toString());
@@ -528,7 +477,7 @@ public final class Memory implements IReadableMemory {
     final String formattedAddr = formatIntToHex(addr, Settings.MIC1_MEM_MACRO_ADDR_WIDTH.getValue());
     final String formattedCmdCode = formatIntToHex(cmdCode, Settings.MIC1_MEM_MICRO_ADDR_WIDTH.getValue());
 
-    sb.append(Text.CODE_LINE.text(formattedAddr, formattedCmdCode, name, formattedArgs.toString()));
+    sb.append(Text.MACRO_CODE_LINE.text(formattedAddr, formattedCmdCode, name, formattedArgs.toString()));
     return bytesRead;
   }
 
@@ -601,19 +550,6 @@ public final class Memory implements IReadableMemory {
       sb.append(" ").append(arg.getRepresentationOfArgument(value, this));
     }
     return bytesRead;
-  }
-
-  /**
-   * Formats the given number to a hexadecimal number and returns an right aligned string with the given width.
-   * 
-   * @since Date: Jan 22, 2012
-   * @param number the number to format
-   * @param width the width the formatted string should at least have
-   * @return the formatted string containing the hexadecimal value of the given number and at least <i>width</i>
-   *         characters.
-   */
-  private String formatIntToHex(final int number, final int width) {
-    return String.format("%" + width + "s", Utils.toHexString(number));
   }
 
   /**

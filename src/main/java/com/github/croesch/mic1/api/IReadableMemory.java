@@ -19,7 +19,7 @@
 package com.github.croesch.mic1.api;
 
 /**
- * TODO Comment here ...
+ * Represents the memory that exports only read access.
  * 
  * @author croesch
  * @since Date: Feb 3, 2012
@@ -36,24 +36,6 @@ public interface IReadableMemory {
   void printContent(final int pos1, final int pos2);
 
   /**
-   * Prints the assembler code stored in the memory to the user between the given lines.
-   * 
-   * @since Date: Jan 26, 2012
-   * @param pos1 the first line to print
-   * @param pos2 the last line to print
-   */
-  void printCode(final int pos1, final int pos2);
-
-  /**
-   * Prints the given number lines of assembler code stored in the memory to the user around the given line.
-   * 
-   * @since Date: Jan 26, 2012
-   * @param line the line around to print the code
-   * @param scope the number of lines to print before and after the given line
-   */
-  void printCodeAroundLine(final int line, final int scope);
-
-  /**
    * Returns the formatted line.
    * 
    * @since Date: Feb 3, 2012
@@ -61,13 +43,6 @@ public interface IReadableMemory {
    * @return the {@link String} representing the given line number
    */
   String getFormattedLine(int line);
-
-  /**
-   * Prints the assembler code stored in the memory to the user.
-   * 
-   * @since Date: Jan 22, 2012
-   */
-  void printCode();
 
   /**
    * Returns the word value at the given address.
