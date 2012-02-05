@@ -41,6 +41,9 @@ DESCRIPTION
 		Lists the value of a register, where REG is the name of that register.
 		If REG is omitted then the values of all registers are listed.
 
+	ls-stack
+		Prints the complete content of the stack.
+
 	macro-break LINE
 		Adds a breakpoint to the given line number (=LINE) in the macro code.
 		The line number refers to the line numbers fetched from ls-macro-code.

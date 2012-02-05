@@ -180,6 +180,15 @@ enum UserInstruction {
     }
   },
 
+  /** prints the content of the stack */
+  LS_STACK {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      processor.printStack();
+      return true;
+    }
+  },
+
   /** adds a breakpoint at the given line in the macro code */
   MACRO_BREAK {
     @Override

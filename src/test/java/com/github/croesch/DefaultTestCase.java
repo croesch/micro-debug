@@ -63,6 +63,7 @@ public class DefaultTestCase {
   public final void setUp() throws Exception {
     Printer.setPrintStream(new PrintStream(out));
     Output.setOut(new PrintStream(micOut));
+    Output.setBuffered(true);
     micOut.reset();
     out.reset();
     setUpDetails();
@@ -71,6 +72,7 @@ public class DefaultTestCase {
   @AfterClass
   public static final void after() throws Exception {
     Printer.setPrintStream(System.out);
+    Output.flush();
   }
 
   protected void setUpDetails() throws Exception {

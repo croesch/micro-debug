@@ -1433,4 +1433,92 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor)).isTrue();
     assertThat(out.toString()).isEqualTo(readFile("mic1/hi-with-null.mic1.dis").toString());
   }
+
+  @Test
+  public void testExecuteLsStack_Add() throws FileFormatException {
+    printlnMethodName();
+    Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
+
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator());
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "15")).isTrue();
+    out.reset();
+    assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
+                                                 + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
+                                                 + getLineSeparator());
+
+    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    out.reset();
+    assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
+                                                 + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x32")
+                                                 + getLineSeparator());
+
+    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    out.reset();
+    assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
+                                                 + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x32")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(7, "  0xC007", "0x30")
+                                                 + getLineSeparator());
+
+    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    out.reset();
+    assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
+                                                 + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x2")
+                                                 + getLineSeparator());
+
+    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    out.reset();
+    assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
+                                                 + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
+                                                 + getLineSeparator());
+
+    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    out.reset();
+    assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
+                                                 + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
+                                                 + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x32")
+                                                 + getLineSeparator());
+  }
 }
