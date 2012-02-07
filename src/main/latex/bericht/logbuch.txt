@@ -105,3 +105,8 @@
 05.02.2012 (4 h)
 	- LS-STACK und LS-MICRO-CODE implementiert
 	- #8 Ausgabe vor dem Lesen einer Eingabe hinzugefügt -> Unterscheidung Prozessor, Debugger
+06.02.2012 (2 h)
+	- Treffen
+
+07.02.2012 (2 h)
+	- Code-Review
