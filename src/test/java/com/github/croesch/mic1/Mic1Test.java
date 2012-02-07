@@ -828,10 +828,8 @@ public class Mic1Test extends DefaultTestCase {
 
     this.processor.step(560);
     assertThat(Register.PC.getValue()).isEqualTo(0x11D);
-    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + " 2" + getLineSeparator() + Text.INPUT_MIC1.text()
-                                                 + "+2" + getLineSeparator() + "========" + getLineSeparator()
-                                                 + "00000004" + getLineSeparator() + Text.TICKS.text(3213)
-                                                 + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + " 2\n" + Text.INPUT_MIC1.text()
+                                         + "+2\n========\n00000004\n" + Text.TICKS.text(3213) + getLineSeparator());
     out.reset();
 
     this.processor.step(560);

@@ -86,7 +86,11 @@ public class DefaultTestCase {
       final Reader r = new InputStreamReader(stream);
       int c;
       while ((c = r.read()) != -1) {
-        sb.append((char) c);
+        if (c == '\n') {
+          sb.append(getLineSeparator());
+        } else {
+          sb.append((char)c);
+        }
       }
     } finally {
       stream.close();

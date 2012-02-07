@@ -1243,10 +1243,8 @@ public class UserInstructionTest extends DefaultTestCase {
 
     assertThat(UserInstruction.STEP.execute(this.processor, "560")).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(0x11D);
-    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + " 2" + getLineSeparator() + Text.INPUT_MIC1.text()
-                                                 + "+2" + getLineSeparator() + "========" + getLineSeparator()
-                                                 + "00000004" + getLineSeparator() + Text.TICKS.text(3213)
-                                                 + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + " 2\n" + Text.INPUT_MIC1.text()
+                                         + "+2\n========\n00000004\n" + Text.TICKS.text(3213) + getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.STEP.execute(this.processor, "560")).isTrue();
