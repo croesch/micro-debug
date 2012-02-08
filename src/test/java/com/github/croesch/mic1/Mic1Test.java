@@ -829,7 +829,8 @@ public class Mic1Test extends DefaultTestCase {
     this.processor.step(560);
     assertThat(Register.PC.getValue()).isEqualTo(0x11D);
     assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + " 2\n" + Text.INPUT_MIC1.text()
-                                         + "+2\n========\n00000004\n" + Text.TICKS.text(3213) + getLineSeparator());
+                                                 + "+2\n========\n00000004\n" + Text.TICKS.text(3213)
+                                                 + getLineSeparator());
     out.reset();
 
     this.processor.step(560);
@@ -965,5 +966,21 @@ public class Mic1Test extends DefaultTestCase {
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x32")
                                                  + getLineSeparator());
+  }
+
+  @Test
+  public final void testTracingLocalVariables() throws IOException {
+    printlnMethodName();
+    Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
+
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    this.processor.step(11);
+    out.reset();
+    this.processor.traceLocalVariable(1);
+
+    this.processor.step(27);
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.LOCAL_VARIABLE_VALUE.text(1, 2)
+                                                 + getLineSeparator() + Text.TICKS.text(129) + getLineSeparator());
   }
 }

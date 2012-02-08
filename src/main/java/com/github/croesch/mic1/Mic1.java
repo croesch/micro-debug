@@ -508,6 +508,16 @@ public final class Mic1 {
   }
 
   /**
+   * Performs to trace the local variable with the given number.
+   * 
+   * @since Date: Feb 8, 2012
+   * @param num the number of the local variable in the given macro code method as an offset to the LV.
+   */
+  public void traceLocalVariable(final int num) {
+    this.view.traceLocalVariable(num);
+  }
+
+  /**
    * Performs to trace the macro code.
    * 
    * @since Date: Feb 3, 2012
@@ -551,6 +561,16 @@ public final class Mic1 {
    */
   public void traceRegister(final Register r) {
     this.view.traceRegister(r);
+  }
+
+  /**
+   * Performs to not trace the local variable with the given number.
+   * 
+   * @since Date: Feb 8, 2012
+   * @param num the number of the local variable in the given macro code method as an offset to the LV.
+   */
+  public void untraceLocalVariable(final int num) {
+    this.view.untraceLocalVariable(num);
   }
 
   /**

@@ -129,4 +129,35 @@ public interface Mic1View {
    * @param macroCodeNumber the line number of the macro instruction being executed
    */
   void update(Mic1Instruction currentInstruction, int macroCodeNumber);
+
+  /**
+   * Start tracing the value of the local variable with the given number. This will create a variable based on the
+   * current LV value so that we can differentiate the variable if we return from this method.
+   * 
+   * @since Date: Feb 8, 2012
+   * @param varNum the local number of this variable as an offset to the LV.
+   */
+  void traceLocalVariable(final int varNum);
+
+  /**
+   * Ends tracing the value of the local variable with the given number. This will remove the variable based on the
+   * current LV value so that we don't stop tracing a variable that is traced outside the current method.
+   * 
+   * @since Date: Feb 8, 2012
+   * @param varNum the local number of this variable as an offset to the LV.
+   */
+  void untraceLocalVariable(final int varNum);
+
+  /**
+   * Returns whether we are tracing the value of the local variable with the given number. This will also check the
+   * value of the LV, so that we are sure we are really tracing this variable and not a variable in a different method
+   * with the same local number.
+   * 
+   * @since Date: Feb 8, 2012
+   * @param varNum the local number of this variable as an offset to the LV.
+   * @return <code>true</code> if we are tracing the local variable with the given number in the current macro code
+   *         method,<br>
+   *         <code>false</code> otherwise
+   */
+  boolean isTracingLocalVariable(final int varNum);
 }

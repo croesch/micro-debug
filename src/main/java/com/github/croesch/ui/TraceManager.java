@@ -225,6 +225,18 @@ public final class TraceManager implements Mic1View {
         listRegister(r);
       }
     }
+
+    //trace local variables
+    for (final MacroVariable var : this.tracingVariables) {
+      final int addr = getAddressOfLocalVariable(var.getNumber());
+      if (addr == var.getAddress()) {
+        final int newVal = this.memory.getWord(addr);
+        if (var.getValue() != newVal) {
+          var.setValue(newVal);
+          Printer.println(Text.LOCAL_VARIABLE_VALUE.text(var.getNumber(), var.getValue()));
+        }
+      }
+    }
   }
 
   /**

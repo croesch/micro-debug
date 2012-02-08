@@ -19,7 +19,6 @@
 package com.github.croesch.i18n;
 
 import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -52,6 +51,8 @@ public enum Text {
 
   /** the text to print the value of a register */
   REGISTER_VALUE,
+  /** the text to print the value of a local variable */
+  LOCAL_VARIABLE_VALUE,
 
   /** the text to print the executed code */
   EXECUTED_CODE,
@@ -154,14 +155,13 @@ public enum Text {
    */
   private Text() {
     final String key = name().toLowerCase(Locale.GERMAN).replace('_', '-');
-    String value;
-    try {
-      value = LazyHolder.INSTANCE.getProperty(key);
-    } catch (final MissingResourceException mre) {
+    final String value = LazyHolder.INSTANCE.getProperty(key);
+    if (value == null) {
       this.logger.warning("missing ressource key=" + key);
-      value = "!!missing-key=" + key + "!!";
+      this.string = "!!missing-key=" + key + "!!";
+    } else {
+      this.string = value;
     }
-    this.string = value;
   }
 
   /**
