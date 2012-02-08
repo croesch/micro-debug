@@ -25,6 +25,7 @@ import org.junit.Test;
 import com.github.croesch.DefaultTestCase;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
+import com.github.croesch.mic1.mem.Memory;
 import com.github.croesch.mic1.register.Register;
 
 /**
@@ -37,61 +38,82 @@ public class TraceManagerTest extends DefaultTestCase {
 
   private TraceManager tm;
 
+  private Memory mem;
+
   @Override
-  protected void setUpDetails() {
-    this.tm = new TraceManager(null);
+  protected void setUpDetails() throws FileFormatException {
+    // create empty memory
+    this.mem = new Memory(Byte.MAX_VALUE, ClassLoader.getSystemResourceAsStream("mic1/wrong-file-format-1.ijvm"));
+    this.tm = new TraceManager(this.mem);
   }
 
   @Test
   public void testTraceRegister() {
+    printMethodName();
     for (final Register r : Register.values()) {
       assertThat(this.tm.isTracing(r)).isFalse();
       this.tm.traceRegister(r);
       assertThat(this.tm.isTracing(r)).isTrue();
+      printStep();
     }
+    printEndOfMethod();
   }
 
   @Test
   public void testTraceAllRegisters() {
+    printMethodName();
     for (final Register r : Register.values()) {
       assertThat(this.tm.isTracing(r)).isFalse();
+      printStep();
     }
 
+    printLoopEnd();
     this.tm.traceRegister();
 
     for (final Register r : Register.values()) {
       assertThat(this.tm.isTracing(r)).isTrue();
+      printStep();
     }
+    printEndOfMethod();
   }
 
   @Test
   public void testUntraceAllRegisters() {
+    printMethodName();
     this.tm.traceRegister();
 
     for (final Register r : Register.values()) {
       assertThat(this.tm.isTracing(r)).isTrue();
+      printStep();
     }
 
+    printLoopEnd();
     this.tm.untraceRegister();
 
     for (final Register r : Register.values()) {
       assertThat(this.tm.isTracing(r)).isFalse();
+      printStep();
     }
+    printEndOfMethod();
   }
 
   @Test
   public void testUntraceRegister() {
+    printMethodName();
     this.tm.traceRegister();
 
     for (final Register r : Register.values()) {
       assertThat(this.tm.isTracing(r)).isTrue();
       this.tm.untraceRegister(r);
       assertThat(this.tm.isTracing(r)).isFalse();
+      printStep();
     }
+    printEndOfMethod();
   }
 
   @Test
   public void testUpdateTracedRegisters() {
+    printlnMethodName();
     Register.MAR.setValue(-1);
     Register.MDR.setValue(0);
     Register.PC.setValue(1);
@@ -122,10 +144,153 @@ public class TraceManagerTest extends DefaultTestCase {
 
   @Test
   public void testTraceMicro() throws FileFormatException {
+    printlnMethodName();
     this.tm.traceMicro();
     assertThat(this.tm.isTracingMicro()).isTrue();
 
     this.tm.untraceMicro();
     assertThat(this.tm.isTracingMicro()).isFalse();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testIAEConstructor() {
+    new TraceManager(null);
+  }
+
+  @Test
+  public void testTraceLocalVariable_LocalVariableExists() {
+    printlnMethodName();
+    Register.LV.setValue(0);
+    this.mem.setWord(0, 0);
+
+    this.tm.traceLocalVariable(2);
+    assertThat(this.tm.isTracingLocalVariable(2)).isFalse();
+
+    this.mem.setWord(0, 1);
+    this.tm.traceLocalVariable(2);
+    assertThat(this.tm.isTracingLocalVariable(2)).isFalse();
+
+    this.mem.setWord(0, 2);
+    this.tm.traceLocalVariable(2);
+    assertThat(this.tm.isTracingLocalVariable(2)).isFalse();
+
+    this.mem.setWord(0, 3);
+    this.tm.traceLocalVariable(2);
+    assertThat(this.tm.isTracingLocalVariable(2)).isTrue();
+
+    this.mem.setWord(0, 2);
+    assertThat(this.tm.isTracingLocalVariable(2)).isFalse();
+
+    this.mem.setWord(0, 3);
+    assertThat(this.tm.isTracingLocalVariable(2)).isTrue();
+
+    this.mem.setWord(2, 12);
+    assertThat(this.tm.isTracingLocalVariable(2)).isTrue();
+  }
+
+  @Test
+  public void testTraceLocalVariable_NegativeNumber() {
+    printlnMethodName();
+    Register.LV.setValue(100);
+    this.mem.setWord(100, 150);
+
+    this.tm.traceLocalVariable(0);
+    this.tm.traceLocalVariable(-1);
+    this.tm.traceLocalVariable(-10);
+    this.tm.traceLocalVariable(-100);
+    this.tm.traceLocalVariable(-1000);
+    assertThat(this.tm.isTracingLocalVariable(42)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(0)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(-1)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(-10)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(-100)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(-1000)).isFalse();
+  }
+
+  @Test
+  public void testTraceLocalVariable() {
+    printlnMethodName();
+    Register.LV.setValue(100);
+    this.mem.setWord(100, 151);
+    this.mem.setWord(101, 151);
+
+    this.tm.traceLocalVariable(1);
+    this.tm.traceLocalVariable(5);
+    this.tm.traceLocalVariable(10);
+    this.tm.traceLocalVariable(50);
+    this.tm.traceLocalVariable(51);
+    this.tm.traceLocalVariable(100);
+    assertThat(this.tm.isTracingLocalVariable(1)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(5)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(10)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(50)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(51)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(100)).isFalse();
+
+    Register.LV.setValue(101);
+    this.tm.traceLocalVariable(5);
+    assertThat(this.tm.isTracingLocalVariable(1)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(4)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(5)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(9)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(10)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(49)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(50)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(51)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(99)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(100)).isFalse();
+
+    Register.LV.setValue(100);
+    assertThat(this.tm.isTracingLocalVariable(1)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(5)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(6)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(10)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(50)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(51)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(100)).isFalse();
+  }
+
+  @Test
+  public void testUntraceLocalVariable() {
+    printlnMethodName();
+    Register.LV.setValue(100);
+    this.mem.setWord(100, 151);
+
+    this.tm.traceLocalVariable(1);
+    this.tm.traceLocalVariable(5);
+    this.tm.traceLocalVariable(10);
+    this.tm.traceLocalVariable(25);
+    this.tm.traceLocalVariable(30);
+    this.tm.traceLocalVariable(50);
+    this.tm.traceLocalVariable(50);
+    this.tm.traceLocalVariable(50);
+
+    assertThat(this.tm.isTracingLocalVariable(1)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(5)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(10)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(25)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(30)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(50)).isTrue();
+
+    this.tm.untraceLocalVariable(1);
+    this.tm.untraceLocalVariable(50);
+
+    assertThat(this.tm.isTracingLocalVariable(1)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(5)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(10)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(25)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(30)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(50)).isFalse();
+
+    this.tm.traceLocalVariable(50);
+    this.tm.untraceLocalVariable(10);
+    this.tm.untraceLocalVariable(30);
+
+    assertThat(this.tm.isTracingLocalVariable(1)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(5)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(10)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(25)).isTrue();
+    assertThat(this.tm.isTracingLocalVariable(30)).isFalse();
+    assertThat(this.tm.isTracingLocalVariable(50)).isTrue();
   }
 }

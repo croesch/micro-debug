@@ -18,7 +18,9 @@
  */
 package com.github.croesch.ui;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 import com.github.croesch.i18n.Text;
@@ -41,6 +43,9 @@ public final class TraceManager implements Mic1View {
   /** contains which registers are traced and which aren't */
   private final Map<Register, Boolean> tracingRegisters = new EnumMap<Register, Boolean>(Register.class);
 
+  /** contains the variables that are currently traced */
+  private final List<MacroVariable> tracingVariables = new ArrayList<MacroVariable>();
+
   /** determines whether the micro code is currently traced */
   private boolean microTracing = false;
 
@@ -54,9 +59,12 @@ public final class TraceManager implements Mic1View {
    * A manager that is able to trace some things of the processors current state.
    * 
    * @since Date: Feb 8, 2012
-   * @param mem the main memory of the processor
+   * @param mem the main memory of the processor, mustn't be <code>null</code>
    */
   public TraceManager(final IReadableMemory mem) {
+    if (mem == null) {
+      throw new IllegalArgumentException();
+    }
     this.memory = mem;
   }
 
@@ -217,5 +225,75 @@ public final class TraceManager implements Mic1View {
         listRegister(r);
       }
     }
+  }
+
+  /**
+   * Start tracing the value of the local variable with the given number. This will create a variable based on the
+   * current LV value so that we can differentiate the variable if we return from this method.
+   * 
+   * @since Date: Feb 8, 2012
+   * @param varNum the local number of this variable as an offset to the LV.
+   */
+  public void traceLocalVariable(final int varNum) {
+    if (varNum > 0 && varNum <= getNumberOfLocalVariables() && !isTracingLocalVariable(varNum)) {
+      final int addr = getAddressOfLocalVariable(varNum);
+      this.tracingVariables.add(new MacroVariable(varNum, addr, this.memory.getWord(addr)));
+    }
+  }
+
+  /**
+   * Ends tracing the value of the local variable with the given number. This will remove the variable based on the
+   * current LV value so that we don't stop tracing a variable that is traced outside the current method.
+   * 
+   * @since Date: Feb 8, 2012
+   * @param varNum the local number of this variable as an offset to the LV.
+   */
+  public void untraceLocalVariable(final int varNum) {
+    if (varNum > 0 && varNum <= getNumberOfLocalVariables()) {
+      final int addr = getAddressOfLocalVariable(varNum);
+      this.tracingVariables.remove(new MacroVariable(varNum, addr, 0));
+    }
+  }
+
+  /**
+   * Returns whether we are tracing the value of the local variable with the given number. This will also check the
+   * value of the LV, so that we are sure we are really tracing this variable and not a variable in a different method
+   * with the same local number.
+   * 
+   * @since Date: Feb 8, 2012
+   * @param varNum the local number of this variable as an offset to the LV.
+   * @return <code>true</code> if we are tracing the local variable with the given number in the current macro code
+   *         method,<br>
+   *         <code>false</code> otherwise
+   */
+  public boolean isTracingLocalVariable(final int varNum) {
+    if (varNum > 0 && varNum <= getNumberOfLocalVariables()) {
+      final int addr = getAddressOfLocalVariable(varNum);
+      return this.tracingVariables.contains(new MacroVariable(varNum, addr, 0));
+    }
+    return false;
+  }
+
+  /**
+   * Returns the number of local variables in the current method, based on the value of the LV.
+   * 
+   * @since Date: Feb 8, 2012
+   * @return the number of local variables in the current method. Means number of parameters plus the number of local
+   *         variables, of this method.
+   */
+  private int getNumberOfLocalVariables() {
+    return this.memory.getWord(Register.LV.getValue()) - Register.LV.getValue() - 1;
+  }
+
+  /**
+   * Returns the physical address in the main memory of the local variable with the given number (in the current macro
+   * code method).
+   * 
+   * @since Date: Feb 8, 2012
+   * @param varNum the number of the local variable to fetch the address of
+   * @return the address of the local variable in the main memory
+   */
+  private int getAddressOfLocalVariable(final int varNum) {
+    return Register.LV.getValue() + varNum;
   }
 }
