@@ -110,3 +110,5 @@
 
 07.02.2012 (2 h)
 	- Code-Review
+08.02.2012 (3,5 h)
+	- Vorbereitungen für TRACE-VAR und UNTRACE-VAR implementiert
