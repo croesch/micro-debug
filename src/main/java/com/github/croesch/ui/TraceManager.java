@@ -47,6 +47,19 @@ public final class TraceManager implements Mic1View {
   /** determines whether the macro code is currently traced */
   private boolean macroTracing = false;
 
+  /** the main memory of the processor being traced */
+  private final IReadableMemory memory;
+
+  /**
+   * A manager that is able to trace some things of the processors current state.
+   * 
+   * @since Date: Feb 8, 2012
+   * @param mem the main memory of the processor
+   */
+  public TraceManager(final IReadableMemory mem) {
+    this.memory = mem;
+  }
+
   /**
    * Lists the values of all {@link Register}s.
    * 
@@ -185,8 +198,14 @@ public final class TraceManager implements Mic1View {
    * 
    * @since Date: Jan 15, 2012
    * @param currentInstruction the instruction that is now executed
+   * @param macroCodeNumber the line number of the macro instruction being executed
    */
-  public void update(final Mic1Instruction currentInstruction) {
+  public void update(final Mic1Instruction currentInstruction, final int macroCodeNumber) {
+    // trace macro code
+    if (macroCodeNumber >= 0 && isTracingMacro()) {
+      Printer.println(Text.EXECUTED_CODE.text(this.memory.getFormattedLine(macroCodeNumber)));
+    }
+
     // trace micro code
     if (isTracingMicro()) {
       Printer.println(Text.EXECUTED_CODE.text(Mic1InstructionDecoder.decode(currentInstruction)));
@@ -197,20 +216,6 @@ public final class TraceManager implements Mic1View {
       if (isTracing(r)) {
         listRegister(r);
       }
-    }
-  }
-
-  /**
-   * Tells the view to update itself when executing macro code.
-   * 
-   * @since Date: Feb 3, 2012
-   * @param macroCodeNumber the line number of the macro instruction being executed
-   * @param mem the memory to read the line from
-   */
-  public void updateMacroCode(final int macroCodeNumber, final IReadableMemory mem) {
-    if (isTracingMacro()) {
-      // trace micro code
-      Printer.println(Text.EXECUTED_CODE.text(mem.getFormattedLine(macroCodeNumber)));
     }
   }
 }

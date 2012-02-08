@@ -39,7 +39,7 @@ public class TraceManagerTest extends DefaultTestCase {
 
   @Override
   protected void setUpDetails() {
-    this.tm = new TraceManager();
+    this.tm = new TraceManager(null);
   }
 
   @Test
@@ -105,7 +105,7 @@ public class TraceManagerTest extends DefaultTestCase {
 
     this.tm.traceRegister();
     assertThat(out.toString()).isEmpty();
-    this.tm.update(null);
+    this.tm.update(null, 0);
 
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF") + getLineSeparator()
                                                  + Text.REGISTER_VALUE.text("MDR ", "0x0") + getLineSeparator()

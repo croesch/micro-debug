@@ -74,7 +74,7 @@ public final class Mic1 {
   private final Memory memory;
 
   /** the view that is able to present details of this processor to the user */
-  private final Mic1View view = new TraceManager();
+  private final Mic1View view;
 
   /** the manager for break points */
   private final BreakpointManager bpm = new BreakpointManager();
@@ -102,6 +102,8 @@ public final class Mic1 {
       // inform the caller about the problem
       throw new FileFormatException();
     }
+
+    this.view = new TraceManager(this.memory);
 
     init();
   }
@@ -192,16 +194,16 @@ public final class Mic1 {
    * @since Date: Nov 21, 2011
    */
   void doTick() {
-    if (isAssemblerCodeFetchingInstruction()) {
+    final boolean assemblerCodeFetchingInstruction = isAssemblerCodeFetchingInstruction();
+    if (assemblerCodeFetchingInstruction) {
       this.lastMacroAddress = Register.PC.getValue();
-      this.view.updateMacroCode(this.lastMacroAddress, this.memory);
     }
 
     doClock1();
     doClock2();
     doClock3();
 
-    update();
+    update(assemblerCodeFetchingInstruction);
     ++this.ticks;
   }
 
@@ -595,9 +597,15 @@ public final class Mic1 {
    * Tells the view to update itself.
    * 
    * @since Date: Jan 15, 2012
+   * @param macroCodeFetching <code>true</code> if the next macro code instruction has being fetched,<br>
+   *        <code>false</code> otherwise
    */
-  public void update() {
-    this.view.update(this.instruction);
+  private void update(final boolean macroCodeFetching) {
+    if (macroCodeFetching) {
+      this.view.update(this.instruction, this.lastMacroAddress);
+    } else {
+      this.view.update(this.instruction, -1);
+    }
   }
 
   /**
