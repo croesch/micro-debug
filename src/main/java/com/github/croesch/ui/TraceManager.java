@@ -29,6 +29,7 @@ import com.github.croesch.mic1.controlstore.Mic1Instruction;
 import com.github.croesch.mic1.controlstore.Mic1InstructionDecoder;
 import com.github.croesch.mic1.register.Register;
 import com.github.croesch.misc.Printer;
+import com.github.croesch.misc.Settings;
 import com.github.croesch.misc.Utils;
 import com.github.croesch.ui.api.Mic1View;
 
@@ -247,7 +248,7 @@ public final class TraceManager implements Mic1View {
    * @param varNum the local number of this variable as an offset to the LV.
    */
   public void traceLocalVariable(final int varNum) {
-    if (varNum > 0 && varNum <= getNumberOfLocalVariables() && !isTracingLocalVariable(varNum)) {
+    if (canTraceLocalVariable(varNum) && !isTracingLocalVariable(varNum)) {
       final int addr = getAddressOfLocalVariable(varNum);
       this.tracingVariables.add(new MacroVariable(varNum, addr, this.memory.getWord(addr)));
     }
@@ -261,10 +262,27 @@ public final class TraceManager implements Mic1View {
    * @param varNum the local number of this variable as an offset to the LV.
    */
   public void untraceLocalVariable(final int varNum) {
-    if (varNum > 0 && varNum <= getNumberOfLocalVariables()) {
+    if (canTraceLocalVariable(varNum)) {
       final int addr = getAddressOfLocalVariable(varNum);
       this.tracingVariables.remove(new MacroVariable(varNum, addr, 0));
     }
+  }
+
+  /**
+   * Returns whether it should be possible to trace a local variable with the given number.
+   * 
+   * @since Date: Feb 9, 2012
+   * @param varNum the number of the local variable to check
+   * @return <code>true</code>, if there is a local variable with the given number that can be traced, <br>
+   *         <code>false</code> otherwise
+   */
+  private boolean canTraceLocalVariable(final int varNum) {
+    return (varNum > 0 && varNum <= getNumberOfLocalVariables())
+           || (Register.LV.getValue() == Settings.MIC1_REGISTER_LV_DEFVAL.getValue() && varNum >= 0 && varNum < Utils
+             .getNextHigherValue(Settings.MIC1_REGISTER_LV_DEFVAL.getValue(), this.memory.getSize(),
+                                 Settings.MIC1_REGISTER_CPP_DEFVAL.getValue(),
+                                 Settings.MIC1_REGISTER_SP_DEFVAL.getValue(),
+                                 Settings.MIC1_REGISTER_PC_DEFVAL.getValue()));
   }
 
   /**
@@ -279,7 +297,7 @@ public final class TraceManager implements Mic1View {
    *         <code>false</code> otherwise
    */
   public boolean isTracingLocalVariable(final int varNum) {
-    if (varNum > 0 && varNum <= getNumberOfLocalVariables()) {
+    if (canTraceLocalVariable(varNum)) {
       final int addr = getAddressOfLocalVariable(varNum);
       return this.tracingVariables.contains(new MacroVariable(varNum, addr, 0));
     }

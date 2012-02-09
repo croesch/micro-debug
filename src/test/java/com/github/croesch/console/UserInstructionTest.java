@@ -1244,7 +1244,8 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.STEP.execute(this.processor, "560")).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(0x11D);
     assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + " 2\n" + Text.INPUT_MIC1.text()
-                                         + "+2\n========\n00000004\n" + Text.TICKS.text(3213) + getLineSeparator());
+                                                 + "+2\n========\n00000004\n" + Text.TICKS.text(3213)
+                                                 + getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.STEP.execute(this.processor, "560")).isTrue();
@@ -1524,5 +1525,101 @@ public class UserInstructionTest extends DefaultTestCase {
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x32")
                                                  + getLineSeparator());
+  }
+
+  @Test
+  public final void testExecuteTraceVar() throws IOException {
+    printlnMethodName();
+    Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
+
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+
+    assertThat(UserInstruction.TRACE_VAR.execute(this.processor, "0")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.processor, "11")).isTrue();
+    out.reset();
+    assertThat(UserInstruction.TRACE_VAR.execute(this.processor, "1")).isTrue();
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "27")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.LOCAL_VARIABLE_VALUE.text(1, 2)
+                                                 + getLineSeparator() + Text.TICKS.text(129) + getLineSeparator());
+    out.reset();
+    assertThat(UserInstruction.STEP.execute(this.processor, "9")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.LOCAL_VARIABLE_VALUE.text(0, 2) + getLineSeparator()
+                                                 + Text.TICKS.text(64) + getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.STEP.execute(this.processor, "33")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.LOCAL_VARIABLE_VALUE.text(1, 0) + getLineSeparator()
+                                                 + Text.INPUT_MIC1.text() + Text.LOCAL_VARIABLE_VALUE.text(1, 2)
+                                                 + getLineSeparator() + Text.TICKS.text(184) + getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.STEP.execute(this.processor, "9")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(64) + getLineSeparator());
+  }
+
+  @Test
+  public final void testExecuteUntraceVar() throws IOException {
+    printlnMethodName();
+    Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
+
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+
+    assertThat(UserInstruction.TRACE_VAR.execute(this.processor, "1")).isTrue();
+    assertThat(UserInstruction.TRACE_VAR.execute(this.processor, "0")).isTrue();
+    assertThat(UserInstruction.UNTRACE_VAR.execute(this.processor, "1")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.processor, "11")).isTrue();
+    out.reset();
+    assertThat(UserInstruction.TRACE_VAR.execute(this.processor, "1")).isTrue();
+    assertThat(UserInstruction.UNTRACE_VAR.execute(this.processor, "0")).isTrue();
+
+    assertThat(UserInstruction.STEP.execute(this.processor, "27")).isTrue();
+    assertThat(UserInstruction.UNTRACE_VAR.execute(this.processor, "1")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.LOCAL_VARIABLE_VALUE.text(1, 2)
+                                                 + getLineSeparator() + Text.TICKS.text(129) + getLineSeparator());
+    out.reset();
+    assertThat(UserInstruction.STEP.execute(this.processor, "9")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.LOCAL_VARIABLE_VALUE.text(0, 2) + getLineSeparator()
+                                                 + Text.TICKS.text(64) + getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.STEP.execute(this.processor, "33")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.TICKS.text(184) + getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.STEP.execute(this.processor, "9")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(64) + getLineSeparator());
+  }
+
+  @Test
+  public void testExecuteTraceVar_Invalid() {
+    printlnMethodName();
+    assertThat(UserInstruction.TRACE_VAR.execute(this.processor, "null")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("null")) + getLineSeparator());
+  }
+
+  @Test
+  public void testExecuteUntraceVar_Invalid() {
+    printlnMethodName();
+    assertThat(UserInstruction.UNTRACE_VAR.execute(this.processor, "null")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("null")) + getLineSeparator());
+  }
+
+  @Test
+  public void testExecuteTraceVar_WrongNumberOfParameters() {
+    printlnMethodName();
+    assertThatNoParameterIsWrong(UserInstruction.TRACE_VAR, 1);
+    assertThatTwoParametersAreWrong(UserInstruction.TRACE_VAR, 1);
+    assertThatThreeParametersAreWrong(UserInstruction.TRACE_VAR, 1);
+  }
+
+  @Test
+  public void testExecuteUntraceVar_WrongNumberOfParameters() {
+    printlnMethodName();
+    assertThatNoParameterIsWrong(UserInstruction.UNTRACE_VAR, 1);
+    assertThatTwoParametersAreWrong(UserInstruction.UNTRACE_VAR, 1);
+    assertThatThreeParametersAreWrong(UserInstruction.UNTRACE_VAR, 1);
   }
 }

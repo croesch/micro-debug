@@ -377,6 +377,22 @@ enum UserInstruction {
     }
   },
 
+  /** instruction to trace the given local variable */
+  TRACE_VAR {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      if (getSize(params) == 1) {
+        final Integer num = (Integer) Parameter.NUMBER.getValue(params[0]);
+        if (num != null) {
+          processor.traceLocalVariable(num.intValue());
+        }
+      } else {
+        Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(1, getSize(params)));
+      }
+      return true;
+    }
+  },
+
   /** instruction to not trace the macro code anymore */
   UNTRACE_MAC {
     @Override
@@ -412,6 +428,22 @@ enum UserInstruction {
         default:
           Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(0, getSize(params)));
           break;
+      }
+      return true;
+    }
+  },
+
+  /** instruction to not trace the given local variable anymore */
+  UNTRACE_VAR {
+    @Override
+    public boolean execute(final Mic1 processor, final String ... params) {
+      if (getSize(params) == 1) {
+        final Integer num = (Integer) Parameter.NUMBER.getValue(params[0]);
+        if (num != null) {
+          processor.untraceLocalVariable(num.intValue());
+        }
+      } else {
+        Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(1, getSize(params)));
       }
       return true;
     }

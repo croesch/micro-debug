@@ -975,6 +975,7 @@ public class Mic1Test extends DefaultTestCase {
 
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    this.processor.traceLocalVariable(0);
     this.processor.step(11);
     out.reset();
     this.processor.traceLocalVariable(1);
@@ -982,5 +983,50 @@ public class Mic1Test extends DefaultTestCase {
     this.processor.step(27);
     assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.LOCAL_VARIABLE_VALUE.text(1, 2)
                                                  + getLineSeparator() + Text.TICKS.text(129) + getLineSeparator());
+    out.reset();
+    this.processor.step(9);
+    assertThat(out.toString()).isEqualTo(Text.LOCAL_VARIABLE_VALUE.text(0, 2) + getLineSeparator()
+                                                 + Text.TICKS.text(64) + getLineSeparator());
+
+    out.reset();
+    this.processor.step(33);
+    assertThat(out.toString()).isEqualTo(Text.LOCAL_VARIABLE_VALUE.text(1, 0) + getLineSeparator()
+                                                 + Text.INPUT_MIC1.text() + Text.LOCAL_VARIABLE_VALUE.text(1, 2)
+                                                 + getLineSeparator() + Text.TICKS.text(184) + getLineSeparator());
+
+    out.reset();
+    this.processor.step(9);
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(64) + getLineSeparator());
+  }
+
+  @Test
+  public final void testUntracingLocalVariables() throws IOException {
+    printlnMethodName();
+    Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
+
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    this.processor.traceLocalVariable(0);
+    this.processor.step(11);
+    out.reset();
+    this.processor.traceLocalVariable(1);
+    this.processor.untraceLocalVariable(0);
+
+    this.processor.step(27);
+    this.processor.untraceLocalVariable(1);
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.LOCAL_VARIABLE_VALUE.text(1, 2)
+                                                 + getLineSeparator() + Text.TICKS.text(129) + getLineSeparator());
+    out.reset();
+    this.processor.step(9);
+    assertThat(out.toString()).isEqualTo(Text.LOCAL_VARIABLE_VALUE.text(0, 2) + getLineSeparator()
+                                                 + Text.TICKS.text(64) + getLineSeparator());
+
+    out.reset();
+    this.processor.step(33);
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.TICKS.text(184) + getLineSeparator());
+
+    out.reset();
+    this.processor.step(9);
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(64) + getLineSeparator());
   }
 }
