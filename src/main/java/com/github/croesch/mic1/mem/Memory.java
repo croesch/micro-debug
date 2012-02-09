@@ -116,7 +116,7 @@ public final class Memory extends AbstractCodeContainer implements IReadableMemo
    */
   public void reset() {
     // copy initial memory state
-    System.arraycopy(this.initialMemory, 0, this.memory, 0, this.memory.length);
+    System.arraycopy(this.initialMemory, 0, this.memory, 0, getSize());
     // set values
     this.read = false;
     this.fetch = false;
@@ -412,7 +412,7 @@ public final class Memory extends AbstractCodeContainer implements IReadableMemo
    *         <code>false</code> otherwise
    */
   private boolean isAddressValid(final int addr) {
-    final boolean valid = addr >= 0 && addr < this.memory.length;
+    final boolean valid = addr >= 0 && addr < getSize();
     if (!valid) {
       Printer.printErrorln(Text.INVALID_MEM_ADDR.text(Utils.toHexString(addr)));
     }
@@ -423,9 +423,18 @@ public final class Memory extends AbstractCodeContainer implements IReadableMemo
   protected int getLastPossibleCodeAddress() {
     return refineEndOfCode(4 * (Utils.getNextHigherValue(getFirstPossibleCodeAddress(),
                                                          Settings.MIC1_REGISTER_CPP_DEFVAL.getValue(),
-                                                         Settings.MIC1_REGISTER_SP_DEFVAL.getValue(),
-                                                         this.memory.length,
+                                                         Settings.MIC1_REGISTER_SP_DEFVAL.getValue(), getSize(),
                                                          Settings.MIC1_REGISTER_LV_DEFVAL.getValue()) - 1));
+  }
+
+  /**
+   * Returns the size of the memory.
+   * 
+   * @since Date: Feb 9, 2012
+   * @return the size of the memory in <em>words</em>
+   */
+  public int getSize() {
+    return this.memory.length;
   }
 
   @Override
@@ -579,7 +588,7 @@ public final class Memory extends AbstractCodeContainer implements IReadableMemo
   public void printContent(final int pos1, final int pos2) {
     // correct arguments
     final int start = Math.max(0, Math.min(pos1, pos2));
-    final int end = Math.min(this.memory.length - 1, Math.max(pos1, pos2));
+    final int end = Math.min(getSize() - 1, Math.max(pos1, pos2));
 
     for (int i = start; i <= end; ++i) {
       Printer.println(Text.MEMORY_CONTENT.text(formatIntToHex(i, Settings.MIC1_MEM_MACRO_ADDR_WIDTH.getValue()),

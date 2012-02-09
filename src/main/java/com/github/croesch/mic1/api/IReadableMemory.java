@@ -69,4 +69,12 @@ public interface IReadableMemory {
    * @since Date: Feb 5, 2012
    */
   void printStack();
+
+  /**
+   * Returns the size of the memory.
+   * 
+   * @since Date: Feb 9, 2012
+   * @return the size of the memory in <em>words</em>
+   */
+  int getSize();
 }
