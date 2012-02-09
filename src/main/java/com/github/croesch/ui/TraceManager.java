@@ -277,12 +277,38 @@ public final class TraceManager implements Mic1View {
    *         <code>false</code> otherwise
    */
   private boolean canTraceLocalVariable(final int varNum) {
-    return (varNum > 0 && varNum <= getNumberOfLocalVariables())
-           || (Register.LV.getValue() == Settings.MIC1_REGISTER_LV_DEFVAL.getValue() && varNum >= 0 && varNum < Utils
-             .getNextHigherValue(Settings.MIC1_REGISTER_LV_DEFVAL.getValue(), this.memory.getSize(),
-                                 Settings.MIC1_REGISTER_CPP_DEFVAL.getValue(),
-                                 Settings.MIC1_REGISTER_SP_DEFVAL.getValue(),
-                                 Settings.MIC1_REGISTER_PC_DEFVAL.getValue()));
+    return isRegularLocalVariable(varNum) || isLocalVariableInMainFunction(varNum);
+  }
+
+  /**
+   * Returns whether we are currently in main function and if the given number is a valid variable in main function.
+   * 
+   * @since Date: Feb 9, 2012
+   * @param varNum the number of the local variable
+   * @return <code>true</code> if we are in the main function of macro code and if the given number could refer to a
+   *         local variable in main function,<br>
+   *         <code>false</code> otherwise
+   */
+  private boolean isLocalVariableInMainFunction(final int varNum) {
+    return Register.LV.getValue() == Settings.MIC1_REGISTER_LV_DEFVAL.getValue()
+           && varNum >= 0
+           && varNum < Utils.getNextHigherValue(Settings.MIC1_REGISTER_LV_DEFVAL.getValue(), this.memory.getSize(),
+                                                Settings.MIC1_REGISTER_CPP_DEFVAL.getValue(),
+                                                Settings.MIC1_REGISTER_SP_DEFVAL.getValue(),
+                                                Settings.MIC1_REGISTER_PC_DEFVAL.getValue());
+  }
+
+  /**
+   * Returns whether the given number is a valid local variable, assuming to be not in the main function of the macro
+   * code.
+   * 
+   * @since Date: Feb 9, 2012
+   * @param varNum the number of the local variable
+   * @return <code>true</code>, if the given number could refer to a local variable in the current function,<br>
+   *         <code>false</code> otherwise
+   */
+  private boolean isRegularLocalVariable(final int varNum) {
+    return varNum > 0 && varNum <= getNumberOfLocalVariables();
   }
 
   /**
