@@ -75,12 +75,12 @@ public final class Mic1ControlStore extends AbstractCodeContainer {
         // reached the end of input stream
         if (i == 0) {
           // only the magic number has been found
-          throw new FileFormatException(Text.WRONG_FORMAT_EMPTY);
+          throw new FileFormatException("file has no content");
         }
         eof = true;
       } else if (i >= this.store.length) {
         // more instructions to read than capacity in the store
-        throw new FileFormatException(Text.WRONG_FORMAT_TOO_BIG);
+        throw new FileFormatException("file is too big to save in control store");
       } else {
         // save the instruction
         this.store[i] = instr;

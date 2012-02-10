@@ -20,8 +20,6 @@ package com.github.croesch.error;
 
 import java.io.IOException;
 
-import com.github.croesch.i18n.Text;
-
 /**
  * Signals that a file being read has another format than expected.
  * 
@@ -61,12 +59,11 @@ public class FileFormatException extends IOException {
   /**
    * Constructs an {@code FileFormatException} with the specified detail message.
    * 
-   * @since Date: Nov 19, 2011
+   * @since Date: Feb 10, 2012
    * @param message The detail message (which is saved for later retrieval by the {@link #getMessage()} method)
-   * @see Text#text()
    */
-  public FileFormatException(final Text message) {
-    super(message.text());
+  public FileFormatException(final String message) {
+    super(message);
   }
 
   /**

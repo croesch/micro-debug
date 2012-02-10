@@ -148,7 +148,8 @@ public final class Mic1 {
     try {
       return new Memory(maxSize, asm);
     } catch (final FileFormatException e) {
-      Printer.printErrorln(Text.WRONG_FORMAT_IJVM.text(e.getMessage()));
+      LOGGER.severe(e.getMessage());
+      Printer.printErrorln(Text.WRONG_FORMAT_IJVM.text());
       return null;
     }
   }
@@ -165,7 +166,8 @@ public final class Mic1 {
     try {
       return new Mic1ControlStore(micAsm);
     } catch (final FileFormatException e) {
-      Printer.printErrorln(Text.WRONG_FORMAT_MIC1.text(e.getMessage()));
+      LOGGER.severe(e.getMessage());
+      Printer.printErrorln(Text.WRONG_FORMAT_MIC1.text());
       return null;
     }
   }

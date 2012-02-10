@@ -24,7 +24,6 @@ import java.util.Locale;
 import java.util.logging.Logger;
 
 import com.github.croesch.error.FileFormatException;
-import com.github.croesch.i18n.Text;
 
 /**
  * Class with utility methods.
@@ -95,7 +94,7 @@ public final class Utils {
 
       // we have not enough data to determine a magic number
       if (isOneValueMinusOne(new int[] { b0, b1, b2, b3 })) {
-        throw new FileFormatException(Text.WRONG_FORMAT_TOO_SMALL);
+        throw new FileFormatException("file is too small to check the magic number");
       }
 
       // build the magic number fetched from the stream
@@ -105,7 +104,8 @@ public final class Utils {
       magicNumber |= b3;
 
       if (magicNumber != magic) {
-        throw new FileFormatException(Text.WRONG_FORMAT_MAGIC_NUMBER);
+        throw new FileFormatException("file has the wrong magic number: expected " + Utils.toHexString(magic)
+                                      + " but was " + Utils.toHexString(magicNumber));
       }
 
     } catch (final IOException e) {

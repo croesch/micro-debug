@@ -149,7 +149,7 @@ public final class Memory extends AbstractCodeContainer implements IReadableMemo
         final int startAddress = Utils.bytesToInt(bytes[0], bytes[1], bytes[2], bytes[3]);
 
         if (stream.read(bytes) == -1) {
-          throw new FileFormatException(Text.WRONG_FORMAT_UNEXPECTED_END);
+          throw new FileFormatException("unexpected end of file");
         }
         final int blockLength = Utils.bytesToInt(bytes[0], bytes[1], bytes[2], bytes[3]);
 
@@ -175,7 +175,7 @@ public final class Memory extends AbstractCodeContainer implements IReadableMemo
         int val = stream.read();
 
         if (val == -1) {
-          throw new FileFormatException(Text.WRONG_FORMAT_UNEXPECTED_END_OF_BLOCK);
+          throw new FileFormatException("unexpected end of block");
         }
 
         final int addr = start + i;

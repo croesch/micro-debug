@@ -372,10 +372,8 @@ public class Mic1Test extends DefaultTestCase {
     } catch (final FileFormatException e) {
       // expected
     }
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_TOO_SMALL))
-                                                 + getLineSeparator()
-                                                 + Text.ERROR.text(Text.WRONG_FORMAT_IJVM
-                                                   .text(Text.WRONG_FORMAT_TOO_SMALL)) + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text()) + getLineSeparator()
+                                                 + Text.ERROR.text(Text.WRONG_FORMAT_IJVM.text()) + getLineSeparator());
     out.reset();
 
     // wrong magic number
@@ -386,10 +384,8 @@ public class Mic1Test extends DefaultTestCase {
     } catch (final FileFormatException e) {
       // expected
     }
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_MAGIC_NUMBER))
-                                                 + getLineSeparator()
-                                                 + Text.ERROR.text(Text.WRONG_FORMAT_IJVM
-                                                   .text(Text.WRONG_FORMAT_MAGIC_NUMBER + getLineSeparator())));
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text()) + getLineSeparator()
+                                                 + Text.ERROR.text(Text.WRONG_FORMAT_IJVM.text()) + getLineSeparator());
     out.reset();
 
     // empty files
@@ -400,8 +396,7 @@ public class Mic1Test extends DefaultTestCase {
     } catch (final FileFormatException e) {
       // expected
     }
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_EMPTY))
-                                                 + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text()) + getLineSeparator());
     out.reset();
 
     // unexpected eof
@@ -412,8 +407,7 @@ public class Mic1Test extends DefaultTestCase {
     } catch (final FileFormatException e) {
       // expected
     }
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_IJVM.text(Text.WRONG_FORMAT_UNEXPECTED_END))
-                                                 + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_IJVM.text()) + getLineSeparator());
     out.reset();
 
     // unexpected end of block
@@ -435,8 +429,7 @@ public class Mic1Test extends DefaultTestCase {
     } catch (final FileFormatException e) {
       // expected
     }
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_IJVM
-                                           .text(Text.WRONG_FORMAT_UNEXPECTED_END_OF_BLOCK)) + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_IJVM.text()) + getLineSeparator());
     out.reset();
 
     // file too big
@@ -454,8 +447,7 @@ public class Mic1Test extends DefaultTestCase {
     } catch (final FileFormatException e) {
       // expected
     }
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text(Text.WRONG_FORMAT_TOO_BIG))
-                                                 + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text()) + getLineSeparator());
     out.reset();
   }
 

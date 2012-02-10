@@ -81,20 +81,16 @@ public class MicroDebugTest extends DefaultTestCase {
   public final void testMain_WrongFormat1() {
     MicroDebug.main(new String[] { "src/test/resources/mic1/hi.mic1", "src/test/resources/mic1/hi.mic1" });
 
-    assertThat(out.toString()).isEqualTo(this.GREETING
-                                                 + this.WELCOME
-                                                 + Text.ERROR.text(Text.WRONG_FORMAT_IJVM
-                                                   .text(Text.WRONG_FORMAT_MAGIC_NUMBER)) + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME + Text.ERROR.text(Text.WRONG_FORMAT_IJVM.text())
+                                                 + getLineSeparator());
   }
 
   @Test
   public final void testMain_WrongFormat2() {
     MicroDebug.main(new String[] { "src/test/resources/mic1/hi.ijvm", "src/test/resources/mic1/hi.ijvm" });
 
-    assertThat(out.toString()).isEqualTo(this.GREETING
-                                                 + this.WELCOME
-                                                 + Text.ERROR.text(Text.WRONG_FORMAT_MIC1
-                                                   .text(Text.WRONG_FORMAT_MAGIC_NUMBER)) + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME + Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text())
+                                                 + getLineSeparator());
   }
 
   @Test

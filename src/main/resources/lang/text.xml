@@ -63,16 +63,10 @@
 
 	<entry key="wrong-param-number">Wrong number of parameters, expected {0} but got {1}</entry>
 
-	<entry key="wrong-format-mic1">wrong format of micro-assembler-file: {0}</entry>
-	<entry key="wrong-format-ijvm">wrong format of assembler-file: {0}</entry>
+	<entry key="wrong-format-mic1">wrong format of .mic1-file, did you assemble it? See log for details.</entry>
+	<entry key="wrong-format-ijvm">wrong format of .ijvm-file, did you assemble it? See log for details.</entry>
 
 	<entry key="file-not-found">file not found {0}</entry>
-	<entry key="wrong-format-too-small">file is too small</entry>
-	<entry key="wrong-format-too-big">file is too big</entry>
-	<entry key="wrong-format-empty">file has no content</entry>
-	<entry key="wrong-format-magic-number">file has the wrong magic number</entry>
-	<entry key="wrong-format-unexpected-end">unexpected end of file</entry>
-	<entry key="wrong-format-unexpected-end-of-block">unexpected end of block</entry>
 
 	<entry key="missing-ijvm-file">argument for .ijvm-file is missing</entry>
 	<entry key="missing-mic1-file">argument for .mic1-file is missing</entry>
