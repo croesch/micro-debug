@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
@@ -45,8 +44,8 @@ public class OutputTest extends DefaultTestCase {
     Output.setOut(System.out);
   }
 
-  @Before
-  public void before() {
+  @Override
+  protected void setUpDetails() throws Exception {
     Output.setOut(new PrintStream(out));
     Output.setBuffered(true);
     out.reset();
@@ -54,6 +53,8 @@ public class OutputTest extends DefaultTestCase {
 
   @Test
   public void testSetBuffered_Unbuffered() throws IOException {
+    printlnMethodName();
+
     assertThat(Output.isBuffered()).isTrue();
     Output.print((byte) '0');
     Output.print((byte) '1');
@@ -69,6 +70,8 @@ public class OutputTest extends DefaultTestCase {
 
   @Test
   public void testSetOut() throws IOException {
+    printlnMethodName();
+
     final ByteArrayOutputStream out2 = new ByteArrayOutputStream();
 
     Output.setOut(new PrintStream(out2));
@@ -95,6 +98,8 @@ public class OutputTest extends DefaultTestCase {
 
   @Test
   public void testPrint() throws IOException {
+    printlnMethodName();
+
     assertThat(Output.isBuffered()).isTrue();
     Output.print((byte) '9');
     Output.print((byte) '8');
@@ -113,6 +118,8 @@ public class OutputTest extends DefaultTestCase {
 
   @Test
   public void testPrint_LF() throws IOException {
+    printlnMethodName();
+
     Output.print((byte) '\n');
     assertThat(out.toString()).isEqualTo("\n");
     Output.print((byte) '\n');
@@ -123,6 +130,8 @@ public class OutputTest extends DefaultTestCase {
 
   @Test
   public void testFlush() throws IOException {
+    printlnMethodName();
+
     assertThat(Output.isBuffered()).isTrue();
     Output.print((byte) 'a');
     Output.print((byte) 'b');
@@ -141,5 +150,35 @@ public class OutputTest extends DefaultTestCase {
     assertThat(out.toString()).isEmpty();
     Output.flush();
     assertThat(out.toString()).isEqualTo("bcac");
+  }
+
+  @Test
+  public void testReset() throws IOException {
+    printlnMethodName();
+
+    assertThat(Output.isBuffered()).isTrue();
+    Output.print((byte) 'a');
+    Output.print((byte) 'b');
+    Output.print((byte) 'c');
+    Output.print((byte) 'c');
+    assertThat(out.toString()).isEmpty();
+    Output.reset();
+    assertThat(out.toString()).isEmpty();
+    Output.print((byte) '\n');
+    assertThat(out.toString()).isEqualTo("\n");
+    out.reset();
+
+    Output.setBuffered(false);
+    Output.print((byte) 'b');
+    Output.print((byte) 'c');
+    Output.print((byte) 'a');
+    Output.print((byte) 'c');
+    assertThat(out.toString()).isEqualTo("bcac");
+    Output.reset();
+    assertThat(out.toString()).isEqualTo("bcac");
+    out.reset();
+    Output.print((byte) '\n');
+    assertThat(out.toString()).isEqualTo("\n");
+    out.reset();
   }
 }

@@ -60,6 +60,7 @@ DESCRIPTION
 	reset
 		Resets the processor to its initial state. Current instruction and position
 		in code will be set to the initial state.
+		Also the buffers of input and output of the processor will be reset.
 
 	rm-break NUM
 		Removes the breakpoint with the id NUM. The NUM can be fetched with the

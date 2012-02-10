@@ -108,6 +108,15 @@ public final class Output {
   }
 
   /**
+   * Empties the internal buffer, so that any contents printed into the buffer will be lost.
+   * 
+   * @since Date: Feb 10, 2012
+   */
+  public static void reset() {
+    buffer.clear();
+  }
+
+  /**
    * Sets the {@link PrintStream} to write the data to.
    * 
    * @since Date: Nov 26, 2011

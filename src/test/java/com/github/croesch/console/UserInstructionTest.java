@@ -1622,4 +1622,39 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThatTwoParametersAreWrong(UserInstruction.UNTRACE_VAR, 1);
     assertThatThreeParametersAreWrong(UserInstruction.UNTRACE_VAR, 1);
   }
+
+  @Test
+  public final void testExecuteReset_Input() throws IOException {
+    printlnMethodName();
+    Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
+
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    assertThat(UserInstruction.STEP.execute(this.processor, "38")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.TICKS.text(208) + getLineSeparator());
+    out.reset();
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.processor, "38")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.TICKS.text(208) + getLineSeparator());
+    out.reset();
+  }
+
+  @Test
+  public final void testReset_Output() throws IOException {
+    printlnMethodName();
+    Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
+
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    assertThat(UserInstruction.STEP.execute(this.processor, "38")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.TICKS.text(208) + getLineSeparator());
+    assertThat(micOut.toString()).isEmpty();
+    out.reset();
+    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.INPUT_MIC1.text() + Text.TICKS.text(3292)
+                                                 + getLineSeparator());
+    assertThat(micOut.toString()).isEqualTo(" 2\n+2\n========\n00000004\n");
+    out.reset();
+  }
 }
