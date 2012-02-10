@@ -87,6 +87,16 @@ public final class Input {
   }
 
   /**
+   * Resets the internal buffer, so that the next call of {@link #read()} will cause an invocation of the underlying
+   * {@link InputStream}.
+   * 
+   * @since Date: Feb 10, 2012
+   */
+  public static void reset() {
+    line = null;
+  }
+
+  /**
    * Reads a line from the input stream to refill the internal buffer.
    * 
    * @since Date: Nov 27, 2011

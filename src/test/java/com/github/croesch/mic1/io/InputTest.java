@@ -38,6 +38,8 @@ public class InputTest extends DefaultTestCase {
 
   @Test
   public void testSetIn() {
+    printlnMethodName();
+
     final InputStream in = new ByteArrayInputStream("Test".getBytes());
     Input.setIn(in);
 
@@ -56,6 +58,7 @@ public class InputTest extends DefaultTestCase {
    */
   @Test
   public void testRead() throws IOException {
+    printlnMethodName();
 
     final ByteArrayInputStream in = new ByteArrayInputStream("Test\nNOT\nHi!".getBytes());
     Input.setIn(in);
@@ -84,6 +87,8 @@ public class InputTest extends DefaultTestCase {
 
   @Test
   public void testRead_IOExc() throws IOException {
+    printlnMethodName();
+
     final InputStream in = new InputStream() {
       @Override
       public int read() throws IOException {
@@ -95,5 +100,19 @@ public class InputTest extends DefaultTestCase {
     assertThat(Input.read()).isEqualTo((byte) -1);
     Input.setIn(System.in);
 
+  }
+
+  @Test
+  public void testReset() {
+    printlnMethodName();
+
+    Input.setIn(new ByteArrayInputStream("Test\nNOT\nHi!".getBytes()));
+    assertThat(Input.read()).isEqualTo("T".getBytes()[0]);
+    Input.reset();
+    assertThat(Input.read()).isEqualTo("N".getBytes()[0]);
+    Input.reset();
+    assertThat(Input.read()).isEqualTo("H".getBytes()[0]);
+    Input.reset();
+    assertThat(Input.read()).isEqualTo((byte) -1);
   }
 }

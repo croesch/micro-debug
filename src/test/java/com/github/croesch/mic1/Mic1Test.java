@@ -1021,4 +1021,20 @@ public class Mic1Test extends DefaultTestCase {
     this.processor.step(9);
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(64) + getLineSeparator());
   }
+
+  @Test
+  public final void testReset_Input() throws IOException {
+    printlnMethodName();
+    Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
+
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
+                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    this.processor.step(38);
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.TICKS.text(208) + getLineSeparator());
+    out.reset();
+    this.processor.reset();
+    this.processor.step(38);
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.TICKS.text(208) + getLineSeparator());
+    out.reset();
+  }
 }

@@ -31,6 +31,7 @@ import com.github.croesch.mic1.controlstore.Mic1Instruction;
 import com.github.croesch.mic1.controlstore.Mic1InstructionDecoder;
 import com.github.croesch.mic1.controlstore.Mic1JMPSignalSet;
 import com.github.croesch.mic1.controlstore.Mic1MemorySignalSet;
+import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.mem.Memory;
 import com.github.croesch.mic1.mpc.NextMPCCalculator;
 import com.github.croesch.mic1.register.Register;
@@ -133,6 +134,7 @@ public final class Mic1 {
     init();
 
     this.memory.reset();
+    Input.reset();
   }
 
   /**
