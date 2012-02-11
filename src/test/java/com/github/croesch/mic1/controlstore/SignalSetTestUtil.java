@@ -33,7 +33,7 @@ import com.github.croesch.DefaultTestCase;
  * @since Date: Nov 12, 2011
  */
 @Ignore
-public class Mic1SignalSetTestUtil extends DefaultTestCase {
+public class SignalSetTestUtil extends DefaultTestCase {
 
   protected void testIsSetSignals(final SignalSet set, final String[] signals) throws Exception {
     printlnMethodName(1);

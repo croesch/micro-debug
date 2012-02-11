@@ -21,24 +21,24 @@ package com.github.croesch.mic1.controlstore;
 import org.junit.Test;
 
 /**
- * Provides test cases for {@link MemorySignalSet}.
+ * Provides test cases for {@link ALUSignalSet}.
  * 
  * @author croesch
  * @since Date: Nov 12, 2011
  */
-public class Mic1MemorySignalSetTest extends Mic1SignalSetTestUtil {
+public class ALUSignalSetTest extends SignalSetTestUtil {
 
   @Test
   public void testSetIsSignal() throws Exception {
-    final MemorySignalSet set = new MemorySignalSet();
-    testIsSetSignals(set, new String[] { "Read", "Write", "Fetch" });
+    final ALUSignalSet set = new ALUSignalSet();
+    testIsSetSignals(set, new String[] { "SLL8", "SRA1", "F0", "F1", "EnA", "EnB", "InvA", "Inc" });
   }
 
   @Test
   public void testEqualsObject() throws Exception {
-    final MemorySignalSet set = new MemorySignalSet();
-    final MemorySignalSet other = new MemorySignalSet();
+    final ALUSignalSet set = new ALUSignalSet();
+    final ALUSignalSet other = new ALUSignalSet();
 
-    testEquals(set, other, new String[] { "Read", "Write", "Fetch" });
+    testEquals(set, other, new String[] { "SLL8", "SRA1", "F0", "F1", "EnA", "EnB", "InvA", "Inc" });
   }
 }

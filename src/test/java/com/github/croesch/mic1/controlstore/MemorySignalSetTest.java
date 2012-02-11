@@ -21,24 +21,24 @@ package com.github.croesch.mic1.controlstore;
 import org.junit.Test;
 
 /**
- * Provides test cases for {@link JMPSignalSet}.
+ * Provides test cases for {@link MemorySignalSet}.
  * 
  * @author croesch
- * @since Date: Nov 13, 2011
+ * @since Date: Nov 12, 2011
  */
-public class Mic1JMPSignalSetTest extends Mic1SignalSetTestUtil {
+public class MemorySignalSetTest extends SignalSetTestUtil {
 
   @Test
   public void testSetIsSignal() throws Exception {
-    final JMPSignalSet set = new JMPSignalSet();
-    testIsSetSignals(set, new String[] { "JmpN", "JmpC", "JmpZ" });
+    final MemorySignalSet set = new MemorySignalSet();
+    testIsSetSignals(set, new String[] { "Read", "Write", "Fetch" });
   }
 
   @Test
   public void testEqualsObject() throws Exception {
-    final JMPSignalSet set = new JMPSignalSet();
-    final JMPSignalSet other = new JMPSignalSet();
+    final MemorySignalSet set = new MemorySignalSet();
+    final MemorySignalSet other = new MemorySignalSet();
 
-    testEquals(set, other, new String[] { "JmpN", "JmpC", "JmpZ" });
+    testEquals(set, other, new String[] { "Read", "Write", "Fetch" });
   }
 }

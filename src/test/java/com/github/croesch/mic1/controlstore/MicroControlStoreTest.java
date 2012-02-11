@@ -38,7 +38,7 @@ import com.github.croesch.mic1.register.Register;
  * @author croesch
  * @since Date: Nov 19, 2011
  */
-public class Mic1ControlStoreTest extends DefaultTestCase {
+public class MicroControlStoreTest extends DefaultTestCase {
 
   private MicroControlStore store;
 

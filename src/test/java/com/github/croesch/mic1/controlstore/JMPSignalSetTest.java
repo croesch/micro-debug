@@ -21,24 +21,24 @@ package com.github.croesch.mic1.controlstore;
 import org.junit.Test;
 
 /**
- * Provides test cases for {@link ALUSignalSet}.
+ * Provides test cases for {@link JMPSignalSet}.
  * 
  * @author croesch
- * @since Date: Nov 12, 2011
+ * @since Date: Nov 13, 2011
  */
-public class Mic1ALUSignalSetTest extends Mic1SignalSetTestUtil {
+public class JMPSignalSetTest extends SignalSetTestUtil {
 
   @Test
   public void testSetIsSignal() throws Exception {
-    final ALUSignalSet set = new ALUSignalSet();
-    testIsSetSignals(set, new String[] { "SLL8", "SRA1", "F0", "F1", "EnA", "EnB", "InvA", "Inc" });
+    final JMPSignalSet set = new JMPSignalSet();
+    testIsSetSignals(set, new String[] { "JmpN", "JmpC", "JmpZ" });
   }
 
   @Test
   public void testEqualsObject() throws Exception {
-    final ALUSignalSet set = new ALUSignalSet();
-    final ALUSignalSet other = new ALUSignalSet();
+    final JMPSignalSet set = new JMPSignalSet();
+    final JMPSignalSet other = new JMPSignalSet();
 
-    testEquals(set, other, new String[] { "SLL8", "SRA1", "F0", "F1", "EnA", "EnB", "InvA", "Inc" });
+    testEquals(set, other, new String[] { "JmpN", "JmpC", "JmpZ" });
   }
 }

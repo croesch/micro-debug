@@ -26,7 +26,7 @@ import org.junit.Test;
  * @author croesch
  * @since Date: Nov 12, 2011
  */
-public class Mic1CBusSignalSetTest extends Mic1SignalSetTestUtil {
+public class CBusSignalSetTest extends SignalSetTestUtil {
 
   @Test
   public void testSetIsSignal() throws Exception {

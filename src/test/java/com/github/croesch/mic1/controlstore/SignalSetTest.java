@@ -30,7 +30,7 @@ import com.github.croesch.DefaultTestCase;
  * @author croesch
  * @since Date: Nov 12, 2011
  */
-public class Mic1SignalSetTest extends DefaultTestCase {
+public class SignalSetTest extends DefaultTestCase {
 
   @Test
   public void testCopyOf() {
