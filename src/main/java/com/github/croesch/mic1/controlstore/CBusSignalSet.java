@@ -26,7 +26,7 @@ package com.github.croesch.mic1.controlstore;
  * @author croesch
  * @since Date: Nov 12, 2011
  */
-public final class CBusSignalSet extends Mic1SignalSet {
+public final class CBusSignalSet extends SignalSet {
 
   /** the number of the signal H */
   private static final int SIGNAL_NUMBER_OF_H = 0;

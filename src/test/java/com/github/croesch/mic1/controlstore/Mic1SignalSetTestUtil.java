@@ -27,7 +27,7 @@ import org.junit.Ignore;
 import com.github.croesch.DefaultTestCase;
 
 /**
- * Provides utility methods for tests of {@link Mic1SignalSet}-objects.
+ * Provides utility methods for tests of {@link SignalSet}-objects.
  * 
  * @author croesch
  * @since Date: Nov 12, 2011
@@ -35,7 +35,7 @@ import com.github.croesch.DefaultTestCase;
 @Ignore
 public class Mic1SignalSetTestUtil extends DefaultTestCase {
 
-  protected void testIsSetSignals(final Mic1SignalSet set, final String[] signals) throws Exception {
+  protected void testIsSetSignals(final SignalSet set, final String[] signals) throws Exception {
     printlnMethodName(1);
 
     for (final String signal : signals) {
@@ -66,7 +66,7 @@ public class Mic1SignalSetTestUtil extends DefaultTestCase {
     }
   }
 
-  protected void testEquals(final Mic1SignalSet set, final Mic1SignalSet other, final String[] signals)
+  protected void testEquals(final SignalSet set, final SignalSet other, final String[] signals)
                                                                                                        throws Exception {
     printlnMethodName(1);
 

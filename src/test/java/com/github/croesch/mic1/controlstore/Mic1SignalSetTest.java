@@ -25,7 +25,7 @@ import org.junit.Test;
 import com.github.croesch.DefaultTestCase;
 
 /**
- * Provides test cases for {@link Mic1SignalSet}.
+ * Provides test cases for {@link SignalSet}.
  * 
  * @author croesch
  * @since Date: Nov 12, 2011
@@ -34,9 +34,9 @@ public class Mic1SignalSetTest extends DefaultTestCase {
 
   @Test
   public void testCopyOf() {
-    final Mic1SignalSet set1 = new Mic1SignalSet(12);
-    final Mic1SignalSet set2 = new Mic1SignalSet(11);
-    final Mic1SignalSet set3 = new Mic1SignalSet(11);
+    final SignalSet set1 = new SignalSet(12);
+    final SignalSet set2 = new SignalSet(11);
+    final SignalSet set3 = new SignalSet(11);
     set1.set(0, true);
     set2.set(1, true);
 
@@ -55,10 +55,10 @@ public class Mic1SignalSetTest extends DefaultTestCase {
 
   @Test
   public void testEqualsObject() {
-    final Mic1SignalSet set1 = new Mic1SignalSet(12);
-    final Mic1SignalSet set2 = new Mic1SignalSet(11);
-    final Mic1SignalSet set3 = new Mic1MemorySignalSet();
-    final Mic1SignalSet set4 = new CBusSignalSet();
+    final SignalSet set1 = new SignalSet(12);
+    final SignalSet set2 = new SignalSet(11);
+    final SignalSet set3 = new Mic1MemorySignalSet();
+    final SignalSet set4 = new CBusSignalSet();
 
     assertThat(set1).isNotEqualTo(set2);
     assertThat(set1).isNotEqualTo(set3);
@@ -79,7 +79,7 @@ public class Mic1SignalSetTest extends DefaultTestCase {
     printMethodName();
 
     for (int i = 0; i < 100; ++i) {
-      final Mic1SignalSet set = new Mic1SignalSet(i);
+      final SignalSet set = new SignalSet(i);
       assertThat(set.getSize()).isEqualTo(i);
       printStep();
     }
@@ -89,7 +89,7 @@ public class Mic1SignalSetTest extends DefaultTestCase {
 
   @Test
   public void testIsSetSomething() {
-    final Mic1SignalSet set = new Mic1SignalSet(5);
+    final SignalSet set = new SignalSet(5);
     set.set(0, true);
     set.set(1, true);
     set.set(2, true);
@@ -118,7 +118,7 @@ public class Mic1SignalSetTest extends DefaultTestCase {
     printMethodName();
 
     for (int size = 0; size < 100; ++size) {
-      final Mic1SignalSet set = new Mic1SignalSet(size);
+      final SignalSet set = new SignalSet(size);
       for (int i = 0; i < set.getSize(); ++i) {
         assertThat(set.isAnythingSet()).isFalse();
 

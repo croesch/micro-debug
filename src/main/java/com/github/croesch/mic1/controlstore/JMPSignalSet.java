@@ -25,7 +25,7 @@ package com.github.croesch.mic1.controlstore;
  * @author croesch
  * @since Date: Nov 13, 2011
  */
-public final class JMPSignalSet extends Mic1SignalSet {
+public final class JMPSignalSet extends SignalSet {
 
   /** the number of the signal JMPC */
   private static final int SIGNAL_NUMBER_OF_JMPC = 0;

@@ -24,7 +24,7 @@ package com.github.croesch.mic1.controlstore;
  * @author croesch
  * @since Date: Nov 12, 2011
  */
-class Mic1SignalSet {
+class SignalSet {
 
   /** the array of signals to manage */
   private final boolean[] signals;
@@ -35,7 +35,7 @@ class Mic1SignalSet {
    * @since Date: Nov 12, 2011
    * @param size the number of signals, cannot be changed later.
    */
-  Mic1SignalSet(final int size) {
+  SignalSet(final int size) {
     this.signals = new boolean[size];
   }
 
@@ -44,7 +44,7 @@ class Mic1SignalSet {
    * 
    * @since Date: Jan 14, 2012
    * @return the number of signals this set contains, greater or equal than zero
-   * @see Mic1SignalSet#Mic1SignalSet(int)
+   * @see SignalSet#Mic1SignalSet(int)
    */
   public final int getSize() {
     return this.signals.length;
@@ -95,7 +95,7 @@ class Mic1SignalSet {
    * @since Date: Nov 13, 2011
    * @param set the set to fetch the signals from
    */
-  public void copyOf(final Mic1SignalSet set) {
+  public void copyOf(final SignalSet set) {
     if (set != null && this.signals.length == set.signals.length) {
       for (int i = 0; i < this.signals.length; ++i) {
         this.signals[i] = set.signals[i];
@@ -124,7 +124,7 @@ class Mic1SignalSet {
     if (getClass() != obj.getClass()) {
       return false;
     }
-    final Mic1SignalSet other = (Mic1SignalSet) obj;
+    final SignalSet other = (SignalSet) obj;
     if (this.signals.length != other.signals.length) {
       return false;
     }
