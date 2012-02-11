@@ -40,7 +40,7 @@ public final class Mic1Instruction {
   private final Mic1JMPSignalSet jmpSignals = new Mic1JMPSignalSet();
 
   /** MIR[23:16]: set of bits that are responsible for the behavior of the ALU and the shifter */
-  private final Mic1ALUSignalSet aluSignals = new Mic1ALUSignalSet();
+  private final ALUSignalSet aluSignals = new ALUSignalSet();
 
   /** MIR[15:7]: set of bits that are responsible for the registers that are filled with the C-Bus value */
   private final Mic1CBusSignalSet cBusSignals = new Mic1CBusSignalSet();
@@ -67,7 +67,7 @@ public final class Mic1Instruction {
    */
   public Mic1Instruction(final int addr,
                          final Mic1JMPSignalSet jmpSet,
-                         final Mic1ALUSignalSet aluSet,
+                         final ALUSignalSet aluSet,
                          final Mic1CBusSignalSet cBusSet,
                          final Mic1MemorySignalSet memSet,
                          final Register b) {
@@ -145,13 +145,13 @@ public final class Mic1Instruction {
   }
 
   /**
-   * Returns the {@link Mic1ALUSignalSet} of this instruction.
+   * Returns the {@link ALUSignalSet} of this instruction.
    * 
    * @since Date: Nov 13, 2011
-   * @return a copy of the {@link Mic1ALUSignalSet} of this instruction.
+   * @return a copy of the {@link ALUSignalSet} of this instruction.
    */
-  public Mic1ALUSignalSet getAluSignals() {
-    final Mic1ALUSignalSet set = new Mic1ALUSignalSet();
+  public ALUSignalSet getAluSignals() {
+    final ALUSignalSet set = new ALUSignalSet();
     set.copyOf(this.aluSignals);
     return set;
   }

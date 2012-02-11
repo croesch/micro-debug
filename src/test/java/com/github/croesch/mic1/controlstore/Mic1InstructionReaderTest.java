@@ -48,7 +48,7 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
     final Mic1Instruction value = Mic1InstructionReader.read(in);
 
     final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
-    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final ALUSignalSet aluSet = new ALUSignalSet();
     final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
 
     jmpSet.setJmpZ(true);
@@ -124,7 +124,7 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
     final Mic1Instruction value = Mic1InstructionReader.read(in);
 
     final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
-    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final ALUSignalSet aluSet = new ALUSignalSet();
     final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
     final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
 

@@ -27,7 +27,7 @@ import com.github.croesch.commons.Utils;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.alu.Alu;
-import com.github.croesch.mic1.controlstore.Mic1ALUSignalSet;
+import com.github.croesch.mic1.controlstore.ALUSignalSet;
 import com.github.croesch.mic1.controlstore.Mic1CBusSignalSet;
 import com.github.croesch.mic1.controlstore.Mic1ControlStore;
 import com.github.croesch.mic1.controlstore.Mic1Instruction;
@@ -313,7 +313,7 @@ public final class Mic1 {
   private void doClock1() {
     // fetching instruction
     fetchNextInstruction();
-    final Mic1ALUSignalSet aluSignals = this.instruction.getAluSignals();
+    final ALUSignalSet aluSignals = this.instruction.getAluSignals();
     // setting the signals
     this.alu.setEnA(aluSignals.isEnA()).setEnB(aluSignals.isEnB());
     this.alu.setF0(aluSignals.isF0()).setF1(aluSignals.isF1());

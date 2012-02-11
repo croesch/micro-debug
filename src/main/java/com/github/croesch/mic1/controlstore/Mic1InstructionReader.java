@@ -124,7 +124,7 @@ public final class Mic1InstructionReader {
     jmpSet.setJmpN((b1 & BIT3) > 0);
     jmpSet.setJmpZ((b1 & BIT4) > 0);
 
-    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final ALUSignalSet aluSet = new ALUSignalSet();
     aluSet.setSLL8((b1 & BIT5) > 0);
     aluSet.setSRA1((b1 & BIT6) > 0);
     aluSet.setF0((b1 & BIT7) > 0);

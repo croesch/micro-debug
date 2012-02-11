@@ -141,7 +141,7 @@ public final class Mic1InstructionDecoder {
    * @param aluSignals the signals to decode
    * @param s the {@link StringBuilder} to append the text to.
    */
-  static void decodeShifterOperation(final Mic1ALUSignalSet aluSignals, final StringBuilder s) {
+  static void decodeShifterOperation(final ALUSignalSet aluSignals, final StringBuilder s) {
     // decode the shifter operation
     if (aluSignals.isSRA1()) {
       s.append(">>1");
@@ -161,7 +161,7 @@ public final class Mic1InstructionDecoder {
    * @param a the decoded text that describes the value written in the input A of the ALU
    * @param b the decoded text that describes the value written in the input B of the ALU
    */
-  static void decodeALUOperation(final Mic1ALUSignalSet aluSignals,
+  static void decodeALUOperation(final ALUSignalSet aluSignals,
                                  final StringBuilder s,
                                  final String a,
                                  final String b) {
@@ -187,7 +187,7 @@ public final class Mic1InstructionDecoder {
    * @param a the decoded text that describes the value written in the input A of the ALU
    * @param b the decoded text that describes the value written in the input B of the ALU
    */
-  static void decodeALUPlus(final Mic1ALUSignalSet aluSignals, final StringBuilder s, final String a, final String b) {
+  static void decodeALUPlus(final ALUSignalSet aluSignals, final StringBuilder s, final String a, final String b) {
     if (aluSignals.isEnA()) {
       decodeALUPlusAEnabled(aluSignals, s, a, b);
     } else {
@@ -204,7 +204,7 @@ public final class Mic1InstructionDecoder {
    * @param s the {@link StringBuilder} to append the text to.
    * @param b the decoded text that describes the value written in the input B of the ALU
    */
-  private static void decodeALUPlusADisabled(final Mic1ALUSignalSet aluSignals, final StringBuilder s, final String b) {
+  private static void decodeALUPlusADisabled(final ALUSignalSet aluSignals, final StringBuilder s, final String b) {
     if (aluSignals.isInvA() && !aluSignals.isInc()) {
       if (aluSignals.isEnB()) {
         s.append(b);
@@ -234,7 +234,7 @@ public final class Mic1InstructionDecoder {
    * @param a the decoded text that describes the value written in the input A of the ALU
    * @param b the decoded text that describes the value written in the input B of the ALU
    */
-  private static void decodeALUPlusAEnabled(final Mic1ALUSignalSet aluSignals,
+  private static void decodeALUPlusAEnabled(final ALUSignalSet aluSignals,
                                             final StringBuilder s,
                                             final String a,
                                             final String b) {
@@ -266,7 +266,7 @@ public final class Mic1InstructionDecoder {
    * @param s the {@link StringBuilder} to append the text to.
    * @param b the decoded text that describes the value written in the input B of the ALU
    */
-  static void decodeALUNotB(final Mic1ALUSignalSet aluSignals, final StringBuilder s, final String b) {
+  static void decodeALUNotB(final ALUSignalSet aluSignals, final StringBuilder s, final String b) {
     if (aluSignals.isEnB()) {
       s.append(TXT_NOT).append(' ').append(b);
     } else {
@@ -284,7 +284,7 @@ public final class Mic1InstructionDecoder {
    * @param a the decoded text that describes the value written in the input A of the ALU
    * @param b the decoded text that describes the value written in the input B of the ALU
    */
-  static void decodeALUOr(final Mic1ALUSignalSet aluSignals, final StringBuilder s, final String a, final String b) {
+  static void decodeALUOr(final ALUSignalSet aluSignals, final StringBuilder s, final String a, final String b) {
     if (aluSignals.isEnA()) {
       if (aluSignals.isEnB()) {
         if (aluSignals.isInvA()) {
@@ -322,7 +322,7 @@ public final class Mic1InstructionDecoder {
    * @param a the decoded text that describes the value written in the input A of the ALU
    * @param b the decoded text that describes the value written in the input B of the ALU
    */
-  static void decodeALUAnd(final Mic1ALUSignalSet aluSignals, final StringBuilder s, final String a, final String b) {
+  static void decodeALUAnd(final ALUSignalSet aluSignals, final StringBuilder s, final String a, final String b) {
     if (aluSignals.isEnB()) {
       if (aluSignals.isEnA()) {
         if (aluSignals.isInvA()) {

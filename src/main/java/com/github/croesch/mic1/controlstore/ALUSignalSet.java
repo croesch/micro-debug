@@ -26,7 +26,7 @@ package com.github.croesch.mic1.controlstore;
  * @author croesch
  * @since Date: Nov 12, 2011
  */
-public final class Mic1ALUSignalSet extends Mic1SignalSet {
+public final class ALUSignalSet extends Mic1SignalSet {
 
   /** the number of the signal SLL8 */
   private static final int SIGNAL_NUMBER_OF_SLL8 = 0;
@@ -62,7 +62,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * 
    * @since Date: Nov 12, 2011
    */
-  Mic1ALUSignalSet() {
+  ALUSignalSet() {
     super(SIZE_OF_SET);
   }
 
@@ -73,7 +73,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>SLL8</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1ALUSignalSet setSLL8(final boolean value) {
+  public ALUSignalSet setSLL8(final boolean value) {
     set(SIGNAL_NUMBER_OF_SLL8, value);
     return this;
   }
@@ -95,7 +95,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>SRA1</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1ALUSignalSet setSRA1(final boolean value) {
+  public ALUSignalSet setSRA1(final boolean value) {
     set(SIGNAL_NUMBER_OF_SRA1, value);
     return this;
   }
@@ -117,7 +117,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>F0</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1ALUSignalSet setF0(final boolean value) {
+  public ALUSignalSet setF0(final boolean value) {
     set(SIGNAL_NUMBER_OF_F0, value);
     return this;
   }
@@ -139,7 +139,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>F1</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1ALUSignalSet setF1(final boolean value) {
+  public ALUSignalSet setF1(final boolean value) {
     set(SIGNAL_NUMBER_OF_F1, value);
     return this;
   }
@@ -161,7 +161,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>ENA</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1ALUSignalSet setEnA(final boolean value) {
+  public ALUSignalSet setEnA(final boolean value) {
     set(SIGNAL_NUMBER_OF_ENA, value);
     return this;
   }
@@ -183,7 +183,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>ENB</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1ALUSignalSet setEnB(final boolean value) {
+  public ALUSignalSet setEnB(final boolean value) {
     set(SIGNAL_NUMBER_OF_ENB, value);
     return this;
   }
@@ -205,7 +205,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>INVA</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1ALUSignalSet setInvA(final boolean value) {
+  public ALUSignalSet setInvA(final boolean value) {
     set(SIGNAL_NUMBER_OF_INVA, value);
     return this;
   }
@@ -227,7 +227,7 @@ public final class Mic1ALUSignalSet extends Mic1SignalSet {
    * @param value the new value for the signal <code>INC</code>.
    * @return instance of this object for fluent API.
    */
-  public Mic1ALUSignalSet setInc(final boolean value) {
+  public ALUSignalSet setInc(final boolean value) {
     set(SIGNAL_NUMBER_OF_INC, value);
     return this;
   }

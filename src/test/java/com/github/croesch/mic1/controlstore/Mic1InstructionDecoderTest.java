@@ -43,7 +43,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
   protected void setUpDetails() {
     this.instruction = new Mic1Instruction(0,
                                            new Mic1JMPSignalSet(),
-                                           new Mic1ALUSignalSet(),
+                                           new ALUSignalSet(),
                                            new Mic1CBusSignalSet(),
                                            new Mic1MemorySignalSet(),
                                            null);
@@ -56,7 +56,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
 
     this.instruction = new Mic1Instruction(0,
                                            new Mic1JMPSignalSet(),
-                                           new Mic1ALUSignalSet(),
+                                           new ALUSignalSet(),
                                            new Mic1CBusSignalSet(),
                                            new Mic1MemorySignalSet(),
                                            Register.MDR);
@@ -64,14 +64,14 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
 
     this.instruction = new Mic1Instruction(144,
                                            new Mic1JMPSignalSet(),
-                                           new Mic1ALUSignalSet(),
+                                           new ALUSignalSet(),
                                            new Mic1CBusSignalSet(),
                                            new Mic1MemorySignalSet(),
                                            Register.SP);
     assertThat(Mic1InstructionDecoder.decode(this.instruction)).isEqualTo("goto 0x90");
 
     final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
-    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final ALUSignalSet aluSet = new ALUSignalSet();
     final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
     final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
     jmpSet.setJmpZ(true);
@@ -179,7 +179,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
   @Test
   public void testDecodeShifterOperation() {
     printMethodName();
-    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final ALUSignalSet aluSet = new ALUSignalSet();
 
     // try all combinations of sra1 and sll8
     for (final boolean sll8 : BOOLEAN_POSSIBILITIES) {
@@ -209,7 +209,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
     // reset the content of the string builder
     this.stringBuilder = new StringBuilder("[...]");
 
-    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final ALUSignalSet aluSet = new ALUSignalSet();
     aluSet.setSLL8(true).setEnA(true).setEnB(true);
 
     aluSet.setF0(true).setF1(true);
@@ -227,7 +227,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
     printEndOfMethod();
   }
 
-  private void testSingleDecodeALUOperation(final Mic1ALUSignalSet aluSet, final String expected) {
+  private void testSingleDecodeALUOperation(final ALUSignalSet aluSet, final String expected) {
     final String start = this.stringBuilder.toString();
     // call decoding
     Mic1InstructionDecoder.decodeALUOperation(aluSet, this.stringBuilder, "A", "B");
@@ -238,7 +238,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
   @Test
   public void testDecodeALUPlus() {
     printMethodName();
-    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final ALUSignalSet aluSet = new ALUSignalSet();
 
     for (final boolean enableA : BOOLEAN_POSSIBILITIES) {
       for (final boolean enableB : BOOLEAN_POSSIBILITIES) {
@@ -301,7 +301,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
   @Test
   public void testDecodeALUNotB() {
     printMethodName();
-    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final ALUSignalSet aluSet = new ALUSignalSet();
 
     // test ENB and !ENB
     for (final boolean enableB : BOOLEAN_POSSIBILITIES) {
@@ -327,7 +327,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
   @Test
   public void testDecodeALUOr() {
     printMethodName();
-    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final ALUSignalSet aluSet = new ALUSignalSet();
 
     for (final boolean enableA : BOOLEAN_POSSIBILITIES) {
       for (final boolean enableB : BOOLEAN_POSSIBILITIES) {
@@ -371,7 +371,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
   @Test
   public void testDecodeALUAnd() {
     printMethodName();
-    final Mic1ALUSignalSet aluSet = new Mic1ALUSignalSet();
+    final ALUSignalSet aluSet = new ALUSignalSet();
 
     for (final boolean enableA : BOOLEAN_POSSIBILITIES) {
       for (final boolean enableB : BOOLEAN_POSSIBILITIES) {
