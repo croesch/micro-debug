@@ -22,12 +22,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Locale;
 
+import com.github.croesch.commons.Parameter;
+import com.github.croesch.commons.Printer;
+import com.github.croesch.commons.Utils;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.Mic1;
 import com.github.croesch.mic1.register.Register;
-import com.github.croesch.misc.Parameter;
-import com.github.croesch.misc.Printer;
-import com.github.croesch.misc.Utils;
 
 /**
  * Enumeration of all possible command line instructions for the debugger.

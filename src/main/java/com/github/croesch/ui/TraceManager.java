@@ -23,14 +23,14 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import com.github.croesch.commons.Printer;
+import com.github.croesch.commons.Settings;
+import com.github.croesch.commons.Utils;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.api.IReadableMemory;
 import com.github.croesch.mic1.controlstore.Mic1Instruction;
 import com.github.croesch.mic1.controlstore.Mic1InstructionDecoder;
 import com.github.croesch.mic1.register.Register;
-import com.github.croesch.misc.Printer;
-import com.github.croesch.misc.Settings;
-import com.github.croesch.misc.Utils;
 import com.github.croesch.ui.api.Mic1View;
 
 /**

@@ -29,10 +29,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.github.croesch.commons.Printer;
+import com.github.croesch.commons.Utils;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.io.Output;
-import com.github.croesch.misc.Printer;
-import com.github.croesch.misc.Utils;
 
 /**
  * Enumeration of all possible command line arguments for the debugger.

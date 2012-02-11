@@ -26,8 +26,8 @@ import java.io.StringReader;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
+import com.github.croesch.commons.Reader;
 import com.github.croesch.i18n.Text;
-import com.github.croesch.misc.Reader;
 
 /**
  * Provides test cases for {@link Debugger}.

@@ -22,13 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.github.croesch.commons.Printer;
 import com.github.croesch.debug.Breakpoint;
 import com.github.croesch.debug.MacroBreakpoint;
 import com.github.croesch.debug.MicroBreakpoint;
 import com.github.croesch.debug.RegisterBreakpoint;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.register.Register;
-import com.github.croesch.misc.Printer;
 
 /**
  * A manager for break points in the debugger.

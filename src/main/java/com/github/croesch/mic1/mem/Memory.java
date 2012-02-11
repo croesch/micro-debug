@@ -23,6 +23,9 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import com.github.croesch.commons.Printer;
+import com.github.croesch.commons.Settings;
+import com.github.croesch.commons.Utils;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.api.AbstractCodeContainer;
@@ -30,9 +33,6 @@ import com.github.croesch.mic1.api.IReadableMemory;
 import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.register.Register;
-import com.github.croesch.misc.Printer;
-import com.github.croesch.misc.Settings;
-import com.github.croesch.misc.Utils;
 
 /**
  * Represents the main memory of the processor.

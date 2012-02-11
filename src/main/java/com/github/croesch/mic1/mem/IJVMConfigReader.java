@@ -31,8 +31,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.croesch.misc.Parameter;
-import com.github.croesch.misc.Utils;
+import com.github.croesch.commons.Parameter;
+import com.github.croesch.commons.Utils;
 
 /**
  * Reads the configuration file for the ijvm-code and can parse it.

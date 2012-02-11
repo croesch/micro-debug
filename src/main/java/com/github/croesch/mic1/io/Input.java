@@ -21,9 +21,9 @@ package com.github.croesch.mic1.io;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.github.croesch.commons.Printer;
+import com.github.croesch.commons.Utils;
 import com.github.croesch.i18n.Text;
-import com.github.croesch.misc.Printer;
-import com.github.croesch.misc.Utils;
 
 /**
  * This class represents the connection to the input of the mic1-processor. It is called buffered, because it reads one

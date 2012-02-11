@@ -19,8 +19,8 @@
  */
 package com.github.croesch.mic1.controlstore;
 
+import com.github.croesch.commons.Utils;
 import com.github.croesch.mic1.register.Register;
-import com.github.croesch.misc.Utils;
 
 /**
  * Based on the implementation of <em>Ray Ontko</em>. <br>

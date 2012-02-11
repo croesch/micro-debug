@@ -30,9 +30,9 @@ import java.io.StringReader;
 
 import org.junit.Test;
 
+import com.github.croesch.commons.Reader;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.io.Output;
-import com.github.croesch.misc.Reader;
 
 /**
  * Contains tests for {@link MicroDebug}.

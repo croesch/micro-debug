@@ -25,6 +25,7 @@ import java.io.ByteArrayInputStream;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
+import com.github.croesch.commons.Utils;
 import com.github.croesch.error.FileFormatException;
 
 /**

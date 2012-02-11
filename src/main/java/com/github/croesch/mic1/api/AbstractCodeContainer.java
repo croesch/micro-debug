@@ -18,7 +18,7 @@
  */
 package com.github.croesch.mic1.api;
 
-import com.github.croesch.misc.Utils;
+import com.github.croesch.commons.Utils;
 
 /**
  * Represents a code container that is e.g. able to print the code.

@@ -28,6 +28,7 @@ import java.io.StringReader;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
+import com.github.croesch.commons.Printer;
 import com.github.croesch.i18n.Text;
 
 /**

@@ -18,8 +18,8 @@
  */
 package com.github.croesch.mic1.mem;
 
+import com.github.croesch.commons.Utils;
 import com.github.croesch.mic1.register.Register;
-import com.github.croesch.misc.Utils;
 
 /**
  * Argument that belongs to an {@link IJVMCommand}.

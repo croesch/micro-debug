@@ -26,6 +26,7 @@ import java.io.StringReader;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
+import com.github.croesch.commons.Reader;
 
 /**
  * Provides test cases for {@link Reader}.

@@ -18,9 +18,9 @@
  */
 package com.github.croesch.debug;
 
+import com.github.croesch.commons.Utils;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.register.Register;
-import com.github.croesch.misc.Utils;
 
 /**
  * A breakpoint for a specific value of a register.
