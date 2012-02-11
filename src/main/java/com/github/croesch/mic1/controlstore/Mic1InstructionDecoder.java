@@ -121,7 +121,7 @@ public final class Mic1InstructionDecoder {
    * @param memorySignals the signals to decode
    * @param s the {@link StringBuilder} to append the text to.
    */
-  static void decodeMemoryBits(final Mic1MemorySignalSet memorySignals, final StringBuilder s) {
+  static void decodeMemoryBits(final MemorySignalSet memorySignals, final StringBuilder s) {
     // decode the memorySignals bits
     if (memorySignals.isWrite()) {
       s.append(";wr");

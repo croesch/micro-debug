@@ -145,7 +145,7 @@ public final class Mic1InstructionReader {
     cBusSet.setMdr((b3 & BIT4) > 0);
     cBusSet.setMar((b3 & BIT5) > 0);
 
-    final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
+    final MemorySignalSet memSet = new MemorySignalSet();
     memSet.setWrite((b3 & BIT6) > 0);
     memSet.setRead((b3 & BIT7) > 0);
     memSet.setFetch((b3 & BIT8) > 0);

@@ -46,7 +46,7 @@ public final class Mic1Instruction {
   private final CBusSignalSet cBusSignals = new CBusSignalSet();
 
   /** MIR[6:4]: set of bits that are responsible for communication with external memory (main memory and program memory) */
-  private final Mic1MemorySignalSet memorySignals = new Mic1MemorySignalSet();
+  private final MemorySignalSet memorySignals = new MemorySignalSet();
 
   /** responsible which register's value is written on the B-Bus */
   private final Register bBusSelect;
@@ -69,7 +69,7 @@ public final class Mic1Instruction {
                          final JMPSignalSet jmpSet,
                          final ALUSignalSet aluSet,
                          final CBusSignalSet cBusSet,
-                         final Mic1MemorySignalSet memSet,
+                         final MemorySignalSet memSet,
                          final Register b) {
     this.nextAddress = addr & ADDRESS_MASK;
     this.bBusSelect = b;
@@ -169,13 +169,13 @@ public final class Mic1Instruction {
   }
 
   /**
-   * Returns the {@link Mic1MemorySignalSet} of this instruction.
+   * Returns the {@link MemorySignalSet} of this instruction.
    * 
    * @since Date: Nov 13, 2011
-   * @return a copy of the {@link Mic1MemorySignalSet} of this instruction.
+   * @return a copy of the {@link MemorySignalSet} of this instruction.
    */
-  public Mic1MemorySignalSet getMemorySignals() {
-    final Mic1MemorySignalSet set = new Mic1MemorySignalSet();
+  public MemorySignalSet getMemorySignals() {
+    final MemorySignalSet set = new MemorySignalSet();
     set.copyOf(this.memorySignals);
     return set;
   }

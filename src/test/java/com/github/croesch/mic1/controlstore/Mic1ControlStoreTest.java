@@ -133,7 +133,7 @@ public class Mic1ControlStoreTest extends DefaultTestCase {
                                                    new JMPSignalSet(),
                                                    new ALUSignalSet(),
                                                    new CBusSignalSet(),
-                                                   new Mic1MemorySignalSet(),
+                                                   new MemorySignalSet(),
                                                    Register.MDR);
     assertThat(this.store.getInstruction(0)).isEqualTo(expected);
 
@@ -141,7 +141,7 @@ public class Mic1ControlStoreTest extends DefaultTestCase {
                                    new JMPSignalSet(),
                                    new ALUSignalSet(),
                                    new CBusSignalSet(),
-                                   new Mic1MemorySignalSet(),
+                                   new MemorySignalSet(),
                                    Register.MDR);
     assertThat(this.store.getInstruction(511)).isEqualTo(expected);
 
@@ -155,7 +155,7 @@ public class Mic1ControlStoreTest extends DefaultTestCase {
                                    new JMPSignalSet(),
                                    aluSet,
                                    cBusSet,
-                                   new Mic1MemorySignalSet(),
+                                   new MemorySignalSet(),
                                    Register.MDR);
     assertThat(this.store.getInstruction(0xFE)).isEqualTo(expected);
   }

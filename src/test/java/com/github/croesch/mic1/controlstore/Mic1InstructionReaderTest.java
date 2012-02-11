@@ -60,7 +60,7 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
                                                          jmpSet,
                                                          aluSet,
                                                          cBusSet,
-                                                         new Mic1MemorySignalSet(),
+                                                         new MemorySignalSet(),
                                                          Register.OPC);
 
     assertThat(value).isEqualTo(expected);
@@ -126,7 +126,7 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
     final JMPSignalSet jmpSet = new JMPSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
     final CBusSignalSet cBusSet = new CBusSignalSet();
-    final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
+    final MemorySignalSet memSet = new MemorySignalSet();
 
     jmpSet.setJmpC(true).setJmpN(true).setJmpZ(true);
     aluSet.setSLL8(true).setSRA1(true).setF0(true).setF1(true);

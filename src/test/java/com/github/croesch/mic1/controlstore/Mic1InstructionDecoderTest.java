@@ -45,7 +45,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
                                            new JMPSignalSet(),
                                            new ALUSignalSet(),
                                            new CBusSignalSet(),
-                                           new Mic1MemorySignalSet(),
+                                           new MemorySignalSet(),
                                            null);
     this.stringBuilder = new StringBuilder("[...]");
   }
@@ -58,7 +58,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
                                            new JMPSignalSet(),
                                            new ALUSignalSet(),
                                            new CBusSignalSet(),
-                                           new Mic1MemorySignalSet(),
+                                           new MemorySignalSet(),
                                            Register.MDR);
     assertThat(Mic1InstructionDecoder.decode(this.instruction)).isEqualTo("goto 0x0");
 
@@ -66,14 +66,14 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
                                            new JMPSignalSet(),
                                            new ALUSignalSet(),
                                            new CBusSignalSet(),
-                                           new Mic1MemorySignalSet(),
+                                           new MemorySignalSet(),
                                            Register.SP);
     assertThat(Mic1InstructionDecoder.decode(this.instruction)).isEqualTo("goto 0x90");
 
     final JMPSignalSet jmpSet = new JMPSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
     final CBusSignalSet cBusSet = new CBusSignalSet();
-    final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
+    final MemorySignalSet memSet = new MemorySignalSet();
     jmpSet.setJmpZ(true);
     aluSet.setSRA1(true).setF1(true).setEnB(true).setInc(true);
     cBusSet.setOpc(true).setCpp(true).setSp(true);
@@ -147,7 +147,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
   public void testDecodeMemoryBits() {
     printMethodName();
 
-    final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
+    final MemorySignalSet memSet = new MemorySignalSet();
 
     // try all combinations of write, read and fetch
     for (final boolean write : BOOLEAN_POSSIBILITIES) {

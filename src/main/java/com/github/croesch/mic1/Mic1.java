@@ -33,7 +33,7 @@ import com.github.croesch.mic1.controlstore.Mic1ControlStore;
 import com.github.croesch.mic1.controlstore.Mic1Instruction;
 import com.github.croesch.mic1.controlstore.Mic1InstructionDecoder;
 import com.github.croesch.mic1.controlstore.JMPSignalSet;
-import com.github.croesch.mic1.controlstore.Mic1MemorySignalSet;
+import com.github.croesch.mic1.controlstore.MemorySignalSet;
 import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.mem.Memory;
@@ -379,7 +379,7 @@ public final class Mic1 {
     this.mpcCalculator.calculate();
 
     // fetch signals for memory operations
-    final Mic1MemorySignalSet memSignals = this.instruction.getMemorySignals();
+    final MemorySignalSet memSignals = this.instruction.getMemorySignals();
     this.memory.setFetch(memSignals.isFetch());
     this.memory.setRead(memSignals.isRead());
     this.memory.setWrite(memSignals.isWrite());

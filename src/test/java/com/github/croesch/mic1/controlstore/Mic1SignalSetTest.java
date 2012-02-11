@@ -57,7 +57,7 @@ public class Mic1SignalSetTest extends DefaultTestCase {
   public void testEqualsObject() {
     final SignalSet set1 = new SignalSet(12);
     final SignalSet set2 = new SignalSet(11);
-    final SignalSet set3 = new Mic1MemorySignalSet();
+    final SignalSet set3 = new MemorySignalSet();
     final SignalSet set4 = new CBusSignalSet();
 
     assertThat(set1).isNotEqualTo(set2);
