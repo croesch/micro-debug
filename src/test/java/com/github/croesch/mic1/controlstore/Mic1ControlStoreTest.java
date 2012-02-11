@@ -129,7 +129,7 @@ public class Mic1ControlStoreTest extends DefaultTestCase {
   public void testGetSingleInstruction() throws IOException {
     printlnMethodName();
 
-    Mic1Instruction expected = new Mic1Instruction(2,
+    MicroInstruction expected = new MicroInstruction(2,
                                                    new JMPSignalSet(),
                                                    new ALUSignalSet(),
                                                    new CBusSignalSet(),
@@ -137,7 +137,7 @@ public class Mic1ControlStoreTest extends DefaultTestCase {
                                                    Register.MDR);
     assertThat(this.store.getInstruction(0)).isEqualTo(expected);
 
-    expected = new Mic1Instruction(0xFE,
+    expected = new MicroInstruction(0xFE,
                                    new JMPSignalSet(),
                                    new ALUSignalSet(),
                                    new CBusSignalSet(),
@@ -151,7 +151,7 @@ public class Mic1ControlStoreTest extends DefaultTestCase {
     final CBusSignalSet cBusSet = new CBusSignalSet();
     cBusSet.setH(true);
     cBusSet.setOpc(true);
-    expected = new Mic1Instruction(0x62,
+    expected = new MicroInstruction(0x62,
                                    new JMPSignalSet(),
                                    aluSet,
                                    cBusSet,

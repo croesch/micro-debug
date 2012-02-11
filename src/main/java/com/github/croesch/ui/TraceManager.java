@@ -28,7 +28,7 @@ import com.github.croesch.commons.Settings;
 import com.github.croesch.commons.Utils;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.api.IReadableMemory;
-import com.github.croesch.mic1.controlstore.Mic1Instruction;
+import com.github.croesch.mic1.controlstore.MicroInstruction;
 import com.github.croesch.mic1.controlstore.Mic1InstructionDecoder;
 import com.github.croesch.mic1.register.Register;
 import com.github.croesch.ui.api.Mic1View;
@@ -209,7 +209,7 @@ public final class TraceManager implements Mic1View {
    * @param currentInstruction the instruction that is now executed
    * @param macroCodeNumber the line number of the macro instruction being executed
    */
-  public void update(final Mic1Instruction currentInstruction, final int macroCodeNumber) {
+  public void update(final MicroInstruction currentInstruction, final int macroCodeNumber) {
     // trace macro code
     if (macroCodeNumber >= 0 && isTracingMacro()) {
       Printer.println(Text.EXECUTED_CODE.text(this.memory.getFormattedLine(macroCodeNumber)));

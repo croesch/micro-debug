@@ -24,7 +24,7 @@ import com.github.croesch.mic1.register.Register;
 
 /**
  * Based on the implementation of <em>Ray Ontko</em>. <br>
- * Decoder for {@link Mic1Instruction}. Is able to construct a {@link String} representing a given instruction.
+ * Decoder for {@link MicroInstruction}. Is able to construct a {@link String} representing a given instruction.
  * 
  * @author croesch
  * @since Date: Nov 13, 2011
@@ -59,7 +59,7 @@ public final class Mic1InstructionDecoder {
    * @param instruction the instruction to decode and represent as {@link String}
    * @return the {@link String} representing the function of the given instruction
    */
-  public static String decode(final Mic1Instruction instruction) {
+  public static String decode(final MicroInstruction instruction) {
     StringBuilder decodedInstruction = new StringBuilder();
     final String aBusValue = Register.H.name();
     final String bBusValue = decodeBBusBits(instruction.getbBusSelect());

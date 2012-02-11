@@ -30,7 +30,7 @@ import com.github.croesch.mic1.alu.Alu;
 import com.github.croesch.mic1.controlstore.ALUSignalSet;
 import com.github.croesch.mic1.controlstore.CBusSignalSet;
 import com.github.croesch.mic1.controlstore.MicroControlStore;
-import com.github.croesch.mic1.controlstore.Mic1Instruction;
+import com.github.croesch.mic1.controlstore.MicroInstruction;
 import com.github.croesch.mic1.controlstore.Mic1InstructionDecoder;
 import com.github.croesch.mic1.controlstore.JMPSignalSet;
 import com.github.croesch.mic1.controlstore.MemorySignalSet;
@@ -67,7 +67,7 @@ public final class Mic1 {
   private final MicroControlStore controlStore;
 
   /** current instruction */
-  private Mic1Instruction instruction;
+  private MicroInstruction instruction;
 
   /** current value of mpc */
   private int oldMpc;

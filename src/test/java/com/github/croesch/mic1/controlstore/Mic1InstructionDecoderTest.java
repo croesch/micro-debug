@@ -26,14 +26,14 @@ import com.github.croesch.DefaultTestCase;
 import com.github.croesch.mic1.register.Register;
 
 /**
- * Provides test cases for {@link Mic1Instruction}.
+ * Provides test cases for {@link MicroInstruction}.
  * 
  * @author croesch
  * @since Date: Nov 10, 2011
  */
 public class Mic1InstructionDecoderTest extends DefaultTestCase {
 
-  private Mic1Instruction instruction;
+  private MicroInstruction instruction;
 
   private StringBuilder stringBuilder;
 
@@ -41,7 +41,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
 
   @Override
   protected void setUpDetails() {
-    this.instruction = new Mic1Instruction(0,
+    this.instruction = new MicroInstruction(0,
                                            new JMPSignalSet(),
                                            new ALUSignalSet(),
                                            new CBusSignalSet(),
@@ -54,7 +54,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
   public void testToString() {
     printMethodName();
 
-    this.instruction = new Mic1Instruction(0,
+    this.instruction = new MicroInstruction(0,
                                            new JMPSignalSet(),
                                            new ALUSignalSet(),
                                            new CBusSignalSet(),
@@ -62,7 +62,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
                                            Register.MDR);
     assertThat(Mic1InstructionDecoder.decode(this.instruction)).isEqualTo("goto 0x0");
 
-    this.instruction = new Mic1Instruction(144,
+    this.instruction = new MicroInstruction(144,
                                            new JMPSignalSet(),
                                            new ALUSignalSet(),
                                            new CBusSignalSet(),
@@ -77,7 +77,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
     jmpSet.setJmpZ(true);
     aluSet.setSRA1(true).setF1(true).setEnB(true).setInc(true);
     cBusSet.setOpc(true).setCpp(true).setSp(true);
-    this.instruction = new Mic1Instruction(47, jmpSet, aluSet, cBusSet, memSet, Register.LV);
+    this.instruction = new MicroInstruction(47, jmpSet, aluSet, cBusSet, memSet, Register.LV);
     assertThat(Mic1InstructionDecoder.decode(this.instruction))
       .isEqualTo("Z=OPC=CPP=SP=LV>>1;if (Z) goto 0x12F; else goto 0x2F");
 

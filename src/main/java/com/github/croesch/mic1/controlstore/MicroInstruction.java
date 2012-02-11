@@ -24,11 +24,11 @@ import com.github.croesch.mic1.register.Register;
 /**
  * Represents an instruction in the micro code. Based on the implementation of <em>Ray Ontko</em>. <br>
  * <br>
- * Mic1Instruction This class represents an instruction which might appear in the Mic-1 control store. <br>
+ * MicroInstruction This class represents an instruction which might appear in the Mic-1 control store. <br>
  * Ray Ontko<br>
  * 1998.09.01 Created
  */
-public final class Mic1Instruction {
+public final class MicroInstruction {
 
   /** bit mask for the value of address */
   private static final int ADDRESS_MASK = 0x1ff;
@@ -65,7 +65,7 @@ public final class Mic1Instruction {
    * @param b contains the MIR[3:0]. Only the lowest four bits are fetched, it contains the bits that are used to define
    *        which register's value is written to the B-Bus.
    */
-  public Mic1Instruction(final int addr,
+  public MicroInstruction(final int addr,
                          final JMPSignalSet jmpSet,
                          final ALUSignalSet aluSet,
                          final CBusSignalSet cBusSet,
@@ -113,7 +113,7 @@ public final class Mic1Instruction {
     if (getClass() != obj.getClass()) {
       return false;
     }
-    final Mic1Instruction other = (Mic1Instruction) obj;
+    final MicroInstruction other = (MicroInstruction) obj;
     if (this.bBusSelect != other.bBusSelect) {
       return false;
     }

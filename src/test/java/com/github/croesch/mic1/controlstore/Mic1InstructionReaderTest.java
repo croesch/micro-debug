@@ -45,7 +45,7 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
     // bits   : 1c    f      2 3  6 7    11         20  8
     final byte[] buf = new byte[] { (byte) 0xe7, (byte) 0x99, (byte) 0x8f, (byte) 0xf8, (byte) 0x8f };
     final InputStream in = new ByteArrayInputStream(buf);
-    final Mic1Instruction value = Mic1InstructionReader.read(in);
+    final MicroInstruction value = Mic1InstructionReader.read(in);
 
     final JMPSignalSet jmpSet = new JMPSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
@@ -56,7 +56,7 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
     cBusSet.setH(true).setOpc(true).setTos(true).setCpp(true);
     cBusSet.setLv(true).setSp(true).setPc(true).setMdr(true).setMar(true);
 
-    final Mic1Instruction expected = new Mic1Instruction(0x1cf,
+    final MicroInstruction expected = new MicroInstruction(0x1cf,
                                                          jmpSet,
                                                          aluSet,
                                                          cBusSet,
@@ -121,7 +121,7 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
     // bits   : 1f    f    0                         24 f
     final byte[] buf = new byte[] { (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xf0 };
     final InputStream in = new ByteArrayInputStream(buf);
-    final Mic1Instruction value = Mic1InstructionReader.read(in);
+    final MicroInstruction value = Mic1InstructionReader.read(in);
 
     final JMPSignalSet jmpSet = new JMPSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
@@ -135,7 +135,7 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
     cBusSet.setSp(true).setPc(true).setMdr(true).setMar(true);
     memSet.setWrite(true).setRead(true).setFetch(true);
 
-    final Mic1Instruction expected = new Mic1Instruction(0x1ff, jmpSet, aluSet, cBusSet, memSet, null);
+    final MicroInstruction expected = new MicroInstruction(0x1ff, jmpSet, aluSet, cBusSet, memSet, null);
 
     assertThat(value).isEqualTo(expected);
   }
@@ -144,7 +144,7 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
   public void testRead_NotNull_MoreThanFiveBytes() throws IOException {
     final byte[] buf = new byte[] { (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xf0, (byte) 0xf0 };
     final InputStream in = new ByteArrayInputStream(buf);
-    final Mic1Instruction value = Mic1InstructionReader.read(in);
+    final MicroInstruction value = Mic1InstructionReader.read(in);
 
     assertThat(value).isNotNull();
   }
@@ -153,7 +153,7 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
   public void testRead_NotNull_FiveBytes() throws IOException {
     final byte[] buf = new byte[] { (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xf0, (byte) 0xf0 };
     final InputStream in = new ByteArrayInputStream(buf);
-    final Mic1Instruction value = Mic1InstructionReader.read(in);
+    final MicroInstruction value = Mic1InstructionReader.read(in);
 
     assertThat(value).isNotNull();
   }
@@ -162,7 +162,7 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
   public void testRead_Null_FourBytes() throws IOException {
     final byte[] buf = new byte[] { (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xf0 };
     final InputStream in = new ByteArrayInputStream(buf);
-    final Mic1Instruction value = Mic1InstructionReader.read(in);
+    final MicroInstruction value = Mic1InstructionReader.read(in);
 
     assertThat(value).isNull();
   }
@@ -171,7 +171,7 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
   public void testRead_Null_ThreeBytes() throws IOException {
     final byte[] buf = new byte[] { (byte) 0xff, (byte) 0xff, (byte) 0xff };
     final InputStream in = new ByteArrayInputStream(buf);
-    final Mic1Instruction value = Mic1InstructionReader.read(in);
+    final MicroInstruction value = Mic1InstructionReader.read(in);
 
     assertThat(value).isNull();
   }
@@ -180,7 +180,7 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
   public void testRead_Null_TwoBytes() throws IOException {
     final byte[] buf = new byte[] { (byte) 0xff, (byte) 0xff };
     final InputStream in = new ByteArrayInputStream(buf);
-    final Mic1Instruction value = Mic1InstructionReader.read(in);
+    final MicroInstruction value = Mic1InstructionReader.read(in);
 
     assertThat(value).isNull();
   }
@@ -189,7 +189,7 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
   public void testRead_Null_OneByte() throws IOException {
     final byte[] buf = new byte[] { (byte) 0xab };
     final InputStream in = new ByteArrayInputStream(buf);
-    final Mic1Instruction value = Mic1InstructionReader.read(in);
+    final MicroInstruction value = Mic1InstructionReader.read(in);
 
     assertThat(value).isNull();
   }
@@ -198,7 +198,7 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
   public void testRead_Null_ZeroBytes() throws IOException {
     final byte[] buf = new byte[] {};
     final InputStream in = new ByteArrayInputStream(buf);
-    final Mic1Instruction value = Mic1InstructionReader.read(in);
+    final MicroInstruction value = Mic1InstructionReader.read(in);
 
     assertThat(value).isNull();
   }
@@ -219,7 +219,7 @@ public class Mic1InstructionReaderTest extends DefaultTestCase {
                              (byte) 0xf0 };
     InputStream in = new ByteArrayInputStream(buf);
 
-    Mic1Instruction value = Mic1InstructionReader.read(in);
+    MicroInstruction value = Mic1InstructionReader.read(in);
     assertThat(value).isNotNull();
 
     value = Mic1InstructionReader.read(in);

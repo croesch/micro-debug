@@ -29,7 +29,7 @@ import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.api.AbstractCodeContainer;
 
 /**
- * The store for {@link Mic1Instruction}s.
+ * The store for {@link MicroInstruction}s.
  * 
  * @author croesch
  * @since Date: Nov 19, 2011
@@ -40,10 +40,10 @@ public final class MicroControlStore extends AbstractCodeContainer {
   private static final int INSTRUCTIONS_PER_STORE = 512;
 
   /** the store of 512 micro code instructions */
-  private final Mic1Instruction[] store = new Mic1Instruction[INSTRUCTIONS_PER_STORE];
+  private final MicroInstruction[] store = new MicroInstruction[INSTRUCTIONS_PER_STORE];
 
   /**
-   * Constructs a {@link MicroControlStore} with the {@link Mic1Instruction} fetched from the given stream. If the magic
+   * Constructs a {@link MicroControlStore} with the {@link MicroInstruction} fetched from the given stream. If the magic
    * number is incorrect, or if there are too few or too many bytes to read, a {@link FileFormatException} will be
    * thrown.
    * 
@@ -64,7 +64,7 @@ public final class MicroControlStore extends AbstractCodeContainer {
     // read the instructions from the stream
     for (int i = 0; !eof; ++i) {
 
-      Mic1Instruction instr = null;
+      MicroInstruction instr = null;
       try {
         instr = Mic1InstructionReader.read(in);
       } catch (final IOException e) {
@@ -93,10 +93,10 @@ public final class MicroControlStore extends AbstractCodeContainer {
    * 
    * @since Date: Nov 20, 2011
    * @param mpc the address of the instruction to fetch - only the least nine bits will be used.
-   * @return the {@link Mic1Instruction} that is stored at the given address, or <code>null</code> if there is no
+   * @return the {@link MicroInstruction} that is stored at the given address, or <code>null</code> if there is no
    *         instruction at the given address.
    */
-  public Mic1Instruction getInstruction(final int mpc) {
+  public MicroInstruction getInstruction(final int mpc) {
     final int nineBitMask = 0x1FF;
     return this.store[mpc & nineBitMask];
   }

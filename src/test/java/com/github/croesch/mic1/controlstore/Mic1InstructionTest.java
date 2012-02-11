@@ -26,18 +26,18 @@ import com.github.croesch.DefaultTestCase;
 import com.github.croesch.mic1.register.Register;
 
 /**
- * Provides test cases for {@link Mic1Instruction}.
+ * Provides test cases for {@link MicroInstruction}.
  * 
  * @author croesch
  * @since Date: Nov 10, 2011
  */
 public class Mic1InstructionTest extends DefaultTestCase {
 
-  private Mic1Instruction instruction;
+  private MicroInstruction instruction;
 
   @Override
   protected void setUpDetails() {
-    this.instruction = new Mic1Instruction(0,
+    this.instruction = new MicroInstruction(0,
                                            new JMPSignalSet(),
                                            new ALUSignalSet(),
                                            new CBusSignalSet(),
@@ -59,7 +59,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
     final CBusSignalSet cBusSet = new CBusSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
     final JMPSignalSet jmpSet = new JMPSignalSet();
-    Mic1Instruction other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
+    MicroInstruction other = new MicroInstruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
     assertThat(this.instruction).isEqualTo(other);
     assertThat(this.instruction.hashCode()).isEqualTo(this.instruction.hashCode());
 
@@ -79,7 +79,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
     final CBusSignalSet cBusSet = new CBusSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
     final JMPSignalSet jmpSet = new JMPSignalSet();
-    Mic1Instruction other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, null);
+    MicroInstruction other = new MicroInstruction(addr, jmpSet, aluSet, cBusSet, memSet, null);
 
     for (final Register b : Register.values()) {
       other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
@@ -97,7 +97,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
     final CBusSignalSet cBusSet = new CBusSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
     final JMPSignalSet jmpSet = new JMPSignalSet();
-    Mic1Instruction other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
+    MicroInstruction other = new MicroInstruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
 
     memSet.setFetch(true);
     other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
@@ -121,7 +121,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
     final CBusSignalSet cBusSet = new CBusSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
     final JMPSignalSet jmpSet = new JMPSignalSet();
-    Mic1Instruction other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
+    MicroInstruction other = new MicroInstruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
 
     jmpSet.setJmpC(true);
     other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
@@ -146,7 +146,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
     final CBusSignalSet cBusSet = new CBusSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
     final JMPSignalSet jmpSet = new JMPSignalSet();
-    Mic1Instruction other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
+    MicroInstruction other = new MicroInstruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
 
     aluSet.setEnA(true);
     other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
@@ -191,7 +191,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
     final CBusSignalSet cBusSet = new CBusSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
     final JMPSignalSet jmpSet = new JMPSignalSet();
-    Mic1Instruction other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
+    MicroInstruction other = new MicroInstruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
 
     cBusSet.setCpp(true);
     other = compareInstructionToOther(addr, b, memSet, cBusSet, aluSet, jmpSet, other);
@@ -268,17 +268,17 @@ public class Mic1InstructionTest extends DefaultTestCase {
     assertThat(this.instruction.getMemorySignals().isFetch()).isFalse();
   }
 
-  private Mic1Instruction compareInstructionToOther(final int addr,
+  private MicroInstruction compareInstructionToOther(final int addr,
                                                     final Register b,
                                                     final MemorySignalSet memSet,
                                                     final CBusSignalSet cBusSet,
                                                     final ALUSignalSet aluSet,
                                                     final JMPSignalSet jmpSet,
-                                                    Mic1Instruction other) {
-    this.instruction = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
+                                                    MicroInstruction other) {
+    this.instruction = new MicroInstruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
     assertThat(this.instruction).isNotEqualTo(other);
     assertThat(this.instruction.hashCode()).isNotEqualTo(other.hashCode());
-    other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b); // make object equal to instruction
+    other = new MicroInstruction(addr, jmpSet, aluSet, cBusSet, memSet, b); // make object equal to instruction
     return other;
   }
 
@@ -298,7 +298,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
     final JMPSignalSet jmpSet = new JMPSignalSet();
     jmpSet.setJmpC(true).setJmpN(true).setJmpZ(true);
 
-    this.instruction = new Mic1Instruction(42, jmpSet, aluSet, cBusSet, memSet, Register.MBR);
+    this.instruction = new MicroInstruction(42, jmpSet, aluSet, cBusSet, memSet, Register.MBR);
 
     assertThat(this.instruction.toString()).isEqualTo("101010_111_11111111_111111111_111_MBR");
   }
@@ -310,32 +310,32 @@ public class Mic1InstructionTest extends DefaultTestCase {
     final CBusSignalSet cBusSet = new CBusSignalSet();
     final MemorySignalSet memSet = new MemorySignalSet();
 
-    this.instruction = new Mic1Instruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
+    this.instruction = new MicroInstruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
     assertThat(this.instruction.isNopOrHalt()).isTrue();
 
     jmpSet.setJmpC(true);
-    this.instruction = new Mic1Instruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
+    this.instruction = new MicroInstruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
     assertThat(this.instruction.isNopOrHalt()).isFalse();
 
     jmpSet.setJmpC(false);
-    this.instruction = new Mic1Instruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
+    this.instruction = new MicroInstruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
     assertThat(this.instruction.isNopOrHalt()).isTrue();
     aluSet.setF1(true);
-    this.instruction = new Mic1Instruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
+    this.instruction = new MicroInstruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
     assertThat(this.instruction.isNopOrHalt()).isFalse();
 
     aluSet.setF1(false);
-    this.instruction = new Mic1Instruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
+    this.instruction = new MicroInstruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
     assertThat(this.instruction.isNopOrHalt()).isTrue();
     cBusSet.setLv(true);
-    this.instruction = new Mic1Instruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
+    this.instruction = new MicroInstruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
     assertThat(this.instruction.isNopOrHalt()).isFalse();
 
     cBusSet.setLv(false);
-    this.instruction = new Mic1Instruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
+    this.instruction = new MicroInstruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
     assertThat(this.instruction.isNopOrHalt()).isTrue();
     memSet.setRead(true);
-    this.instruction = new Mic1Instruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
+    this.instruction = new MicroInstruction(144, jmpSet, aluSet, cBusSet, memSet, Register.SP);
     assertThat(this.instruction.isNopOrHalt()).isFalse();
   }
 }

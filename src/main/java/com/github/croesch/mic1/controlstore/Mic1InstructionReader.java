@@ -27,7 +27,7 @@ import com.github.croesch.mic1.register.Register;
 
 /**
  * Based on the implementation of <em>Ray Ontko</em>. <br>
- * Is able to read bytes from {@link InputStream}s and to construct {@link Mic1Instruction}s with the given values.
+ * Is able to read bytes from {@link InputStream}s and to construct {@link MicroInstruction}s with the given values.
  * 
  * @author croesch
  * @since Date: Nov 7, 2011
@@ -92,16 +92,16 @@ public final class Mic1InstructionReader {
   // methods
 
   /**
-   * Reads five bytes from the given {@link InputStream} and constructs one {@link Mic1Instruction}. Invoke several
+   * Reads five bytes from the given {@link InputStream} and constructs one {@link MicroInstruction}. Invoke several
    * times to read the whole data in the stream.
    * 
    * @since Date: Nov 10, 2011
    * @param in the inputstream to fetch five bytes from
-   * @return a {@link Mic1Instruction} constructed from the bytes read or <code>null</code> if there are less than five
+   * @return a {@link MicroInstruction} constructed from the bytes read or <code>null</code> if there are less than five
    *         bytes to read from the inputstream.
    * @throws IOException if something went wrong reading the given {@link InputStream}.
    */
-  public static Mic1Instruction read(final InputStream in) throws IOException {
+  public static MicroInstruction read(final InputStream in) throws IOException {
     final int b0 = in.read();
     final int b1 = in.read();
     final int b2 = in.read();
@@ -152,7 +152,7 @@ public final class Mic1InstructionReader {
 
     final int b = (b4 >> 4) & BIT5678;
 
-    return new Mic1Instruction(nextAddress, jmpSet, aluSet, cBusSet, memSet, decodeBBusBits(b));
+    return new MicroInstruction(nextAddress, jmpSet, aluSet, cBusSet, memSet, decodeBBusBits(b));
   }
 
   /**

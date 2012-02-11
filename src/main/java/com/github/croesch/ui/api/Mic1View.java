@@ -18,7 +18,7 @@
  */
 package com.github.croesch.ui.api;
 
-import com.github.croesch.mic1.controlstore.Mic1Instruction;
+import com.github.croesch.mic1.controlstore.MicroInstruction;
 import com.github.croesch.mic1.register.Register;
 
 /**
@@ -128,7 +128,7 @@ public interface Mic1View {
    * @param currentInstruction the instruction that is now executed
    * @param macroCodeNumber the line number of the macro instruction being executed
    */
-  void update(Mic1Instruction currentInstruction, int macroCodeNumber);
+  void update(MicroInstruction currentInstruction, int macroCodeNumber);
 
   /**
    * Start tracing the value of the local variable with the given number. This will create a variable based on the
