@@ -118,7 +118,7 @@ public class Mic1ControlStoreTest extends DefaultTestCase {
     final BufferedReader expectedFile = new BufferedReader(new InputStreamReader(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.txt")));
 
     for (int i = 0; i < 512; ++i) {
-      assertThat(Mic1InstructionDecoder.decode(this.store.getInstruction(i))).isEqualTo(expectedFile.readLine());
+      assertThat(MicroInstructionDecoder.decode(this.store.getInstruction(i))).isEqualTo(expectedFile.readLine());
       printStep();
     }
 

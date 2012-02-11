@@ -60,7 +60,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
                                            new CBusSignalSet(),
                                            new MemorySignalSet(),
                                            Register.MDR);
-    assertThat(Mic1InstructionDecoder.decode(this.instruction)).isEqualTo("goto 0x0");
+    assertThat(MicroInstructionDecoder.decode(this.instruction)).isEqualTo("goto 0x0");
 
     this.instruction = new MicroInstruction(144,
                                            new JMPSignalSet(),
@@ -68,7 +68,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
                                            new CBusSignalSet(),
                                            new MemorySignalSet(),
                                            Register.SP);
-    assertThat(Mic1InstructionDecoder.decode(this.instruction)).isEqualTo("goto 0x90");
+    assertThat(MicroInstructionDecoder.decode(this.instruction)).isEqualTo("goto 0x90");
 
     final JMPSignalSet jmpSet = new JMPSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
@@ -78,7 +78,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
     aluSet.setSRA1(true).setF1(true).setEnB(true).setInc(true);
     cBusSet.setOpc(true).setCpp(true).setSp(true);
     this.instruction = new MicroInstruction(47, jmpSet, aluSet, cBusSet, memSet, Register.LV);
-    assertThat(Mic1InstructionDecoder.decode(this.instruction))
+    assertThat(MicroInstructionDecoder.decode(this.instruction))
       .isEqualTo("Z=OPC=CPP=SP=LV>>1;if (Z) goto 0x12F; else goto 0x2F");
 
     printEndOfMethod();
@@ -94,49 +94,49 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
     jmpSet.setJmpC(false).setJmpN(false).setJmpZ(false);
     String start = this.stringBuilder.toString();
     // call decoding
-    Mic1InstructionDecoder.decodeJMPAndAddress(jmpSet, 47, this.stringBuilder);
+    MicroInstructionDecoder.decodeJMPAndAddress(jmpSet, 47, this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo(start + ";goto 0x2F");
 
     jmpSet.setJmpC(true).setJmpN(false).setJmpZ(false);
     start = this.stringBuilder.toString();
     // call decoding
-    Mic1InstructionDecoder.decodeJMPAndAddress(jmpSet, 47, this.stringBuilder);
+    MicroInstructionDecoder.decodeJMPAndAddress(jmpSet, 47, this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo(start + ";goto (MBR OR 0x2F)");
 
     jmpSet.setJmpC(true).setJmpN(false).setJmpZ(false);
     start = this.stringBuilder.toString();
     // call decoding
-    Mic1InstructionDecoder.decodeJMPAndAddress(jmpSet, 0, this.stringBuilder);
+    MicroInstructionDecoder.decodeJMPAndAddress(jmpSet, 0, this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo(start + ";goto (MBR)");
 
     jmpSet.setJmpC(false).setJmpN(true).setJmpZ(false);
     start = this.stringBuilder.toString();
     // call decoding
-    Mic1InstructionDecoder.decodeJMPAndAddress(jmpSet, 47, this.stringBuilder);
+    MicroInstructionDecoder.decodeJMPAndAddress(jmpSet, 47, this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo("N=" + start + ";if (N) goto 0x12F; else goto 0x2F");
 
     jmpSet.setJmpC(false).setJmpN(false).setJmpZ(true);
     start = this.stringBuilder.toString();
     // call decoding
-    Mic1InstructionDecoder.decodeJMPAndAddress(jmpSet, 47, this.stringBuilder);
+    MicroInstructionDecoder.decodeJMPAndAddress(jmpSet, 47, this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo("Z=" + start + ";if (Z) goto 0x12F; else goto 0x2F");
 
     jmpSet.setJmpC(false).setJmpN(true).setJmpZ(false);
     start = this.stringBuilder.toString();
     // call decoding
-    Mic1InstructionDecoder.decodeJMPAndAddress(jmpSet, 447, this.stringBuilder);
+    MicroInstructionDecoder.decodeJMPAndAddress(jmpSet, 447, this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo("N=" + start + ";if (N) goto 0x1BF; else goto 0x1BF");
 
     jmpSet.setJmpC(false).setJmpN(false).setJmpZ(true);
     start = this.stringBuilder.toString();
     // call decoding
-    Mic1InstructionDecoder.decodeJMPAndAddress(jmpSet, 447, this.stringBuilder);
+    MicroInstructionDecoder.decodeJMPAndAddress(jmpSet, 447, this.stringBuilder);
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo("Z=" + start + ";if (Z) goto 0x1BF; else goto 0x1BF");
 
@@ -161,7 +161,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
           // ensure the method appends generated text
           final String start = this.stringBuilder.toString();
           // call decoding
-          Mic1InstructionDecoder.decodeMemoryBits(memSet, this.stringBuilder);
+          MicroInstructionDecoder.decodeMemoryBits(memSet, this.stringBuilder);
           // check the created text
           assertThat(this.stringBuilder.toString()).startsWith(start);
           assertThat(this.stringBuilder.toString().contains(";wr")).isEqualTo(write);
@@ -191,7 +191,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
 
         final String start = this.stringBuilder.toString();
         // call decoding
-        Mic1InstructionDecoder.decodeShifterOperation(aluSet, this.stringBuilder);
+        MicroInstructionDecoder.decodeShifterOperation(aluSet, this.stringBuilder);
         // check the created text
         assertThat(this.stringBuilder.toString()).startsWith(start);
         assertThat(this.stringBuilder.toString().contains(">>1")).isEqualTo(sra1);
@@ -230,7 +230,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
   private void testSingleDecodeALUOperation(final ALUSignalSet aluSet, final String expected) {
     final String start = this.stringBuilder.toString();
     // call decoding
-    Mic1InstructionDecoder.decodeALUOperation(aluSet, this.stringBuilder, "A", "B");
+    MicroInstructionDecoder.decodeALUOperation(aluSet, this.stringBuilder, "A", "B");
     // check the created text
     assertThat(this.stringBuilder.toString()).isEqualTo(start + expected);
   }
@@ -251,7 +251,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
 
             final String start = this.stringBuilder.toString();
             // call decoding
-            Mic1InstructionDecoder.decodeALUPlus(aluSet, this.stringBuilder, "A", "B");
+            MicroInstructionDecoder.decodeALUPlus(aluSet, this.stringBuilder, "A", "B");
 
             // check the created text
             if (enableA && enableB && invertA && increment) {
@@ -312,7 +312,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
 
       final String start = this.stringBuilder.toString();
       // call decoding
-      Mic1InstructionDecoder.decodeALUNotB(aluSet, this.stringBuilder, "B");
+      MicroInstructionDecoder.decodeALUNotB(aluSet, this.stringBuilder, "B");
       // check the created text
       if (enableB) {
         assertThat(this.stringBuilder.toString()).isEqualTo(start + "NOT B");
@@ -339,7 +339,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
 
           final String start = this.stringBuilder.toString();
           // call decoding
-          Mic1InstructionDecoder.decodeALUOr(aluSet, this.stringBuilder, "A", "B");
+          MicroInstructionDecoder.decodeALUOr(aluSet, this.stringBuilder, "A", "B");
 
           // check the created text
           if (enableA && enableB && invertA) {
@@ -383,7 +383,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
 
           final String start = this.stringBuilder.toString();
           // call decoding
-          Mic1InstructionDecoder.decodeALUAnd(aluSet, this.stringBuilder, "A", "B");
+          MicroInstructionDecoder.decodeALUAnd(aluSet, this.stringBuilder, "A", "B");
 
           // check the created text
           if (enableA && enableB && invertA) {
@@ -433,11 +433,11 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
 
   private void checkDecodingOfBBusBits(final String s, final Register reg) {
     // check it multiple times
-    assertThat(Mic1InstructionDecoder.decodeBBusBits(reg)).isEqualTo(s);
-    assertThat(Mic1InstructionDecoder.decodeBBusBits(reg)).isEqualTo(s);
-    assertThat(Mic1InstructionDecoder.decodeBBusBits(reg)).isEqualTo(s);
-    assertThat(Mic1InstructionDecoder.decodeBBusBits(reg)).isEqualTo(s);
-    assertThat(Mic1InstructionDecoder.decodeBBusBits(reg)).isEqualTo(s);
+    assertThat(MicroInstructionDecoder.decodeBBusBits(reg)).isEqualTo(s);
+    assertThat(MicroInstructionDecoder.decodeBBusBits(reg)).isEqualTo(s);
+    assertThat(MicroInstructionDecoder.decodeBBusBits(reg)).isEqualTo(s);
+    assertThat(MicroInstructionDecoder.decodeBBusBits(reg)).isEqualTo(s);
+    assertThat(MicroInstructionDecoder.decodeBBusBits(reg)).isEqualTo(s);
   }
 
   @Test
@@ -461,7 +461,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
 
                       final String start = this.stringBuilder.toString();
                       // call decoding
-                      Mic1InstructionDecoder.decodeCBusBits(cBusSet, this.stringBuilder);
+                      MicroInstructionDecoder.decodeCBusBits(cBusSet, this.stringBuilder);
                       // check the created text
                       assertThat(this.stringBuilder.toString()).startsWith(start);
 

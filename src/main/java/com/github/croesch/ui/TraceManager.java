@@ -29,7 +29,7 @@ import com.github.croesch.commons.Utils;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.api.IReadableMemory;
 import com.github.croesch.mic1.controlstore.MicroInstruction;
-import com.github.croesch.mic1.controlstore.Mic1InstructionDecoder;
+import com.github.croesch.mic1.controlstore.MicroInstructionDecoder;
 import com.github.croesch.mic1.register.Register;
 import com.github.croesch.ui.api.Mic1View;
 
@@ -217,7 +217,7 @@ public final class TraceManager implements Mic1View {
 
     // trace micro code
     if (isTracingMicro()) {
-      Printer.println(Text.EXECUTED_CODE.text(Mic1InstructionDecoder.decode(currentInstruction)));
+      Printer.println(Text.EXECUTED_CODE.text(MicroInstructionDecoder.decode(currentInstruction)));
     }
 
     // trace register

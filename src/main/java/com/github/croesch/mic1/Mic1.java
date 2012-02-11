@@ -31,7 +31,7 @@ import com.github.croesch.mic1.controlstore.ALUSignalSet;
 import com.github.croesch.mic1.controlstore.CBusSignalSet;
 import com.github.croesch.mic1.controlstore.MicroControlStore;
 import com.github.croesch.mic1.controlstore.MicroInstruction;
-import com.github.croesch.mic1.controlstore.Mic1InstructionDecoder;
+import com.github.croesch.mic1.controlstore.MicroInstructionDecoder;
 import com.github.croesch.mic1.controlstore.JMPSignalSet;
 import com.github.croesch.mic1.controlstore.MemorySignalSet;
 import com.github.croesch.mic1.io.Input;
@@ -483,13 +483,13 @@ public final class Mic1 {
     } else if (this.controlStore.getInstruction(this.mpcCalculator.getMpc()) == null) {
       // instruction points to an undefined position
       LOGGER.warning("instruction at " + Utils.toHexString(this.oldMpc) + " ["
-                     + Mic1InstructionDecoder.decode(this.instruction) + "] points to an undefined address: "
+                     + MicroInstructionDecoder.decode(this.instruction) + "] points to an undefined address: "
                      + Utils.toHexString(this.mpcCalculator.getMpc()));
       halt = true;
     }
 
     if (halt && this.instruction != null) {
-      LOGGER.finer("found halt: (" + Mic1InstructionDecoder.decode(this.instruction) + ")");
+      LOGGER.finer("found halt: (" + MicroInstructionDecoder.decode(this.instruction) + ")");
     }
     return halt;
   }

@@ -118,7 +118,7 @@ public final class MicroControlStore extends AbstractCodeContainer {
   @Override
   protected int printCodeLine(final int i) {
     final String formattedAddress = formatIntToHex(i, Settings.MIC1_MEM_MICRO_ADDR_WIDTH.getValue());
-    Printer.println(Text.MICRO_CODE_LINE.text(formattedAddress, Mic1InstructionDecoder.decode(this.store[i])));
+    Printer.println(Text.MICRO_CODE_LINE.text(formattedAddress, MicroInstructionDecoder.decode(this.store[i])));
     return 0;
   }
 }

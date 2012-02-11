@@ -29,7 +29,7 @@ import com.github.croesch.mic1.register.Register;
  * @author croesch
  * @since Date: Nov 13, 2011
  */
-public final class Mic1InstructionDecoder {
+public final class MicroInstructionDecoder {
 
   /** contains a bit mask to define the highest bit in the nine-bit-value of address - 2 to the 8th */
   private static final int HIGHEST_BIT_OF_ADDRESS = 256;
@@ -48,7 +48,7 @@ public final class Mic1InstructionDecoder {
    * 
    * @since Date: Nov 13, 2011
    */
-  private Mic1InstructionDecoder() {
+  private MicroInstructionDecoder() {
     throw new AssertionError("called hidden constructor of utility class.");
   }
 
