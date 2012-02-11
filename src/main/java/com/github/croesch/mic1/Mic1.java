@@ -28,7 +28,7 @@ import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.alu.Alu;
 import com.github.croesch.mic1.controlstore.ALUSignalSet;
-import com.github.croesch.mic1.controlstore.Mic1CBusSignalSet;
+import com.github.croesch.mic1.controlstore.CBusSignalSet;
 import com.github.croesch.mic1.controlstore.Mic1ControlStore;
 import com.github.croesch.mic1.controlstore.Mic1Instruction;
 import com.github.croesch.mic1.controlstore.Mic1InstructionDecoder;
@@ -398,7 +398,7 @@ public final class Mic1 {
    * @param value the value of the C-Bus.
    * @param cBusSignals the signals that determine, which registers are selected.
    */
-  private static void setValueIntoRegisters(final int value, final Mic1CBusSignalSet cBusSignals) {
+  private static void setValueIntoRegisters(final int value, final CBusSignalSet cBusSignals) {
     if (cBusSignals.isCpp()) {
       Register.CPP.setValue(value);
     }

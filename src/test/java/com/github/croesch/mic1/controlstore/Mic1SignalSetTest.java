@@ -58,7 +58,7 @@ public class Mic1SignalSetTest extends DefaultTestCase {
     final Mic1SignalSet set1 = new Mic1SignalSet(12);
     final Mic1SignalSet set2 = new Mic1SignalSet(11);
     final Mic1SignalSet set3 = new Mic1MemorySignalSet();
-    final Mic1SignalSet set4 = new Mic1CBusSignalSet();
+    final Mic1SignalSet set4 = new CBusSignalSet();
 
     assertThat(set1).isNotEqualTo(set2);
     assertThat(set1).isNotEqualTo(set3);

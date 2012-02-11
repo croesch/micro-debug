@@ -134,7 +134,7 @@ public final class Mic1InstructionReader {
     aluSet.setInvA((b2 & BIT3) > 0);
     aluSet.setInc((b2 & BIT4) > 0);
 
-    final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
+    final CBusSignalSet cBusSet = new CBusSignalSet();
     cBusSet.setH((b2 & BIT5) > 0);
     cBusSet.setOpc((b2 & BIT6) > 0);
     cBusSet.setTos((b2 & BIT7) > 0);

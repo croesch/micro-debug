@@ -364,7 +364,7 @@ public final class Mic1InstructionDecoder {
    * @param s the {@link StringBuilder} to append the text to.
    * @param cBusSignals the signals to decode
    */
-  static void decodeCBusBits(final Mic1CBusSignalSet cBusSignals, final StringBuilder s) {
+  static void decodeCBusBits(final CBusSignalSet cBusSignals, final StringBuilder s) {
     // decode the C-bus bits
     if (cBusSignals.isH()) {
       s.append(Register.H.name()).append("=");

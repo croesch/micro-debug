@@ -43,7 +43,7 @@ public final class Mic1Instruction {
   private final ALUSignalSet aluSignals = new ALUSignalSet();
 
   /** MIR[15:7]: set of bits that are responsible for the registers that are filled with the C-Bus value */
-  private final Mic1CBusSignalSet cBusSignals = new Mic1CBusSignalSet();
+  private final CBusSignalSet cBusSignals = new CBusSignalSet();
 
   /** MIR[6:4]: set of bits that are responsible for communication with external memory (main memory and program memory) */
   private final Mic1MemorySignalSet memorySignals = new Mic1MemorySignalSet();
@@ -68,7 +68,7 @@ public final class Mic1Instruction {
   public Mic1Instruction(final int addr,
                          final Mic1JMPSignalSet jmpSet,
                          final ALUSignalSet aluSet,
-                         final Mic1CBusSignalSet cBusSet,
+                         final CBusSignalSet cBusSet,
                          final Mic1MemorySignalSet memSet,
                          final Register b) {
     this.nextAddress = addr & ADDRESS_MASK;
@@ -157,13 +157,13 @@ public final class Mic1Instruction {
   }
 
   /**
-   * Returns the {@link Mic1CBusSignalSet} of this instruction.
+   * Returns the {@link CBusSignalSet} of this instruction.
    * 
    * @since Date: Nov 13, 2011
-   * @return a copy of the {@link Mic1CBusSignalSet} of this instruction.
+   * @return a copy of the {@link CBusSignalSet} of this instruction.
    */
-  public Mic1CBusSignalSet getCBusSignals() {
-    final Mic1CBusSignalSet set = new Mic1CBusSignalSet();
+  public CBusSignalSet getCBusSignals() {
+    final CBusSignalSet set = new CBusSignalSet();
     set.copyOf(this.cBusSignals);
     return set;
   }

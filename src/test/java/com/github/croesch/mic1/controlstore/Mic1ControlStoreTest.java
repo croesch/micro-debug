@@ -132,7 +132,7 @@ public class Mic1ControlStoreTest extends DefaultTestCase {
     Mic1Instruction expected = new Mic1Instruction(2,
                                                    new Mic1JMPSignalSet(),
                                                    new ALUSignalSet(),
-                                                   new Mic1CBusSignalSet(),
+                                                   new CBusSignalSet(),
                                                    new Mic1MemorySignalSet(),
                                                    Register.MDR);
     assertThat(this.store.getInstruction(0)).isEqualTo(expected);
@@ -140,7 +140,7 @@ public class Mic1ControlStoreTest extends DefaultTestCase {
     expected = new Mic1Instruction(0xFE,
                                    new Mic1JMPSignalSet(),
                                    new ALUSignalSet(),
-                                   new Mic1CBusSignalSet(),
+                                   new CBusSignalSet(),
                                    new Mic1MemorySignalSet(),
                                    Register.MDR);
     assertThat(this.store.getInstruction(511)).isEqualTo(expected);
@@ -148,7 +148,7 @@ public class Mic1ControlStoreTest extends DefaultTestCase {
     final ALUSignalSet aluSet = new ALUSignalSet();
     aluSet.setF1(true);
     aluSet.setInvA(true);
-    final Mic1CBusSignalSet cBusSet = new Mic1CBusSignalSet();
+    final CBusSignalSet cBusSet = new CBusSignalSet();
     cBusSet.setH(true);
     cBusSet.setOpc(true);
     expected = new Mic1Instruction(0x62,
