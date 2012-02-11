@@ -33,58 +33,58 @@ import com.github.croesch.error.FileFormatException;
 import com.github.croesch.mic1.register.Register;
 
 /**
- * Contains test cases for {@link Mic1ControlStore}.
+ * Contains test cases for {@link MicroControlStore}.
  * 
  * @author croesch
  * @since Date: Nov 19, 2011
  */
 public class Mic1ControlStoreTest extends DefaultTestCase {
 
-  private Mic1ControlStore store;
+  private MicroControlStore store;
 
   @Override
   protected void setUpDetails() throws Exception {
-    this.store = new Mic1ControlStore(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"));
+    this.store = new MicroControlStore(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"));
   }
 
   @Test(expected = FileFormatException.class)
   public void testConstructor_TooShortFile_Bytes0() throws FileFormatException {
-    new Mic1ControlStore(new ByteArrayInputStream(new byte[] {}));
+    new MicroControlStore(new ByteArrayInputStream(new byte[] {}));
   }
 
   @Test(expected = FileFormatException.class)
   public void testConstructor_TooShortFile_Bytes1() throws FileFormatException {
-    new Mic1ControlStore(new ByteArrayInputStream(new byte[] { 1 }));
+    new MicroControlStore(new ByteArrayInputStream(new byte[] { 1 }));
   }
 
   @Test(expected = FileFormatException.class)
   public void testConstructor_TooShortFile_Bytes2() throws FileFormatException {
-    new Mic1ControlStore(new ByteArrayInputStream(new byte[] { 1, 2 }));
+    new MicroControlStore(new ByteArrayInputStream(new byte[] { 1, 2 }));
   }
 
   @Test(expected = FileFormatException.class)
   public void testConstructor_TooShortFile_Bytes3() throws FileFormatException {
-    new Mic1ControlStore(new ByteArrayInputStream(new byte[] { 1, 2, 3 }));
+    new MicroControlStore(new ByteArrayInputStream(new byte[] { 1, 2, 3 }));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testConstructor_Null() throws FileFormatException {
-    new Mic1ControlStore(null);
+    new MicroControlStore(null);
   }
 
   @Test(expected = FileFormatException.class)
   public void testConstructor_FalseFormat() throws FileFormatException {
-    new Mic1ControlStore(new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x77 }));
+    new MicroControlStore(new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x77 }));
   }
 
   @Test(expected = FileFormatException.class)
   public void testConstructor_EmptyFile() throws FileFormatException {
-    new Mic1ControlStore(new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x78 }));
+    new MicroControlStore(new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x78 }));
   }
 
   @Test(expected = FileFormatException.class)
   public void testConstructor_IOException() throws FileFormatException {
-    new Mic1ControlStore(new InputStream() {
+    new MicroControlStore(new InputStream() {
       private final byte[] bytes = new byte[] { 0x12, 0x34, 0x56, 0x78 };
 
       private int counter = 0;
@@ -108,7 +108,7 @@ public class Mic1ControlStoreTest extends DefaultTestCase {
     bs[2] = 0x56;
     bs[3] = 0x78;
 
-    new Mic1ControlStore(new ByteArrayInputStream(bs));
+    new MicroControlStore(new ByteArrayInputStream(bs));
   }
 
   @Test
@@ -296,7 +296,7 @@ public class Mic1ControlStoreTest extends DefaultTestCase {
   @Test
   public void testPrintCode_Hi() throws IOException {
     printlnMethodName();
-    this.store = new Mic1ControlStore(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"));
+    this.store = new MicroControlStore(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"));
 
     this.store.printCode();
     assertThat(out.toString()).isEqualTo(readFile("mic1/hi.mic1.dis").toString());
@@ -312,7 +312,7 @@ public class Mic1ControlStoreTest extends DefaultTestCase {
   @Test
   public void testPrintCode_WithNullValues() throws IOException {
     printlnMethodName();
-    this.store = new Mic1ControlStore(ClassLoader.getSystemResourceAsStream("mic1/hi-with-null.mic1"));
+    this.store = new MicroControlStore(ClassLoader.getSystemResourceAsStream("mic1/hi-with-null.mic1"));
 
     this.store.printCode();
     assertThat(out.toString()).isEqualTo(readFile("mic1/hi-with-null.mic1.dis").toString());

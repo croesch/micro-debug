@@ -29,7 +29,7 @@ import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.alu.Alu;
 import com.github.croesch.mic1.controlstore.ALUSignalSet;
 import com.github.croesch.mic1.controlstore.CBusSignalSet;
-import com.github.croesch.mic1.controlstore.Mic1ControlStore;
+import com.github.croesch.mic1.controlstore.MicroControlStore;
 import com.github.croesch.mic1.controlstore.Mic1Instruction;
 import com.github.croesch.mic1.controlstore.Mic1InstructionDecoder;
 import com.github.croesch.mic1.controlstore.JMPSignalSet;
@@ -64,7 +64,7 @@ public final class Mic1 {
   private NextMPCCalculator mpcCalculator;
 
   /** store of the micro program */
-  private final Mic1ControlStore controlStore;
+  private final MicroControlStore controlStore;
 
   /** current instruction */
   private Mic1Instruction instruction;
@@ -162,13 +162,13 @@ public final class Mic1 {
    * Tries to create the control store of the processor and prints an error if one occurred.
    * 
    * @since Date: Dec 3, 2011
-   * @param micAsm the input stream to pass to the {@link Mic1ControlStore#Mic1ControlStore(InputStream)}
+   * @param micAsm the input stream to pass to the {@link MicroControlStore#Mic1ControlStore(InputStream)}
    * @return the constructed control store, or <code>null</code> if an error occurred
-   * @see Mic1ControlStore#Mic1ControlStore(InputStream)
+   * @see MicroControlStore#Mic1ControlStore(InputStream)
    */
-  private Mic1ControlStore createMic1ControlStore(final InputStream micAsm) {
+  private MicroControlStore createMic1ControlStore(final InputStream micAsm) {
     try {
-      return new Mic1ControlStore(micAsm);
+      return new MicroControlStore(micAsm);
     } catch (final FileFormatException e) {
       LOGGER.severe(e.getMessage());
       Printer.printErrorln(Text.WRONG_FORMAT_MIC1.text());
@@ -334,7 +334,7 @@ public final class Mic1 {
   }
 
   /**
-   * Fetches the next instruction from the {@link Mic1ControlStore} and stores the address from where the instruction
+   * Fetches the next instruction from the {@link MicroControlStore} and stores the address from where the instruction
    * has been fetched.
    * 
    * @since Date: Jan 14, 2012

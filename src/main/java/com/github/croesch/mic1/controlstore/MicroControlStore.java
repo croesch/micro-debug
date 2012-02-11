@@ -34,7 +34,7 @@ import com.github.croesch.mic1.api.AbstractCodeContainer;
  * @author croesch
  * @since Date: Nov 19, 2011
  */
-public final class Mic1ControlStore extends AbstractCodeContainer {
+public final class MicroControlStore extends AbstractCodeContainer {
 
   /** the number of micro code instructions that are stored in this store */
   private static final int INSTRUCTIONS_PER_STORE = 512;
@@ -43,7 +43,7 @@ public final class Mic1ControlStore extends AbstractCodeContainer {
   private final Mic1Instruction[] store = new Mic1Instruction[INSTRUCTIONS_PER_STORE];
 
   /**
-   * Constructs a {@link Mic1ControlStore} with the {@link Mic1Instruction} fetched from the given stream. If the magic
+   * Constructs a {@link MicroControlStore} with the {@link Mic1Instruction} fetched from the given stream. If the magic
    * number is incorrect, or if there are too few or too many bytes to read, a {@link FileFormatException} will be
    * thrown.
    * 
@@ -57,7 +57,7 @@ public final class Mic1ControlStore extends AbstractCodeContainer {
    *         <li>an {@link IOException} occurs</li>
    *         </ul>
    */
-  public Mic1ControlStore(final InputStream in) throws FileFormatException {
+  public MicroControlStore(final InputStream in) throws FileFormatException {
     Utils.checkMagicNumber(in, Mic1InstructionReader.MIC1_MAGIC_NUMBER);
 
     boolean eof = false;
