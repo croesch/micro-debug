@@ -32,7 +32,7 @@ import com.github.croesch.mic1.register.Register;
  * @author croesch
  * @since Date: Nov 7, 2011
  */
-public final class Mic1InstructionReader {
+public final class MicroInstructionReader {
 
   /**
    * the list of registers that can be written on the B-bus. The last four bits of a instruction generate the index in
@@ -85,7 +85,7 @@ public final class Mic1InstructionReader {
    * 
    * @since Date: Nov 10, 2011
    */
-  private Mic1InstructionReader() {
+  private MicroInstructionReader() {
     throw new AssertionError("called constructor of utility class");
   }
 

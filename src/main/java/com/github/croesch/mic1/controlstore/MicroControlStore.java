@@ -58,7 +58,7 @@ public final class MicroControlStore extends AbstractCodeContainer {
    *         </ul>
    */
   public MicroControlStore(final InputStream in) throws FileFormatException {
-    Utils.checkMagicNumber(in, Mic1InstructionReader.MIC1_MAGIC_NUMBER);
+    Utils.checkMagicNumber(in, MicroInstructionReader.MIC1_MAGIC_NUMBER);
 
     boolean eof = false;
     // read the instructions from the stream
@@ -66,7 +66,7 @@ public final class MicroControlStore extends AbstractCodeContainer {
 
       MicroInstruction instr = null;
       try {
-        instr = Mic1InstructionReader.read(in);
+        instr = MicroInstructionReader.read(in);
       } catch (final IOException e) {
         throw new FileFormatException(e);
       }
