@@ -32,7 +32,7 @@ import com.github.croesch.mic1.controlstore.CBusSignalSet;
 import com.github.croesch.mic1.controlstore.Mic1ControlStore;
 import com.github.croesch.mic1.controlstore.Mic1Instruction;
 import com.github.croesch.mic1.controlstore.Mic1InstructionDecoder;
-import com.github.croesch.mic1.controlstore.Mic1JMPSignalSet;
+import com.github.croesch.mic1.controlstore.JMPSignalSet;
 import com.github.croesch.mic1.controlstore.Mic1MemorySignalSet;
 import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.io.Output;
@@ -371,7 +371,7 @@ public final class Mic1 {
     this.mpcCalculator.setMbr((byte) Register.MBR.getValue());
 
     // fetch signals for calculation of mpc
-    final Mic1JMPSignalSet jmpSignals = this.instruction.getJmpSignals();
+    final JMPSignalSet jmpSignals = this.instruction.getJmpSignals();
     this.mpcCalculator.setJmpC(jmpSignals.isJmpC());
     this.mpcCalculator.setJmpN(jmpSignals.isJmpN());
     this.mpcCalculator.setJmpZ(jmpSignals.isJmpZ());

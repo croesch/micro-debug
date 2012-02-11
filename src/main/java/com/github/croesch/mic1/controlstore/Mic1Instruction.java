@@ -37,7 +37,7 @@ public final class Mic1Instruction {
   private final int nextAddress;
 
   /** MIR[26:24]: set of bits that are basic for calculation of next MPC */
-  private final Mic1JMPSignalSet jmpSignals = new Mic1JMPSignalSet();
+  private final JMPSignalSet jmpSignals = new JMPSignalSet();
 
   /** MIR[23:16]: set of bits that are responsible for the behavior of the ALU and the shifter */
   private final ALUSignalSet aluSignals = new ALUSignalSet();
@@ -66,7 +66,7 @@ public final class Mic1Instruction {
    *        which register's value is written to the B-Bus.
    */
   public Mic1Instruction(final int addr,
-                         final Mic1JMPSignalSet jmpSet,
+                         final JMPSignalSet jmpSet,
                          final ALUSignalSet aluSet,
                          final CBusSignalSet cBusSet,
                          final Mic1MemorySignalSet memSet,
@@ -133,13 +133,13 @@ public final class Mic1Instruction {
   }
 
   /**
-   * Returns the {@link Mic1JMPSignalSet} of this instruction.
+   * Returns the {@link JMPSignalSet} of this instruction.
    * 
    * @since Date: Nov 13, 2011
-   * @return a copy of the {@link Mic1JMPSignalSet} of this instruction.
+   * @return a copy of the {@link JMPSignalSet} of this instruction.
    */
-  public Mic1JMPSignalSet getJmpSignals() {
-    final Mic1JMPSignalSet set = new Mic1JMPSignalSet();
+  public JMPSignalSet getJmpSignals() {
+    final JMPSignalSet set = new JMPSignalSet();
     set.copyOf(this.jmpSignals);
     return set;
   }

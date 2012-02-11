@@ -38,7 +38,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
   @Override
   protected void setUpDetails() {
     this.instruction = new Mic1Instruction(0,
-                                           new Mic1JMPSignalSet(),
+                                           new JMPSignalSet(),
                                            new ALUSignalSet(),
                                            new CBusSignalSet(),
                                            new Mic1MemorySignalSet(),
@@ -58,7 +58,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
     final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
     final CBusSignalSet cBusSet = new CBusSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
-    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    final JMPSignalSet jmpSet = new JMPSignalSet();
     Mic1Instruction other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
     assertThat(this.instruction).isEqualTo(other);
     assertThat(this.instruction.hashCode()).isEqualTo(this.instruction.hashCode());
@@ -78,7 +78,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
     final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
     final CBusSignalSet cBusSet = new CBusSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
-    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    final JMPSignalSet jmpSet = new JMPSignalSet();
     Mic1Instruction other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, null);
 
     for (final Register b : Register.values()) {
@@ -96,7 +96,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
     final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
     final CBusSignalSet cBusSet = new CBusSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
-    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    final JMPSignalSet jmpSet = new JMPSignalSet();
     Mic1Instruction other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
 
     memSet.setFetch(true);
@@ -120,7 +120,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
     final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
     final CBusSignalSet cBusSet = new CBusSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
-    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    final JMPSignalSet jmpSet = new JMPSignalSet();
     Mic1Instruction other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
 
     jmpSet.setJmpC(true);
@@ -145,7 +145,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
     final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
     final CBusSignalSet cBusSet = new CBusSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
-    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    final JMPSignalSet jmpSet = new JMPSignalSet();
     Mic1Instruction other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
 
     aluSet.setEnA(true);
@@ -190,7 +190,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
     final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
     final CBusSignalSet cBusSet = new CBusSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
-    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    final JMPSignalSet jmpSet = new JMPSignalSet();
     Mic1Instruction other = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
 
     cBusSet.setCpp(true);
@@ -234,7 +234,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
 
   @Test
   public void testGetJmpSignals() {
-    final Mic1JMPSignalSet jmpSignals = this.instruction.getJmpSignals();
+    final JMPSignalSet jmpSignals = this.instruction.getJmpSignals();
     assertThat(this.instruction.getJmpSignals().isJmpN()).isFalse();
 
     jmpSignals.setJmpN(true);
@@ -273,7 +273,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
                                                     final Mic1MemorySignalSet memSet,
                                                     final CBusSignalSet cBusSet,
                                                     final ALUSignalSet aluSet,
-                                                    final Mic1JMPSignalSet jmpSet,
+                                                    final JMPSignalSet jmpSet,
                                                     Mic1Instruction other) {
     this.instruction = new Mic1Instruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
     assertThat(this.instruction).isNotEqualTo(other);
@@ -295,7 +295,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
     final ALUSignalSet aluSet = new ALUSignalSet();
     aluSet.setEnA(true).setEnB(true).setF0(true).setF1(true);
     aluSet.setInc(true).setInvA(true).setSLL8(true).setSRA1(true);
-    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    final JMPSignalSet jmpSet = new JMPSignalSet();
     jmpSet.setJmpC(true).setJmpN(true).setJmpZ(true);
 
     this.instruction = new Mic1Instruction(42, jmpSet, aluSet, cBusSet, memSet, Register.MBR);
@@ -305,7 +305,7 @@ public class Mic1InstructionTest extends DefaultTestCase {
 
   @Test
   public void testIsNopOrHalt() {
-    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    final JMPSignalSet jmpSet = new JMPSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
     final CBusSignalSet cBusSet = new CBusSignalSet();
     final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();

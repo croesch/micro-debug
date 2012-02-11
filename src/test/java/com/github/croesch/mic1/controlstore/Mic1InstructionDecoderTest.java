@@ -42,7 +42,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
   @Override
   protected void setUpDetails() {
     this.instruction = new Mic1Instruction(0,
-                                           new Mic1JMPSignalSet(),
+                                           new JMPSignalSet(),
                                            new ALUSignalSet(),
                                            new CBusSignalSet(),
                                            new Mic1MemorySignalSet(),
@@ -55,7 +55,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
     printMethodName();
 
     this.instruction = new Mic1Instruction(0,
-                                           new Mic1JMPSignalSet(),
+                                           new JMPSignalSet(),
                                            new ALUSignalSet(),
                                            new CBusSignalSet(),
                                            new Mic1MemorySignalSet(),
@@ -63,14 +63,14 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
     assertThat(Mic1InstructionDecoder.decode(this.instruction)).isEqualTo("goto 0x0");
 
     this.instruction = new Mic1Instruction(144,
-                                           new Mic1JMPSignalSet(),
+                                           new JMPSignalSet(),
                                            new ALUSignalSet(),
                                            new CBusSignalSet(),
                                            new Mic1MemorySignalSet(),
                                            Register.SP);
     assertThat(Mic1InstructionDecoder.decode(this.instruction)).isEqualTo("goto 0x90");
 
-    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    final JMPSignalSet jmpSet = new JMPSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
     final CBusSignalSet cBusSet = new CBusSignalSet();
     final Mic1MemorySignalSet memSet = new Mic1MemorySignalSet();
@@ -90,7 +90,7 @@ public class Mic1InstructionDecoderTest extends DefaultTestCase {
     // reset the content of the string builder
     this.stringBuilder = new StringBuilder("[...]");
 
-    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    final JMPSignalSet jmpSet = new JMPSignalSet();
     jmpSet.setJmpC(false).setJmpN(false).setJmpZ(false);
     String start = this.stringBuilder.toString();
     // call decoding

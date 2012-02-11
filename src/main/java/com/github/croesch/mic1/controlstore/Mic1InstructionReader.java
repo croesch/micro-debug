@@ -119,7 +119,7 @@ public final class Mic1InstructionReader {
     final int bitNumberOfSecondByte = 7;
     final int nextAddress = (b0 << 1) | ((b1 & BIT1) >> bitNumberOfSecondByte);
 
-    final Mic1JMPSignalSet jmpSet = new Mic1JMPSignalSet();
+    final JMPSignalSet jmpSet = new JMPSignalSet();
     jmpSet.setJmpC((b1 & BIT2) > 0);
     jmpSet.setJmpN((b1 & BIT3) > 0);
     jmpSet.setJmpZ((b1 & BIT4) > 0);

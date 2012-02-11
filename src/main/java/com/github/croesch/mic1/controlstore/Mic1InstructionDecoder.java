@@ -90,7 +90,7 @@ public final class Mic1InstructionDecoder {
    * @param nextAddress the bytes of MIC that define the address
    * @param s the {@link StringBuilder} to append the text to.
    */
-  static void decodeJMPAndAddress(final Mic1JMPSignalSet jmpSignals, final int nextAddress, final StringBuilder s) {
+  static void decodeJMPAndAddress(final JMPSignalSet jmpSignals, final int nextAddress, final StringBuilder s) {
     // decode the JMP bits/addr
     if (jmpSignals.isJmpN() || jmpSignals.isJmpZ()) {
       final char c;
