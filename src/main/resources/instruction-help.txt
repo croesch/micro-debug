@@ -89,7 +89,7 @@ DESCRIPTION
 		Traces the executed micro instructions.
 
 	trace-reg [REG]
-		Traces the value of a register after each instruction, where REG is the name
+		Traces the value of a register after each change, where REG is the name
 		of that register. If REG is omitted then all registers are traced.
 
 	trace-var NUM
@@ -103,7 +103,7 @@ DESCRIPTION
 		Ends tracing the executed micro instructions.
 
 	untrace-reg [REG]
-		Ends tracing the value of a register after each instruction, where REG is
+		Ends tracing the value of a register after each change, where REG is
 		the name of that register. If REG is omitted then this ends tracing all
 		registers.
 

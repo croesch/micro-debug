@@ -48,6 +48,32 @@ public class TraceManagerTest extends DefaultTestCase {
   }
 
   @Test
+  public void testTraceRegister_Null() {
+    printlnMethodName();
+    this.tm.traceRegister(null);
+  }
+
+  @Test
+  public void testListRegister_Null() {
+    printlnMethodName();
+    this.tm.listRegister(null);
+
+    assertThat(out.toString()).isEmpty();
+  }
+
+  @Test
+  public void testUntraceRegister_Null() {
+    printlnMethodName();
+    this.tm.untraceRegister(null);
+  }
+
+  @Test
+  public void testIsTracingRegister_Null() {
+    printlnMethodName();
+    assertThat(this.tm.isTracing(null)).isFalse();
+  }
+
+  @Test
   public void testTraceRegister() {
     printMethodName();
     for (final Register r : Register.values()) {
@@ -114,6 +140,22 @@ public class TraceManagerTest extends DefaultTestCase {
   @Test
   public void testUpdateTracedRegisters() {
     printlnMethodName();
+
+    Register.MAR.setValue(10);
+    Register.MDR.setValue(10);
+    Register.PC.setValue(10);
+    Register.MBR.setValue(10);
+    Register.SP.setValue(10);
+    Register.LV.setValue(10);
+    Register.CPP.setValue(10);
+    Register.TOS.setValue(10);
+    Register.OPC.setValue(10);
+    Register.H.setValue(10);
+
+    this.tm.traceRegister();
+    this.tm.update(null, 0);
+    assertThat(out.toString()).isEmpty();
+
     Register.MAR.setValue(-1);
     Register.MDR.setValue(0);
     Register.PC.setValue(1);
@@ -125,7 +167,6 @@ public class TraceManagerTest extends DefaultTestCase {
     Register.OPC.setValue(0x8c0);
     Register.H.setValue(0x8c1);
 
-    this.tm.traceRegister();
     assertThat(out.toString()).isEmpty();
     this.tm.update(null, 0);
 
@@ -140,6 +181,22 @@ public class TraceManagerTest extends DefaultTestCase {
                                                  + Text.REGISTER_VALUE.text("TOS ", "0x8BF") + getLineSeparator()
                                                  + Text.REGISTER_VALUE.text("OPC ", "0x8C0") + getLineSeparator()
                                                  + Text.REGISTER_VALUE.text("H   ", "0x8C1") + getLineSeparator());
+    out.reset();
+
+    this.tm.update(null, 0);
+    assertThat(out.toString()).isEmpty();
+
+    Register.PC.setValue(10);
+    Register.MBR.setValue(11);
+    Register.SP.setValue(12);
+
+    out.reset();
+    this.tm.update(null, 0);
+
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("PC  ", "0xA") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("MBR ", "0xB") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("MBRU", "0xB") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("SP  ", "0xC") + getLineSeparator());
   }
 
   @Test

@@ -485,18 +485,8 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.RUN.execute(this.processor, (String[]) null)).isTrue();
 
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("PC  ", "0x0") + getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x0") + getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x0") + getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x0") + getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1") + getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1") + getLineSeparator()
                                                  + Text.REGISTER_VALUE.text("PC  ", "0x1") + getLineSeparator()
                                                  + Text.REGISTER_VALUE.text("PC  ", "0x2") + getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x2") + getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x2") + getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x3") + getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x3") + getLineSeparator()
-                                                 + Text.REGISTER_VALUE.text("PC  ", "0x3") + getLineSeparator()
                                                  + Text.REGISTER_VALUE.text("PC  ", "0x3") + getLineSeparator()
                                                  + Text.TICKS.text(14) + getLineSeparator());
   }

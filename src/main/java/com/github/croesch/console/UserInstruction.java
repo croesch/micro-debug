@@ -168,9 +168,7 @@ enum UserInstruction {
           break;
         case 1:
           final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
-          if (r != null) {
-            processor.listSingleRegister(r);
-          }
+          processor.listSingleRegister(r);
           break;
         default:
           Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(0, getSize(params)));
@@ -365,9 +363,7 @@ enum UserInstruction {
           break;
         case 1:
           final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
-          if (r != null) {
-            processor.traceRegister(r);
-          }
+          processor.traceRegister(r);
           break;
         default:
           Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(0, getSize(params)));
@@ -421,9 +417,7 @@ enum UserInstruction {
           break;
         case 1:
           final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
-          if (r != null) {
-            processor.untraceRegister(r);
-          }
+          processor.untraceRegister(r);
           break;
         default:
           Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(0, getSize(params)));

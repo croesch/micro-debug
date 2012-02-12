@@ -44,6 +44,9 @@ public final class TraceManager implements Mic1View {
   /** contains which registers are traced and which aren't */
   private final Map<Register, Boolean> tracingRegisters = new EnumMap<Register, Boolean>(Register.class);
 
+  /** contains the old/current values of the registers */
+  private final Map<Register, Integer> tracingRegistersValues = new EnumMap<Register, Integer>(Register.class);
+
   /** contains the variables that are currently traced */
   private final List<MacroVariable> tracingVariables = new ArrayList<MacroVariable>();
 
@@ -87,7 +90,9 @@ public final class TraceManager implements Mic1View {
    * @param r the {@link Register} to print with its value.
    */
   public void listRegister(final Register r) {
-    Printer.println(Text.REGISTER_VALUE.text(String.format("%-4s", r), Utils.toHexString(r.getValue())));
+    if (r != null) {
+      Printer.println(Text.REGISTER_VALUE.text(String.format("%-4s", r), Utils.toHexString(r.getValue())));
+    }
   }
 
   /**
@@ -108,7 +113,10 @@ public final class TraceManager implements Mic1View {
    * @param r the {@link Register} to trace.
    */
   public void traceRegister(final Register r) {
-    this.tracingRegisters.put(r, Boolean.TRUE);
+    if (r != null) {
+      this.tracingRegisters.put(r, Boolean.TRUE);
+      this.tracingRegistersValues.put(r, Integer.valueOf(r.getValue()));
+    }
   }
 
   /**
@@ -129,7 +137,9 @@ public final class TraceManager implements Mic1View {
    * @param r the {@link Register} not being traced anymore.
    */
   public void untraceRegister(final Register r) {
-    this.tracingRegisters.put(r, Boolean.FALSE);
+    if (r != null) {
+      this.tracingRegisters.put(r, Boolean.FALSE);
+    }
   }
 
   /**
@@ -222,7 +232,8 @@ public final class TraceManager implements Mic1View {
 
     // trace register
     for (final Register r : Register.values()) {
-      if (isTracing(r)) {
+      if (isTracing(r) && r.getValue() != this.tracingRegistersValues.get(r).intValue()) {
+        this.tracingRegistersValues.put(r, Integer.valueOf(r.getValue()));
         listRegister(r);
       }
     }
