@@ -24,6 +24,7 @@ import java.util.Locale;
 
 import com.github.croesch.commons.Parameter;
 import com.github.croesch.commons.Printer;
+import com.github.croesch.commons.Settings;
 import com.github.croesch.commons.Utils;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.Mic1;
@@ -182,7 +183,7 @@ enum UserInstruction {
   LS_STACK {
     @Override
     public boolean execute(final Mic1 processor, final String ... params) {
-      processor.printStack();
+      processor.printStack(Settings.STACK_ELEMENTS_TO_HIDE.getValue());
       return true;
     }
   },

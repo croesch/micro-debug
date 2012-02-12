@@ -29,11 +29,11 @@ import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.alu.Alu;
 import com.github.croesch.mic1.controlstore.ALUSignalSet;
 import com.github.croesch.mic1.controlstore.CBusSignalSet;
+import com.github.croesch.mic1.controlstore.JMPSignalSet;
+import com.github.croesch.mic1.controlstore.MemorySignalSet;
 import com.github.croesch.mic1.controlstore.MicroControlStore;
 import com.github.croesch.mic1.controlstore.MicroInstruction;
 import com.github.croesch.mic1.controlstore.MicroInstructionDecoder;
-import com.github.croesch.mic1.controlstore.JMPSignalSet;
-import com.github.croesch.mic1.controlstore.MemorySignalSet;
 import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.mem.Memory;
@@ -783,8 +783,10 @@ public final class Mic1 {
    * pointer value and the current value of the stack (inclusive edges).
    * 
    * @since Date: Feb 5, 2012
+   * @param elementsToHide the number of elements to hide. The first possible element is the one the initial stack
+   *        pointer points to.
    */
-  public void printStack() {
-    this.memory.printStack();
+  public void printStack(final int elementsToHide) {
+    this.memory.printStack(elementsToHide);
   }
 }

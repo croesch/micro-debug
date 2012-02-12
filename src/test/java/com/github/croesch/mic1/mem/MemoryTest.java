@@ -745,11 +745,12 @@ public class MemoryTest extends DefaultTestCase {
   @Test
   public void testPrintStack() throws FileFormatException {
     printlnMethodName();
+    Register.SP.setValue(Settings.MIC1_REGISTER_SP_DEFVAL.getValue());
     this.mem = new Memory(Settings.MIC1_MEM_MACRO_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
 
-    this.mem.printStack();
-    assertThat(out.toString()).isEmpty();
+    this.mem.printStack(1);
+    assertThat(out.toString()).isEqualTo(Text.STACK_EMPTY.text() + getLineSeparator());
   }
 
   @Test

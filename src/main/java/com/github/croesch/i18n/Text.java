@@ -61,6 +61,8 @@ public enum Text {
   MEMORY_CONTENT,
   /** the text to print an entry of the stack */
   STACK_CONTENT,
+  /** the text to display the user an empty stack */
+  STACK_EMPTY,
 
   /** the text to print a single line of macro code */
   MACRO_CODE_LINE,

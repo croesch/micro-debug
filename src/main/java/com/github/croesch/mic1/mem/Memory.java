@@ -601,17 +601,26 @@ public final class Memory extends AbstractCodeContainer implements IReadableMemo
    * pointer value and the current value of the stack (inclusive edges).
    * 
    * @since Date: Feb 5, 2012
+   * @param elementsToHide the number of elements to hide. The first possible element is the one the initial stack
+   *        pointer points to.
    */
-  public void printStack() {
+  public void printStack(final int elementsToHide) {
     // fetch initial and current stack pointer values
     final int initialStackPointer = Settings.MIC1_REGISTER_SP_DEFVAL.getValue();
     final int currentStackPointer = Register.SP.getValue();
 
+    int stackElement = elementsToHide;
+
     // iterate over the memory and print the content of the stack
-    for (int addr = initialStackPointer, stackElement = 0; addr <= currentStackPointer; ++addr, ++stackElement) {
+    for (int addr = initialStackPointer + stackElement; addr <= currentStackPointer; ++addr, ++stackElement) {
       final String formattedAddress = formatIntToHex(addr, Settings.MIC1_MEM_MACRO_ADDR_WIDTH.getValue());
       final String formattedValue = Utils.toHexString(getWord(addr));
       Printer.println(Text.STACK_CONTENT.text(stackElement, formattedAddress, formattedValue));
+    }
+
+    // instead of nothing display a text, if stack is empty
+    if (stackElement == elementsToHide) {
+      Printer.println(Text.STACK_EMPTY);
     }
   }
 }

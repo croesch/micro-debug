@@ -31,6 +31,9 @@ import java.util.Properties;
  */
 public enum Settings {
 
+  /** the number of elements to hide, when printing the stack to the user */
+  STACK_ELEMENTS_TO_HIDE,
+
   /** contains the default value for the {@link com.github.croesch.mic1.register.Register#CPP} */
   MIC1_REGISTER_CPP_DEFVAL,
   /** contains the default value for the {@link com.github.croesch.mic1.register.Register#H} */

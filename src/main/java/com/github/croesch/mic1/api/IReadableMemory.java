@@ -67,8 +67,10 @@ public interface IReadableMemory {
    * pointer value and the current value of the stack (inclusive edges).
    * 
    * @since Date: Feb 5, 2012
+   * @param elementsToHide the number of elements to hide. The first possible element is the one the initial stack
+   *        pointer points to.
    */
-  void printStack();
+  void printStack(final int elementsToHide);
 
   /**
    * Returns the size of the memory.

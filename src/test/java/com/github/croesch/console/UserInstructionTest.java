@@ -1437,16 +1437,14 @@ public class UserInstructionTest extends DefaultTestCase {
     this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
                               ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
     assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.STACK_EMPTY.text() + getLineSeparator());
 
     assertThat(UserInstruction.STEP.execute(this.processor, "15")).isTrue();
     out.reset();
     assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
-                                                 + getLineSeparator()
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(1, "  0xC001", "0xC003") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(2, "  0xC002", "0x0") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(3, "  0xC003", "0x10") + getLineSeparator()
                                                  + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
                                                  + getLineSeparator());
@@ -1454,11 +1452,9 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
     out.reset();
     assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
-                                                 + getLineSeparator()
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(1, "  0xC001", "0xC003") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(2, "  0xC002", "0x0") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(3, "  0xC003", "0x10") + getLineSeparator()
                                                  + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x32")
@@ -1467,11 +1463,9 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
     out.reset();
     assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
-                                                 + getLineSeparator()
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(1, "  0xC001", "0xC003") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(2, "  0xC002", "0x0") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(3, "  0xC003", "0x10") + getLineSeparator()
                                                  + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x32")
@@ -1481,11 +1475,9 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
     out.reset();
     assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
-                                                 + getLineSeparator()
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(1, "  0xC001", "0xC003") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(2, "  0xC002", "0x0") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(3, "  0xC003", "0x10") + getLineSeparator()
                                                  + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x2")
@@ -1494,11 +1486,9 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
     out.reset();
     assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
-                                                 + getLineSeparator()
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(1, "  0xC001", "0xC003") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(2, "  0xC002", "0x0") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(3, "  0xC003", "0x10") + getLineSeparator()
                                                  + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
                                                  + getLineSeparator());
@@ -1506,11 +1496,9 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
     out.reset();
     assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
-    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
-                                                 + getLineSeparator()
+    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(1, "  0xC001", "0xC003") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(2, "  0xC002", "0x0") + getLineSeparator()
+                                                 + Text.STACK_CONTENT.text(3, "  0xC003", "0x10") + getLineSeparator()
                                                  + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x32")
