@@ -31,7 +31,6 @@ import com.github.croesch.mic1.api.IReadableMemory;
 import com.github.croesch.mic1.controlstore.MicroInstruction;
 import com.github.croesch.mic1.controlstore.MicroInstructionDecoder;
 import com.github.croesch.mic1.register.Register;
-import com.github.croesch.ui.api.Mic1View;
 
 /**
  * Console view for the {@link com.github.croesch.mic1.Mic1}.
@@ -39,7 +38,7 @@ import com.github.croesch.ui.api.Mic1View;
  * @author croesch
  * @since Date: Jan 15, 2012
  */
-public final class TraceManager implements Mic1View {
+public final class TraceManager {
 
   /** contains which registers are traced and which aren't */
   private final Map<Register, Boolean> tracingRegisters = new EnumMap<Register, Boolean>(Register.class);

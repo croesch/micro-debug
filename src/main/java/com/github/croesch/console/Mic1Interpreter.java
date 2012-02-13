@@ -23,7 +23,6 @@ import com.github.croesch.mic1.api.IProcessorInterpreter;
 import com.github.croesch.mic1.controlstore.MicroInstruction;
 import com.github.croesch.mic1.register.Register;
 import com.github.croesch.ui.TraceManager;
-import com.github.croesch.ui.api.Mic1View;
 
 /**
  * Interpreter of a processor, can access and manipulate the processor.
@@ -34,7 +33,7 @@ import com.github.croesch.ui.api.Mic1View;
 public final class Mic1Interpreter implements IProcessorInterpreter {
 
   /** the view that is able to present details of this processor to the user */
-  private final Mic1View view;
+  private final TraceManager view;
 
   /** the processor to interprete */
   private final Mic1 mic1;
