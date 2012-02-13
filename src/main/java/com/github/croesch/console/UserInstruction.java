@@ -27,7 +27,7 @@ import com.github.croesch.commons.Printer;
 import com.github.croesch.commons.Settings;
 import com.github.croesch.commons.Utils;
 import com.github.croesch.i18n.Text;
-import com.github.croesch.mic1.Mic1;
+import com.github.croesch.mic1.Mic1Interpreter;
 import com.github.croesch.mic1.register.Register;
 
 /**
@@ -41,11 +41,11 @@ enum UserInstruction {
   /** creates a break point - debugger will stop if the given register has the given value */
   BREAK {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       if (getSize(params) == 2) {
         final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
         final Integer i = (Integer) Parameter.NUMBER.getValue(params[1]);
-        processor.addRegisterBreakpoint(r, i);
+        interpreter.addRegisterBreakpoint(r, i);
       } else {
         Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(2, getSize(params)));
       }
@@ -56,7 +56,7 @@ enum UserInstruction {
   /** ends the debugger */
   EXIT {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       // simply return to end the program
       return false;
     }
@@ -68,7 +68,7 @@ enum UserInstruction {
     private static final String HELP_FILE = "instruction-help.txt";
 
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       final InputStream fileStream = Utils.class.getClassLoader().getResourceAsStream(HELP_FILE);
       Printer.printReader(new InputStreamReader(fileStream));
       return true;
@@ -78,8 +78,8 @@ enum UserInstruction {
   /** lists all breakpoints */
   LS_BREAK {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
-      processor.listBreakpoints();
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
+      interpreter.listBreakpoints();
       return true;
     }
   },
@@ -87,22 +87,22 @@ enum UserInstruction {
   /** instruction to print the macro code to the user */
   LS_MACRO_CODE {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       switch (getSize(params)) {
         case 0:
-          processor.printMacroCode();
+          interpreter.getProcessor().printMacroCode();
           break;
         case 1:
           final Integer num = (Integer) Parameter.NUMBER.getValue(params[0]);
           if (num != null) {
-            processor.printMacroCode(num.intValue());
+            interpreter.getProcessor().printMacroCode(num.intValue());
           }
           break;
         case 2:
           final Integer from = (Integer) Parameter.NUMBER.getValue(params[0]);
           final Integer to = (Integer) Parameter.NUMBER.getValue(params[1]);
           if (from != null && to != null) {
-            processor.printMacroCode(from.intValue(), to.intValue());
+            interpreter.getProcessor().printMacroCode(from.intValue(), to.intValue());
           }
           break;
         default:
@@ -116,22 +116,22 @@ enum UserInstruction {
   /** instruction to print the micro code to the user */
   LS_MICRO_CODE {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       switch (getSize(params)) {
         case 0:
-          processor.printMicroCode();
+          interpreter.getProcessor().printMicroCode();
           break;
         case 1:
           final Integer num = (Integer) Parameter.NUMBER.getValue(params[0]);
           if (num != null) {
-            processor.printMicroCode(num.intValue());
+            interpreter.getProcessor().printMicroCode(num.intValue());
           }
           break;
         case 2:
           final Integer from = (Integer) Parameter.NUMBER.getValue(params[0]);
           final Integer to = (Integer) Parameter.NUMBER.getValue(params[1]);
           if (from != null && to != null) {
-            processor.printMicroCode(from.intValue(), to.intValue());
+            interpreter.getProcessor().printMicroCode(from.intValue(), to.intValue());
           }
           break;
         default:
@@ -145,12 +145,12 @@ enum UserInstruction {
   /** lists the content of the memory between the given addresses (inclusive) */
   LS_MEM {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       if (getSize(params) == 2) {
         final Integer from = (Integer) Parameter.NUMBER.getValue(params[0]);
         final Integer to = (Integer) Parameter.NUMBER.getValue(params[1]);
         if (from != null && to != null) {
-          processor.printContent(from.intValue(), to.intValue());
+          interpreter.getProcessor().printContent(from.intValue(), to.intValue());
         }
       } else {
         Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(2, getSize(params)));
@@ -162,14 +162,14 @@ enum UserInstruction {
   /** list the values of all or a single register */
   LS_REG {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       switch (getSize(params)) {
         case 0:
-          processor.listAllRegisters();
+          interpreter.getProcessor().listAllRegisters();
           break;
         case 1:
           final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
-          processor.listSingleRegister(r);
+          interpreter.getProcessor().listSingleRegister(r);
           break;
         default:
           Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(0, getSize(params)));
@@ -182,8 +182,8 @@ enum UserInstruction {
   /** prints the content of the stack */
   LS_STACK {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
-      processor.printStack(Settings.STACK_ELEMENTS_TO_HIDE.getValue());
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
+      interpreter.getProcessor().printStack(Settings.STACK_ELEMENTS_TO_HIDE.getValue());
       return true;
     }
   },
@@ -191,10 +191,10 @@ enum UserInstruction {
   /** adds a breakpoint at the given line in the macro code */
   MACRO_BREAK {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       if (getSize(params) == 1) {
         final Integer l = (Integer) Parameter.NUMBER.getValue(params[0]);
-        processor.addMacroBreakpoint(l);
+        interpreter.addMacroBreakpoint(l);
       } else {
         Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(1, getSize(params)));
       }
@@ -205,10 +205,10 @@ enum UserInstruction {
   /** adds a breakpoint at the given line in the micro code */
   MICRO_BREAK {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       if (getSize(params) == 1) {
         final Integer l = (Integer) Parameter.NUMBER.getValue(params[0]);
-        processor.addMicroBreakpoint(l);
+        interpreter.addMicroBreakpoint(l);
       } else {
         Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(1, getSize(params)));
       }
@@ -219,15 +219,15 @@ enum UserInstruction {
   /** executes one or the given number of micro instructions */
   MICRO_STEP {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       switch (getSize(params)) {
         case 0:
-          processor.microStep();
+          interpreter.getProcessor().microStep();
           break;
         case 1:
           final Integer i = (Integer) Parameter.NUMBER.getValue(params[0]);
           if (i != null) {
-            processor.microStep(i.intValue());
+            interpreter.getProcessor().microStep(i.intValue());
           }
           break;
         default:
@@ -242,8 +242,8 @@ enum UserInstruction {
   /** resets the processor to its initial state */
   RESET {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
-      processor.reset();
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
+      interpreter.getProcessor().reset();
       return true;
     }
   },
@@ -251,13 +251,13 @@ enum UserInstruction {
   /** Removes the breakpoint with the given number */
   RM_BREAK {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       if (getSize(params) != 1) {
         Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(1, getSize(params)));
       } else {
         final Integer i = (Integer) Parameter.NUMBER.getValue(params[0]);
         if (i != null) {
-          processor.removeBreakpoint(i.intValue());
+          interpreter.removeBreakpoint(i.intValue());
         }
       }
       return true;
@@ -267,8 +267,8 @@ enum UserInstruction {
   /** runs the program to the end */
   RUN {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
-      processor.run();
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
+      interpreter.getProcessor().run();
       return true;
     }
   },
@@ -279,7 +279,7 @@ enum UserInstruction {
     private static final int EXPECTED_PARAMETERS = 2;
 
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       if (getSize(params) != EXPECTED_PARAMETERS) {
         Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(EXPECTED_PARAMETERS, getSize(params)));
       } else {
@@ -299,14 +299,14 @@ enum UserInstruction {
     private static final int EXPECTED_PARAMETERS = 2;
 
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       if (getSize(params) != EXPECTED_PARAMETERS) {
         Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(EXPECTED_PARAMETERS, getSize(params)));
       } else {
         final Integer a = (Integer) Parameter.NUMBER.getValue(params[0]);
         final Integer v = (Integer) Parameter.NUMBER.getValue(params[1]);
         if (a != null && v != null) {
-          processor.setMemoryValue(a.intValue(), v.intValue());
+          interpreter.getProcessor().setMemoryValue(a.intValue(), v.intValue());
         }
       }
       return true;
@@ -316,15 +316,15 @@ enum UserInstruction {
   /** executes the given number of macro instructions - or by default one, if no number is given */
   STEP {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       switch (getSize(params)) {
         case 0:
-          processor.step();
+          interpreter.getProcessor().step();
           break;
         case 1:
           final Integer i = (Integer) Parameter.NUMBER.getValue(params[0]);
           if (i != null) {
-            processor.step(i.intValue());
+            interpreter.getProcessor().step(i.intValue());
           }
           break;
         default:
@@ -339,8 +339,8 @@ enum UserInstruction {
   /** instruction to trace the micro code */
   TRACE_MAC {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
-      processor.traceMacro();
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
+      interpreter.getProcessor().traceMacro();
       return true;
     }
   },
@@ -348,8 +348,8 @@ enum UserInstruction {
   /** instruction to trace the micro code */
   TRACE_MIC {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
-      processor.traceMicro();
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
+      interpreter.getProcessor().traceMicro();
       return true;
     }
   },
@@ -357,14 +357,14 @@ enum UserInstruction {
   /** instruction to trace one or all registers */
   TRACE_REG {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       switch (getSize(params)) {
         case 0:
-          processor.traceRegister();
+          interpreter.getProcessor().traceRegister();
           break;
         case 1:
           final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
-          processor.traceRegister(r);
+          interpreter.getProcessor().traceRegister(r);
           break;
         default:
           Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(0, getSize(params)));
@@ -377,11 +377,11 @@ enum UserInstruction {
   /** instruction to trace the given local variable */
   TRACE_VAR {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       if (getSize(params) == 1) {
         final Integer num = (Integer) Parameter.NUMBER.getValue(params[0]);
         if (num != null) {
-          processor.traceLocalVariable(num.intValue());
+          interpreter.getProcessor().traceLocalVariable(num.intValue());
         }
       } else {
         Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(1, getSize(params)));
@@ -393,8 +393,8 @@ enum UserInstruction {
   /** instruction to not trace the macro code anymore */
   UNTRACE_MAC {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
-      processor.untraceMacro();
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
+      interpreter.getProcessor().untraceMacro();
       return true;
     }
   },
@@ -402,8 +402,8 @@ enum UserInstruction {
   /** instruction to not trace the micro code anymore */
   UNTRACE_MIC {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
-      processor.untraceMicro();
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
+      interpreter.getProcessor().untraceMicro();
       return true;
     }
   },
@@ -411,14 +411,14 @@ enum UserInstruction {
   /** instruction to not trace one or all registers anymore */
   UNTRACE_REG {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       switch (getSize(params)) {
         case 0:
-          processor.untraceRegister();
+          interpreter.getProcessor().untraceRegister();
           break;
         case 1:
           final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
-          processor.untraceRegister(r);
+          interpreter.getProcessor().untraceRegister(r);
           break;
         default:
           Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(0, getSize(params)));
@@ -431,11 +431,11 @@ enum UserInstruction {
   /** instruction to not trace the given local variable anymore */
   UNTRACE_VAR {
     @Override
-    public boolean execute(final Mic1 processor, final String ... params) {
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       if (getSize(params) == 1) {
         final Integer num = (Integer) Parameter.NUMBER.getValue(params[0]);
         if (num != null) {
-          processor.untraceLocalVariable(num.intValue());
+          interpreter.getProcessor().untraceLocalVariable(num.intValue());
         }
       } else {
         Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(1, getSize(params)));
@@ -497,12 +497,12 @@ enum UserInstruction {
    * Executes the instruction with the given parameters.
    * 
    * @since Date: Dec 3, 2011
-   * @param processor the processor to operate on, is not needed for every {@link UserInstruction}.
+   * @param interpreter the interpreter to operate with, is not needed for every {@link UserInstruction}.
    * @param params the parameters of that {@link UserInstruction}.
    * @return <code>true</code>, if the application can continue<br>
    *         <code>false</code>, if the {@link UserInstruction} enforces the application to stop.
    */
-  public abstract boolean execute(Mic1 processor, String ... params);
+  public abstract boolean execute(Mic1Interpreter interpreter, String ... params);
 
   /**
    * Returns the size of the given array or <code>0</code>, if the array is <code>null</code>.

@@ -22,6 +22,7 @@ import com.github.croesch.commons.Printer;
 import com.github.croesch.commons.Reader;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.Mic1;
+import com.github.croesch.mic1.Mic1Interpreter;
 
 /**
  * Class that handles the core of debugging. Reads user input and handles the instructions.
@@ -34,8 +35,8 @@ public final class Debugger implements Runnable {
   /** {@link String} that separates instruction from parameters and each parameter to another */
   private static final String SEPARATING_STRING = " ";
 
-  /** the processor to debug */
-  private final Mic1 processor;
+  /** the interpreter to debug the processor with */
+  private final Mic1Interpreter interpreter;
 
   /**
    * Constructs a debugger for the given processor.
@@ -44,7 +45,7 @@ public final class Debugger implements Runnable {
    * @param mic1 the processor to debug.
    */
   public Debugger(final Mic1 mic1) {
-    this.processor = mic1;
+    this.interpreter = new Mic1Interpreter(mic1);
   }
 
   /**
@@ -62,7 +63,7 @@ public final class Debugger implements Runnable {
         final String[] params = new String[usersInstruction.length - 1];
         System.arraycopy(usersInstruction, 1, params, 0, params.length);
         // execute the instruction, returns whether program can continue
-        canContinue = in.execute(this.processor, params);
+        canContinue = in.execute(this.interpreter, params);
       } else {
         // unknown instruction -> inform user
         Printer.printErrorln(Text.UNKNOWN_INSTRUCTION.text(usersInstruction[0]));

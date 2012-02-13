@@ -27,6 +27,7 @@ import com.github.croesch.commons.Utils;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.alu.Alu;
+import com.github.croesch.mic1.api.IProcessorInterpreter;
 import com.github.croesch.mic1.controlstore.ALUSignalSet;
 import com.github.croesch.mic1.controlstore.CBusSignalSet;
 import com.github.croesch.mic1.controlstore.JMPSignalSet;
@@ -82,14 +83,14 @@ public final class Mic1 {
   /** the view that is able to present details of this processor to the user */
   private final Mic1View view;
 
-  /** the manager for break points */
-  private final BreakpointManager bpm = new BreakpointManager();
-
   /** counter for ticks that have been executed */
   private int ticks;
 
   /** stores the current address of the ijvm-instruction being executed */
   private int lastMacroAddress;
+
+  /** interpreter of this processor */
+  private IProcessorInterpreter interpreter = null;
 
   /**
    * Constructs a new Mic1-processor, reading the given inputstreams as micro-program and assembler-program.
@@ -113,6 +114,16 @@ public final class Mic1 {
     this.memInterpreter = new MemoryInterpreter(this.memory);
 
     init();
+  }
+
+  /**
+   * Sets the interpreter of this processor.
+   * 
+   * @since Date: Feb 13, 2012
+   * @param ip the interpreter to store.
+   */
+  public void setProcessorInterpreter(final IProcessorInterpreter ip) {
+    this.interpreter = ip;
   }
 
   /**
@@ -307,7 +318,8 @@ public final class Mic1 {
    */
   private boolean canContinue() {
     return !isHaltInstruction()
-           && (isFirstTick() || !this.bpm.isBreakpoint(this.mpcCalculator.getMpc(), Register.PC.getValue()));
+           && (isFirstTick() || this.interpreter == null || this.interpreter.canContinue(this.mpcCalculator.getMpc(),
+                                                                                         Register.PC.getValue()));
   }
 
   /**
@@ -719,57 +731,6 @@ public final class Mic1 {
    */
   public void printMicroCode(final int from, final int to) {
     this.controlStore.printCode(from, to);
-  }
-
-  /**
-   * Adds a breakpoint for the given {@link Register} and the given value. Debugger will break, if the given
-   * {@link Register} has the given value.
-   * 
-   * @since Date: Jan 27, 2012
-   * @param r the {@link Register} to watch for the given value
-   * @param value the value that should be a break point if the given {@link Register} has it.
-   */
-  public void addRegisterBreakpoint(final Register r, final Integer value) {
-    this.bpm.addRegisterBreakpoint(r, value);
-  }
-
-  /**
-   * Adds a breakpoint for the given line number in the micro code.
-   * 
-   * @since Date: Feb 4, 2012
-   * @param line the line number in micro code the debugger should break at
-   */
-  public void addMicroBreakpoint(final Integer line) {
-    this.bpm.addMicroBreakpoint(line);
-  }
-
-  /**
-   * Adds a breakpoint for the given line number in the macro code.
-   * 
-   * @since Date: Feb 4, 2012
-   * @param line the line number in macro code the debugger should break at
-   */
-  public void addMacroBreakpoint(final Integer line) {
-    this.bpm.addMacroBreakpoint(line);
-  }
-
-  /**
-   * Removes the breakpoint with the given unique id.
-   * 
-   * @since Date: Jan 30, 2012
-   * @param id the unique id of the breakpoint to remove
-   */
-  public void removeBreakpoint(final int id) {
-    this.bpm.removeBreakpoint(id);
-  }
-
-  /**
-   * Lists all breakpoints.
-   * 
-   * @since Date: Jan 28, 2012
-   */
-  public void listBreakpoints() {
-    this.bpm.listBreakpoints();
   }
 
   /**

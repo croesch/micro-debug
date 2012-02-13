@@ -35,6 +35,7 @@ import com.github.croesch.commons.Settings;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.Mic1;
+import com.github.croesch.mic1.Mic1Interpreter;
 import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.register.Register;
@@ -47,12 +48,17 @@ import com.github.croesch.mic1.register.Register;
  */
 public class UserInstructionTest extends DefaultTestCase {
 
-  private Mic1 processor;
+  private Mic1Interpreter interpreter;
 
   @Override
   protected void setUpDetails() throws FileFormatException {
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
+    init("mic1/hi.mic1", "mic1/hi.ijvm");
+  }
+
+  private void init(final String micFile, final String ijvmFile) throws FileFormatException {
+    final Mic1 mic = new Mic1(ClassLoader.getSystemResourceAsStream(micFile),
+                              ClassLoader.getSystemResourceAsStream(ijvmFile));
+    this.interpreter = new Mic1Interpreter(mic);
   }
 
   @Test
@@ -137,17 +143,17 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public final void testExecuteRun() throws IOException {
     printlnMethodName();
-    assertThat(UserInstruction.RUN.execute(this.processor, "asd")).isTrue();
-    assertThat(UserInstruction.RUN.execute(this.processor, "asd", "asd")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter, "asd")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter, "asd", "asd")).isTrue();
     out.reset();
 
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
 
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEmpty();
   }
 
@@ -244,68 +250,68 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public final void testExecuteMicroStep() throws IOException {
     printlnMethodName();
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter)).isTrue();
     assertThat(Register.MAR.getValue()).isZero();
     assertThat(Register.PC.getValue()).isZero();
-    assertThat(this.processor.isHaltInstruction()).isFalse();
+    assertThat(this.interpreter.getProcessor().isHaltInstruction()).isFalse();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
 
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, (String[]) null)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, (String[]) null)).isTrue();
     assertThat(Register.MAR.getValue()).isZero();
     assertThat(Register.PC.getValue()).isZero();
-    assertThat(this.processor.isHaltInstruction()).isFalse();
+    assertThat(this.interpreter.getProcessor().isHaltInstruction()).isFalse();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "zwei")).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "zwei")).isTrue();
     assertThat(Register.MAR.getValue()).isZero();
     assertThat(Register.PC.getValue()).isZero();
-    assertThat(this.processor.isHaltInstruction()).isFalse();
+    assertThat(this.interpreter.getProcessor().isHaltInstruction()).isFalse();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("zwei")) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "1")).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "1")).isTrue();
     assertThat(Register.MAR.getValue()).isZero();
     assertThat(Register.PC.getValue()).isZero();
     assertThat(Register.LV.getValue()).isEqualTo(-1);
     assertThat(Register.H.getValue()).isEqualTo(-1);
-    assertThat(this.processor.isHaltInstruction()).isFalse();
+    assertThat(this.interpreter.getProcessor().isHaltInstruction()).isFalse();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
 
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "20")).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "20")).isTrue();
     assertThat(Register.MDR.getValue()).isEqualTo('\n');
     assertThat(Register.MAR.getValue()).isEqualTo(-3);
     assertThat(Register.PC.getValue()).isEqualTo(3);
     assertThat(Register.LV.getValue()).isEqualTo(-2);
     assertThat(Register.H.getValue()).isEqualTo(-1);
-    assertThat(this.processor.isHaltInstruction()).isTrue();
+    assertThat(this.interpreter.getProcessor().isHaltInstruction()).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "1")).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "1")).isTrue();
     assertThat(Register.MDR.getValue()).isEqualTo('\n');
     assertThat(Register.MAR.getValue()).isEqualTo(-3);
     assertThat(Register.PC.getValue()).isEqualTo(3);
     assertThat(Register.LV.getValue()).isEqualTo(-2);
     assertThat(Register.H.getValue()).isEqualTo(-1);
-    assertThat(this.processor.isHaltInstruction()).isTrue();
+    assertThat(this.interpreter.getProcessor().isHaltInstruction()).isTrue();
     assertThat(out.toString()).isEmpty();
     out.reset();
 
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
 
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "2_10")).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "2_10")).isTrue();
     assertThat(Register.MAR.getValue()).isZero();
     assertThat(Register.PC.getValue()).isZero();
     assertThat(Register.LV.getValue()).isEqualTo(-1);
     assertThat(Register.H.getValue()).isEqualTo(-1);
-    assertThat(this.processor.isHaltInstruction()).isFalse();
+    assertThat(this.interpreter.getProcessor().isHaltInstruction()).isFalse();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
   }
 
@@ -332,7 +338,7 @@ public class UserInstructionTest extends DefaultTestCase {
     Register.H.setValue(11);
 
     assertThat(out.toString()).isEmpty();
-    assertThat(UserInstruction.LS_REG.execute(this.processor, (String[]) null)).isTrue();
+    assertThat(UserInstruction.LS_REG.execute(this.interpreter, (String[]) null)).isTrue();
 
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x1") + getLineSeparator()
                                                  + Text.REGISTER_VALUE.text("MDR ", "0x2") + getLineSeparator()
@@ -351,7 +357,7 @@ public class UserInstructionTest extends DefaultTestCase {
   public final void testExecuteLsReg_NullArg() throws IOException {
     printlnMethodName();
     assertThat(out.toString()).isEmpty();
-    assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { null })).isTrue();
+    assertThat(UserInstruction.LS_REG.execute(this.interpreter, new String[] { null })).isTrue();
     assertThat(out.toString()).isEmpty();
   }
 
@@ -359,7 +365,7 @@ public class UserInstructionTest extends DefaultTestCase {
   public final void testExecuteLsReg_FalseArg() throws IOException {
     printlnMethodName();
     assertThat(out.toString()).isEmpty();
-    assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { "Bernd" })).isTrue();
+    assertThat(UserInstruction.LS_REG.execute(this.interpreter, new String[] { "Bernd" })).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("Bernd")) + getLineSeparator());
   }
 
@@ -374,12 +380,12 @@ public class UserInstructionTest extends DefaultTestCase {
   public final void testExecuteLsReg_OneArg() throws IOException {
     printlnMethodName();
     Register.MAR.setValue(0x4711);
-    assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { "MAR" })).isTrue();
+    assertThat(UserInstruction.LS_REG.execute(this.interpreter, new String[] { "MAR" })).isTrue();
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x4711") + getLineSeparator());
     out.reset();
 
     Register.SP.setValue(-2);
-    assertThat(UserInstruction.LS_REG.execute(this.processor, new String[] { "SP" })).isTrue();
+    assertThat(UserInstruction.LS_REG.execute(this.interpreter, new String[] { "SP" })).isTrue();
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("SP  ", "0xFFFFFFFE") + getLineSeparator());
     out.reset();
   }
@@ -388,9 +394,9 @@ public class UserInstructionTest extends DefaultTestCase {
   public void testExecuteTraceReg() {
     printMethodName();
     for (final Register r : Register.values()) {
-      assertThat(this.processor.isTracing(r)).isFalse();
-      assertThat(UserInstruction.TRACE_REG.execute(this.processor, r.name())).isTrue();
-      assertThat(this.processor.isTracing(r)).isTrue();
+      assertThat(this.interpreter.getProcessor().isTracing(r)).isFalse();
+      assertThat(UserInstruction.TRACE_REG.execute(this.interpreter, r.name())).isTrue();
+      assertThat(this.interpreter.getProcessor().isTracing(r)).isTrue();
       printStep();
     }
     printEndOfMethod();
@@ -400,15 +406,15 @@ public class UserInstructionTest extends DefaultTestCase {
   public void testExecuteTraceReg_All() {
     printMethodName();
     for (final Register r : Register.values()) {
-      assertThat(this.processor.isTracing(r)).isFalse();
+      assertThat(this.interpreter.getProcessor().isTracing(r)).isFalse();
       printStep();
     }
     printLoopEnd();
 
-    assertThat(UserInstruction.TRACE_REG.execute(this.processor, (String[]) null)).isTrue();
+    assertThat(UserInstruction.TRACE_REG.execute(this.interpreter, (String[]) null)).isTrue();
 
     for (final Register r : Register.values()) {
-      assertThat(this.processor.isTracing(r)).isTrue();
+      assertThat(this.interpreter.getProcessor().isTracing(r)).isTrue();
       printStep();
     }
     printEndOfMethod();
@@ -431,18 +437,18 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteUntraceReg_All() {
     printMethodName();
-    assertThat(UserInstruction.TRACE_REG.execute(this.processor, (String[]) null)).isTrue();
+    assertThat(UserInstruction.TRACE_REG.execute(this.interpreter, (String[]) null)).isTrue();
 
     for (final Register r : Register.values()) {
-      assertThat(this.processor.isTracing(r)).isTrue();
+      assertThat(this.interpreter.getProcessor().isTracing(r)).isTrue();
       printStep();
     }
     printLoopEnd();
 
-    assertThat(UserInstruction.UNTRACE_REG.execute(this.processor, (String[]) null)).isTrue();
+    assertThat(UserInstruction.UNTRACE_REG.execute(this.interpreter, (String[]) null)).isTrue();
 
     for (final Register r : Register.values()) {
-      assertThat(this.processor.isTracing(r)).isFalse();
+      assertThat(this.interpreter.getProcessor().isTracing(r)).isFalse();
       printStep();
     }
     printEndOfMethod();
@@ -451,14 +457,14 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteTraceReg_Invalid() {
     printlnMethodName();
-    assertThat(UserInstruction.TRACE_REG.execute(this.processor, "null")).isTrue();
+    assertThat(UserInstruction.TRACE_REG.execute(this.interpreter, "null")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("null")) + getLineSeparator());
   }
 
   @Test
   public void testExecuteUntraceReg_Invalid() {
     printlnMethodName();
-    assertThat(UserInstruction.UNTRACE_REG.execute(this.processor, "null")).isTrue();
+    assertThat(UserInstruction.UNTRACE_REG.execute(this.interpreter, "null")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("null")) + getLineSeparator());
   }
 
@@ -466,12 +472,12 @@ public class UserInstructionTest extends DefaultTestCase {
   public void testExecuteUntraceReg() {
     printMethodName();
     // trace all registers
-    assertThat(UserInstruction.TRACE_REG.execute(this.processor, (String[]) null)).isTrue();
+    assertThat(UserInstruction.TRACE_REG.execute(this.interpreter, (String[]) null)).isTrue();
 
     for (final Register r : Register.values()) {
-      assertThat(this.processor.isTracing(r)).isTrue();
-      assertThat(UserInstruction.UNTRACE_REG.execute(this.processor, r.name())).isTrue();
-      assertThat(this.processor.isTracing(r)).isFalse();
+      assertThat(this.interpreter.getProcessor().isTracing(r)).isTrue();
+      assertThat(UserInstruction.UNTRACE_REG.execute(this.interpreter, r.name())).isTrue();
+      assertThat(this.interpreter.getProcessor().isTracing(r)).isFalse();
       printStep();
     }
     printEndOfMethod();
@@ -480,9 +486,9 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testUpdateTracedRegisters() {
     printlnMethodName();
-    assertThat(UserInstruction.TRACE_REG.execute(this.processor, Register.PC.name())).isTrue();
+    assertThat(UserInstruction.TRACE_REG.execute(this.interpreter, Register.PC.name())).isTrue();
     assertThat(out.toString()).isEmpty();
-    assertThat(UserInstruction.RUN.execute(this.processor, (String[]) null)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter, (String[]) null)).isTrue();
 
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("PC  ", "0x0") + getLineSeparator()
                                                  + Text.REGISTER_VALUE.text("PC  ", "0x1") + getLineSeparator()
@@ -510,26 +516,26 @@ public class UserInstructionTest extends DefaultTestCase {
                             + Text.EXECUTED_CODE.text("goto 0xD") + getLineSeparator() + Text.TICKS.text(14)
                             + getLineSeparator();
 
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
 
-    assertThat(UserInstruction.TRACE_MIC.execute(this.processor)).isTrue();
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.TRACE_MIC.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(expected);
 
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
     out.reset();
 
-    assertThat(UserInstruction.TRACE_MIC.execute(this.processor)).isTrue();
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.TRACE_MIC.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(firstLine + Text.TICKS.text(1) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.UNTRACE_MIC.execute(this.processor)).isTrue();
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.UNTRACE_MIC.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(13) + getLineSeparator());
   }
 
@@ -538,8 +544,7 @@ public class UserInstructionTest extends DefaultTestCase {
     printlnMethodName();
     Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
 
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
 
     final String firstLine = Text.EXECUTED_CODE.text("     0x0: [ 0x10] BIPUSH 0x0") + getLineSeparator();
     final String expected = firstLine + Text.EXECUTED_CODE.text("     0x2: [ 0x59] DUP") + getLineSeparator()
@@ -547,34 +552,34 @@ public class UserInstructionTest extends DefaultTestCase {
                             + Text.EXECUTED_CODE.text("     0x5: [ 0x36] ISTORE 1") + getLineSeparator()
                             + Text.TICKS.text(24) + getLineSeparator();
 
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.INPUT_MIC1.text() + Text.TICKS.text(3292)
                                                  + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
 
-    assertThat(UserInstruction.TRACE_MAC.execute(this.processor)).isTrue();
-    assertThat(UserInstruction.STEP.execute(this.processor, "5")).isTrue();
+    assertThat(UserInstruction.TRACE_MAC.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "5")).isTrue();
     assertThat(out.toString()).isEqualTo(expected);
 
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
     out.reset();
 
-    assertThat(UserInstruction.STEP.execute(this.processor, "0b10")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "0b10")).isTrue();
     assertThat(out.toString()).isEqualTo(firstLine + Text.TICKS.text(7) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.UNTRACE_MAC.execute(this.processor)).isTrue();
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.UNTRACE_MAC.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.INPUT_MIC1.text() + Text.TICKS.text(3285)
                                                  + getLineSeparator());
 
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
     out.reset();
 
-    assertThat(UserInstruction.TRACE_MAC.execute(this.processor)).isTrue();
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "7")).isTrue();
+    assertThat(UserInstruction.TRACE_MAC.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "7")).isTrue();
     assertThat(out.toString()).isEqualTo(firstLine + Text.TICKS.text(7) + getLineSeparator());
     out.reset();
   }
@@ -590,59 +595,59 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteSetMem_Valid() {
     printlnMethodName();
-    assertThat(UserInstruction.SET_MEM.execute(this.processor, "0xA", "14")).isTrue();
-    assertThat(this.processor.getMemoryValue(0xa)).isEqualTo(14);
+    assertThat(UserInstruction.SET_MEM.execute(this.interpreter, "0xA", "14")).isTrue();
+    assertThat(this.interpreter.getProcessor().getMemoryValue(0xa)).isEqualTo(14);
     assertThat(out.toString()).isEmpty();
 
-    assertThat(UserInstruction.SET_MEM.execute(this.processor, "12", "0xF1")).isTrue();
-    assertThat(this.processor.getMemoryValue(12)).isEqualTo(0xf1);
+    assertThat(UserInstruction.SET_MEM.execute(this.interpreter, "12", "0xF1")).isTrue();
+    assertThat(this.interpreter.getProcessor().getMemoryValue(12)).isEqualTo(0xf1);
     assertThat(out.toString()).isEmpty();
 
-    assertThat(UserInstruction.SET_MEM.execute(this.processor, "0b10", "0b1010")).isTrue();
-    assertThat(this.processor.getMemoryValue(2)).isEqualTo(10);
+    assertThat(UserInstruction.SET_MEM.execute(this.interpreter, "0b10", "0b1010")).isTrue();
+    assertThat(this.interpreter.getProcessor().getMemoryValue(2)).isEqualTo(10);
     assertThat(out.toString()).isEmpty();
   }
 
   @Test
   public void testExecuteSetMem_Invalid() {
     printlnMethodName();
-    assertThat(UserInstruction.SET_MEM.execute(this.processor, "abc", "14")).isTrue();
+    assertThat(UserInstruction.SET_MEM.execute(this.interpreter, "abc", "14")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("abc")) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET_MEM.execute(this.processor, "", "14")).isTrue();
+    assertThat(UserInstruction.SET_MEM.execute(this.interpreter, "", "14")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("")) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET_MEM.execute(this.processor, " h ", "-123414")).isTrue();
+    assertThat(UserInstruction.SET_MEM.execute(this.interpreter, " h ", "-123414")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text(" h ")) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET_MEM.execute(this.processor, "23", "0b14")).isTrue();
+    assertThat(UserInstruction.SET_MEM.execute(this.interpreter, "23", "0b14")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0b14")) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET_MEM.execute(this.processor, "0", "0xXY")).isTrue();
+    assertThat(UserInstruction.SET_MEM.execute(this.interpreter, "0", "0xXY")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0xXY")) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET_MEM.execute(this.processor, "12", "H")).isTrue();
+    assertThat(UserInstruction.SET_MEM.execute(this.interpreter, "12", "H")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("H")) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET_MEM.execute(this.processor, "abc", "14_2")).isTrue();
+    assertThat(UserInstruction.SET_MEM.execute(this.interpreter, "abc", "14_2")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("abc")) + getLineSeparator()
                                                  + Text.ERROR.text(Text.INVALID_NUMBER.text("14_2"))
                                                  + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET_MEM.execute(this.processor, "REG", "0xXY")).isTrue();
+    assertThat(UserInstruction.SET_MEM.execute(this.interpreter, "REG", "0xXY")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("REG")) + getLineSeparator()
                                                  + Text.ERROR.text(Text.INVALID_NUMBER.text("0xXY"))
                                                  + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.SET_MEM.execute(this.processor, "0X", "H")).isTrue();
+    assertThat(UserInstruction.SET_MEM.execute(this.interpreter, "0X", "H")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0X")) + getLineSeparator()
                                                  + Text.ERROR.text(Text.INVALID_NUMBER.text("H")) + getLineSeparator());
   }
@@ -650,31 +655,29 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteLsMacroCode_All() throws IOException {
     printlnMethodName();
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
     final StringBuilder sb = readFile("mic1/add.ijvm.dis");
 
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(sb.toString());
   }
 
   @Test
   public void testExecuteLsMacroCode_Part1() throws IOException {
     printlnMethodName();
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
     final StringBuilder sb = readFile("mic1/add_part1.ijvm.dis");
 
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0_2", "0x1d")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "0_2", "0x1d")).isTrue();
     assertThat(out.toString()).isEqualTo(sb.toString());
     out.reset();
 
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "-1", "0x1d")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "-1", "0x1d")).isTrue();
 
     assertThat(out.toString()).isEqualTo(sb.toString());
     out.reset();
 
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "-20_19", "0x1e")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "-20_19", "0x1e")).isTrue();
 
     assertThat(out.toString()).isEqualTo(sb.toString());
   }
@@ -682,51 +685,49 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteLsMacroCode_Around1() throws IOException {
     printlnMethodName();
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
     final StringBuilder sb = readFile("mic1/add_part1.ijvm.dis");
 
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0x1d")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "0x1d")).isTrue();
     assertThat(out.toString()).isEqualTo(sb.toString());
     out.reset();
 
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "8")).isTrue();
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0x1b")).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "8")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "0x1b")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(8) + getLineSeparator() + sb.toString());
     out.reset();
 
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "60")).isTrue();
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "16")).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "60")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "16")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(60) + getLineSeparator() + sb.toString());
     out.reset();
 
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "8")).isTrue();
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0x1b")).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "8")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "0x1b")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(8) + getLineSeparator() + sb.toString());
   }
 
   @Test
   public void testExecuteLsMacroCode_Part2() throws IOException {
     printlnMethodName();
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
     final StringBuilder sb = readFile("mic1/add_part2.ijvm.dis");
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0x18", "0x2E")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "0x18", "0x2E")).isTrue();
 
     assertThat(out.toString()).isEqualTo(sb.toString());
     out.reset();
 
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0x18", "0x2F")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "0x18", "0x2F")).isTrue();
 
     assertThat(out.toString()).isEqualTo(sb.toString());
     out.reset();
 
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0x17", "0x2E")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "0x17", "0x2E")).isTrue();
     assertThat(out.toString()).isNotEqualTo(sb.toString());
     out.reset();
 
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0x18", "0x30")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "0x18", "0x30")).isTrue();
     assertThat(out.toString()).isNotEqualTo(sb.toString());
     out.reset();
   }
@@ -736,20 +737,19 @@ public class UserInstructionTest extends DefaultTestCase {
     printlnMethodName();
     Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
 
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
     final StringBuilder sb = readFile("mic1/add_part2.ijvm.dis");
 
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "537")).isTrue();
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "11")).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "537")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "11")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.INPUT_MIC1.text() + Text.TICKS.text(537)
                                                  + getLineSeparator() + sb.toString());
     out.reset();
 
     Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "537")).isTrue();
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "11")).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "537")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "11")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.INPUT_MIC1.text() + Text.TICKS.text(537)
                                                  + getLineSeparator() + sb.toString());
     out.reset();
@@ -758,23 +758,22 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteLsMacroCode_Part3() throws IOException {
     printlnMethodName();
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
     final StringBuilder sb = readFile("mic1/add_part3.ijvm.dis");
 
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0xff", "0x11D")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "0xff", "0x11D")).isTrue();
     assertThat(out.toString()).isEqualTo(sb.toString());
     out.reset();
 
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0xff", "0x11E")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "0xff", "0x11E")).isTrue();
     assertThat(out.toString()).isEqualTo(sb.toString());
     out.reset();
 
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0xff", "0xFE111D")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "0xff", "0xFE111D")).isTrue();
     assertThat(out.toString()).isEqualTo(sb.toString());
     out.reset();
 
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0x100", "0x11D")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "0x100", "0x11D")).isTrue();
     assertThat(out.toString()).isNotEqualTo(sb.toString());
     out.reset();
   }
@@ -782,18 +781,17 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteLsMacroCode_Around() throws IOException {
     printlnMethodName();
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
 
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "8")).isTrue();
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0")).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "8")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "0")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(8) + getLineSeparator() + "     0x2: [ 0x59] DUP"
                                                  + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "8")).isTrue();
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0")).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "8")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "0")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(8) + getLineSeparator() + "     0x2: [ 0x59] DUP"
                                                  + getLineSeparator());
   }
@@ -801,85 +799,84 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteBreak() {
     printlnMethodName();
-    assertThat(UserInstruction.BREAK.execute(this.processor, Register.H.name(), "-1")).isTrue();
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, Register.H.name(), "-1")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
   }
 
   @Test
   public void testExecuteMicroBreak() {
     printlnMethodName();
-    assertThat(UserInstruction.MICRO_BREAK.execute(this.processor, "0x2")).isTrue();
-    assertThat(UserInstruction.MICRO_BREAK.execute(this.processor, "0x3")).isTrue();
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.MICRO_BREAK.execute(this.interpreter, "0x2")).isTrue();
+    assertThat(UserInstruction.MICRO_BREAK.execute(this.interpreter, "0x3")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "0002")).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "0002")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "02")).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "02")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(11) + getLineSeparator());
   }
 
   @Test
   public void testExecuteMacroBreak() throws FileFormatException {
     printlnMethodName();
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
     Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
 
-    assertThat(UserInstruction.MACRO_BREAK.execute(this.processor, "0x2")).isTrue();
-    assertThat(UserInstruction.MACRO_BREAK.execute(this.processor, "0x3")).isTrue();
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.MACRO_BREAK.execute(this.interpreter, "0x2")).isTrue();
+    assertThat(UserInstruction.MACRO_BREAK.execute(this.interpreter, "0x3")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(7) + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(3) + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "0O2")).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "0O2")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "0XC")).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "0XC")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(5) + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(3) + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.INPUT_MIC1.text() + Text.TICKS.text(3282)
                                                  + getLineSeparator());
   }
@@ -911,25 +908,25 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteRmBreak() {
     printlnMethodName();
-    assertThat(UserInstruction.BREAK.execute(this.processor, Register.H.name(), "-1")).isTrue();
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, Register.H.name(), "-1")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.LS_BREAK.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.LS_BREAK.execute(this.interpreter)).isTrue();
     final Matcher m = Pattern.compile(".*#([0-9]+).*" + getLineSeparator()).matcher(out.toString());
 
     assertThat(m.matches()).isTrue();
-    assertThat(UserInstruction.RM_BREAK.execute(this.processor, m.group(1))).isTrue();
+    assertThat(UserInstruction.RM_BREAK.execute(this.interpreter, m.group(1))).isTrue();
     out.reset();
 
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + getLineSeparator());
     out.reset();
   }
@@ -946,7 +943,7 @@ public class UserInstructionTest extends DefaultTestCase {
   public final void testExecuteRmBreak_Invalid() {
     printlnMethodName();
 
-    assertThat(UserInstruction.RM_BREAK.execute(this.processor, "AA")).isTrue();
+    assertThat(UserInstruction.RM_BREAK.execute(this.interpreter, "AA")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("AA")) + getLineSeparator());
   }
 
@@ -1003,14 +1000,14 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteLsMacroCode_One_Invalid() {
     printlnMethodName();
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "1x")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "1x")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator());
   }
 
   @Test
   public void testExecuteLsMacroCode_Two_InvalidBoth() {
     printlnMethodName();
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "1x", "0x")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "1x", "0x")).isTrue();
     assertThat(out.toString())
       .isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator()
                          + Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
@@ -1019,14 +1016,14 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteLsMacroCode_Two_Invalid1() {
     printlnMethodName();
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "1x", "0")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "1x", "0")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator());
   }
 
   @Test
   public void testExecuteLsMacroCode_Two_Invalid2() {
     printlnMethodName();
-    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.processor, "0", "1x")).isTrue();
+    assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "0", "1x")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator());
   }
 
@@ -1034,20 +1031,20 @@ public class UserInstructionTest extends DefaultTestCase {
   public void testExecuteLsBreak() {
     printlnMethodName();
 
-    assertThat(UserInstruction.BREAK.execute(this.processor, "MBRU", "16")).isTrue();
-    assertThat(UserInstruction.BREAK.execute(this.processor, "MBRU", "-48")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, "MBRU", "16")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, "MBRU", "-48")).isTrue();
 
-    assertThat(UserInstruction.BREAK.execute(this.processor, "CPP", "-1")).isTrue();
-    assertThat(UserInstruction.BREAK.execute(this.processor, "CPP", "0x7FfFfFfF")).isTrue();
-    assertThat(UserInstruction.BREAK.execute(this.processor, "CPP", "-2147483648")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, "CPP", "-1")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, "CPP", "0x7FfFfFfF")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, "CPP", "-2147483648")).isTrue();
 
-    assertThat(UserInstruction.BREAK.execute(this.processor, "H", "2")).isTrue();
-    assertThat(UserInstruction.BREAK.execute(this.processor, "H", "0x2")).isTrue();
-    assertThat(UserInstruction.BREAK.execute(this.processor, "H", "11_2")).isTrue();
-    assertThat(UserInstruction.BREAK.execute(this.processor, "H", "1")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, "H", "2")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, "H", "0x2")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, "H", "11_2")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, "H", "1")).isTrue();
 
     assertThat(out.toString()).isEmpty();
-    assertThat(UserInstruction.LS_BREAK.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.LS_BREAK.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).matches(Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.MBRU, "0x10")
                                                + getLineSeparator()
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.MBRU, "0xFFFFFFD0")
@@ -1069,26 +1066,25 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteLsMem() throws FileFormatException {
     printlnMethodName();
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/test.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/test.ijvm");
 
-    assertThat(UserInstruction.LS_MEM.execute(this.processor, "0x0", "0b1")).isTrue();
+    assertThat(UserInstruction.LS_MEM.execute(this.interpreter, "0x0", "0b1")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator()
                                                  + Text.MEMORY_CONTENT.text("     0x1", "0x4050607")
                                                  + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.LS_MEM.execute(this.processor, "0x1", "0o0")).isTrue();
+    assertThat(UserInstruction.LS_MEM.execute(this.interpreter, "0x1", "0o0")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator()
                                                  + Text.MEMORY_CONTENT.text("     0x1", "0x4050607")
                                                  + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.LS_MEM.execute(this.processor, "0x0", "0b0")).isTrue();
+    assertThat(UserInstruction.LS_MEM.execute(this.interpreter, "0x0", "0b0")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.LS_MEM.execute(this.processor, "2", "-13")).isTrue();
+    assertThat(UserInstruction.LS_MEM.execute(this.interpreter, "2", "-13")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator()
                                                  + Text.MEMORY_CONTENT.text("     0x1", "0x4050607")
                                                  + getLineSeparator()
@@ -1096,7 +1092,7 @@ public class UserInstructionTest extends DefaultTestCase {
                                                  + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.LS_MEM.execute(this.processor, "0x3", "0b1")).isTrue();
+    assertThat(UserInstruction.LS_MEM.execute(this.interpreter, "0x3", "0b1")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x1", "0x4050607") + getLineSeparator()
                                                  + Text.MEMORY_CONTENT.text("     0x2", "0x8090A0B")
                                                  + getLineSeparator()
@@ -1104,7 +1100,7 @@ public class UserInstructionTest extends DefaultTestCase {
                                                  + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.LS_MEM.execute(this.processor, "0x7F", "0x7C")).isTrue();
+    assertThat(UserInstruction.LS_MEM.execute(this.interpreter, "0x7F", "0x7C")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("    0x7C", "0x0") + getLineSeparator()
                                                  + Text.MEMORY_CONTENT.text("    0x7D", "0x0") + getLineSeparator()
                                                  + Text.MEMORY_CONTENT.text("    0x7E", "0x0") + getLineSeparator()
@@ -1123,15 +1119,15 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public final void testExecuteLsMem_Invalid() {
     printlnMethodName();
-    assertThat(UserInstruction.LS_MEM.execute(this.processor, "0x", "0x7C")).isTrue();
+    assertThat(UserInstruction.LS_MEM.execute(this.interpreter, "0x", "0x7C")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.LS_MEM.execute(this.processor, "0x7F", "0x")).isTrue();
+    assertThat(UserInstruction.LS_MEM.execute(this.interpreter, "0x7F", "0x")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.LS_MEM.execute(this.processor, "1x", "0x")).isTrue();
+    assertThat(UserInstruction.LS_MEM.execute(this.interpreter, "1x", "0x")).isTrue();
     assertThat(out.toString())
       .isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator()
                          + Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
@@ -1141,50 +1137,49 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteStep_Invalid() {
     printlnMethodName();
-    assertThat(UserInstruction.STEP.execute(this.processor, "null")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "null")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("null")) + getLineSeparator());
   }
 
   @Test
   public void testExecuteStep() throws FileFormatException {
     printlnMethodName();
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
     assertThat(Register.PC.getValue()).isEqualTo(Settings.MIC1_REGISTER_PC_DEFVAL.getValue());
 
-    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter)).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(0);
     assertTicksDoneAndResetPrintStream(3);
 
-    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter)).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(2);
     assertTicksDoneAndResetPrintStream(4);
 
-    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter)).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(3);
     assertTicksDoneAndResetPrintStream(3);
 
-    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter)).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(5);
     assertTicksDoneAndResetPrintStream(7);
 
-    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter)).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(7);
     assertTicksDoneAndResetPrintStream(7);
 
-    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter)).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(9);
     assertTicksDoneAndResetPrintStream(4);
 
-    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter)).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(10);
     assertTicksDoneAndResetPrintStream(9);
 
-    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter)).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(13);
     assertTicksDoneAndResetPrintStream(8);
 
-    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter)).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(71);
     assertTicksDoneAndResetPrintStream(23);
   }
@@ -1192,57 +1187,56 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteStepN() throws FileFormatException {
     printlnMethodName();
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
     Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
     Output.setBuffered(true);
     Output.setOut(new PrintStream(out));
     assertThat(Register.PC.getValue()).isEqualTo(Settings.MIC1_REGISTER_PC_DEFVAL.getValue());
 
-    assertThat(UserInstruction.STEP.execute(this.processor, "0")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "0")).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(Settings.MIC1_REGISTER_PC_DEFVAL.getValue());
     assertThat(out.toString()).isEmpty();
 
-    assertThat(UserInstruction.STEP.execute(this.processor, "1")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "1")).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(0);
     assertTicksDoneAndResetPrintStream(3);
 
-    assertThat(UserInstruction.STEP.execute(this.processor, "2")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "2")).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(3);
     assertTicksDoneAndResetPrintStream(7);
 
-    assertThat(UserInstruction.STEP.execute(this.processor, "3")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "3")).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(9);
     assertTicksDoneAndResetPrintStream(18);
 
-    assertThat(UserInstruction.STEP.execute(this.processor, "-1")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "-1")).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(9);
     assertThat(out.toString()).isEmpty();
 
-    assertThat(UserInstruction.STEP.execute(this.processor, "0")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "0")).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(9);
     assertThat(out.toString()).isEmpty();
 
-    assertThat(UserInstruction.STEP.execute(this.processor, "1")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "1")).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(10);
     assertTicksDoneAndResetPrintStream(9);
 
-    assertThat(UserInstruction.STEP.execute(this.processor, "2")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "2")).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(71);
     assertTicksDoneAndResetPrintStream(31);
 
-    assertThat(UserInstruction.STEP.execute(this.processor, "560")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "560")).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(0x11D);
     assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + " 2\n" + Text.INPUT_MIC1.text()
                                                  + "+2\n========\n00000004\n" + Text.TICKS.text(3213)
                                                  + getLineSeparator());
     out.reset();
 
-    assertThat(UserInstruction.STEP.execute(this.processor, "560")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "560")).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(0x41);
     assertTicksDoneAndResetPrintStream(11);
 
-    assertThat(UserInstruction.STEP.execute(this.processor, "0x7fe5")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "0x7fe5")).isTrue();
     assertThat(Register.PC.getValue()).isEqualTo(0x41);
     assertThat(out.toString()).isEmpty();
 
@@ -1265,14 +1259,14 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteLsMicroCode_One_Invalid() {
     printlnMethodName();
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "1x")).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter, "1x")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator());
   }
 
   @Test
   public void testExecuteLsMicroCode_Two_InvalidBoth() {
     printlnMethodName();
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "1x", "0x")).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter, "1x", "0x")).isTrue();
     assertThat(out.toString())
       .isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator()
                          + Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
@@ -1281,49 +1275,47 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteLsMicroCode_Two_Invalid1() {
     printlnMethodName();
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "1x", "0")).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter, "1x", "0")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator());
   }
 
   @Test
   public void testExecuteLsMicroCode_Two_Invalid2() {
     printlnMethodName();
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "0", "1x")).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter, "0", "1x")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator());
   }
 
   @Test
   public void testExecuteLsMicroCode_PrintCode_All() throws IOException {
     printlnMethodName();
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
 
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(readFile("mic1/mic1ijvm.mic1.dis").toString());
   }
 
   @Test
   public void testExecuteLsMicroCode_PrintCode_Part1() throws IOException {
     printlnMethodName();
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
 
     final String expected = readFile("mic1/mic1ijvm_part1.mic1.dis").toString();
     final int end = 0x20;
 
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "0", String.valueOf(end))).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter, "0", String.valueOf(end))).isTrue();
     assertThat(out.toString()).isEqualTo(expected);
     out.reset();
 
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, String.valueOf(end), "0")).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter, String.valueOf(end), "0")).isTrue();
     assertThat(out.toString()).isEqualTo(expected);
     out.reset();
 
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, String.valueOf(end), "-42")).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter, String.valueOf(end), "-42")).isTrue();
     assertThat(out.toString()).isEqualTo(expected);
     out.reset();
 
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "-42", String.valueOf(end))).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter, "-42", String.valueOf(end))).isTrue();
     assertThat(out.toString()).isEqualTo(expected);
     out.reset();
   }
@@ -1331,16 +1323,15 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteLsMicroCode_PrintCode_Part2() throws IOException {
     printlnMethodName();
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
 
     final String expected = readFile("mic1/mic1ijvm_part2.mic1.dis").toString();
 
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "0x35", "0x63")).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter, "0x35", "0x63")).isTrue();
     assertThat(out.toString()).isEqualTo(expected);
     out.reset();
 
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "0x63", "0x35")).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter, "0x63", "0x35")).isTrue();
     assertThat(out.toString()).isEqualTo(expected);
     out.reset();
   }
@@ -1348,25 +1339,24 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteLsMicroCode_PrintCode_Part3() throws IOException {
     printlnMethodName();
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
 
     final String expected = readFile("mic1/mic1ijvm_part3.mic1.dis").toString();
     final int start = 0x87;
 
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, String.valueOf(start), "0x1fF")).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter, String.valueOf(start), "0x1fF")).isTrue();
     assertThat(out.toString()).isEqualTo(expected);
     out.reset();
 
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "0x1FF", String.valueOf(start))).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter, "0x1FF", String.valueOf(start))).isTrue();
     assertThat(out.toString()).isEqualTo(expected);
     out.reset();
 
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, String.valueOf(start), "4711")).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter, String.valueOf(start), "4711")).isTrue();
     assertThat(out.toString()).isEqualTo(expected);
     out.reset();
 
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "0x4711", String.valueOf(start))).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter, "0x4711", String.valueOf(start))).isTrue();
     assertThat(out.toString()).isEqualTo(expected);
     out.reset();
   }
@@ -1374,20 +1364,19 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteLsMicroCode_PrintCode_Around_Part1() throws IOException {
     printlnMethodName();
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
 
     final String expected = readFile("mic1/mic1ijvm_part1.mic1.dis").toString();
 
-    assertThat(UserInstruction.MICRO_STEP.execute(this.processor, "5")).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "5")).isTrue();
     out.reset();
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "0x10")).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter, "0x10")).isTrue();
     assertThat(out.toString()).isEqualTo(expected);
     out.reset();
 
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
 
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "0x20")).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter, "0x20")).isTrue();
     assertThat(out.toString()).isEqualTo(expected);
     out.reset();
   }
@@ -1395,14 +1384,13 @@ public class UserInstructionTest extends DefaultTestCase {
   @Test
   public void testExecuteLsMicroCode_PrintCode_Around_Part2() throws IOException {
     printlnMethodName();
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
 
     final String expected = readFile("mic1/mic1ijvm_part2.mic1.dis").toString();
 
-    UserInstruction.MICRO_STEP.execute(this.processor, "7");
+    UserInstruction.MICRO_STEP.execute(this.interpreter, "7");
     out.reset();
-    UserInstruction.LS_MICRO_CODE.execute(this.processor, "0x4C");
+    UserInstruction.LS_MICRO_CODE.execute(this.interpreter, "0x4C");
     assertThat(out.toString()).isNotEqualTo(expected);
     out.reset();
   }
@@ -1411,21 +1399,20 @@ public class UserInstructionTest extends DefaultTestCase {
   public void testExecuteLsMicroCode_PrintCode_Hi() throws IOException {
     printlnMethodName();
 
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(readFile("mic1/hi.mic1.dis").toString());
     out.reset();
 
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor, "0x10", "0x20")).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter, "0x10", "0x20")).isTrue();
     assertThat(out.toString()).isEmpty();
   }
 
   @Test
   public void testExecuteLsMicroCode_PrintCode_WithNullValues() throws IOException {
     printlnMethodName();
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi-with-null.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
+    init("mic1/hi-with-null.mic1", "mic1/hi.ijvm");
 
-    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(readFile("mic1/hi-with-null.mic1.dis").toString());
   }
 
@@ -1434,14 +1421,13 @@ public class UserInstructionTest extends DefaultTestCase {
     printlnMethodName();
     Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
 
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
-    assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
+    assertThat(UserInstruction.LS_STACK.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.STACK_EMPTY.text() + getLineSeparator());
 
-    assertThat(UserInstruction.STEP.execute(this.processor, "15")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "15")).isTrue();
     out.reset();
-    assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.LS_STACK.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(1, "  0xC001", "0xC003") + getLineSeparator()
                                                  + Text.STACK_CONTENT.text(2, "  0xC002", "0x0") + getLineSeparator()
                                                  + Text.STACK_CONTENT.text(3, "  0xC003", "0x10") + getLineSeparator()
@@ -1449,9 +1435,9 @@ public class UserInstructionTest extends DefaultTestCase {
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
                                                  + getLineSeparator());
 
-    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter)).isTrue();
     out.reset();
-    assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.LS_STACK.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(1, "  0xC001", "0xC003") + getLineSeparator()
                                                  + Text.STACK_CONTENT.text(2, "  0xC002", "0x0") + getLineSeparator()
                                                  + Text.STACK_CONTENT.text(3, "  0xC003", "0x10") + getLineSeparator()
@@ -1460,9 +1446,9 @@ public class UserInstructionTest extends DefaultTestCase {
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x32")
                                                  + getLineSeparator());
 
-    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter)).isTrue();
     out.reset();
-    assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.LS_STACK.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(1, "  0xC001", "0xC003") + getLineSeparator()
                                                  + Text.STACK_CONTENT.text(2, "  0xC002", "0x0") + getLineSeparator()
                                                  + Text.STACK_CONTENT.text(3, "  0xC003", "0x10") + getLineSeparator()
@@ -1472,9 +1458,9 @@ public class UserInstructionTest extends DefaultTestCase {
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(7, "  0xC007", "0x30")
                                                  + getLineSeparator());
 
-    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter)).isTrue();
     out.reset();
-    assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.LS_STACK.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(1, "  0xC001", "0xC003") + getLineSeparator()
                                                  + Text.STACK_CONTENT.text(2, "  0xC002", "0x0") + getLineSeparator()
                                                  + Text.STACK_CONTENT.text(3, "  0xC003", "0x10") + getLineSeparator()
@@ -1483,9 +1469,9 @@ public class UserInstructionTest extends DefaultTestCase {
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x2")
                                                  + getLineSeparator());
 
-    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter)).isTrue();
     out.reset();
-    assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.LS_STACK.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(1, "  0xC001", "0xC003") + getLineSeparator()
                                                  + Text.STACK_CONTENT.text(2, "  0xC002", "0x0") + getLineSeparator()
                                                  + Text.STACK_CONTENT.text(3, "  0xC003", "0x10") + getLineSeparator()
@@ -1493,9 +1479,9 @@ public class UserInstructionTest extends DefaultTestCase {
                                                  + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
                                                  + getLineSeparator());
 
-    assertThat(UserInstruction.STEP.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter)).isTrue();
     out.reset();
-    assertThat(UserInstruction.LS_STACK.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.LS_STACK.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(1, "  0xC001", "0xC003") + getLineSeparator()
                                                  + Text.STACK_CONTENT.text(2, "  0xC002", "0x0") + getLineSeparator()
                                                  + Text.STACK_CONTENT.text(3, "  0xC003", "0x10") + getLineSeparator()
@@ -1510,30 +1496,29 @@ public class UserInstructionTest extends DefaultTestCase {
     printlnMethodName();
     Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
 
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
 
-    assertThat(UserInstruction.TRACE_VAR.execute(this.processor, "0")).isTrue();
-    assertThat(UserInstruction.STEP.execute(this.processor, "11")).isTrue();
+    assertThat(UserInstruction.TRACE_VAR.execute(this.interpreter, "0")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "11")).isTrue();
     out.reset();
-    assertThat(UserInstruction.TRACE_VAR.execute(this.processor, "1")).isTrue();
+    assertThat(UserInstruction.TRACE_VAR.execute(this.interpreter, "1")).isTrue();
 
-    assertThat(UserInstruction.STEP.execute(this.processor, "27")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "27")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.LOCAL_VARIABLE_VALUE.text(1, 2)
                                                  + getLineSeparator() + Text.TICKS.text(129) + getLineSeparator());
     out.reset();
-    assertThat(UserInstruction.STEP.execute(this.processor, "9")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "9")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.LOCAL_VARIABLE_VALUE.text(0, 2) + getLineSeparator()
                                                  + Text.TICKS.text(64) + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.STEP.execute(this.processor, "33")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "33")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.LOCAL_VARIABLE_VALUE.text(1, 0) + getLineSeparator()
                                                  + Text.INPUT_MIC1.text() + Text.LOCAL_VARIABLE_VALUE.text(1, 2)
                                                  + getLineSeparator() + Text.TICKS.text(184) + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.STEP.execute(this.processor, "9")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "9")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(64) + getLineSeparator());
   }
 
@@ -1542,46 +1527,45 @@ public class UserInstructionTest extends DefaultTestCase {
     printlnMethodName();
     Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
 
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
 
-    assertThat(UserInstruction.TRACE_VAR.execute(this.processor, "1")).isTrue();
-    assertThat(UserInstruction.TRACE_VAR.execute(this.processor, "0")).isTrue();
-    assertThat(UserInstruction.UNTRACE_VAR.execute(this.processor, "1")).isTrue();
-    assertThat(UserInstruction.STEP.execute(this.processor, "11")).isTrue();
+    assertThat(UserInstruction.TRACE_VAR.execute(this.interpreter, "1")).isTrue();
+    assertThat(UserInstruction.TRACE_VAR.execute(this.interpreter, "0")).isTrue();
+    assertThat(UserInstruction.UNTRACE_VAR.execute(this.interpreter, "1")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "11")).isTrue();
     out.reset();
-    assertThat(UserInstruction.TRACE_VAR.execute(this.processor, "1")).isTrue();
-    assertThat(UserInstruction.UNTRACE_VAR.execute(this.processor, "0")).isTrue();
+    assertThat(UserInstruction.TRACE_VAR.execute(this.interpreter, "1")).isTrue();
+    assertThat(UserInstruction.UNTRACE_VAR.execute(this.interpreter, "0")).isTrue();
 
-    assertThat(UserInstruction.STEP.execute(this.processor, "27")).isTrue();
-    assertThat(UserInstruction.UNTRACE_VAR.execute(this.processor, "1")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "27")).isTrue();
+    assertThat(UserInstruction.UNTRACE_VAR.execute(this.interpreter, "1")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.LOCAL_VARIABLE_VALUE.text(1, 2)
                                                  + getLineSeparator() + Text.TICKS.text(129) + getLineSeparator());
     out.reset();
-    assertThat(UserInstruction.STEP.execute(this.processor, "9")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "9")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.LOCAL_VARIABLE_VALUE.text(0, 2) + getLineSeparator()
                                                  + Text.TICKS.text(64) + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.STEP.execute(this.processor, "33")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "33")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.TICKS.text(184) + getLineSeparator());
 
     out.reset();
-    assertThat(UserInstruction.STEP.execute(this.processor, "9")).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "9")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(64) + getLineSeparator());
   }
 
   @Test
   public void testExecuteTraceVar_Invalid() {
     printlnMethodName();
-    assertThat(UserInstruction.TRACE_VAR.execute(this.processor, "null")).isTrue();
+    assertThat(UserInstruction.TRACE_VAR.execute(this.interpreter, "null")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("null")) + getLineSeparator());
   }
 
   @Test
   public void testExecuteUntraceVar_Invalid() {
     printlnMethodName();
-    assertThat(UserInstruction.UNTRACE_VAR.execute(this.processor, "null")).isTrue();
+    assertThat(UserInstruction.UNTRACE_VAR.execute(this.interpreter, "null")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("null")) + getLineSeparator());
   }
 
@@ -1606,13 +1590,12 @@ public class UserInstructionTest extends DefaultTestCase {
     printlnMethodName();
     Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
 
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
-    assertThat(UserInstruction.STEP.execute(this.processor, "38")).isTrue();
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "38")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.TICKS.text(208) + getLineSeparator());
     out.reset();
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
-    assertThat(UserInstruction.STEP.execute(this.processor, "38")).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "38")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.TICKS.text(208) + getLineSeparator());
     out.reset();
   }
@@ -1622,14 +1605,13 @@ public class UserInstructionTest extends DefaultTestCase {
     printlnMethodName();
     Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
 
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
-    assertThat(UserInstruction.STEP.execute(this.processor, "38")).isTrue();
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
+    assertThat(UserInstruction.STEP.execute(this.interpreter, "38")).isTrue();
     assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.TICKS.text(208) + getLineSeparator());
     assertThat(micOut.toString()).isEmpty();
     out.reset();
-    assertThat(UserInstruction.RESET.execute(this.processor)).isTrue();
-    assertThat(UserInstruction.RUN.execute(this.processor)).isTrue();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.INPUT_MIC1.text() + Text.TICKS.text(3292)
                                                  + getLineSeparator());
     assertThat(micOut.toString()).isEqualTo(" 2\n+2\n========\n00000004\n");
