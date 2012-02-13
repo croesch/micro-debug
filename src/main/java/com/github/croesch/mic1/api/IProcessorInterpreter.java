@@ -44,8 +44,9 @@ public interface IProcessorInterpreter {
    * 
    * @since Date: Feb 13, 2012
    * @param instruction the executed micro instruction
-   * @param macroCodeLine the current macro code instruction being executed
+   * @param macroCodeFetching <code>true</code> if the next macro code instruction has being fetched,<br>
+   *        <code>false</code> otherwise
    */
-  void tickDone(MicroInstruction instruction, String macroCodeLine);
+  void tickDone(MicroInstruction instruction, boolean macroCodeFetching);
 
 }

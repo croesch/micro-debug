@@ -28,6 +28,7 @@ import org.junit.Test;
 import com.github.croesch.DefaultTestCase;
 import com.github.croesch.commons.Reader;
 import com.github.croesch.i18n.Text;
+import com.github.croesch.mic1.Mic1;
 
 /**
  * Provides test cases for {@link Debugger}.
@@ -37,19 +38,27 @@ import com.github.croesch.i18n.Text;
  */
 public class DebuggerTest extends DefaultTestCase {
 
+  private Debugger debugger;
+
+  @Override
+  protected void setUpDetails() throws Exception {
+    final Mic1 processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),
+                                    ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
+    this.debugger = new Debugger(processor);
+  }
+
   @Test
   public void testRun_Exit() {
     printlnMethodName();
-    final Debugger debugger = new Debugger(null);
 
     Reader.setReader(new StringReader("exit"));
-    debugger.run();
+    this.debugger.run();
 
     Reader.setReader(new StringReader("EXIT"));
-    debugger.run();
+    this.debugger.run();
 
     Reader.setReader(new StringReader("exit now or never!!!"));
-    debugger.run();
+    this.debugger.run();
 
     assertThat(out.toString()).isEqualTo(Text.INPUT_DEBUGGER.text() + Text.INPUT_DEBUGGER.text()
                                                  + Text.INPUT_DEBUGGER.text());
@@ -58,17 +67,16 @@ public class DebuggerTest extends DefaultTestCase {
   @Test
   public void testRun_WrongCommand() {
     printlnMethodName();
-    final Debugger debugger = new Debugger(null);
 
     Reader.setReader(new StringReader("excel\nexit"));
-    debugger.run();
+    this.debugger.run();
     assertThat(out.toString()).isEqualTo(Text.INPUT_DEBUGGER.text()
                                                  + Text.ERROR.text(Text.UNKNOWN_INSTRUCTION.text("excel"))
                                                  + getLineSeparator() + Text.INPUT_DEBUGGER.text());
     out.reset();
 
     Reader.setReader(new StringReader("schließe dich!\nEXIT"));
-    debugger.run();
+    this.debugger.run();
     assertThat(out.toString()).isEqualTo(Text.INPUT_DEBUGGER.text()
                                                  + Text.ERROR.text(Text.UNKNOWN_INSTRUCTION.text("schließe"))
                                                  + getLineSeparator() + Text.INPUT_DEBUGGER.text());
@@ -78,22 +86,21 @@ public class DebuggerTest extends DefaultTestCase {
   @Test
   public void testRun_Help() throws IOException {
     printlnMethodName();
-    final Debugger debugger = new Debugger(null);
 
     final StringBuilder sb = readFile("instruction-help.txt");
 
     Reader.setReader(new StringReader("help\nexit"));
-    debugger.run();
+    this.debugger.run();
     assertThat(out.toString()).isEqualTo(Text.INPUT_DEBUGGER.text() + sb.toString() + Text.INPUT_DEBUGGER.text());
     out.reset();
 
     Reader.setReader(new StringReader("HELP\nexit"));
-    debugger.run();
+    this.debugger.run();
     assertThat(out.toString()).isEqualTo(Text.INPUT_DEBUGGER.text() + sb.toString() + Text.INPUT_DEBUGGER.text());
     out.reset();
 
     Reader.setReader(new StringReader("heLp me!!\nexit"));
-    debugger.run();
+    this.debugger.run();
     assertThat(out.toString()).isEqualTo(Text.INPUT_DEBUGGER.text() + sb.toString() + Text.INPUT_DEBUGGER.text());
     out.reset();
   }

@@ -454,51 +454,6 @@ public class Mic1Test extends DefaultTestCase {
   }
 
   @Test
-  public void testPrintContent() throws FileFormatException {
-    printlnMethodName();
-    init("mic1/mic1ijvm.mic1", "mic1/test.ijvm");
-
-    this.processor.printContent(0, 1);
-    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator()
-                                                 + Text.MEMORY_CONTENT.text("     0x1", "0x4050607")
-                                                 + getLineSeparator());
-    out.reset();
-
-    this.processor.printContent(1, 0);
-    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator()
-                                                 + Text.MEMORY_CONTENT.text("     0x1", "0x4050607")
-                                                 + getLineSeparator());
-    out.reset();
-
-    this.processor.printContent(0, 0);
-    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator());
-    out.reset();
-
-    this.processor.printContent(2, -13);
-    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x0", "0x10203") + getLineSeparator()
-                                                 + Text.MEMORY_CONTENT.text("     0x1", "0x4050607")
-                                                 + getLineSeparator()
-                                                 + Text.MEMORY_CONTENT.text("     0x2", "0x8090A0B")
-                                                 + getLineSeparator());
-    out.reset();
-
-    this.processor.printContent(3, 1);
-    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("     0x1", "0x4050607") + getLineSeparator()
-                                                 + Text.MEMORY_CONTENT.text("     0x2", "0x8090A0B")
-                                                 + getLineSeparator()
-                                                 + Text.MEMORY_CONTENT.text("     0x3", "0xC0D0E0F")
-                                                 + getLineSeparator());
-    out.reset();
-
-    this.processor.printContent(Byte.MAX_VALUE, Byte.MAX_VALUE - 3);
-    assertThat(out.toString()).isEqualTo(Text.MEMORY_CONTENT.text("    0x7C", "0x0") + getLineSeparator()
-                                                 + Text.MEMORY_CONTENT.text("    0x7D", "0x0") + getLineSeparator()
-                                                 + Text.MEMORY_CONTENT.text("    0x7E", "0x0") + getLineSeparator()
-                                                 + Text.MEMORY_CONTENT.text("    0x7F", "0x0") + getLineSeparator());
-    out.reset();
-  }
-
-  @Test
   public void testStep() throws FileFormatException {
     printlnMethodName();
     init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
@@ -598,85 +553,6 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(out.toString()).isEmpty();
 
     Output.setOut(System.out);
-  }
-
-  @Test
-  public final void testPrintStack() throws IOException {
-    printlnMethodName();
-    Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
-
-    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
-
-    this.processor.printStack(1);
-    assertThat(out.toString()).isEqualTo(Text.STACK_EMPTY.text() + getLineSeparator());
-
-    this.processor.step(15);
-    out.reset();
-    this.processor.printStack(1);
-    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(1, "  0xC001", "0xC003") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(2, "  0xC002", "0x0") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(3, "  0xC003", "0x10") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
-                                                 + getLineSeparator());
-
-    this.processor.step();
-    out.reset();
-    this.processor.printStack(0);
-    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
-                                                 + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x32")
-                                                 + getLineSeparator());
-
-    this.processor.step();
-    out.reset();
-    this.processor.printStack(0);
-    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(0, "  0xC000", "0x0") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(1, "  0xC001", "0xC003")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(2, "  0xC002", "0x0")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(3, "  0xC003", "0x10")
-                                                 + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x32")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(7, "  0xC007", "0x30")
-                                                 + getLineSeparator());
-
-    this.processor.step();
-    out.reset();
-    this.processor.printStack(1);
-    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(1, "  0xC001", "0xC003") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(2, "  0xC002", "0x0") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(3, "  0xC003", "0x10") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x2")
-                                                 + getLineSeparator());
-
-    this.processor.step();
-    out.reset();
-    this.processor.printStack(2);
-    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(2, "  0xC002", "0x0") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(3, "  0xC003", "0x10") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
-                                                 + getLineSeparator());
-
-    this.processor.step();
-    out.reset();
-    this.processor.printStack(1);
-    assertThat(out.toString()).isEqualTo(Text.STACK_CONTENT.text(1, "  0xC001", "0xC003") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(2, "  0xC002", "0x0") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(3, "  0xC003", "0x10") + getLineSeparator()
-                                                 + Text.STACK_CONTENT.text(4, "  0xC004", "0x8000")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(5, "  0xC005", "0x32")
-                                                 + getLineSeparator() + Text.STACK_CONTENT.text(6, "  0xC006", "0x32")
-                                                 + getLineSeparator());
   }
 
   @Test

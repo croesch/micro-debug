@@ -21,6 +21,7 @@ package com.github.croesch.console;
 import com.github.croesch.mic1.Mic1;
 import com.github.croesch.mic1.api.IProcessorInterpreter;
 import com.github.croesch.mic1.controlstore.MicroInstruction;
+import com.github.croesch.mic1.mem.MemoryInterpreter;
 import com.github.croesch.mic1.register.Register;
 
 /**
@@ -40,6 +41,9 @@ public final class Mic1Interpreter implements IProcessorInterpreter {
   /** the manager for break points */
   private final BreakpointManager bpm = new BreakpointManager();
 
+  /** the interpreter for the memory of the processor */
+  private final MemoryInterpreter memInterpreter;
+
   /**
    * Constructs an interpreter for the given processor.
    * 
@@ -47,13 +51,13 @@ public final class Mic1Interpreter implements IProcessorInterpreter {
    * @param mic the processor to interprete
    */
   public Mic1Interpreter(final Mic1 mic) {
-    this.mic1 = mic;
-    if (this.mic1 == null) {
-      this.view = null;
-    } else {
-      mic.setProcessorInterpreter(this);
-      this.view = new TraceManager(this.mic1.getMemory());
+    if (mic == null) {
+      throw new IllegalArgumentException();
     }
+    this.mic1 = mic;
+    mic.setProcessorInterpreter(this);
+    this.view = new TraceManager(this.mic1.getMemory());
+    this.memInterpreter = new MemoryInterpreter(this.mic1.getMemory());
   }
 
   /**
@@ -233,6 +237,59 @@ public final class Mic1Interpreter implements IProcessorInterpreter {
   }
 
   /**
+   * Prints the whole ijvm code to the user.
+   * 
+   * @since Date: Jan 23, 2012
+   */
+  public void printMacroCode() {
+    this.memInterpreter.printCode();
+  }
+
+  /**
+   * Prints the given number of lines of code around the current line to the user.
+   * 
+   * @since Date: Jan 26, 2012
+   * @param scope the number of lines to print before and after the current line
+   */
+  public void printMacroCode(final int scope) {
+    this.memInterpreter.printCodeAroundLine(Math.max(0, this.mic1.getLastMacroAddress()), scope);
+  }
+
+  /**
+   * Prints the whole ijvm code to the user. Between the given line numbers.
+   * 
+   * @since Date: Jan 26, 2012
+   * @param from the first line to print
+   * @param to the last line to print
+   */
+  public void printMacroCode(final int from, final int to) {
+    this.memInterpreter.printCode(from, to);
+  }
+
+  /**
+   * Prints the content of the memory between the given addresses.
+   * 
+   * @since Date: Jan 29, 2012
+   * @param pos1 the address to start (inclusive)
+   * @param pos2 the address to end (inclusive)
+   */
+  public void printContent(final int pos1, final int pos2) {
+    this.memInterpreter.printContent(pos1, pos2);
+  }
+
+  /**
+   * Prints the content of the stack. Technical speaking it prints the content of the memory between the initial stack
+   * pointer value and the current value of the stack (inclusive edges).
+   * 
+   * @since Date: Feb 5, 2012
+   * @param elementsToHide the number of elements to hide. The first possible element is the one the initial stack
+   *        pointer points to.
+   */
+  public void printStack(final int elementsToHide) {
+    this.memInterpreter.printStack(elementsToHide);
+  }
+
+  /**
    * Returns whether the processor should halt now or if it can continue.
    * 
    * @since Date: Feb 13, 2012
@@ -250,10 +307,15 @@ public final class Mic1Interpreter implements IProcessorInterpreter {
    * 
    * @since Date: Feb 13, 2012
    * @param instruction the executed micro instruction
-   * @param macroCodeLine the current macro code instruction being executed
+   * @param macroCodeFetching <code>true</code> if the next macro code instruction has being fetched,<br>
+   *        <code>false</code> otherwise
    */
-  public void tickDone(final MicroInstruction instruction, final String macroCodeLine) {
-    this.view.update(instruction, macroCodeLine);
+  public void tickDone(final MicroInstruction instruction, final boolean macroCodeFetching) {
+    if (macroCodeFetching) {
+      this.view.update(instruction, this.memInterpreter.getFormattedLine(this.mic1.getLastMacroAddress()));
+    } else {
+      this.view.update(instruction, null);
+    }
   }
 
   /**

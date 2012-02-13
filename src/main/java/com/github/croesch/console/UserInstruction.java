@@ -89,19 +89,19 @@ enum UserInstruction {
     public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       switch (getSize(params)) {
         case 0:
-          interpreter.getProcessor().printMacroCode();
+          interpreter.printMacroCode();
           break;
         case 1:
           final Integer num = (Integer) Parameter.NUMBER.getValue(params[0]);
           if (num != null) {
-            interpreter.getProcessor().printMacroCode(num.intValue());
+            interpreter.printMacroCode(num.intValue());
           }
           break;
         case 2:
           final Integer from = (Integer) Parameter.NUMBER.getValue(params[0]);
           final Integer to = (Integer) Parameter.NUMBER.getValue(params[1]);
           if (from != null && to != null) {
-            interpreter.getProcessor().printMacroCode(from.intValue(), to.intValue());
+            interpreter.printMacroCode(from.intValue(), to.intValue());
           }
           break;
         default:
@@ -149,7 +149,7 @@ enum UserInstruction {
         final Integer from = (Integer) Parameter.NUMBER.getValue(params[0]);
         final Integer to = (Integer) Parameter.NUMBER.getValue(params[1]);
         if (from != null && to != null) {
-          interpreter.getProcessor().printContent(from.intValue(), to.intValue());
+          interpreter.printContent(from.intValue(), to.intValue());
         }
       } else {
         Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(2, getSize(params)));
@@ -182,7 +182,7 @@ enum UserInstruction {
   LS_STACK {
     @Override
     public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
-      interpreter.getProcessor().printStack(Settings.STACK_ELEMENTS_TO_HIDE.getValue());
+      interpreter.printStack(Settings.STACK_ELEMENTS_TO_HIDE.getValue());
       return true;
     }
   },

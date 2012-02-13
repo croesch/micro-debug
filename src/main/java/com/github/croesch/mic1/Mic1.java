@@ -38,7 +38,6 @@ import com.github.croesch.mic1.controlstore.MicroInstructionDecoder;
 import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.mem.Memory;
-import com.github.croesch.mic1.mem.MemoryInterpreter;
 import com.github.croesch.mic1.mpc.NextMPCCalculator;
 import com.github.croesch.mic1.register.Register;
 import com.github.croesch.mic1.shifter.Shifter;
@@ -75,9 +74,6 @@ public final class Mic1 {
   /** the main memory of the processor */
   private final Memory memory;
 
-  /** the interpreter for the memory of the processor */
-  private final MemoryInterpreter memInterpreter;
-
   /** counter for ticks that have been executed */
   private int ticks;
 
@@ -104,8 +100,6 @@ public final class Mic1 {
       // inform the caller about the problem
       throw new FileFormatException();
     }
-
-    this.memInterpreter = new MemoryInterpreter(this.memory);
 
     init();
   }
@@ -513,11 +507,7 @@ public final class Mic1 {
    *        <code>false</code> otherwise
    */
   private void update(final boolean macroCodeFetching) {
-    if (macroCodeFetching) {
-      this.interpreter.tickDone(this.instruction, this.memInterpreter.getFormattedLine(this.lastMacroAddress));
-    } else {
-      this.interpreter.tickDone(this.instruction, null);
-    }
+    this.interpreter.tickDone(this.instruction, macroCodeFetching);
   }
 
   /**
@@ -540,36 +530,6 @@ public final class Mic1 {
    */
   public int getMemoryValue(final int addr) {
     return this.memory.getWord(addr);
-  }
-
-  /**
-   * Prints the whole ijvm code to the user.
-   * 
-   * @since Date: Jan 23, 2012
-   */
-  public void printMacroCode() {
-    this.memInterpreter.printCode();
-  }
-
-  /**
-   * Prints the given number of lines of code around the current line to the user.
-   * 
-   * @since Date: Jan 26, 2012
-   * @param scope the number of lines to print before and after the current line
-   */
-  public void printMacroCode(final int scope) {
-    this.memInterpreter.printCodeAroundLine(Math.max(0, this.lastMacroAddress), scope);
-  }
-
-  /**
-   * Prints the whole ijvm code to the user. Between the given line numbers.
-   * 
-   * @since Date: Jan 26, 2012
-   * @param from the first line to print
-   * @param to the last line to print
-   */
-  public void printMacroCode(final int from, final int to) {
-    this.memInterpreter.printCode(from, to);
   }
 
   /**
@@ -603,29 +563,6 @@ public final class Mic1 {
   }
 
   /**
-   * Prints the content of the memory between the given addresses.
-   * 
-   * @since Date: Jan 29, 2012
-   * @param pos1 the address to start (inclusive)
-   * @param pos2 the address to end (inclusive)
-   */
-  public void printContent(final int pos1, final int pos2) {
-    this.memInterpreter.printContent(pos1, pos2);
-  }
-
-  /**
-   * Prints the content of the stack. Technical speaking it prints the content of the memory between the initial stack
-   * pointer value and the current value of the stack (inclusive edges).
-   * 
-   * @since Date: Feb 5, 2012
-   * @param elementsToHide the number of elements to hide. The first possible element is the one the initial stack
-   *        pointer points to.
-   */
-  public void printStack(final int elementsToHide) {
-    this.memInterpreter.printStack(elementsToHide);
-  }
-
-  /**
    * Returns the main memory.
    * 
    * @since Date: Feb 13, 2012
@@ -633,5 +570,15 @@ public final class Mic1 {
    */
   public Memory getMemory() {
     return this.memory;
+  }
+
+  /**
+   * Returns the address of the last executed code line.
+   * 
+   * @since Date: Feb 13, 2012
+   * @return the address of the last executed code line.
+   */
+  public int getLastMacroAddress() {
+    return this.lastMacroAddress;
   }
 }
