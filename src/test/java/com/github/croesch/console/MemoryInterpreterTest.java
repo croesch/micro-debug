@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.croesch.mic1.mem;
+package com.github.croesch.console;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -26,8 +26,10 @@ import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
 import com.github.croesch.commons.Settings;
+import com.github.croesch.console.MemoryInterpreter;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
+import com.github.croesch.mic1.mem.Memory;
 import com.github.croesch.mic1.register.Register;
 
 /**

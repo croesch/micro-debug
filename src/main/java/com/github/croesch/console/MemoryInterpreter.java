@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.croesch.mic1.mem;
+package com.github.croesch.console;
 
 import java.io.InputStream;
 import java.util.List;
@@ -27,6 +27,10 @@ import com.github.croesch.commons.Settings;
 import com.github.croesch.commons.Utils;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.api.AbstractCodeContainer;
+import com.github.croesch.mic1.mem.IJVMCommand;
+import com.github.croesch.mic1.mem.IJVMCommandArgument;
+import com.github.croesch.mic1.mem.IJVMConfigReader;
+import com.github.croesch.mic1.mem.Memory;
 import com.github.croesch.mic1.register.Register;
 
 /**

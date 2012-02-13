@@ -27,7 +27,7 @@ import java.util.List;
  * @author croesch
  * @since Date: Jan 22, 2012
  */
-class IJVMCommand {
+public final class IJVMCommand {
 
   /** the name of this command */
   private final String name;
@@ -106,7 +106,7 @@ class IJVMCommand {
    * @since Date: Jan 22, 2012
    * @return the {@link String} representing the name of this command.
    */
-  String getName() {
+  public String getName() {
     return this.name;
   }
 
@@ -117,7 +117,7 @@ class IJVMCommand {
    * @return a {@link List} containing the required {@link IJVMCommandArgument}s for this command. Ensured to be not
    *         <code>null</code> and to contain no <code>null</code>-values.
    */
-  List<IJVMCommandArgument> getArgs() {
+  public List<IJVMCommandArgument> getArgs() {
     return new ArrayList<IJVMCommandArgument>(this.args);
   }
 }

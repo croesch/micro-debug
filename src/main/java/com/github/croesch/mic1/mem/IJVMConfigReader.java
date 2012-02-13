@@ -40,7 +40,7 @@ import com.github.croesch.commons.Utils;
  * @author croesch
  * @since Date: Jan 22, 2012
  */
-class IJVMConfigReader {
+public final class IJVMConfigReader {
 
   /** the {@link Logger} for this class */
   private static final Logger LOGGER = Logger.getLogger(IJVMConfigReader.class.getName());
@@ -64,7 +64,7 @@ class IJVMConfigReader {
    *         from the configuration file<br>
    *         in case of error this map might be empty
    */
-  Map<Integer, IJVMCommand> readConfig(final InputStream in) {
+  public Map<Integer, IJVMCommand> readConfig(final InputStream in) {
     final Map<Integer, IJVMCommand> map = new HashMap<Integer, IJVMCommand>();
     try {
       final BufferedReader reader = new BufferedReader(new InputStreamReader(in));

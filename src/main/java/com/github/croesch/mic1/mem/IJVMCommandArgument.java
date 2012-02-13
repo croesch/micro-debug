@@ -27,14 +27,14 @@ import com.github.croesch.mic1.register.Register;
  * @author croesch
  * @since Date: Jan 22, 2012
  */
-enum IJVMCommandArgument {
+public enum IJVMCommandArgument {
 
   /** represents a single byte */
   BYTE (1),
   /** represents a label defined in the assembler code */
   LABEL (2) {
     @Override
-    String represent(final int value, final Memory mem) {
+    public String represent(final int value, final Memory mem) {
       return String.valueOf(signExtend(value));
     }
 
@@ -57,14 +57,14 @@ enum IJVMCommandArgument {
   /** represents a variable */
   VARNUM (1) {
     @Override
-    String represent(final int value, final Memory mem) {
+    public String represent(final int value, final Memory mem) {
       return String.valueOf(value);
     }
   },
   /** represents an offset */
   OFFSET (2) {
     @Override
-    String represent(final int value, final Memory mem) {
+    public String represent(final int value, final Memory mem) {
       final int cons = mem.getWord(Register.CPP.getValue() + value);
       return value + "[=" + Utils.toHexString(cons) + "]";
     }
@@ -72,7 +72,7 @@ enum IJVMCommandArgument {
   /** represents an index */
   INDEX (2) {
     @Override
-    String represent(final int value, final Memory mem) {
+    public String represent(final int value, final Memory mem) {
       final int cons = mem.getWord(Register.CPP.getValue() + value);
       return value + "[=" + Utils.toHexString(cons) + "]";
     }
@@ -106,7 +106,7 @@ enum IJVMCommandArgument {
    * @since Date: Jan 23, 2012
    * @return number of bytes needed to build this argument
    */
-  final int getNumberOfBytes() {
+  public final int getNumberOfBytes() {
     return this.bytes;
   }
 
@@ -118,7 +118,7 @@ enum IJVMCommandArgument {
    * @param mem the memory to fetch values from
    * @return the {@link String} representing the given value for this argument.
    */
-  final String getRepresentationOfArgument(final int value, final Memory mem) {
+  public final String getRepresentationOfArgument(final int value, final Memory mem) {
     return represent(maskValue(value), mem);
   }
 
@@ -149,7 +149,7 @@ enum IJVMCommandArgument {
    * @param mem the memory to fetch values from
    * @return the string representation of the given value for that argument.
    */
-  String represent(final int value, final Memory mem) {
+  public String represent(final int value, final Memory mem) {
     return Utils.toHexString(value);
   }
 }
