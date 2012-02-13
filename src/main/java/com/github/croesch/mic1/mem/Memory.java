@@ -38,17 +38,8 @@ import com.github.croesch.mic1.register.Register;
  */
 public final class Memory implements IReadableMemory {
 
-  /** a mask to deselect byte 0 */
-  private static final int MASK_BYTE_0 = 0xFFFFFF00;
-
-  /** a mask to deselect byte 1 */
-  private static final int MASK_BYTE_1 = 0xFFFF00FF;
-
-  /** a mask to deselect byte 2 */
-  private static final int MASK_BYTE_2 = 0xFF00FFFF;
-
-  /** a mask to deselect byte 3 */
-  private static final int MASK_BYTE_3 = 0x00FFFFFF;
+  /** a mask to deselect bytes */
+  private static final int[] MASK_BYTE = new int[] { 0xFFFFFF00, 0xFFFF00FF, 0xFF00FFFF, 0x00FFFFFF };
 
   /** mask to select a byte from an int */
   private static final int BYTE_MASK = 0xFF;
@@ -165,37 +156,32 @@ public final class Memory implements IReadableMemory {
   private void readBlock(final int start, final int length, final InputStream stream) throws FileFormatException {
     try {
       for (int i = 0; i < length; ++i) {
-        int val = stream.read();
+        final int val = stream.read();
 
         if (val == -1) {
           throw new FileFormatException("unexpected end of block");
         }
 
-        final int addr = start + i;
-        final int mask;
-        final int word = this.memory[addr / 4];
-        switch (addr % 4) {
-          case 0:
-            val <<= Byte.SIZE * 3;
-            mask = MASK_BYTE_3;
-            break;
-          case 1:
-            val <<= Byte.SIZE * 2;
-            mask = MASK_BYTE_2;
-            break;
-          case 2:
-            val <<= Byte.SIZE;
-            mask = MASK_BYTE_1;
-            break;
-          default:
-            mask = MASK_BYTE_0;
-            break;
-        }
-        this.memory[addr / 4] = (word & mask) | val;
+        setByte(start + i, val);
       }
     } catch (final IOException e) {
       throw new FileFormatException(e.getMessage(), e);
     }
+  }
+
+  /**
+   * Sets the byte value at the given address to the given value. The address is the byte address.
+   * 
+   * @since Date: Feb 13, 2012
+   * @param addr the address, where to write the byte to
+   * @param value the byte to write to the memory
+   */
+  private void setByte(final int addr, final int value) {
+    final int offs = 3 - (addr % 4);
+    final int mask = MASK_BYTE[offs];
+    final int word = this.memory[addr / 4];
+
+    this.memory[addr / 4] = (word & mask) | value << offs * Byte.SIZE;
   }
 
   /**
