@@ -21,13 +21,13 @@ package com.github.croesch.console;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
-import com.github.croesch.console.Mic1Interpreter;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.Mic1;
@@ -48,8 +48,12 @@ public class Mic1InterpreterTest extends DefaultTestCase {
 
   @Override
   protected void setUpDetails() throws FileFormatException {
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
+    init("mic1/hi.mic1", "mic1/hi.ijvm");
+  }
+
+  private void init(final String micFile, final String ijvmFile) throws FileFormatException {
+    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream(micFile),
+                              ClassLoader.getSystemResourceAsStream(ijvmFile));
     this.interpreter = new Mic1Interpreter(this.processor);
   }
 
@@ -107,9 +111,7 @@ public class Mic1InterpreterTest extends DefaultTestCase {
   @Test
   public void testAddMacroBreakPoint() throws FileFormatException {
     printlnMethodName();
-    this.processor = new Mic1(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"),
-                              ClassLoader.getSystemResourceAsStream("mic1/add.ijvm"));
-    this.interpreter = new Mic1Interpreter(this.processor);
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
 
     Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
 
@@ -203,5 +205,186 @@ public class Mic1InterpreterTest extends DefaultTestCase {
                                                + getLineSeparator());
 
     printEndOfMethod();
+  }
+
+  @Test
+  public final void testTracingLocalVariables() throws IOException {
+    printlnMethodName();
+    Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
+
+    this.interpreter.traceLocalVariable(0);
+    this.processor.step(11);
+    out.reset();
+    this.interpreter.traceLocalVariable(1);
+
+    this.processor.step(27);
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.LOCAL_VARIABLE_VALUE.text(1, 2)
+                                                 + getLineSeparator() + Text.TICKS.text(129) + getLineSeparator());
+    out.reset();
+    this.processor.step(9);
+    assertThat(out.toString()).isEqualTo(Text.LOCAL_VARIABLE_VALUE.text(0, 2) + getLineSeparator()
+                                                 + Text.TICKS.text(64) + getLineSeparator());
+
+    out.reset();
+    this.processor.step(33);
+    assertThat(out.toString()).isEqualTo(Text.LOCAL_VARIABLE_VALUE.text(1, 0) + getLineSeparator()
+                                                 + Text.INPUT_MIC1.text() + Text.LOCAL_VARIABLE_VALUE.text(1, 2)
+                                                 + getLineSeparator() + Text.TICKS.text(184) + getLineSeparator());
+
+    out.reset();
+    this.processor.step(9);
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(64) + getLineSeparator());
+  }
+
+  @Test
+  public final void testUntracingLocalVariables() throws IOException {
+    printlnMethodName();
+    Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
+
+    this.interpreter.traceLocalVariable(0);
+    this.processor.step(11);
+    out.reset();
+    this.interpreter.traceLocalVariable(1);
+    this.interpreter.untraceLocalVariable(0);
+
+    this.processor.step(27);
+    this.interpreter.untraceLocalVariable(1);
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.LOCAL_VARIABLE_VALUE.text(1, 2)
+                                                 + getLineSeparator() + Text.TICKS.text(129) + getLineSeparator());
+    out.reset();
+    this.processor.step(9);
+    assertThat(out.toString()).isEqualTo(Text.LOCAL_VARIABLE_VALUE.text(0, 2) + getLineSeparator()
+                                                 + Text.TICKS.text(64) + getLineSeparator());
+
+    out.reset();
+    this.processor.step(33);
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.TICKS.text(184) + getLineSeparator());
+
+    out.reset();
+    this.processor.step(9);
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(64) + getLineSeparator());
+  }
+
+  @Test
+  public final void testTraceMacro() throws IOException {
+    printlnMethodName();
+    Input.setIn(new ByteArrayInputStream("2\n2\n2\n2\n".getBytes()));
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
+
+    final String firstLine = Text.EXECUTED_CODE.text("     0x0: [ 0x10] BIPUSH 0x0") + getLineSeparator();
+    final String expected = firstLine + Text.EXECUTED_CODE.text("     0x2: [ 0x59] DUP") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("     0x3: [ 0x36] ISTORE 0") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("     0x5: [ 0x36] ISTORE 1") + getLineSeparator()
+                            + Text.TICKS.text(24) + getLineSeparator();
+
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.INPUT_MIC1.text() + Text.TICKS.text(3292)
+                                                 + getLineSeparator());
+    out.reset();
+
+    this.processor.reset();
+
+    this.interpreter.traceMacro();
+    this.processor.step(5);
+    assertThat(out.toString()).isEqualTo(expected);
+
+    this.processor.reset();
+    out.reset();
+
+    this.processor.step(2);
+    assertThat(out.toString()).isEqualTo(firstLine + Text.TICKS.text(7) + getLineSeparator());
+    out.reset();
+
+    this.interpreter.untraceMacro();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text() + Text.INPUT_MIC1.text() + Text.TICKS.text(3285)
+                                                 + getLineSeparator());
+  }
+
+  @Test
+  public final void testListAllRegisters() throws IOException {
+    printlnMethodName();
+    Register.MAR.setValue(-1);
+    Register.MDR.setValue(0);
+    Register.PC.setValue(1);
+    Register.MBR.setValue(0x1273);
+    Register.SP.setValue(0x8bc);
+    Register.LV.setValue(0x8bd);
+    Register.CPP.setValue(0x8be);
+    Register.TOS.setValue(0x8bf);
+    Register.OPC.setValue(0x8c0);
+    Register.H.setValue(0x8c1);
+
+    assertThat(out.toString()).isEmpty();
+    this.interpreter.listAllRegisters();
+
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("MDR ", "0x0") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("PC  ", "0x1") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("MBR ", "0x73") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("MBRU", "0x73") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("SP  ", "0x8BC") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("LV  ", "0x8BD") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("CPP ", "0x8BE") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("TOS ", "0x8BF") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("OPC ", "0x8C0") + getLineSeparator()
+                                                 + Text.REGISTER_VALUE.text("H   ", "0x8C1") + getLineSeparator());
+  }
+
+  @Test
+  public final void testListSingleRegister() throws IOException {
+    printlnMethodName();
+    Register.MAR.setValue(0x4711);
+    this.interpreter.listSingleRegister(Register.MAR);
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0x4711") + getLineSeparator());
+    out.reset();
+
+    Register.SP.setValue(-2);
+    this.interpreter.listSingleRegister(Register.SP);
+    assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("SP  ", "0xFFFFFFFE") + getLineSeparator());
+    out.reset();
+  }
+
+  @Test
+  public final void testTraceMicro() throws IOException {
+    printlnMethodName();
+    final String firstLine = Text.EXECUTED_CODE.text("PC=MAR=0;rd;goto 0x1") + getLineSeparator();
+    final String expected = firstLine + Text.EXECUTED_CODE.text("H=LV=-1;goto 0x2") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("LV=H+LV;wr;goto 0x3") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;wr;goto 0x4") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0x5") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0x6") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("wr;goto 0x7") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0x8") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0x9") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("wr;goto 0xA") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("PC=MAR=PC+1;rd;goto 0xB") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("MAR=LV-1;goto 0xC") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("wr;goto 0xD") + getLineSeparator()
+                            + Text.EXECUTED_CODE.text("goto 0xD") + getLineSeparator() + Text.TICKS.text(14)
+                            + getLineSeparator();
+
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + getLineSeparator());
+    out.reset();
+
+    this.processor.reset();
+
+    this.interpreter.traceMicro();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(expected);
+
+    this.processor.reset();
+    out.reset();
+
+    this.processor.microStep();
+    assertThat(out.toString()).isEqualTo(firstLine + Text.TICKS.text(1) + getLineSeparator());
+    out.reset();
+
+    this.interpreter.untraceMicro();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(13) + getLineSeparator());
   }
 }

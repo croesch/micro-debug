@@ -18,6 +18,8 @@
  */
 package com.github.croesch.mic1.api;
 
+import com.github.croesch.mic1.controlstore.MicroInstruction;
+
 /**
  * Interpreter of a processor, can access and manipulate the processor.
  * 
@@ -36,5 +38,14 @@ public interface IProcessorInterpreter {
    *         <code>false</code> otherwise
    */
   boolean canContinue(final int microLine, final int macroLine);
+
+  /**
+   * Informs the interpreter that the processor has done one tick.
+   * 
+   * @since Date: Feb 13, 2012
+   * @param instruction the executed micro instruction
+   * @param macroCodeLine the current macro code instruction being executed
+   */
+  void tickDone(MicroInstruction instruction, String macroCodeLine);
 
 }

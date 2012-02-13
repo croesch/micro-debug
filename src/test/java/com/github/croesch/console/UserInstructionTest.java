@@ -393,9 +393,9 @@ public class UserInstructionTest extends DefaultTestCase {
   public void testExecuteTraceReg() {
     printMethodName();
     for (final Register r : Register.values()) {
-      assertThat(this.interpreter.getProcessor().isTracing(r)).isFalse();
+      assertThat(this.interpreter.isTracing(r)).isFalse();
       assertThat(UserInstruction.TRACE_REG.execute(this.interpreter, r.name())).isTrue();
-      assertThat(this.interpreter.getProcessor().isTracing(r)).isTrue();
+      assertThat(this.interpreter.isTracing(r)).isTrue();
       printStep();
     }
     printEndOfMethod();
@@ -405,7 +405,7 @@ public class UserInstructionTest extends DefaultTestCase {
   public void testExecuteTraceReg_All() {
     printMethodName();
     for (final Register r : Register.values()) {
-      assertThat(this.interpreter.getProcessor().isTracing(r)).isFalse();
+      assertThat(this.interpreter.isTracing(r)).isFalse();
       printStep();
     }
     printLoopEnd();
@@ -413,7 +413,7 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.TRACE_REG.execute(this.interpreter, (String[]) null)).isTrue();
 
     for (final Register r : Register.values()) {
-      assertThat(this.interpreter.getProcessor().isTracing(r)).isTrue();
+      assertThat(this.interpreter.isTracing(r)).isTrue();
       printStep();
     }
     printEndOfMethod();
@@ -439,7 +439,7 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.TRACE_REG.execute(this.interpreter, (String[]) null)).isTrue();
 
     for (final Register r : Register.values()) {
-      assertThat(this.interpreter.getProcessor().isTracing(r)).isTrue();
+      assertThat(this.interpreter.isTracing(r)).isTrue();
       printStep();
     }
     printLoopEnd();
@@ -447,7 +447,7 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.UNTRACE_REG.execute(this.interpreter, (String[]) null)).isTrue();
 
     for (final Register r : Register.values()) {
-      assertThat(this.interpreter.getProcessor().isTracing(r)).isFalse();
+      assertThat(this.interpreter.isTracing(r)).isFalse();
       printStep();
     }
     printEndOfMethod();
@@ -474,9 +474,9 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.TRACE_REG.execute(this.interpreter, (String[]) null)).isTrue();
 
     for (final Register r : Register.values()) {
-      assertThat(this.interpreter.getProcessor().isTracing(r)).isTrue();
+      assertThat(this.interpreter.isTracing(r)).isTrue();
       assertThat(UserInstruction.UNTRACE_REG.execute(this.interpreter, r.name())).isTrue();
-      assertThat(this.interpreter.getProcessor().isTracing(r)).isFalse();
+      assertThat(this.interpreter.isTracing(r)).isFalse();
       printStep();
     }
     printEndOfMethod();

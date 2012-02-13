@@ -164,11 +164,11 @@ enum UserInstruction {
     public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       switch (getSize(params)) {
         case 0:
-          interpreter.getProcessor().listAllRegisters();
+          interpreter.listAllRegisters();
           break;
         case 1:
           final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
-          interpreter.getProcessor().listSingleRegister(r);
+          interpreter.listSingleRegister(r);
           break;
         default:
           Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(0, getSize(params)));
@@ -339,7 +339,7 @@ enum UserInstruction {
   TRACE_MAC {
     @Override
     public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
-      interpreter.getProcessor().traceMacro();
+      interpreter.traceMacro();
       return true;
     }
   },
@@ -348,7 +348,7 @@ enum UserInstruction {
   TRACE_MIC {
     @Override
     public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
-      interpreter.getProcessor().traceMicro();
+      interpreter.traceMicro();
       return true;
     }
   },
@@ -359,11 +359,11 @@ enum UserInstruction {
     public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       switch (getSize(params)) {
         case 0:
-          interpreter.getProcessor().traceRegister();
+          interpreter.traceRegister();
           break;
         case 1:
           final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
-          interpreter.getProcessor().traceRegister(r);
+          interpreter.traceRegister(r);
           break;
         default:
           Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(0, getSize(params)));
@@ -380,7 +380,7 @@ enum UserInstruction {
       if (getSize(params) == 1) {
         final Integer num = (Integer) Parameter.NUMBER.getValue(params[0]);
         if (num != null) {
-          interpreter.getProcessor().traceLocalVariable(num.intValue());
+          interpreter.traceLocalVariable(num.intValue());
         }
       } else {
         Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(1, getSize(params)));
@@ -393,7 +393,7 @@ enum UserInstruction {
   UNTRACE_MAC {
     @Override
     public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
-      interpreter.getProcessor().untraceMacro();
+      interpreter.untraceMacro();
       return true;
     }
   },
@@ -402,7 +402,7 @@ enum UserInstruction {
   UNTRACE_MIC {
     @Override
     public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
-      interpreter.getProcessor().untraceMicro();
+      interpreter.untraceMicro();
       return true;
     }
   },
@@ -413,11 +413,11 @@ enum UserInstruction {
     public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       switch (getSize(params)) {
         case 0:
-          interpreter.getProcessor().untraceRegister();
+          interpreter.untraceRegister();
           break;
         case 1:
           final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
-          interpreter.getProcessor().untraceRegister(r);
+          interpreter.untraceRegister(r);
           break;
         default:
           Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(0, getSize(params)));
@@ -434,7 +434,7 @@ enum UserInstruction {
       if (getSize(params) == 1) {
         final Integer num = (Integer) Parameter.NUMBER.getValue(params[0]);
         if (num != null) {
-          interpreter.getProcessor().untraceLocalVariable(num.intValue());
+          interpreter.untraceLocalVariable(num.intValue());
         }
       } else {
         Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(1, getSize(params)));

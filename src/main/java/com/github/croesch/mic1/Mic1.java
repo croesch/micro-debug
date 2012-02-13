@@ -42,8 +42,6 @@ import com.github.croesch.mic1.mem.MemoryInterpreter;
 import com.github.croesch.mic1.mpc.NextMPCCalculator;
 import com.github.croesch.mic1.register.Register;
 import com.github.croesch.mic1.shifter.Shifter;
-import com.github.croesch.ui.TraceManager;
-import com.github.croesch.ui.api.Mic1View;
 
 /**
  * This class represents the CISC-processor being debugged by this program.
@@ -80,9 +78,6 @@ public final class Mic1 {
   /** the interpreter for the memory of the processor */
   private final MemoryInterpreter memInterpreter;
 
-  /** the view that is able to present details of this processor to the user */
-  private final Mic1View view;
-
   /** counter for ticks that have been executed */
   private int ticks;
 
@@ -110,7 +105,6 @@ public final class Mic1 {
       throw new FileFormatException();
     }
 
-    this.view = new TraceManager(this.memory);
     this.memInterpreter = new MemoryInterpreter(this.memory);
 
     init();
@@ -512,131 +506,6 @@ public final class Mic1 {
   }
 
   /**
-   * Lists the values of all {@link Register}s.
-   * 
-   * @since Date: Jan 15, 2012
-   */
-  public void listAllRegisters() {
-    this.view.listAllRegisters();
-  }
-
-  /**
-   * Lists the value of a single {@link Register}.
-   * 
-   * @since Date: Jan 15, 2012
-   * @param r the {@link Register} to print with its value.
-   */
-  public void listSingleRegister(final Register r) {
-    this.view.listRegister(r);
-  }
-
-  /**
-   * Performs to trace the local variable with the given number.
-   * 
-   * @since Date: Feb 8, 2012
-   * @param num the number of the local variable in the given macro code method as an offset to the LV.
-   */
-  public void traceLocalVariable(final int num) {
-    this.view.traceLocalVariable(num);
-  }
-
-  /**
-   * Performs to trace the macro code.
-   * 
-   * @since Date: Feb 3, 2012
-   */
-  public void traceMacro() {
-    this.view.traceMacro();
-  }
-
-  /**
-   * Performs to not trace the macro code.
-   * 
-   * @since Date: Feb 3, 2012
-   */
-  public void untraceMacro() {
-    this.view.untraceMacro();
-  }
-
-  /**
-   * Performs to trace the micro code.
-   * 
-   * @since Date: Jan 21, 2012
-   */
-  public void traceMicro() {
-    this.view.traceMicro();
-  }
-
-  /**
-   * Performs to trace all {@link Register}s.
-   * 
-   * @since Date: Jan 15, 2012
-   */
-  public void traceRegister() {
-    this.view.traceRegister();
-  }
-
-  /**
-   * Performs to trace the given {@link Register}.
-   * 
-   * @since Date: Jan 15, 2012
-   * @param r the {@link Register} to trace.
-   */
-  public void traceRegister(final Register r) {
-    this.view.traceRegister(r);
-  }
-
-  /**
-   * Performs to not trace the local variable with the given number.
-   * 
-   * @since Date: Feb 8, 2012
-   * @param num the number of the local variable in the given macro code method as an offset to the LV.
-   */
-  public void untraceLocalVariable(final int num) {
-    this.view.untraceLocalVariable(num);
-  }
-
-  /**
-   * Performs to not trace the micro code.
-   * 
-   * @since Date: Jan 21, 2012
-   */
-  public void untraceMicro() {
-    this.view.untraceMicro();
-  }
-
-  /**
-   * Performs to not trace any {@link Register}.
-   * 
-   * @since Date: Jan 15, 2012
-   */
-  public void untraceRegister() {
-    this.view.untraceRegister();
-  }
-
-  /**
-   * Performs to not trace the given {@link Register} anymore.
-   * 
-   * @since Date: Jan 15, 2012
-   * @param r the {@link Register} not being traced anymore.
-   */
-  public void untraceRegister(final Register r) {
-    this.view.untraceRegister(r);
-  }
-
-  /**
-   * Returns whether the given {@link Register} is currently traced.
-   * 
-   * @since Date: Jan 15, 2012
-   * @param r the {@link Register} to check, if it's traced
-   * @return <code>true</code>, if the {@link Register} is currently traced<br>
-   *         <code>false</code> otherwise.
-   */
-  public boolean isTracing(final Register r) {
-    return this.view.isTracing(r);
-  }
-
-  /**
    * Tells the view to update itself.
    * 
    * @since Date: Jan 15, 2012
@@ -645,9 +514,9 @@ public final class Mic1 {
    */
   private void update(final boolean macroCodeFetching) {
     if (macroCodeFetching) {
-      this.view.update(this.instruction, this.memInterpreter.getFormattedLine(this.lastMacroAddress));
+      this.interpreter.tickDone(this.instruction, this.memInterpreter.getFormattedLine(this.lastMacroAddress));
     } else {
-      this.view.update(this.instruction, null);
+      this.interpreter.tickDone(this.instruction, null);
     }
   }
 
@@ -754,5 +623,15 @@ public final class Mic1 {
    */
   public void printStack(final int elementsToHide) {
     this.memInterpreter.printStack(elementsToHide);
+  }
+
+  /**
+   * Returns the main memory.
+   * 
+   * @since Date: Feb 13, 2012
+   * @return the {@link Memory} of this processor.
+   */
+  public Memory getMemory() {
+    return this.memory;
   }
 }
