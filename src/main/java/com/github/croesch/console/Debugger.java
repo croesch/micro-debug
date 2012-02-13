@@ -22,7 +22,6 @@ import com.github.croesch.commons.Printer;
 import com.github.croesch.commons.Reader;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.Mic1;
-import com.github.croesch.mic1.Mic1Interpreter;
 
 /**
  * Class that handles the core of debugging. Reads user input and handles the instructions.

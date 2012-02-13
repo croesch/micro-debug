@@ -16,8 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.croesch.mic1;
+package com.github.croesch.console;
 
+import com.github.croesch.mic1.Mic1;
 import com.github.croesch.mic1.api.IProcessorInterpreter;
 import com.github.croesch.mic1.register.Register;
 

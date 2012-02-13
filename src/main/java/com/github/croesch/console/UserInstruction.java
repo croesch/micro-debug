@@ -27,7 +27,6 @@ import com.github.croesch.commons.Printer;
 import com.github.croesch.commons.Settings;
 import com.github.croesch.commons.Utils;
 import com.github.croesch.i18n.Text;
-import com.github.croesch.mic1.Mic1Interpreter;
 import com.github.croesch.mic1.register.Register;
 
 /**

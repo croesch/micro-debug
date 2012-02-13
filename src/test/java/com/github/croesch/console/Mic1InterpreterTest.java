@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.croesch.mic1;
+package com.github.croesch.console;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -27,8 +27,10 @@ import java.util.regex.Pattern;
 import org.junit.Test;
 
 import com.github.croesch.DefaultTestCase;
+import com.github.croesch.console.Mic1Interpreter;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
+import com.github.croesch.mic1.Mic1;
 import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.register.Register;
 
