@@ -22,7 +22,6 @@ import com.github.croesch.mic1.Mic1;
 import com.github.croesch.mic1.api.IProcessorInterpreter;
 import com.github.croesch.mic1.controlstore.MicroInstruction;
 import com.github.croesch.mic1.register.Register;
-import com.github.croesch.ui.TraceManager;
 
 /**
  * Interpreter of a processor, can access and manipulate the processor.
