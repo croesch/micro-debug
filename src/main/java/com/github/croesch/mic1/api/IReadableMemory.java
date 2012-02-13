@@ -27,24 +27,6 @@ package com.github.croesch.mic1.api;
 public interface IReadableMemory {
 
   /**
-   * Prints the content of the memory between the given addresses.
-   * 
-   * @since Date: Jan 29, 2012
-   * @param pos1 the address to start (inclusive)
-   * @param pos2 the address to end (inclusive)
-   */
-  void printContent(final int pos1, final int pos2);
-
-  /**
-   * Returns the formatted line.
-   * 
-   * @since Date: Feb 3, 2012
-   * @param line the number of line to fetch.
-   * @return the {@link String} representing the given line number
-   */
-  String getFormattedLine(int line);
-
-  /**
    * Returns the word value at the given address.
    * 
    * @since Date: Jan 21, 2012
@@ -61,16 +43,6 @@ public interface IReadableMemory {
    * @return the byte from the memory at the given address.
    */
   int getByte(final int addr);
-
-  /**
-   * Prints the content of the stack. Technical speaking it prints the content of the memory between the initial stack
-   * pointer value and the current value of the stack (inclusive edges).
-   * 
-   * @since Date: Feb 5, 2012
-   * @param elementsToHide the number of elements to hide. The first possible element is the one the initial stack
-   *        pointer points to.
-   */
-  void printStack(final int elementsToHide);
 
   /**
    * Returns the size of the memory.

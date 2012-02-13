@@ -153,7 +153,7 @@ public class TraceManagerTest extends DefaultTestCase {
     Register.H.setValue(10);
 
     this.tm.traceRegister();
-    this.tm.update(null, 0);
+    this.tm.update(null, null);
     assertThat(out.toString()).isEmpty();
 
     Register.MAR.setValue(-1);
@@ -168,7 +168,7 @@ public class TraceManagerTest extends DefaultTestCase {
     Register.H.setValue(0x8c1);
 
     assertThat(out.toString()).isEmpty();
-    this.tm.update(null, 0);
+    this.tm.update(null, null);
 
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("MAR ", "0xFFFFFFFF") + getLineSeparator()
                                                  + Text.REGISTER_VALUE.text("MDR ", "0x0") + getLineSeparator()
@@ -183,7 +183,7 @@ public class TraceManagerTest extends DefaultTestCase {
                                                  + Text.REGISTER_VALUE.text("H   ", "0x8C1") + getLineSeparator());
     out.reset();
 
-    this.tm.update(null, 0);
+    this.tm.update(null, null);
     assertThat(out.toString()).isEmpty();
 
     Register.PC.setValue(10);
@@ -191,7 +191,7 @@ public class TraceManagerTest extends DefaultTestCase {
     Register.SP.setValue(12);
 
     out.reset();
-    this.tm.update(null, 0);
+    this.tm.update(null, null);
 
     assertThat(out.toString()).isEqualTo(Text.REGISTER_VALUE.text("PC  ", "0xA") + getLineSeparator()
                                                  + Text.REGISTER_VALUE.text("MBR ", "0xB") + getLineSeparator()

@@ -126,9 +126,10 @@ public interface Mic1View {
    * 
    * @since Date: Jan 15, 2012
    * @param currentInstruction the instruction that is now executed
-   * @param macroCodeNumber the line number of the macro instruction being executed
+   * @param macroCodeLine the formatted macro code line being executed, or <code>null</code> if no new macro code line
+   *        has been reached
    */
-  void update(MicroInstruction currentInstruction, int macroCodeNumber);
+  void update(MicroInstruction currentInstruction, String macroCodeLine);
 
   /**
    * Start tracing the value of the local variable with the given number. This will create a variable based on the

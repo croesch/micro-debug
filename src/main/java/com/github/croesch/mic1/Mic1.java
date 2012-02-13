@@ -37,6 +37,7 @@ import com.github.croesch.mic1.controlstore.MicroInstructionDecoder;
 import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.io.Output;
 import com.github.croesch.mic1.mem.Memory;
+import com.github.croesch.mic1.mem.MemoryInterpreter;
 import com.github.croesch.mic1.mpc.NextMPCCalculator;
 import com.github.croesch.mic1.register.Register;
 import com.github.croesch.mic1.shifter.Shifter;
@@ -75,6 +76,9 @@ public final class Mic1 {
   /** the main memory of the processor */
   private final Memory memory;
 
+  /** the interpreter for the memory of the processor */
+  private final MemoryInterpreter memInterpreter;
+
   /** the view that is able to present details of this processor to the user */
   private final Mic1View view;
 
@@ -106,6 +110,7 @@ public final class Mic1 {
     }
 
     this.view = new TraceManager(this.memory);
+    this.memInterpreter = new MemoryInterpreter(this.memory);
 
     init();
   }
@@ -628,9 +633,9 @@ public final class Mic1 {
    */
   private void update(final boolean macroCodeFetching) {
     if (macroCodeFetching) {
-      this.view.update(this.instruction, this.lastMacroAddress);
+      this.view.update(this.instruction, this.memInterpreter.getFormattedLine(this.lastMacroAddress));
     } else {
-      this.view.update(this.instruction, -1);
+      this.view.update(this.instruction, null);
     }
   }
 
@@ -662,7 +667,7 @@ public final class Mic1 {
    * @since Date: Jan 23, 2012
    */
   public void printMacroCode() {
-    this.memory.printCode();
+    this.memInterpreter.printCode();
   }
 
   /**
@@ -672,7 +677,7 @@ public final class Mic1 {
    * @param scope the number of lines to print before and after the current line
    */
   public void printMacroCode(final int scope) {
-    this.memory.printCodeAroundLine(Math.max(0, this.lastMacroAddress), scope);
+    this.memInterpreter.printCodeAroundLine(Math.max(0, this.lastMacroAddress), scope);
   }
 
   /**
@@ -683,7 +688,7 @@ public final class Mic1 {
    * @param to the last line to print
    */
   public void printMacroCode(final int from, final int to) {
-    this.memory.printCode(from, to);
+    this.memInterpreter.printCode(from, to);
   }
 
   /**
@@ -775,7 +780,7 @@ public final class Mic1 {
    * @param pos2 the address to end (inclusive)
    */
   public void printContent(final int pos1, final int pos2) {
-    this.memory.printContent(pos1, pos2);
+    this.memInterpreter.printContent(pos1, pos2);
   }
 
   /**
@@ -787,6 +792,6 @@ public final class Mic1 {
    *        pointer points to.
    */
   public void printStack(final int elementsToHide) {
-    this.memory.printStack(elementsToHide);
+    this.memInterpreter.printStack(elementsToHide);
   }
 }

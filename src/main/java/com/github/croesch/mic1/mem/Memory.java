@@ -20,15 +20,11 @@ package com.github.croesch.mic1.mem;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
 
 import com.github.croesch.commons.Printer;
-import com.github.croesch.commons.Settings;
 import com.github.croesch.commons.Utils;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
-import com.github.croesch.mic1.api.AbstractCodeContainer;
 import com.github.croesch.mic1.api.IReadableMemory;
 import com.github.croesch.mic1.io.Input;
 import com.github.croesch.mic1.io.Output;
@@ -40,7 +36,7 @@ import com.github.croesch.mic1.register.Register;
  * @author croesch
  * @since Date: Nov 21, 2011
  */
-public final class Memory extends AbstractCodeContainer implements IReadableMemory {
+public final class Memory implements IReadableMemory {
 
   /** a mask to deselect byte 0 */
   private static final int MASK_BYTE_0 = 0xFFFFFF00;
@@ -86,9 +82,6 @@ public final class Memory extends AbstractCodeContainer implements IReadableMemo
 
   /** the byte read from the memory */
   private byte byteValue = -1;
-
-  /** the map that contains the configuration with addresses in micro code and the belonging command */
-  private Map<Integer, IJVMCommand> commands = null;
 
   /** the magic number that is needed at the begin of a binary ijvm-file */
   public static final int IJVM_MAGIC_NUMBER = 0x1DEADFAD;
@@ -419,14 +412,6 @@ public final class Memory extends AbstractCodeContainer implements IReadableMemo
     return valid;
   }
 
-  @Override
-  protected int getLastPossibleCodeAddress() {
-    return refineEndOfCode(4 * (Utils.getNextHigherValue(getFirstPossibleCodeAddress(),
-                                                         Settings.MIC1_REGISTER_CPP_DEFVAL.getValue(),
-                                                         Settings.MIC1_REGISTER_SP_DEFVAL.getValue(), getSize(),
-                                                         Settings.MIC1_REGISTER_LV_DEFVAL.getValue()) - 1));
-  }
-
   /**
    * Returns the size of the memory.
    * 
@@ -435,192 +420,5 @@ public final class Memory extends AbstractCodeContainer implements IReadableMemo
    */
   public int getSize() {
     return this.memory.length;
-  }
-
-  @Override
-  protected int getFirstPossibleCodeAddress() {
-    return 4 * (Settings.MIC1_REGISTER_PC_DEFVAL.getValue() + 1);
-  }
-
-  /**
-   * Returns the address of the last assembler instruction that is only followed by <code>NOP</code>s
-   * 
-   * @since Date: Jan 26, 2012
-   * @param end the end of the code area in the memory
-   * @return the address of last assembler instruction
-   */
-  private int refineEndOfCode(final int end) {
-    int refEnd = end;
-    while (getByte(refEnd) == 0) {
-      --refEnd;
-    }
-    return refEnd;
-  }
-
-  @Override
-  protected int printCodeLine(final int addr) {
-    final StringBuilder sb = new StringBuilder();
-    final int bytesRead = getLineString(addr, sb);
-    Printer.println(sb.toString());
-
-    return bytesRead;
-  }
-
-  /**
-   * Returns the number of bytes read as arguments additional to the command byte.
-   * 
-   * @since Date: Feb 3, 2012
-   * @param addr the absolute address of the code instruction to fetch
-   * @param sb {@link StringBuilder} to append the formatted line to
-   * @return the number of bytes read as arguments to the command byte
-   */
-  private int getLineString(final int addr, final StringBuilder sb) {
-    final StringBuilder formattedArgs = new StringBuilder();
-
-    final int cmdCode = getByte(addr);
-    final IJVMCommand cmd = lookupCommand(cmdCode);
-
-    final String name = buildNameForCommand(cmd);
-    final int bytesRead = readArgumentsIfAny(addr, cmd, formattedArgs);
-
-    final String formattedAddr = formatIntToHex(addr, Settings.MIC1_MEM_MACRO_ADDR_WIDTH.getValue());
-    final String formattedCmdCode = formatIntToHex(cmdCode, Settings.MIC1_MEM_MICRO_ADDR_WIDTH.getValue());
-
-    sb.append(Text.MACRO_CODE_LINE.text(formattedAddr, formattedCmdCode, name, formattedArgs.toString()));
-    return bytesRead;
-  }
-
-  /**
-   * Returns the formatted line.
-   * 
-   * @since Date: Feb 3, 2012
-   * @param line the number of line to fetch.
-   * @return the {@link String} representing the given line number
-   */
-  public String getFormattedLine(final int line) {
-    if (line < 0) {
-      return null;
-    }
-
-    final StringBuilder sb = new StringBuilder();
-    getLineString(line, sb);
-    return sb.toString();
-  }
-
-  /**
-   * If the command is valid, this will read all argument bytes and build a formatted string with them.
-   * 
-   * @since Date: Jan 23, 2012
-   * @param addr the address of the command byte
-   * @param cmd the fetched {@link IJVMCommand} the command byte stands for
-   * @param sb the {@link StringBuilder} that stores the formatted arguments
-   * @return the number of bytes read as arguments
-   */
-  private int readArgumentsIfAny(final int addr, final IJVMCommand cmd, final StringBuilder sb) {
-    if (cmd != null) {
-      return createArgumentList(cmd.getArgs(), addr, sb);
-    }
-    return 0;
-  }
-
-  /**
-   * Returns the name for the given command to display.
-   * 
-   * @since Date: Jan 23, 2012
-   * @param cmd the {@link IJVMCommand} to fetch the name from, may be <code>null</code>
-   * @return the name of the {@link IJVMCommand},<br>
-   *         or an text to indicate, that the command is unknown, if the given command is <code>null</code>
-   * @see IJVMCommand#getName()
-   */
-  private String buildNameForCommand(final IJVMCommand cmd) {
-    if (cmd == null) {
-      return Text.UNKNOWN_IJVM_INSTRUCTION.text();
-    }
-    return cmd.getName();
-  }
-
-  /**
-   * Builds the formatted {@link String} based on the arguments to read.
-   * 
-   * @since Date: Jan 23, 2012
-   * @param args the argument list that define the number of bytes to read, may not be <code>null</code>
-   * @param addr the address of the command byte
-   * @param sb the {@link StringBuilder} that stores the formatted arguments
-   * @return the number of bytes read as arguments
-   */
-  private int createArgumentList(final List<IJVMCommandArgument> args, final int addr, final StringBuilder sb) {
-    int bytesRead = 0;
-    for (final IJVMCommandArgument arg : args) {
-      int value = 0;
-      for (int i = 1; i <= arg.getNumberOfBytes(); ++i) {
-        value |= getByte(addr + i) << (Byte.SIZE * (arg.getNumberOfBytes() - i));
-        ++bytesRead;
-      }
-      sb.append(" ").append(arg.getRepresentationOfArgument(value, this));
-    }
-    return bytesRead;
-  }
-
-  /**
-   * Returns the {@link IJVMCommand} that belongs to the given address.
-   * 
-   * @since Date: Jan 22, 2012
-   * @param addr the address where the command is placed in the micro code
-   * @return the {@link IJVMCommand} describing the command at the given address<br>
-   *         or <code>null</code> if no command is configured for this address
-   */
-  private IJVMCommand lookupCommand(final int addr) {
-    if (this.commands == null) {
-      // read configuration file the first time
-      final InputStream in = getClass().getClassLoader().getResourceAsStream("ijvm.conf");
-      this.commands = new IJVMConfigReader().readConfig(in);
-    }
-    return this.commands.get(Integer.valueOf(addr));
-  }
-
-  /**
-   * Prints the content of the memory between the given addresses.
-   * 
-   * @since Date: Jan 29, 2012
-   * @param pos1 the address to start (inclusive)
-   * @param pos2 the address to end (inclusive)
-   */
-  public void printContent(final int pos1, final int pos2) {
-    // correct arguments
-    final int start = Math.max(0, Math.min(pos1, pos2));
-    final int end = Math.min(getSize() - 1, Math.max(pos1, pos2));
-
-    for (int i = start; i <= end; ++i) {
-      Printer.println(Text.MEMORY_CONTENT.text(formatIntToHex(i, Settings.MIC1_MEM_MACRO_ADDR_WIDTH.getValue()),
-                                               Utils.toHexString(getWord(i))));
-    }
-  }
-
-  /**
-   * Prints the content of the stack. Technical speaking it prints the content of the memory between the initial stack
-   * pointer value and the current value of the stack (inclusive edges).
-   * 
-   * @since Date: Feb 5, 2012
-   * @param elementsToHide the number of elements to hide. The first possible element is the one the initial stack
-   *        pointer points to.
-   */
-  public void printStack(final int elementsToHide) {
-    // fetch initial and current stack pointer values
-    final int initialStackPointer = Settings.MIC1_REGISTER_SP_DEFVAL.getValue();
-    final int currentStackPointer = Register.SP.getValue();
-
-    int stackElement = elementsToHide;
-
-    // iterate over the memory and print the content of the stack
-    for (int addr = initialStackPointer + stackElement; addr <= currentStackPointer; ++addr, ++stackElement) {
-      final String formattedAddress = formatIntToHex(addr, Settings.MIC1_MEM_MACRO_ADDR_WIDTH.getValue());
-      final String formattedValue = Utils.toHexString(getWord(addr));
-      Printer.println(Text.STACK_CONTENT.text(stackElement, formattedAddress, formattedValue));
-    }
-
-    // instead of nothing display a text, if stack is empty
-    if (stackElement == elementsToHide) {
-      Printer.println(Text.STACK_EMPTY);
-    }
   }
 }

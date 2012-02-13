@@ -217,12 +217,13 @@ public final class TraceManager implements Mic1View {
    * 
    * @since Date: Jan 15, 2012
    * @param currentInstruction the instruction that is now executed
-   * @param macroCodeNumber the line number of the macro instruction being executed
+   * @param macroCodeLine the formatted macro code line being executed, or <code>null</code> if no new macro code line
+   *        has been reached
    */
-  public void update(final MicroInstruction currentInstruction, final int macroCodeNumber) {
+  public void update(final MicroInstruction currentInstruction, final String macroCodeLine) {
     // trace macro code
-    if (macroCodeNumber >= 0 && isTracingMacro()) {
-      Printer.println(Text.EXECUTED_CODE.text(this.memory.getFormattedLine(macroCodeNumber)));
+    if (macroCodeLine != null && isTracingMacro()) {
+      Printer.println(Text.EXECUTED_CODE.text(macroCodeLine));
     }
 
     // trace micro code
