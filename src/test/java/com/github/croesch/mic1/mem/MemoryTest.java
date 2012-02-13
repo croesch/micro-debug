@@ -97,7 +97,7 @@ public class MemoryTest extends DefaultTestCase {
 
     this.mem.setRead(true);
     this.mem.setWordAddress(0);
-    this.mem.poke();
+    this.mem.doTick();
     this.mem.fillRegisters(Register.H, null);
     assertThat(Register.H.getValue()).isEqualTo(0xFFFFFF);
     assertThat(this.mem.getWord(0)).isEqualTo(0xFFFFFF);
@@ -110,7 +110,7 @@ public class MemoryTest extends DefaultTestCase {
 
     this.mem.setRead(true);
     this.mem.setWordAddress(0);
-    this.mem.poke();
+    this.mem.doTick();
     this.mem.fillRegisters(Register.H, null);
     assertThat(Register.H.getValue()).isEqualTo(0xFF00FFFF);
     assertThat(this.mem.getWord(0)).isEqualTo(0xFF00FFFF);
@@ -123,7 +123,7 @@ public class MemoryTest extends DefaultTestCase {
 
     this.mem.setRead(true);
     this.mem.setWordAddress(0);
-    this.mem.poke();
+    this.mem.doTick();
     this.mem.fillRegisters(Register.H, null);
     assertThat(Register.H.getValue()).isEqualTo(0xFFFF00FF);
     assertThat(this.mem.getWord(0)).isEqualTo(0xFFFF00FF);
@@ -136,7 +136,7 @@ public class MemoryTest extends DefaultTestCase {
 
     this.mem.setRead(true);
     this.mem.setWordAddress(0);
-    this.mem.poke();
+    this.mem.doTick();
     this.mem.fillRegisters(Register.H, null);
     assertThat(Register.H.getValue()).isEqualTo(0xFFFFFF00);
     assertThat(this.mem.getWord(0)).isEqualTo(0xFFFFFF00);
@@ -153,7 +153,7 @@ public class MemoryTest extends DefaultTestCase {
     final int old = Register.H.getValue();
     for (byte b = 0; b < 7; ++b) {
       this.mem.setByteAddress(b);
-      this.mem.poke();
+      this.mem.doTick();
       this.mem.fillRegisters(Register.H, Register.LV);
       assertThat(Register.H.getValue()).isEqualTo(old);
       assertThat(Register.LV.getValue()).isEqualTo(0xff);
@@ -174,7 +174,7 @@ public class MemoryTest extends DefaultTestCase {
     final int old = Register.LV.getValue();
     for (byte b = 0; b < Byte.MAX_VALUE - 3; b += 4) {
       this.mem.setWordAddress(b / 4);
-      this.mem.poke();
+      this.mem.doTick();
       this.mem.fillRegisters(Register.H, Register.LV);
       assertThat(Register.LV.getValue()).isEqualTo(old);
       int val = this.bytes[b] << 8;
@@ -200,7 +200,7 @@ public class MemoryTest extends DefaultTestCase {
     final int old = Register.H.getValue();
     for (byte b = 0; b < Byte.MAX_VALUE - 3; ++b) {
       this.mem.setByteAddress(b);
-      this.mem.poke();
+      this.mem.doTick();
       this.mem.fillRegisters(Register.H, Register.LV);
       assertThat(Register.H.getValue()).isEqualTo(old);
       assertThat(Register.LV.getValue()).isEqualTo(this.bytes[b]);
@@ -215,21 +215,21 @@ public class MemoryTest extends DefaultTestCase {
   public void testPoke_WriteToNegative() {
     this.mem.setWrite(true);
     this.mem.setWordAddress(-1);
-    this.mem.poke();
+    this.mem.doTick();
   }
 
   @Test(expected = ArrayIndexOutOfBoundsException.class)
   public void testPoke_ReadFromNegative() {
     this.mem.setRead(true);
     this.mem.setWordAddress(-1);
-    this.mem.poke();
+    this.mem.doTick();
   }
 
   @Test(expected = ArrayIndexOutOfBoundsException.class)
   public void testPoke_FetchFromNegative() {
     this.mem.setFetch(true);
     this.mem.setByteAddress(-4);
-    this.mem.poke();
+    this.mem.doTick();
   }
 
   @Test(expected = ArrayIndexOutOfBoundsException.class)
@@ -241,7 +241,7 @@ public class MemoryTest extends DefaultTestCase {
     this.mem = new Memory(1, programStream);
     this.mem.setWrite(true);
     this.mem.setWordAddress(1);
-    this.mem.poke();
+    this.mem.doTick();
   }
 
   @Test(expected = ArrayIndexOutOfBoundsException.class)
@@ -253,7 +253,7 @@ public class MemoryTest extends DefaultTestCase {
     this.mem = new Memory(1, programStream);
     this.mem.setRead(true);
     this.mem.setWordAddress(1);
-    this.mem.poke();
+    this.mem.doTick();
   }
 
   @Test(expected = ArrayIndexOutOfBoundsException.class)
@@ -265,7 +265,7 @@ public class MemoryTest extends DefaultTestCase {
     this.mem = new Memory(1, programStream);
     this.mem.setFetch(true);
     this.mem.setByteAddress(4);
-    this.mem.poke();
+    this.mem.doTick();
   }
 
   @Test
@@ -274,11 +274,11 @@ public class MemoryTest extends DefaultTestCase {
     this.mem.setWrite(true);
     this.mem.setWordAddress(1);
     this.mem.setWordValue(0xFFFFFFFF);
-    this.mem.poke();
+    this.mem.doTick();
     this.mem.setWrite(false);
 
     this.mem.setRead(true);
-    this.mem.poke();
+    this.mem.doTick();
     this.mem.fillRegisters(Register.H, null);
     assertThat(Register.H.getValue()).isEqualTo(0xFFFFFFFF);
   }
@@ -289,12 +289,12 @@ public class MemoryTest extends DefaultTestCase {
     this.mem.setWrite(true);
     this.mem.setWordAddress(1);
     this.mem.setWordValue(0xFFFFFFFF);
-    this.mem.poke();
+    this.mem.doTick();
     this.mem.setWrite(false);
 
     this.mem.setFetch(true);
     this.mem.setByteAddress(5);
-    this.mem.poke();
+    this.mem.doTick();
     this.mem.fillRegisters(null, Register.H);
     assertThat(Register.H.getValue()).isEqualTo(0xFF);
   }
@@ -308,7 +308,7 @@ public class MemoryTest extends DefaultTestCase {
     this.mem.setWordAddress(1);
     this.mem.setByteAddress(6);
     this.mem.setWordValue(0x12345678);
-    this.mem.poke();
+    this.mem.doTick();
     this.mem.fillRegisters(Register.TOS, Register.H);
     assertThat(Register.TOS.getValue()).isEqualTo(0x12345678);
     assertThat(Register.H.getValue()).isEqualTo(0x56);
@@ -320,7 +320,7 @@ public class MemoryTest extends DefaultTestCase {
     this.mem.setWordAddress(1);
     this.mem.setByteAddress(6);
     this.mem.setWordValue(0x12345678);
-    this.mem.poke();
+    this.mem.doTick();
     int old = Register.H.getValue();
     this.mem.fillRegisters(Register.H, null);
     assertThat(Register.H.getValue()).isEqualTo(old);
@@ -339,7 +339,7 @@ public class MemoryTest extends DefaultTestCase {
     this.mem.setWrite(true);
 
     assertThat(micOut.toString()).isEmpty();
-    this.mem.poke();
+    this.mem.doTick();
     assertThat(micOut.toString()).isEmpty();
     Output.flush();
     assertThat(micOut.toString()).isEqualTo("x");
@@ -368,7 +368,7 @@ public class MemoryTest extends DefaultTestCase {
 
     this.mem.fillRegisters(Register.H, null);
     assertThat(Register.H.getValue()).isEqualTo(0x12345678);
-    this.mem.poke();
+    this.mem.doTick();
     this.mem.fillRegisters(Register.H, null);
     assertThat(Register.H.getValue()).isEqualTo(0x48);
 
@@ -388,7 +388,7 @@ public class MemoryTest extends DefaultTestCase {
 
     this.mem.fillRegisters(Register.H, null);
     assertThat(Register.H.getValue()).isEqualTo(0x12345678);
-    this.mem.poke();
+    this.mem.doTick();
     this.mem.fillRegisters(Register.H, null);
     // read -1 but as byte value -> 0xFF as integer
     assertThat(Register.H.getValue()).isEqualTo(0xFF);
@@ -421,7 +421,7 @@ public class MemoryTest extends DefaultTestCase {
 
     this.mem.setByteAddress(2);
     this.mem.setFetch(true);
-    this.mem.poke();
+    this.mem.doTick();
     this.mem.fillRegisters(Register.H, Register.LV);
     assertThat(Register.LV.getValue()).isEqualTo(0x96);
 

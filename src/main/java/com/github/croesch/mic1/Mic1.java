@@ -393,7 +393,7 @@ public final class Mic1 {
     this.memory.setWordAddress(Register.MAR.getValue());
     this.memory.setWordValue(Register.MDR.getValue());
     // let the memory do its work
-    this.memory.poke();
+    this.memory.doTick();
   }
 
   /**

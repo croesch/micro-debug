@@ -270,14 +270,14 @@ public final class Memory implements IReadableMemory {
   /**
    * If at least the signal <code>read</code> or <code>fetch</code> has been set in the memory. The values read will be
    * stored in the given registers.<br />
-   * <b>Note:</b> You have to call {@link #poke()} before invoking this method.
+   * <b>Note:</b> You have to call {@link #doTick()} before invoking this method.
    * 
    * @since Date: Nov 21, 2011
    * @param wordRegister if the signal <code>read</code> has been set, will be filled with the value read from the
    *        memory
    * @param byteRegister if the signal <code>fetch</code> has been set, will be filled with the value read from the
    *        memory
-   * @see #poke()
+   * @see #doTick()
    */
   public void fillRegisters(final Register wordRegister, final Register byteRegister) {
     if (this.read) {
@@ -296,7 +296,7 @@ public final class Memory implements IReadableMemory {
    * @since Date: Nov 21, 2011
    * @see #fillRegisters(Register, Register)
    */
-  public void poke() {
+  public void doTick() {
     if (this.write) {
       write();
     }
