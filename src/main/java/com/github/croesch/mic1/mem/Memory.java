@@ -130,13 +130,16 @@ public final class Memory implements IReadableMemory {
     final byte[] bytes = new byte[4];
     try {
       while (stream.read(bytes) != -1) {
+        // read four bytes to define start address
         final int startAddress = Utils.bytesToInt(bytes[0], bytes[1], bytes[2], bytes[3]);
 
         if (stream.read(bytes) == -1) {
+          // file ends after start address
           throw new FileFormatException("unexpected end of file");
         }
         final int blockLength = Utils.bytesToInt(bytes[0], bytes[1], bytes[2], bytes[3]);
 
+        // read the block from the given stream with the calculated size and blocklength
         readBlock(startAddress, blockLength, stream);
       }
     } catch (final IOException e) {
@@ -159,9 +162,11 @@ public final class Memory implements IReadableMemory {
         final int val = stream.read();
 
         if (val == -1) {
+          // block should contain more content but stream returned end of stream
           throw new FileFormatException("unexpected end of block");
         }
 
+        // store the value
         setByte(start + i, val);
       }
     } catch (final IOException e) {
@@ -177,11 +182,14 @@ public final class Memory implements IReadableMemory {
    * @param value the byte to write to the memory
    */
   private void setByte(final int addr, final int value) {
+    // offset of the byte where 0 is the lsb and 3 the msb
     final int offs = 3 - (addr % 4);
-    final int mask = MASK_BYTE[offs];
-    final int word = this.memory[addr / 4];
+    // align the value
+    final int alignedValue = value << offs * Byte.SIZE;
 
-    this.memory[addr / 4] = (word & mask) | value << offs * Byte.SIZE;
+    // read the current word value and override just the given byte
+    final int word = this.memory[addr / 4];
+    this.memory[addr / 4] = (word & MASK_BYTE[offs]) | alignedValue;
   }
 
   /**
