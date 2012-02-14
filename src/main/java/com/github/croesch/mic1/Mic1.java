@@ -533,36 +533,6 @@ public final class Mic1 {
   }
 
   /**
-   * Prints the whole micro code to the user.
-   * 
-   * @since Date: Feb 5, 2012
-   */
-  public void printMicroCode() {
-    this.controlStore.printCode();
-  }
-
-  /**
-   * Prints the given number of lines of micro code around the current line to the user.
-   * 
-   * @since Date: Feb 5, 2012
-   * @param scope the number of lines to print before and after the current line
-   */
-  public void printMicroCode(final int scope) {
-    this.controlStore.printCodeAroundLine(Math.max(0, this.oldMpc), scope);
-  }
-
-  /**
-   * Prints the micro code to the user. Between the given line numbers.
-   * 
-   * @since Date: Feb 5, 2012
-   * @param from the first line to print
-   * @param to the last line to print
-   */
-  public void printMicroCode(final int from, final int to) {
-    this.controlStore.printCode(from, to);
-  }
-
-  /**
    * Returns the main memory.
    * 
    * @since Date: Feb 13, 2012
@@ -580,5 +550,25 @@ public final class Mic1 {
    */
   public int getLastMacroAddress() {
     return this.lastMacroAddress;
+  }
+
+  /**
+   * Returns the address of the last executed micro code line.
+   * 
+   * @since Date: Feb 14, 2012
+   * @return the address of the last executed micro code line.
+   */
+  public int getOldMpc() {
+    return this.oldMpc;
+  }
+
+  /**
+   * Returns the control store of micro instructions.
+   * 
+   * @since Date: Feb 14, 2012
+   * @return {@link MicroControlStore} storing the micro code of the processor
+   */
+  public MicroControlStore getControlStore() {
+    return this.controlStore;
   }
 }

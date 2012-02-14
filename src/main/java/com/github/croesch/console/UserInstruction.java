@@ -118,19 +118,19 @@ enum UserInstruction {
     public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
       switch (getSize(params)) {
         case 0:
-          interpreter.getProcessor().printMicroCode();
+          interpreter.printMicroCode();
           break;
         case 1:
           final Integer num = (Integer) Parameter.NUMBER.getValue(params[0]);
           if (num != null) {
-            interpreter.getProcessor().printMicroCode(num.intValue());
+            interpreter.printMicroCode(num.intValue());
           }
           break;
         case 2:
           final Integer from = (Integer) Parameter.NUMBER.getValue(params[0]);
           final Integer to = (Integer) Parameter.NUMBER.getValue(params[1]);
           if (from != null && to != null) {
-            interpreter.getProcessor().printMicroCode(from.intValue(), to.intValue());
+            interpreter.printMicroCode(from.intValue(), to.intValue());
           }
           break;
         default:

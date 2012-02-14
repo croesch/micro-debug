@@ -20,6 +20,7 @@ package com.github.croesch.console;
 
 import com.github.croesch.mic1.Mic1;
 import com.github.croesch.mic1.api.IProcessorInterpreter;
+import com.github.croesch.mic1.controlstore.MicroControlStore;
 import com.github.croesch.mic1.controlstore.MicroInstruction;
 import com.github.croesch.mic1.register.Register;
 
@@ -43,6 +44,9 @@ public final class Mic1Interpreter implements IProcessorInterpreter {
   /** the interpreter for the memory of the processor */
   private final MemoryInterpreter memInterpreter;
 
+  /** the store of micro instructions */
+  private final MicroControlStore controlStore;
+
   /**
    * Constructs an interpreter for the given processor.
    * 
@@ -57,6 +61,7 @@ public final class Mic1Interpreter implements IProcessorInterpreter {
     mic.setProcessorInterpreter(this);
     this.view = new TraceManager(this.mic1.getMemory());
     this.memInterpreter = new MemoryInterpreter(this.mic1.getMemory());
+    this.controlStore = this.mic1.getControlStore();
   }
 
   /**
@@ -325,5 +330,35 @@ public final class Mic1Interpreter implements IProcessorInterpreter {
    */
   public Mic1 getProcessor() {
     return this.mic1;
+  }
+
+  /**
+   * Prints the whole micro code to the user.
+   * 
+   * @since Date: Feb 5, 2012
+   */
+  public void printMicroCode() {
+    this.controlStore.printCode();
+  }
+
+  /**
+   * Prints the given number of lines of micro code around the current line to the user.
+   * 
+   * @since Date: Feb 5, 2012
+   * @param scope the number of lines to print before and after the current line
+   */
+  public void printMicroCode(final int scope) {
+    this.controlStore.printCodeAroundLine(Math.max(0, this.mic1.getOldMpc()), scope);
+  }
+
+  /**
+   * Prints the micro code to the user. Between the given line numbers.
+   * 
+   * @since Date: Feb 5, 2012
+   * @param from the first line to print
+   * @param to the last line to print
+   */
+  public void printMicroCode(final int from, final int to) {
+    this.controlStore.printCode(from, to);
   }
 }
