@@ -21,12 +21,12 @@ package com.github.croesch.mic1.controlstore;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.github.croesch.commons.AbstractCodeContainer;
 import com.github.croesch.commons.Printer;
 import com.github.croesch.commons.Settings;
 import com.github.croesch.commons.Utils;
 import com.github.croesch.error.FileFormatException;
 import com.github.croesch.i18n.Text;
-import com.github.croesch.mic1.AbstractCodeContainer;
 
 /**
  * The store for {@link MicroInstruction}s.

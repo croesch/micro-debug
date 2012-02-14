@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.croesch.mic1;
+package com.github.croesch.commons;
 
-import com.github.croesch.commons.Utils;
 
 /**
  * Represents a code container that is e.g. able to print the code.
