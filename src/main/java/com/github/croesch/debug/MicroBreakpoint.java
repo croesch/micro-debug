@@ -27,7 +27,7 @@ import com.github.croesch.i18n.Text;
  * @author croesch
  * @since Date: Feb 4, 2012
  */
-public final class MicroBreakpoint extends AbstractLineBreakpoint {
+final class MicroBreakpoint extends AbstractLineBreakpoint {
 
   /**
    * Constructs a breakpoint with the condition that the given line of micro code is executed.
@@ -35,7 +35,7 @@ public final class MicroBreakpoint extends AbstractLineBreakpoint {
    * @since Date: Feb 4, 2012
    * @param l the line that should be executed so that this breakpoint is activated
    */
-  public MicroBreakpoint(final int l) {
+  MicroBreakpoint(final int l) {
     super(l);
   }
 

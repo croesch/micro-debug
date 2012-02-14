@@ -18,6 +18,7 @@
  */
 package com.github.croesch.console;
 
+import com.github.croesch.debug.BreakpointManager;
 import com.github.croesch.mic1.Mic1;
 import com.github.croesch.mic1.api.IProcessorInterpreter;
 import com.github.croesch.mic1.controlstore.MicroControlStore;

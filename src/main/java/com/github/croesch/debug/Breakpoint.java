@@ -24,7 +24,7 @@ package com.github.croesch.debug;
  * @author croesch
  * @since Date: Jan 30, 2012
  */
-public abstract class Breakpoint {
+abstract class Breakpoint {
 
   /** the unique id of this breakpoint */
   private int id = 0;
@@ -37,7 +37,7 @@ public abstract class Breakpoint {
    * 
    * @since Date: Jan 30, 2012
    */
-  public Breakpoint() {
+  Breakpoint() {
     this.id = ++highestId;
   }
 
@@ -47,7 +47,7 @@ public abstract class Breakpoint {
    * @since Date: Jan 30, 2012
    * @return the unique id of this breakpoint.
    */
-  public final int getId() {
+  final int getId() {
     return this.id;
   }
 
@@ -59,5 +59,5 @@ public abstract class Breakpoint {
    * @param macroLine the number of the line in macro code being executed next
    * @return <code>true</code>, if the condition of this breakpoint is met and the debugger should stop.
    */
-  public abstract boolean isConditionMet(int microLine, int macroLine);
+  abstract boolean isConditionMet(int microLine, int macroLine);
 }

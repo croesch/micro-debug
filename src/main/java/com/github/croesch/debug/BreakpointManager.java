@@ -16,17 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.croesch.console;
+package com.github.croesch.debug;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import com.github.croesch.commons.Printer;
-import com.github.croesch.debug.Breakpoint;
-import com.github.croesch.debug.MacroBreakpoint;
-import com.github.croesch.debug.MicroBreakpoint;
-import com.github.croesch.debug.RegisterBreakpoint;
 import com.github.croesch.i18n.Text;
 import com.github.croesch.mic1.register.Register;
 
@@ -36,7 +32,7 @@ import com.github.croesch.mic1.register.Register;
  * @author croesch
  * @since Date: Jan 27, 2012
  */
-final class BreakpointManager {
+public final class BreakpointManager {
 
   /** the {@link Logger} for this class */
   private static final Logger LOGGER = Logger.getLogger(Text.class.getName());
@@ -53,7 +49,7 @@ final class BreakpointManager {
    * @return <code>true</code> if a break point is met,<br>
    *         <code>false</code> otherwise
    */
-  boolean isBreakpoint(final int microLine, final int macroLine) {
+  public boolean isBreakpoint(final int microLine, final int macroLine) {
     for (final Breakpoint bp : this.breakPoints) {
       if (bp.isConditionMet(microLine, macroLine)) {
         return true;
@@ -69,7 +65,7 @@ final class BreakpointManager {
    * @param r the {@link Register} to watch for the given value
    * @param val the value the debugger should break if the given {@link Register} has it.
    */
-  void addRegisterBreakpoint(final Register r, final Integer val) {
+  public void addRegisterBreakpoint(final Register r, final Integer val) {
     if (r != null && val != null) {
       final Breakpoint bp = new RegisterBreakpoint(r, val);
       if (this.breakPoints.contains(bp)) {
@@ -86,7 +82,7 @@ final class BreakpointManager {
    * @since Date: Feb 4, 2012
    * @param line the line number in micro code the debugger should break at
    */
-  void addMicroBreakpoint(final Integer line) {
+  public void addMicroBreakpoint(final Integer line) {
     if (line != null) {
       final Breakpoint bp = new MicroBreakpoint(line.intValue());
       if (this.breakPoints.contains(bp)) {
@@ -103,7 +99,7 @@ final class BreakpointManager {
    * @since Date: Feb 4, 2012
    * @param line the line number in macro code the debugger should break at
    */
-  void addMacroBreakpoint(final Integer line) {
+  public void addMacroBreakpoint(final Integer line) {
     if (line != null) {
       final Breakpoint bp = new MacroBreakpoint(line.intValue());
       if (this.breakPoints.contains(bp)) {
@@ -120,7 +116,7 @@ final class BreakpointManager {
    * @since Date: Jan 30, 2012
    * @param id the unique id of the breakpoint to remove
    */
-  void removeBreakpoint(final int id) {
+  public void removeBreakpoint(final int id) {
     boolean removed = false;
     for (final Breakpoint bp : this.breakPoints) {
       if (bp.getId() == id) {
@@ -139,7 +135,7 @@ final class BreakpointManager {
    * 
    * @since Date: Jan 28, 2012
    */
-  void listBreakpoints() {
+  public void listBreakpoints() {
     for (final Breakpoint bp : this.breakPoints) {
       Printer.println(bp);
     }

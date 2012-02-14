@@ -24,7 +24,7 @@ package com.github.croesch.debug;
  * @author croesch
  * @since Date: Feb 4, 2012
  */
-public abstract class AbstractLineBreakpoint extends Breakpoint {
+abstract class AbstractLineBreakpoint extends Breakpoint {
 
   /** the line that is the condition for this breakpoint */
   private final int line;
@@ -35,7 +35,7 @@ public abstract class AbstractLineBreakpoint extends Breakpoint {
    * @since Date: Feb 4, 2012
    * @param l the line number this breakpoint should make the debugger to break at
    */
-  public AbstractLineBreakpoint(final int l) {
+  AbstractLineBreakpoint(final int l) {
     this.line = l;
   }
 
@@ -45,7 +45,7 @@ public abstract class AbstractLineBreakpoint extends Breakpoint {
    * @since Date: Feb 4, 2012
    * @return the line in code, where this breakpoint lies.
    */
-  public final int getLine() {
+  final int getLine() {
     return this.line;
   }
 
@@ -75,5 +75,4 @@ public abstract class AbstractLineBreakpoint extends Breakpoint {
     }
     return true;
   }
-
 }

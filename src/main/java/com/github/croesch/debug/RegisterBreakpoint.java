@@ -28,7 +28,7 @@ import com.github.croesch.mic1.register.Register;
  * @author croesch
  * @since Date: Jan 30, 2012
  */
-public final class RegisterBreakpoint extends Breakpoint {
+final class RegisterBreakpoint extends Breakpoint {
 
   /** the register that is checked for the value */
   private final Register register;
@@ -43,7 +43,7 @@ public final class RegisterBreakpoint extends Breakpoint {
    * @param r the {@link Register} to check for the given value
    * @param v the value that the given {@link Register} should have, that is the breakpoint condition
    */
-  public RegisterBreakpoint(final Register r, final int v) {
+  RegisterBreakpoint(final Register r, final int v) {
     if (r == null) {
       throw new IllegalArgumentException();
     }
@@ -67,7 +67,7 @@ public final class RegisterBreakpoint extends Breakpoint {
    * @since Date: Jan 30, 2012
    * @return the {@link Register} to check for the condition value.
    */
-  public Register getRegister() {
+  Register getRegister() {
     return this.register;
   }
 
@@ -77,7 +77,7 @@ public final class RegisterBreakpoint extends Breakpoint {
    * @since Date: Jan 30, 2012
    * @return the value to check the given {@link Register} for.
    */
-  public int getValue() {
+  int getValue() {
     return this.val;
   }
 

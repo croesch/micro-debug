@@ -28,7 +28,7 @@ import com.github.croesch.i18n.Text;
  * @author croesch
  * @since Date: Feb 4, 2012
  */
-public final class MacroBreakpoint extends AbstractLineBreakpoint {
+final class MacroBreakpoint extends AbstractLineBreakpoint {
 
   /**
    * Constructs a breakpoint with the condition that the given line of macro code is executed.
@@ -36,7 +36,7 @@ public final class MacroBreakpoint extends AbstractLineBreakpoint {
    * @since Date: Feb 4, 2012
    * @param l the line that should be executed so that this breakpoint is activated
    */
-  public MacroBreakpoint(final int l) {
+  MacroBreakpoint(final int l) {
     super(l);
   }
 
