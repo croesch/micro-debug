@@ -26,7 +26,7 @@ import com.github.croesch.commons.Printer;
 import com.github.croesch.commons.Settings;
 import com.github.croesch.commons.Utils;
 import com.github.croesch.i18n.Text;
-import com.github.croesch.mic1.api.AbstractCodeContainer;
+import com.github.croesch.mic1.AbstractCodeContainer;
 import com.github.croesch.mic1.mem.IJVMCommand;
 import com.github.croesch.mic1.mem.IJVMCommandArgument;
 import com.github.croesch.mic1.mem.IJVMConfigReader;
