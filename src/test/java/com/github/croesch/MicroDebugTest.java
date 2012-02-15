@@ -50,6 +50,7 @@ public class MicroDebugTest extends DefaultTestCase {
 
   @Test
   public final void testMain_FileNotFound() {
+    printlnMethodName();
     MicroDebug.main(new String[] { "asd", "bas" });
 
     assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME
@@ -61,6 +62,7 @@ public class MicroDebugTest extends DefaultTestCase {
 
   @Test
   public final void testMain_FileNotFound1() {
+    printlnMethodName();
     MicroDebug.main(new String[] { "asd", "src/test/resources/mic1/hi.mic1" });
 
     assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME
@@ -70,6 +72,7 @@ public class MicroDebugTest extends DefaultTestCase {
 
   @Test
   public final void testMain_FileNotFound2() {
+    printlnMethodName();
     MicroDebug.main(new String[] { "src/test/resources/mic1/hi.mic1", "asd" });
 
     assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME
@@ -79,6 +82,7 @@ public class MicroDebugTest extends DefaultTestCase {
 
   @Test
   public final void testMain_WrongFormat1() {
+    printlnMethodName();
     MicroDebug.main(new String[] { "src/test/resources/mic1/hi.mic1", "src/test/resources/mic1/hi.mic1" });
 
     assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME + Text.ERROR.text(Text.WRONG_FORMAT_IJVM.text())
@@ -87,6 +91,7 @@ public class MicroDebugTest extends DefaultTestCase {
 
   @Test
   public final void testMain_WrongFormat2() {
+    printlnMethodName();
     MicroDebug.main(new String[] { "src/test/resources/mic1/hi.ijvm", "src/test/resources/mic1/hi.ijvm" });
 
     assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME + Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text())
@@ -95,6 +100,7 @@ public class MicroDebugTest extends DefaultTestCase {
 
   @Test
   public final void testMain_TooFewArgs() {
+    printlnMethodName();
     MicroDebug.main(new String[] { "-u" });
     assertThat(out.toString()).isEqualTo(this.GREETING + this.BORDER + Text.ERROR.text(Text.MISSING_IJVM_FILE)
                                                  + getLineSeparator() + Text.TRY_HELP + getLineSeparator());
@@ -122,6 +128,7 @@ public class MicroDebugTest extends DefaultTestCase {
 
   @Test
   public final void testMain_Version() {
+    printlnMethodName();
     MicroDebug.main(new String[] { "-v" });
     assertThat(out.toString()).isEqualTo(this.GREETING + this.BORDER + Text.VERSION.text() + getLineSeparator());
 
@@ -147,6 +154,7 @@ public class MicroDebugTest extends DefaultTestCase {
 
   @Test
   public final void testMain_Unknown() throws IOException {
+    printlnMethodName();
     MicroDebug.main(new String[] { "-xxx", "", "" });
     assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME
                                                  + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("-xxx"))
@@ -164,6 +172,7 @@ public class MicroDebugTest extends DefaultTestCase {
 
   @Test
   public final void testMain_Hi() {
+    printlnMethodName();
     Output.setOut(new PrintStream(out));
     Reader.setReader(new StringReader("run\nexit"));
 
@@ -177,6 +186,7 @@ public class MicroDebugTest extends DefaultTestCase {
 
   @Test
   public final void testMain_Hi_OutputFile() throws IOException {
+    printlnMethodName();
     Reader.setReader(new StringReader("run" + getLineSeparator() + "exit"));
 
     final String filePath = "tmp-micro-debug-test.del";
@@ -185,6 +195,9 @@ public class MicroDebugTest extends DefaultTestCase {
                                   filePath,
                                   "src/test/resources/mic1/hi.mic1",
                                   "src/test/resources/mic1/hi.ijvm" });
+    for (final byte b : "This should not be visible in output file ...\n".getBytes()) {
+      Output.print(b);
+    }
     assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME + Text.INPUT_DEBUGGER.text()
                                                  + Text.TICKS.text(14) + getLineSeparator()
                                                  + Text.INPUT_DEBUGGER.text());
@@ -203,7 +216,7 @@ public class MicroDebugTest extends DefaultTestCase {
       if (fileInputStream != null) {
         fileInputStream.close();
       }
-      new File(filePath).delete();
+      assertThat(new File(filePath).delete()).isTrue();
     }
   }
 }

@@ -73,14 +73,29 @@ enum Argument {
 
   /** argument to specify a file to append the output of the debugger to */
   OUTPUT_FILE (1) {
+
+    /** the stream that has been opened by this instance */
+    private PrintStream stream = null;
+
     @Override
     public boolean execute(final String ... params) {
+      releaseResources();
       try {
-        Output.setOut(new PrintStream(new FileOutputStream(new File(params[0]), true)));
+        this.stream = new PrintStream(new FileOutputStream(new File(params[0]), true));
+        Output.setOut(this.stream);
       } catch (final FileNotFoundException e) {
         Utils.logThrownThrowable(e);
       }
       return true;
+    }
+
+    @Override
+    void releaseResources() {
+      if (this.stream != null) {
+        Output.setOut(System.out);
+        this.stream.close();
+        this.stream = null;
+      }
     }
   },
 
@@ -315,5 +330,25 @@ enum Argument {
       HELP.execute();
     }
     return !argumentFound;
+  }
+
+  /**
+   * Releases important references.
+   * 
+   * @since Date: Feb 15, 2012
+   */
+  static void releaseAllResources() {
+    for (final Argument arg : values()) {
+      arg.releaseResources();
+    }
+  }
+
+  /**
+   * Releases important references.
+   * 
+   * @since Date: Feb 15, 2012
+   */
+  void releaseResources() {
+    // to be overridden by the arguments that decide to release something
   }
 }

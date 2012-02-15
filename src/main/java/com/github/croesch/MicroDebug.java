@@ -118,6 +118,8 @@ public final class MicroDebug {
         }
       }
     }
+
+    Argument.releaseAllResources();
   }
 
   /**

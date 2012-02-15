@@ -20,6 +20,7 @@ package com.github.croesch;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.junit.Test;
@@ -37,6 +38,7 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testOf_DifferentValues() {
+    printlnMethodName();
     assertThat(Argument.of("--help")).isSameAs(Argument.HELP);
     assertThat(Argument.of("-h")).isSameAs(Argument.HELP);
 
@@ -52,6 +54,7 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testOf_Unkown() {
+    printlnMethodName();
     assertThat(Argument.of(null)).isNull();
     assertThat(Argument.of("")).isNull();
     assertThat(Argument.of(" ")).isNull();
@@ -62,21 +65,25 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testCreateArgumentList_NullDeliversEmptyMap() {
+    printlnMethodName();
     assertThat(Argument.createArgumentList(null)).isEmpty();
   }
 
   @Test
   public final void testCreateArgumentList_EmptyArrayDeliversEmptyMap() {
+    printlnMethodName();
     assertThat(Argument.createArgumentList(new String[] {})).isEmpty();
   }
 
   @Test
   public final void testCreateArgumentList_NullArgumentProducesNoEntry() {
+    printlnMethodName();
     assertThat(Argument.createArgumentList(new String[] { null })).isEmpty();
   }
 
   @Test
   public final void testCreateArgumentList_UnknownArgument() {
+    printlnMethodName();
     String[] args = new String[] { "" };
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.ERROR_UNKNOWN);
     assertThat(Argument.createArgumentList(args).get(Argument.ERROR_UNKNOWN)).containsOnly("");
@@ -96,6 +103,7 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testCreateArgumentList_HelpInArray() {
+    printlnMethodName();
     String[] args = new String[] { "-h" };
 
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.HELP);
@@ -108,6 +116,7 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testCreateArgumentList_VersionInArray() {
+    printlnMethodName();
     String[] args = new String[] { "-v" };
 
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.VERSION);
@@ -120,6 +129,7 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testCreateArgumentList_OutputFileInArray() {
+    printlnMethodName();
     String[] args = new String[] { "-o" };
 
     assertThat(Argument.createArgumentList(args).keySet()).containsOnly(Argument.ERROR_PARAM_NUMBER);
@@ -136,6 +146,7 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testCreateArgumentList() {
+    printlnMethodName();
     final String[] args = new String[] { "-h", "-v", null, "--help", "--xxno-argument", "null", "-o" };
 
     assertThat(Argument.createArgumentList(args)).hasSize(4);
@@ -150,6 +161,7 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testCreateArgumentList2() {
+    printlnMethodName();
     final String[] args = new String[] { "-h", "-v", null, "--xxno-argument", "null", "-dx", "-d", "--output-file" };
 
     assertThat(Argument.createArgumentList(args)).hasSize(4);
@@ -165,18 +177,21 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteVersion() {
+    printlnMethodName();
     assertThat(Argument.VERSION.execute()).isFalse();
     assertThat(out.toString()).isEqualTo(Text.VERSION.text() + getLineSeparator());
   }
 
   @Test
   public final void testExecuteHelp() throws IOException {
+    printlnMethodName();
     assertThat(Argument.HELP.execute()).isFalse();
     assertThat(out.toString()).isEqualTo(getHelpFileText());
   }
 
   @Test
   public final void testExecuteUnbufferedOutput() {
+    printlnMethodName();
     assertThat(Argument.UNBUFFERED_OUTPUT.execute()).isTrue();
     assertThat(Output.isBuffered()).isFalse();
 
@@ -193,6 +208,7 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteUnknownArgument() throws IOException {
+    printlnMethodName();
     assertThat(Argument.ERROR_UNKNOWN.execute()).isTrue();
     assertThat(out.toString()).isEmpty();
 
@@ -218,6 +234,7 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public final void testExecuteParameterNumber() throws IOException {
+    printlnMethodName();
     assertThat(Argument.ERROR_PARAM_NUMBER.execute()).isTrue();
     assertThat(out.toString()).isEmpty();
 
@@ -237,8 +254,20 @@ public class ArgumentTest extends DefaultTestCase {
 
   @Test
   public void testErrorArgs() {
+    printlnMethodName();
     assertThat(Argument.of("--error-unknown")).isNull();
     assertThat(Argument.of("--error-param-number")).isNull();
     assertThat(Argument.of("-e")).isNull();
+  }
+
+  @Test
+  public void testExecuteOutputFileAndReleaseResources() {
+    printlnMethodName();
+    Argument.releaseAllResources();
+    Argument.OUTPUT_FILE.execute(System.getProperty("java.io.tmpdir") + "/asd");
+    Argument.releaseAllResources();
+    assertThat(new File(System.getProperty("java.io.tmpdir") + "/asd").delete()).isTrue();
+    Argument.releaseAllResources();
+    Argument.OUTPUT_FILE.releaseResources();
   }
 }
