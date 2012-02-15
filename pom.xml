@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<!-- Copyright (C) 2011-2012 Christian Roesch -->
@@ -17,13 +16,13 @@
 	<!-- GNU General Public License for more details. -->
 
 	<!-- You should have received a copy of the GNU General Public License -->
-	<!-- along with micro-debug. If not, see <http://www.gnu.org/licenses/>. -->
+	<!-- along with micro-debug. If not, see <http://www.gnu.org/licenses />. -->
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.croesch</groupId>
 	<artifactId>micro-debug</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.1</version>
 	<name>MicroDebug</name>
 	<url>https://github.com/croesch/micro-debug</url>
 
