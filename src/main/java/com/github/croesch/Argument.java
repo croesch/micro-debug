@@ -75,7 +75,7 @@ enum Argument {
   OUTPUT_FILE (1) {
 
     /** the stream that has been opened by this instance */
-    private PrintStream stream = null;
+    private transient PrintStream stream = null;
 
     @Override
     public boolean execute(final String ... params) {
