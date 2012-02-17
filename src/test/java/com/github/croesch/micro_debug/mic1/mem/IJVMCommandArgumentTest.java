@@ -55,59 +55,59 @@ public class IJVMCommandArgumentTest extends DefaultTestCase {
 
   @Test
   public void testGetRepresentationOfArgument() {
-    assertThat(IJVMCommandArgument.BYTE.getRepresentationOfArgument(0, this.mem)).isEqualTo("0x0");
-    assertThat(IJVMCommandArgument.BYTE.getRepresentationOfArgument(127, this.mem)).isEqualTo("0x7F");
-    assertThat(IJVMCommandArgument.BYTE.getRepresentationOfArgument(-127, this.mem)).isEqualTo("0x81");
-    assertThat(IJVMCommandArgument.BYTE.getRepresentationOfArgument(12, this.mem)).isEqualTo("0xC");
-    assertThat(IJVMCommandArgument.BYTE.getRepresentationOfArgument(-12, this.mem)).isEqualTo("0xF4");
-    assertThat(IJVMCommandArgument.BYTE.getRepresentationOfArgument(0xF4, this.mem)).isEqualTo("0xF4");
-    assertThat(IJVMCommandArgument.BYTE.getRepresentationOfArgument(258, this.mem)).isEqualTo("0x2");
-    assertThat(IJVMCommandArgument.BYTE.getRepresentationOfArgument(130, this.mem)).isEqualTo("0x82");
-    assertThat(IJVMCommandArgument.BYTE.getRepresentationOfArgument(-130, this.mem)).isEqualTo("0x7E");
+    assertThat(IJVMCommandArgument.BYTE.getRepresentationOfArgument(-1, 0, this.mem)).isEqualTo("0x0");
+    assertThat(IJVMCommandArgument.BYTE.getRepresentationOfArgument(1, 127, this.mem)).isEqualTo("0x7F");
+    assertThat(IJVMCommandArgument.BYTE.getRepresentationOfArgument(42, -127, this.mem)).isEqualTo("0x81");
+    assertThat(IJVMCommandArgument.BYTE.getRepresentationOfArgument(-42, 12, this.mem)).isEqualTo("0xC");
+    assertThat(IJVMCommandArgument.BYTE.getRepresentationOfArgument(0, -12, this.mem)).isEqualTo("0xF4");
+    assertThat(IJVMCommandArgument.BYTE.getRepresentationOfArgument(0, 0xF4, this.mem)).isEqualTo("0xF4");
+    assertThat(IJVMCommandArgument.BYTE.getRepresentationOfArgument(0, 258, this.mem)).isEqualTo("0x2");
+    assertThat(IJVMCommandArgument.BYTE.getRepresentationOfArgument(0, 130, this.mem)).isEqualTo("0x82");
+    assertThat(IJVMCommandArgument.BYTE.getRepresentationOfArgument(0, -130, this.mem)).isEqualTo("0x7E");
 
-    assertThat(IJVMCommandArgument.VARNUM.getRepresentationOfArgument(0, this.mem)).isEqualTo("0");
-    assertThat(IJVMCommandArgument.VARNUM.getRepresentationOfArgument(127, this.mem)).isEqualTo("127");
-    assertThat(IJVMCommandArgument.VARNUM.getRepresentationOfArgument(-127, this.mem)).isEqualTo("129");
-    assertThat(IJVMCommandArgument.VARNUM.getRepresentationOfArgument(12, this.mem)).isEqualTo("12");
-    assertThat(IJVMCommandArgument.VARNUM.getRepresentationOfArgument(-12, this.mem)).isEqualTo("244");
-    assertThat(IJVMCommandArgument.VARNUM.getRepresentationOfArgument(258, this.mem)).isEqualTo("2");
-    assertThat(IJVMCommandArgument.VARNUM.getRepresentationOfArgument(130, this.mem)).isEqualTo("130");
-    assertThat(IJVMCommandArgument.VARNUM.getRepresentationOfArgument(-130, this.mem)).isEqualTo("126");
+    assertThat(IJVMCommandArgument.VARNUM.getRepresentationOfArgument(-1, 0, this.mem)).isEqualTo("0");
+    assertThat(IJVMCommandArgument.VARNUM.getRepresentationOfArgument(1, 127, this.mem)).isEqualTo("127");
+    assertThat(IJVMCommandArgument.VARNUM.getRepresentationOfArgument(42, -127, this.mem)).isEqualTo("129");
+    assertThat(IJVMCommandArgument.VARNUM.getRepresentationOfArgument(-42, 12, this.mem)).isEqualTo("12");
+    assertThat(IJVMCommandArgument.VARNUM.getRepresentationOfArgument(0, -12, this.mem)).isEqualTo("244");
+    assertThat(IJVMCommandArgument.VARNUM.getRepresentationOfArgument(0, 258, this.mem)).isEqualTo("2");
+    assertThat(IJVMCommandArgument.VARNUM.getRepresentationOfArgument(0, 130, this.mem)).isEqualTo("130");
+    assertThat(IJVMCommandArgument.VARNUM.getRepresentationOfArgument(0, -130, this.mem)).isEqualTo("126");
 
-    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(0, this.mem)).isEqualTo("0x0");
-    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(127, this.mem)).isEqualTo("0x7F");
-    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(-127, this.mem)).isEqualTo("0x81");
-    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(12, this.mem)).isEqualTo("0xC");
-    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(-12, this.mem)).isEqualTo("0xF4");
-    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(0xF4, this.mem)).isEqualTo("0xF4");
-    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(258, this.mem)).isEqualTo("0x2");
-    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(130, this.mem)).isEqualTo("0x82");
-    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(-130, this.mem)).isEqualTo("0x7E");
+    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(-1, 0, this.mem)).isEqualTo("0x0");
+    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(1, 127, this.mem)).isEqualTo("0x7F");
+    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(42, -127, this.mem)).isEqualTo("0x81");
+    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(-42, 12, this.mem)).isEqualTo("0xC");
+    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(0, -12, this.mem)).isEqualTo("0xF4");
+    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(0, 0xF4, this.mem)).isEqualTo("0xF4");
+    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(0, 258, this.mem)).isEqualTo("0x2");
+    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(0, 130, this.mem)).isEqualTo("0x82");
+    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(0, -130, this.mem)).isEqualTo("0x7E");
 
-    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(0, this.mem)).isEqualTo("0");
-    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(127, this.mem)).isEqualTo("127");
-    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(-127, this.mem)).isEqualTo("-127");
-    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(12, this.mem)).isEqualTo("12");
-    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(-12, this.mem)).isEqualTo("-12");
-    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(0xF4, this.mem)).isEqualTo("244");
-    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(258, this.mem)).isEqualTo("258");
-    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(13456, this.mem)).isEqualTo("13456");
-    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(0xABCD, this.mem)).isEqualTo("-21555");
-    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(0x1010, this.mem)).isEqualTo("4112");
-
-    Register.CPP.setValue(0);
-    assertThat(IJVMCommandArgument.INDEX.getRepresentationOfArgument(0, this.mem)).isEqualTo("0[=0x10203]");
-    assertThat(IJVMCommandArgument.INDEX.getRepresentationOfArgument(1, this.mem)).isEqualTo("1[=0x4050607]");
-    assertThat(IJVMCommandArgument.INDEX.getRepresentationOfArgument(2, this.mem)).isEqualTo("2[=0x8090A0B]");
-    Register.CPP.setValue(Register.CPP.getValue() + 1);
-    assertThat(IJVMCommandArgument.INDEX.getRepresentationOfArgument(0, this.mem)).isEqualTo("0[=0x4050607]");
+    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(100, 0, this.mem)).isEqualTo("0x64");
+    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(80, 127, this.mem)).isEqualTo("0xCF");
+    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(500, -127, this.mem)).isEqualTo("0x175");
+    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(40, 12, this.mem)).isEqualTo("0x34");
+    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(30, -12, this.mem)).isEqualTo("0x12");
+    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(200, 0xF4, this.mem)).isEqualTo("0x1BC");
+    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(0, 258, this.mem)).isEqualTo("0x102");
+    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(1, 13456, this.mem)).isEqualTo("0x3491");
+    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(2, 0xABCD, this.mem)).isEqualTo("0xFFFFABCF");
+    assertThat(IJVMCommandArgument.LABEL.getRepresentationOfArgument(3, 0x1010, this.mem)).isEqualTo("0x1013");
 
     Register.CPP.setValue(0);
-    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(0, this.mem)).isEqualTo("0[=0x10203]");
-    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(1, this.mem)).isEqualTo("1[=0x4050607]");
-    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(2, this.mem)).isEqualTo("2[=0x8090A0B]");
+    assertThat(IJVMCommandArgument.INDEX.getRepresentationOfArgument(-1, 0, this.mem)).isEqualTo("0[=0x10203]");
+    assertThat(IJVMCommandArgument.INDEX.getRepresentationOfArgument(2, 1, this.mem)).isEqualTo("1[=0x4050607]");
+    assertThat(IJVMCommandArgument.INDEX.getRepresentationOfArgument(42, 2, this.mem)).isEqualTo("2[=0x8090A0B]");
     Register.CPP.setValue(Register.CPP.getValue() + 1);
-    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(0, this.mem)).isEqualTo("0[=0x4050607]");
+    assertThat(IJVMCommandArgument.INDEX.getRepresentationOfArgument(-42, 0, this.mem)).isEqualTo("0[=0x4050607]");
+
+    Register.CPP.setValue(0);
+    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(-1, 0, this.mem)).isEqualTo("0[=0x10203]");
+    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(1, 1, this.mem)).isEqualTo("1[=0x4050607]");
+    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(42, 2, this.mem)).isEqualTo("2[=0x8090A0B]");
+    Register.CPP.setValue(Register.CPP.getValue() + 1);
+    assertThat(IJVMCommandArgument.OFFSET.getRepresentationOfArgument(-42, 0, this.mem)).isEqualTo("0[=0x4050607]");
   }
 
 }

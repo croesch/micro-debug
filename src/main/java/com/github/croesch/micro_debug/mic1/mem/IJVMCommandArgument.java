@@ -34,8 +34,8 @@ public enum IJVMCommandArgument {
   /** represents a label defined in the assembler code */
   LABEL (2) {
     @Override
-    public String represent(final int value, final Memory mem) {
-      return String.valueOf(signExtend(value));
+    public String represent(final int addr, final int value, final Memory mem) {
+      return Utils.toHexString(addr + signExtend(value));
     }
 
     /**
@@ -57,14 +57,14 @@ public enum IJVMCommandArgument {
   /** represents a variable */
   VARNUM (1) {
     @Override
-    public String represent(final int value, final Memory mem) {
+    public String represent(final int addr, final int value, final Memory mem) {
       return String.valueOf(value);
     }
   },
   /** represents an offset */
   OFFSET (2) {
     @Override
-    public String represent(final int value, final Memory mem) {
+    public String represent(final int addr, final int value, final Memory mem) {
       final int cons = mem.getWord(Register.CPP.getValue() + value);
       return value + "[=" + Utils.toHexString(cons) + "]";
     }
@@ -72,7 +72,7 @@ public enum IJVMCommandArgument {
   /** represents an index */
   INDEX (2) {
     @Override
-    public String represent(final int value, final Memory mem) {
+    public String represent(final int addr, final int value, final Memory mem) {
       final int cons = mem.getWord(Register.CPP.getValue() + value);
       return value + "[=" + Utils.toHexString(cons) + "]";
     }
@@ -114,12 +114,13 @@ public enum IJVMCommandArgument {
    * Returns the {@link String} representing the given value of this argument.
    * 
    * @since Date: Jan 23, 2012
+   * @param addr the address of the command this argument belongs to
    * @param value the value of the argument to represent as {@link String}
    * @param mem the memory to fetch values from
    * @return the {@link String} representing the given value for this argument.
    */
-  public final String getRepresentationOfArgument(final int value, final Memory mem) {
-    return represent(maskValue(value), mem);
+  public final String getRepresentationOfArgument(final int addr, final int value, final Memory mem) {
+    return represent(addr, maskValue(value), mem);
   }
 
   /**
@@ -145,11 +146,12 @@ public enum IJVMCommandArgument {
    * this will return the hexadecimal representation of the given number.
    * 
    * @since Date: Jan 23, 2012
+   * @param addr the address of the command this argument belongs to
    * @param value the number to represent
    * @param mem the memory to fetch values from
    * @return the string representation of the given value for that argument.
    */
-  public String represent(final int value, final Memory mem) {
+  public String represent(final int addr, final int value, final Memory mem) {
     return Utils.toHexString(value);
   }
 }

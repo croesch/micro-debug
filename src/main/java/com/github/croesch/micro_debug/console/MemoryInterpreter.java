@@ -219,7 +219,7 @@ public final class MemoryInterpreter extends AbstractCodeContainer {
         value |= this.memory.getByte(addr + i) << (Byte.SIZE * (arg.getNumberOfBytes() - i));
         ++bytesRead;
       }
-      sb.append(" ").append(arg.getRepresentationOfArgument(value, this.memory));
+      sb.append(" ").append(arg.getRepresentationOfArgument(addr, value, this.memory));
     }
     return bytesRead;
   }
