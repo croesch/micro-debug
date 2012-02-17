@@ -219,4 +219,14 @@ public class MicroDebugTest extends DefaultTestCase {
       assertThat(new File(filePath).delete()).isTrue();
     }
   }
+
+  @Test
+  public final void testMain_EmptyAssemblerCode() {
+    printlnMethodName();
+    Reader.setReader(new StringReader("ls-macro-code\nexit"));
+
+    MicroDebug
+      .main(new String[] { "src/test/resources/mic1/selectionsort.mic1", "src/test/resources/mic1/values.ijvm" });
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME + Text.INPUT_DEBUGGER + Text.INPUT_DEBUGGER);
+  }
 }

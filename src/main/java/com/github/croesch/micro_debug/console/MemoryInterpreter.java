@@ -246,8 +246,9 @@ public final class MemoryInterpreter extends AbstractCodeContainer {
    * @return the address of last assembler instruction
    */
   private int refineEndOfCode(final int end) {
+    final int start = getFirstPossibleCodeAddress();
     int refEnd = end;
-    while (this.memory.getByte(refEnd) == 0) {
+    while (refEnd >= start && this.memory.getByte(refEnd) == 0) {
       --refEnd;
     }
     return refEnd;
