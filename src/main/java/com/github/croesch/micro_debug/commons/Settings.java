@@ -24,7 +24,6 @@ import java.util.Properties;
 
 /**
  * An enumeration of some settings that are made in a property-file.<br>
- * TODO provide default values to avoid user errors
  * 
  * @author croesch
  * @since Date: Jan 14, 2012
@@ -32,38 +31,38 @@ import java.util.Properties;
 public enum Settings {
 
   /** the number of elements to hide, when printing the stack to the user */
-  STACK_ELEMENTS_TO_HIDE,
+  STACK_ELEMENTS_TO_HIDE (1),
 
   /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#CPP} */
-  MIC1_REGISTER_CPP_DEFVAL,
+  MIC1_REGISTER_CPP_DEFVAL (0x4000),
   /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#H} */
-  MIC1_REGISTER_H_DEFVAL,
+  MIC1_REGISTER_H_DEFVAL (0),
   /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#LV} */
-  MIC1_REGISTER_LV_DEFVAL,
+  MIC1_REGISTER_LV_DEFVAL (0x8000),
   /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#MAR} */
-  MIC1_REGISTER_MAR_DEFVAL,
+  MIC1_REGISTER_MAR_DEFVAL (0),
   /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#MBR} */
-  MIC1_REGISTER_MBR_DEFVAL,
+  MIC1_REGISTER_MBR_DEFVAL (0),
   /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#MDR} */
-  MIC1_REGISTER_MDR_DEFVAL,
+  MIC1_REGISTER_MDR_DEFVAL (0),
   /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#OPC} */
-  MIC1_REGISTER_OPC_DEFVAL,
+  MIC1_REGISTER_OPC_DEFVAL (0),
   /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#PC} */
-  MIC1_REGISTER_PC_DEFVAL,
+  MIC1_REGISTER_PC_DEFVAL (-1),
   /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#SP} */
-  MIC1_REGISTER_SP_DEFVAL,
+  MIC1_REGISTER_SP_DEFVAL (0xC000),
   /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#TOS} */
-  MIC1_REGISTER_TOS_DEFVAL,
+  MIC1_REGISTER_TOS_DEFVAL (0),
 
   /** the width of a formatted address of a micro code instruction */
-  MIC1_MEM_MICRO_ADDR_WIDTH,
+  MIC1_MEM_MICRO_ADDR_WIDTH (5),
   /** the width of a formatted address of a macro/ijvm code instruction */
-  MIC1_MEM_MACRO_ADDR_WIDTH,
+  MIC1_MEM_MACRO_ADDR_WIDTH (8),
   /** contains the maximum size of the {@link com.github.croesch.micro_debug.micro_debug.mic1.mem.Memory} */
-  MIC1_MEM_MACRO_MAXSIZE,
+  MIC1_MEM_MACRO_MAXSIZE (0x10000),
 
   /** the address of micro assembler code that reads the next ijvm instruction */
-  MIC1_MICRO_ADDRESS_IJVM;
+  MIC1_MICRO_ADDRESS_IJVM (0x2);
 
   /** the value set up in the properties file */
   private int value;
@@ -76,12 +75,18 @@ public enum Settings {
    * The key is the name of the setting.
    * 
    * @since Date: Jan 15, 2012
+   * @param defaultValue value of the setting if the properties file doesn't contain a valid value
    */
-  private Settings() {
+  private Settings(final int defaultValue) {
     final String key = name().toLowerCase(Locale.GERMAN).replaceAll("_", ".");
     final String val = getProperties().getProperty(key);
     final Integer number = (Integer) Parameter.NUMBER.getValue(val);
-    this.value = number.intValue();
+
+    if (number == null) {
+      this.value = defaultValue;
+    } else {
+      this.value = number.intValue();
+    }
   }
 
   /**
