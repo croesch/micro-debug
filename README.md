@@ -42,7 +42,15 @@ In the directory ```config``` there are several files that can be used to config
 
 You can use the file ```micro-debug.properties``` to change some default values like the size of the memory or the start values of the registers.
 
+### Logger
+
 The file ```logging.properties``` contains the configuration for the Java logger that is used when executing the debugger via start script. Please see documentation of ```java.util.logging``` for details.
+
+### ijvm.conf
+
+Since the directory ```config``` is placed in classpath upon the debuggers jar-file, you can override files by simply adding them into the ```config``` directory.
+The debugger uses an ```ijvm.conf``` file to disassemble assembler code, this file is packaged in the jar-file.
+So if you want to use your own ```ijvm.conf``` file then just put it into the ```config``` directory and restart the debugger.
 
 Internationalisation
 --------------------
