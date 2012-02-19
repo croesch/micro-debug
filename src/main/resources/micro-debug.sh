@@ -19,4 +19,4 @@
 ###################
 
 java -Djava.util.logging.config.file=config/logging.properties \
-     -cp micro-debug-${version}.jar:config com.github.croesch.micro_debug.MicroDebug $@
+     -cp config:micro-debug-${version}.jar com.github.croesch.micro_debug.MicroDebug $@
