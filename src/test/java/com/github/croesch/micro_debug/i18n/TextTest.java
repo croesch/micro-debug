@@ -33,6 +33,24 @@ import com.github.croesch.micro_debug.DefaultTestCase;
 public class TextTest extends DefaultTestCase {
 
   @Test
+  public void testText() {
+    printlnMethodName();
+    assertThat(Text.MACRO_CODE_LINE.text("$", " $ ", "  $  ")).isEqualTo("$: [ $ ]   $  {3}");
+    assertThat(Text.MACRO_CODE_LINE.text("a", "b", "c", "d")).isEqualTo("a: [b] cd");
+    assertThat(Text.MACRO_CODE_LINE.text("{0}")).isEqualTo("{0}: [{1}] {2}{3}");
+    assertThat(Text.MACRO_CODE_LINE.text("{{0}")).isEqualTo("{0}: [{1}] {2}{3}");
+    assertThat(Text.MACRO_CODE_LINE.text((Object[]) null)).isEqualTo("{0}: [{1}] {2}{3}");
+    assertThat(Text.MACRO_CODE_LINE.text(new Object[] { null })).isEqualTo("null: [{1}] {2}{3}");
+    assertThat(Text.MACRO_CODE_LINE.text(new Object[] { new Object() {
+      @Override
+      public String toString() {
+        return null;
+      }
+    } })).isEqualTo("null: [{1}] {2}{3}");
+    assertThat(Text.BORDER.text("asd")).isEqualTo("b o r d e r");
+  }
+
+  @Test
   public void test() {
     printlnMethodName();
     assertThat(Text.BORDER.text()).isEqualTo("b o r d e r");

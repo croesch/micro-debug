@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  * @author croesch
  * @since Date: Jan 25, 2012
  */
-public class TextProperties extends Properties {
+final class TextProperties extends Properties {
 
   /** generated serial version uid */
   private static final long serialVersionUID = -4384001694719486867L;
@@ -40,14 +40,20 @@ public class TextProperties extends Properties {
   /** logger for this class */
   private static final Logger LOGGER = Logger.getLogger(TextProperties.class.getName());
 
+  /** the path to the file to read the properties from, doesn't contain APPENDIX nor file extension */
+  private String file;
+
   /**
    * Properties that are filled with the properties fetched from the lang/testX.xml files, where X is defined by the
    * attributes of the {@link Locale}.
    * 
    * @since Date: Jan 25, 2012
+   * @param f path to the base file, <b>without</b> file extension!
    * @param loc the {@link Locale} to fetch the language, country and variant from
    */
-  public TextProperties(final Locale loc) {
+  public TextProperties(final String f, final Locale loc) {
+    this.file = f;
+
     final String language = loc.getLanguage();
     final String country = loc.getCountry();
     final String variant = loc.getVariant();
@@ -75,16 +81,16 @@ public class TextProperties extends Properties {
   }
 
   /**
-   * Builds the resource name with the given appendix. The name is built from the directory path + the file name + the
-   * file ending. The file name is built from a base name and the appendix. So the resource name will be:<br>
-   * <code>directory/baseNameAPPENDIX.end</code>
+   * Builds the resource name with the given appendix. The name is built from the file name + the file ending. The file
+   * name is built from the parameter file and the appendix. So the resource name will be:<br>
+   * <code>fileAPPENDIX.xml</code>
    * 
    * @since Date: Feb 3, 2012
    * @param appendix the APPENDIX in the code above, or simply the string to append to the base file name
    * @return the full resource name
    */
   private String buildResourceName(final StringBuilder appendix) {
-    return "lang/text" + appendix.toString() + ".xml";
+    return this.file + appendix.toString() + ".xml";
   }
 
   /**
@@ -123,5 +129,15 @@ public class TextProperties extends Properties {
     final String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
     LOGGER.severe(e.getMessage());
     LOGGER.throwing(className, methodName, e);
+  }
+
+  @Override
+  public String getProperty(final String key) {
+    final String ret = super.getProperty(key.toLowerCase(Locale.GERMAN).replace('_', '-'));
+    if (ret == null) {
+      LOGGER.warning("missing key=" + key + " in file=" + this.file);
+      return "!!missing-key=" + key + "!!";
+    }
+    return ret;
   }
 }

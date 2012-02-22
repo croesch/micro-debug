@@ -35,14 +35,29 @@ import com.github.croesch.micro_debug.DefaultTestCase;
 public class TextPropertiesTest extends DefaultTestCase {
 
   @Test
-  public void test() {
+  public void testXyGetProperty() {
     printlnMethodName();
-    assertThat(new TextProperties(new Locale("test", "tst", "asd")).getProperty("border")).isEqualTo("b o r d e r");
-    assertThat(new TextProperties(new Locale("test")).getProperty("try-help")).isEqualTo("..no one will ever see..");
-    assertThat(new TextProperties(new Locale("test", "tst")).getProperty("try-help")).isEqualTo("OVERRIDDEN");
-    assertThat(new TextProperties(new Locale("")).getProperty("try-help")).isNotEqualTo("OVERRIDDEN");
-    assertThat(new TextProperties(new Locale("")).getProperty("try-help")).isNotEqualTo("..no one will ever see..");
-    assertThat(new TextProperties(new Locale("pdf")).getProperty("try-help")).isNotEqualTo("OVERRIDDEN");
-    assertThat(new TextProperties(new Locale("pdf")).getProperty("try-help")).isNotEqualTo("..no one will ever see..");
+    final String file = "xy";
+    assertThat(new TextProperties(file, Locale.getDefault()).getProperty("border")).isEqualTo("!!missing-key=border!!");
+    assertThat(new TextProperties(file, Locale.getDefault()).propertyNames().hasMoreElements()).isFalse();
+  }
+
+  @Test
+  public void testLangTextGetProperty() {
+    printlnMethodName();
+    final String file = "lang/text";
+    assertThat(new TextProperties(file, new Locale("test", "tst", "asd")).getProperty("border"))
+      .isEqualTo("b o r d e r");
+    assertThat(new TextProperties(file, new Locale("test", "tst", "asd")).getProperty("BORDER"))
+      .isEqualTo("b o r d e r");
+    assertThat(new TextProperties(file, new Locale("test")).getProperty("try-help"))
+      .isEqualTo("..no one will ever see..");
+    assertThat(new TextProperties(file, new Locale("test", "tst")).getProperty("try-help")).isEqualTo("OVERRIDDEN");
+    assertThat(new TextProperties(file, new Locale("")).getProperty("try-help")).isNotEqualTo("OVERRIDDEN");
+    assertThat(new TextProperties(file, new Locale("")).getProperty("try-help"))
+      .isNotEqualTo("..no one will ever see..");
+    assertThat(new TextProperties(file, new Locale("pdf")).getProperty("try-help")).isNotEqualTo("OVERRIDDEN");
+    assertThat(new TextProperties(file, new Locale("pdf")).getProperty("try-help"))
+      .isNotEqualTo("..no one will ever see..");
   }
 }

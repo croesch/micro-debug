@@ -18,10 +18,6 @@
  */
 package com.github.croesch.micro_debug.i18n;
 
-import java.util.Locale;
-import java.util.Properties;
-import java.util.logging.Logger;
-
 /**
  * This class provides access to the internationalized text resources.
  * 
@@ -122,9 +118,6 @@ public enum Text {
   /** the text to give a hint to the user that he should try to read the help */
   TRY_HELP;
 
-  /** the {@link Logger} for this class */
-  private final transient Logger logger = Logger.getLogger(Text.class.getName());
-
   /** the value of this instance */
   private final String string;
 
@@ -137,34 +130,7 @@ public enum Text {
    * @since Date: Dec 2, 2011
    */
   private Text() {
-    final String key = name().toLowerCase(Locale.GERMAN).replace('_', '-');
-    final String value = LazyHolder.INSTANCE.getProperty(key);
-    if (value == null) {
-      this.logger.warning("missing ressource key=" + key);
-      this.string = "!!missing-key=" + key + "!!";
-    } else {
-      this.string = value;
-    }
-  }
-
-  /**
-   * Initialization on Demand Holder.
-   * 
-   * @author croesch
-   * @since Date: Jan 25, 2012
-   */
-  private static final class LazyHolder {
-    /** instance of {@link TextProperties} */
-    public static final Properties INSTANCE = new TextProperties(Locale.getDefault());
-
-    /**
-     * Hidden constructor..
-     * 
-     * @since Date: Jan 25, 2012
-     */
-    private LazyHolder() {
-      throw new AssertionError();
-    }
+    this.string = XMLPropertiesProvider.getInstance().get("lang/text", name());
   }
 
   @Override
@@ -188,15 +154,9 @@ public enum Text {
    * @since Date: Dec 2, 2011
    * @param s the replacements
    * @return the String that represents the object with replaced placeholders
+   * @see XMLPropertiesProvider#replacePlaceholdersInString(String, Object...)
    */
   public String text(final Object ... s) {
-    String text = this.string;
-    for (int i = 0; i < s.length; ++i) {
-      // prevent exceptions with using $
-      final String param = s[i].toString().replaceAll("\\$", "\\\\\\$");
-      text = text.replaceAll("(^|[^{])\\{" + i + "\\}", "$1" + param);
-      text = text.replaceAll("\\{\\{" + i + "\\}", "\\{" + i + "\\}");
-    }
-    return text;
+    return XMLPropertiesProvider.replacePlaceholdersInString(this.string, s);
   }
 }
