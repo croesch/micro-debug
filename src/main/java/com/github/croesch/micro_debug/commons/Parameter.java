@@ -18,10 +18,10 @@
  */
 package com.github.croesch.micro_debug.commons;
 
-import java.util.Locale;
-
 import com.github.croesch.micro_debug.i18n.Text;
-import com.github.croesch.micro_debug.mic1.register.Register;
+import com.github.croesch.micro_debug.parser.IParser;
+import com.github.croesch.micro_debug.parser.IntegerParser;
+import com.github.croesch.micro_debug.parser.RegisterParser;
 
 /**
  * Represents the different types of parameter that are possible.
@@ -32,84 +32,29 @@ import com.github.croesch.micro_debug.mic1.register.Register;
 public enum Parameter {
 
   /** the numerical argument, can be decimal or every other basis */
-  NUMBER {
+  NUMBER (new IntegerParser(), Text.INVALID_NUMBER),
 
-    /**
-     * Converts valid aliases like <code>0x</code> to their representation in the notation.
-     * 
-     * @since Date: Jan 28, 2012
-     * @param num the number that might contain aliases
-     * @return the number with aliases converted to notation
-     */
-    private String convertAliases(final String num) {
-      if (num.length() > 1 && num.charAt(0) == '0') {
-        switch (Character.toLowerCase(num.charAt(1))) {
-          case 'b':
-            return num.substring(2) + "_2";
-          case 'o':
-            return num.substring(2) + "_8";
-          case 'x':
-            return num.substring(2) + "_16";
-          default:
-            return num;
-        }
-      }
-      return num;
-    }
+  /** a {@link com.github.croesch.micro_debug.mic1.register.Register} as argument */
+  REGISTER (new RegisterParser(), Text.INVALID_REGISTER);
 
-    @Override
-    protected Object toValue(final String str) {
+  /** the parser that is able to parse a given string and return the parsed object */
+  private final IParser parser;
 
-      try {
-        // try parsing and if this works, it was a valid number
-        return Integer.valueOf(str);
-      } catch (final NumberFormatException nfe) {
-        // number might be 0x.. or .._.., so split the number in radix and the number
-        // convert aliases (0x,0b,..) to the correct notation
-        final String[] num = convertAliases(str).split("_");
-        if (num.length != 2) {
-          // not a valid number - no idea what to do
-          Printer.printErrorln(Text.INVALID_NUMBER.text(str));
-          return null;
-        }
-
-        // number is a special number
-        try {
-          // try to parse the number with the specified radix
-          return Integer.valueOf(num[0], Integer.parseInt(num[1]));
-        } catch (final NumberFormatException nfe2) {
-          // didn't work -> invalid number
-          Printer.printErrorln(Text.INVALID_NUMBER.text(str));
-          return null;
-        }
-      }
-    }
-  },
-
-  /** a {@link Register} as argument */
-  REGISTER {
-    @Override
-    protected Object toValue(final String str) {
-      try {
-        return Register.valueOf(str.toUpperCase(Locale.GERMAN));
-      } catch (final IllegalArgumentException e) {
-        Printer.printErrorln(Text.INVALID_REGISTER.text(str));
-        return null;
-      }
-    }
-  };
+  /** the text to visualise that the given string cannot be parsed - is not valid */
+  private final Text errorText;
 
   /**
-   * Converts the given {@link String} to an object that has the expected type. Returns an object with the logical type
-   * of the enumeration that has the given value. Returns <code>null</code>, if the given string is not a valid value.<br>
-   * Informs the user (per {@link Printer}) about a wrong value.
+   * Create a parameter with the given parser to parse {@link String}s and the given {@link Text} to be able to
+   * visualise invalid input to the user.
    * 
-   * @since Date: Dec 3, 2011
-   * @param str the value to convert into the correct data type, is not <code>null</code>
-   * @return an {@link Object} with the logical type of the enumeration that has the value given by the given string,<br>
-   *         or <code>null</code> if the given {@link String} is no valid representation for any value of the data type
+   * @since Date: Feb 22, 2012
+   * @param p the {@link IParser} that parses the {@link String} and returns an {@link Object}
+   * @param eText the {@link Text} to visualise that the input is invalid
    */
-  protected abstract Object toValue(String str);
+  private Parameter(final IParser p, final Text eText) {
+    this.parser = p;
+    this.errorText = eText;
+  }
 
   /**
    * Converts the given {@link String} to an object that has the expected type. Returns an object with the logical type
@@ -126,6 +71,10 @@ public enum Parameter {
       return null;
     }
 
-    return toValue(str);
+    final Object ret = this.parser.parse(str);
+    if (ret == null) {
+      Printer.printErrorln(this.errorText.text(str));
+    }
+    return ret;
   }
 }
