@@ -33,7 +33,7 @@ import com.github.croesch.micro_debug.mic1.controlstore.MicroInstructionDecoder;
 import com.github.croesch.micro_debug.mic1.register.Register;
 
 /**
- * Console view for the {@link com.github.croesch.micro_debug.micro_debug.mic1.Mic1}.
+ * Console view for the {@link com.github.croesch.micro_debug.mic1.Mic1}.
  * 
  * @author croesch
  * @since Date: Jan 15, 2012

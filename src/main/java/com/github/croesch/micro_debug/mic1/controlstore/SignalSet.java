@@ -44,7 +44,7 @@ class SignalSet {
    * 
    * @since Date: Jan 14, 2012
    * @return the number of signals this set contains, greater or equal than zero
-   * @see SignalSet#Mic1SignalSet(int)
+   * @see SignalSet#SignalSet(int)
    */
   public final int getSize() {
     return this.signals.length;

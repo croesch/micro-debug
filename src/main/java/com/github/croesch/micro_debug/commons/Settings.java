@@ -33,32 +33,32 @@ public enum Settings {
   /** the number of elements to hide, when printing the stack to the user */
   STACK_ELEMENTS_TO_HIDE (1),
 
-  /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#CPP} */
+  /** contains the default value for the {@link com.github.croesch.micro_debug.mic1.register.Register#CPP} */
   MIC1_REGISTER_CPP_DEFVAL (0x4000),
-  /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#H} */
+  /** contains the default value for the {@link com.github.croesch.micro_debug.mic1.register.Register#H} */
   MIC1_REGISTER_H_DEFVAL (0),
-  /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#LV} */
+  /** contains the default value for the {@link com.github.croesch.micro_debug.mic1.register.Register#LV} */
   MIC1_REGISTER_LV_DEFVAL (0x8000),
-  /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#MAR} */
+  /** contains the default value for the {@link com.github.croesch.micro_debug.mic1.register.Register#MAR} */
   MIC1_REGISTER_MAR_DEFVAL (0),
-  /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#MBR} */
+  /** contains the default value for the {@link com.github.croesch.micro_debug.mic1.register.Register#MBR} */
   MIC1_REGISTER_MBR_DEFVAL (0),
-  /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#MDR} */
+  /** contains the default value for the {@link com.github.croesch.micro_debug.mic1.register.Register#MDR} */
   MIC1_REGISTER_MDR_DEFVAL (0),
-  /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#OPC} */
+  /** contains the default value for the {@link com.github.croesch.micro_debug.mic1.register.Register#OPC} */
   MIC1_REGISTER_OPC_DEFVAL (0),
-  /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#PC} */
+  /** contains the default value for the {@link com.github.croesch.micro_debug.mic1.register.Register#PC} */
   MIC1_REGISTER_PC_DEFVAL (-1),
-  /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#SP} */
+  /** contains the default value for the {@link com.github.croesch.micro_debug.mic1.register.Register#SP} */
   MIC1_REGISTER_SP_DEFVAL (0xC000),
-  /** contains the default value for the {@link com.github.croesch.micro_debug.micro_debug.mic1.register.Register#TOS} */
+  /** contains the default value for the {@link com.github.croesch.micro_debug.mic1.register.Register#TOS} */
   MIC1_REGISTER_TOS_DEFVAL (0),
 
   /** the width of a formatted address of a micro code instruction */
   MIC1_MEM_MICRO_ADDR_WIDTH (5),
   /** the width of a formatted address of a macro/ijvm code instruction */
   MIC1_MEM_MACRO_ADDR_WIDTH (8),
-  /** contains the maximum size of the {@link com.github.croesch.micro_debug.micro_debug.mic1.mem.Memory} */
+  /** contains the maximum size of the {@link com.github.croesch.micro_debug.mic1.mem.Memory} */
   MIC1_MEM_MACRO_MAXSIZE (0x10000),
 
   /** the address of micro assembler code that reads the next ijvm instruction */

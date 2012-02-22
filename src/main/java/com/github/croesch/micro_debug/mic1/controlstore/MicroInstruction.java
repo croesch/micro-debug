@@ -66,11 +66,11 @@ public final class MicroInstruction {
    *        which register's value is written to the B-Bus.
    */
   public MicroInstruction(final int addr,
-                         final JMPSignalSet jmpSet,
-                         final ALUSignalSet aluSet,
-                         final CBusSignalSet cBusSet,
-                         final MemorySignalSet memSet,
-                         final Register b) {
+                          final JMPSignalSet jmpSet,
+                          final ALUSignalSet aluSet,
+                          final CBusSignalSet cBusSet,
+                          final MemorySignalSet memSet,
+                          final Register b) {
     this.nextAddress = addr & ADDRESS_MASK;
     this.bBusSelect = b;
 
@@ -194,7 +194,7 @@ public final class MicroInstruction {
    * Returns the value that defines the register that'll be written on the B-Bus.
    * 
    * @since Date: Nov 13, 2011
-   * @return the {@link Mic1BBusRegister} that defines the register being written on the B-Bus.
+   * @return the {@link Register} that defines the register being written on the B-Bus.
    */
   public Register getbBusSelect() {
     return this.bBusSelect;
