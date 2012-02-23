@@ -138,4 +138,14 @@ final class TextProperties extends Properties {
     }
     return ret;
   }
+
+  @Override
+  public synchronized boolean equals(final Object o) {
+    return super.equals(o);
+  }
+
+  @Override
+  public synchronized int hashCode() {
+    return super.hashCode();
+  }
 }

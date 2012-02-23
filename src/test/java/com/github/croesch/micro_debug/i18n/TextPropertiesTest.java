@@ -35,6 +35,20 @@ import com.github.croesch.micro_debug.DefaultTestCase;
 public class TextPropertiesTest extends DefaultTestCase {
 
   @Test
+  public void testEqualsAndHashCode() {
+    assertThat(new TextProperties("asd", Locale.getDefault()))
+      .isEqualTo(new TextProperties("asd", Locale.getDefault()));
+
+    assertThat(new TextProperties("asd", Locale.getDefault())).isEqualTo(new TextProperties("", Locale.getDefault()));
+
+    assertThat(new TextProperties("asd", Locale.getDefault()).hashCode()).isEqualTo(new TextProperties("asd", Locale
+                                                                                      .getDefault()).hashCode());
+
+    assertThat(new TextProperties("asd", Locale.getDefault()).hashCode()).isEqualTo(new TextProperties("", Locale
+                                                                                      .getDefault()).hashCode());
+  }
+
+  @Test
   public void testGetProperty_WrongFormat() {
     printlnMethodName();
     final String file = "lang/false-format";
