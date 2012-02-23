@@ -31,8 +31,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.croesch.micro_debug.commons.Parameter;
 import com.github.croesch.micro_debug.commons.Utils;
+import com.github.croesch.micro_debug.parser.IntegerParser;
 
 /**
  * Reads the configuration file for the ijvm-code and can parse it.
@@ -53,6 +53,9 @@ public final class IJVMConfigReader {
 
   /** pattern to match a single argument */
   private static final Pattern ARGUMENTS_PATTERN = Pattern.compile("([\\S&&[^/]]+)\\s*");
+
+  /** the parser to parse an {@link Integer} from a {@link String} */
+  private final IntegerParser integerParser = new IntegerParser();
 
   /**
    * Tries to read configuration file from the given stream and returns the map with parsed entries. If an error occurs
@@ -103,7 +106,7 @@ public final class IJVMConfigReader {
     if (!line.equals("")) {
       final Matcher m = LINE_PATTERN.matcher(line);
       if (m.matches()) {
-        final Integer addr = (Integer) Parameter.NUMBER.getValue(m.group(1));
+        final Integer addr = this.integerParser.parse(m.group(1));
         final String name = m.group(2);
         map.put(addr, new IJVMCommand(name, parseArguments(m.group(3))));
       } else {

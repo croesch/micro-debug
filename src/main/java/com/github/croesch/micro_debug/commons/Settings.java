@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Properties;
 
+import com.github.croesch.micro_debug.parser.IntegerParser;
+
 /**
  * An enumeration of some settings that are made in a property-file.<br>
  * 
@@ -80,7 +82,7 @@ public enum Settings {
   private Settings(final int defaultValue) {
     final String key = name().toLowerCase(Locale.GERMAN).replaceAll("_", ".");
     final String val = getProperties().getProperty(key);
-    final Integer number = (Integer) Parameter.NUMBER.getValue(val);
+    final Integer number = new IntegerParser().parse(val);
 
     if (number == null) {
       this.value = defaultValue;
