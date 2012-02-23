@@ -21,10 +21,8 @@ package com.github.croesch.micro_debug.properties;
 import java.io.IOException;
 import java.util.Properties;
 
-import com.github.croesch.micro_debug.commons.Utils;
-
 /**
- * TODO Comment here ...
+ * Provides properties in properties format.
  * 
  * @author croesch
  * @since Date: Feb 23, 2012
@@ -46,7 +44,7 @@ public final class PropertiesProvider extends APropertiesProvider {
     try {
       props.load(ClassLoader.getSystemResourceAsStream(file + ".properties"));
     } catch (final IOException e) {
-      Utils.logThrownThrowable(e);
+      ExceptionLogger.logException(e);
     }
     return props;
   }

@@ -24,7 +24,7 @@ import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * TODO Comment here ...
+ * Provides properties for different files.
  * 
  * @author croesch
  * @since Date: Feb 23, 2012

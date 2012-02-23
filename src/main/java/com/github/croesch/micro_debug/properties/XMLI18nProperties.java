@@ -108,25 +108,12 @@ final class XMLI18nProperties extends Properties {
         LOGGER.fine("resource not found: " + resourceName);
       }
     } catch (final InvalidPropertiesFormatException e) {
-      logException(e);
+      ExceptionLogger.logException(e);
     } catch (final IOException e) {
-      logException(e);
+      ExceptionLogger.logException(e);
     } catch (final RuntimeException e) {
-      logException(e);
+      ExceptionLogger.logException(e);
     }
-  }
-
-  /**
-   * Logs the exception that happened in critical part of the program.
-   * 
-   * @since Date: Feb 3, 2012
-   * @param e the {@link Throwable} that was thrown
-   */
-  private void logException(final Throwable e) {
-    final String className = Thread.currentThread().getStackTrace()[2].getClassName();
-    final String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
-    LOGGER.severe(e.getMessage());
-    LOGGER.throwing(className, methodName, e);
   }
 
   @Override
