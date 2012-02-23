@@ -32,13 +32,13 @@ import java.util.logging.Logger;
  * @author croesch
  * @since Date: Jan 25, 2012
  */
-final class TextProperties extends Properties {
+final class XMLI18nProperties extends Properties {
 
   /** generated serial version uid */
   private static final long serialVersionUID = -4384001694719486867L;
 
   /** logger for this class */
-  private static final Logger LOGGER = Logger.getLogger(TextProperties.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(XMLI18nProperties.class.getName());
 
   /** the path to the file to read the properties from, doesn't contain APPENDIX nor file extension */
   private String file;
@@ -51,7 +51,7 @@ final class TextProperties extends Properties {
    * @param f path to the base file, <b>without</b> file extension!
    * @param loc the {@link Locale} to fetch the language, country and variant from
    */
-  public TextProperties(final String f, final Locale loc) {
+  public XMLI18nProperties(final String f, final Locale loc) {
     this.file = f;
 
     final String language = loc.getLanguage();

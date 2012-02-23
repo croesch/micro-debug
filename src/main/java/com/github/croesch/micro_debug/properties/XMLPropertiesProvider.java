@@ -68,7 +68,7 @@ public final class XMLPropertiesProvider {
    */
   private Properties getProperties(final String file) {
     if (!this.propertiesMap.containsKey(file)) {
-      this.propertiesMap.put(file, new TextProperties(file, Locale.getDefault()));
+      this.propertiesMap.put(file, new XMLI18nProperties(file, Locale.getDefault()));
     }
     return this.propertiesMap.get(file);
   }
@@ -148,7 +148,7 @@ public final class XMLPropertiesProvider {
    * @since Date: Jan 25, 2012
    */
   private static final class LazyHolder {
-    /** instance of {@link TextProperties} */
+    /** instance of {@link XMLI18nProperties} */
     public static final XMLPropertiesProvider INSTANCE = new XMLPropertiesProvider();
 
     /**

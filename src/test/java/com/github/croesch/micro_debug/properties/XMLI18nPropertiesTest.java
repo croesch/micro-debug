@@ -27,24 +27,24 @@ import org.junit.Test;
 import com.github.croesch.micro_debug.DefaultTestCase;
 
 /**
- * Provides test cases for {@link TextProperties}.
+ * Provides test cases for {@link XMLI18nProperties}.
  * 
  * @author croesch
  * @since Date: Jan 24, 2012
  */
-public class TextPropertiesTest extends DefaultTestCase {
+public class XMLI18nPropertiesTest extends DefaultTestCase {
 
   @Test
   public void testEqualsAndHashCode() {
-    assertThat(new TextProperties("asd", Locale.getDefault()))
-      .isEqualTo(new TextProperties("asd", Locale.getDefault()));
+    assertThat(new XMLI18nProperties("asd", Locale.getDefault()))
+      .isEqualTo(new XMLI18nProperties("asd", Locale.getDefault()));
 
-    assertThat(new TextProperties("asd", Locale.getDefault())).isEqualTo(new TextProperties("", Locale.getDefault()));
+    assertThat(new XMLI18nProperties("asd", Locale.getDefault())).isEqualTo(new XMLI18nProperties("", Locale.getDefault()));
 
-    assertThat(new TextProperties("asd", Locale.getDefault()).hashCode()).isEqualTo(new TextProperties("asd", Locale
+    assertThat(new XMLI18nProperties("asd", Locale.getDefault()).hashCode()).isEqualTo(new XMLI18nProperties("asd", Locale
                                                                                       .getDefault()).hashCode());
 
-    assertThat(new TextProperties("asd", Locale.getDefault()).hashCode()).isEqualTo(new TextProperties("", Locale
+    assertThat(new XMLI18nProperties("asd", Locale.getDefault()).hashCode()).isEqualTo(new XMLI18nProperties("", Locale
                                                                                       .getDefault()).hashCode());
   }
 
@@ -52,33 +52,33 @@ public class TextPropertiesTest extends DefaultTestCase {
   public void testGetProperty_WrongFormat() {
     printlnMethodName();
     final String file = "lang/false-format";
-    assertThat(new TextProperties(file, Locale.getDefault()).getProperty("border")).isEqualTo("!!missing-key=border!!");
+    assertThat(new XMLI18nProperties(file, Locale.getDefault()).getProperty("border")).isEqualTo("!!missing-key=border!!");
   }
 
   @Test
   public void testXyGetProperty() {
     printlnMethodName();
     final String file = "xy";
-    assertThat(new TextProperties(file, Locale.getDefault()).getProperty("border")).isEqualTo("!!missing-key=border!!");
-    assertThat(new TextProperties(file, Locale.getDefault()).propertyNames().hasMoreElements()).isFalse();
+    assertThat(new XMLI18nProperties(file, Locale.getDefault()).getProperty("border")).isEqualTo("!!missing-key=border!!");
+    assertThat(new XMLI18nProperties(file, Locale.getDefault()).propertyNames().hasMoreElements()).isFalse();
   }
 
   @Test
   public void testLangTextGetProperty() {
     printlnMethodName();
     final String file = "lang/text";
-    assertThat(new TextProperties(file, new Locale("test", "tst", "asd")).getProperty("border"))
+    assertThat(new XMLI18nProperties(file, new Locale("test", "tst", "asd")).getProperty("border"))
       .isEqualTo("b o r d e r");
-    assertThat(new TextProperties(file, new Locale("test", "tst", "asd")).getProperty("BORDER"))
+    assertThat(new XMLI18nProperties(file, new Locale("test", "tst", "asd")).getProperty("BORDER"))
       .isEqualTo("b o r d e r");
-    assertThat(new TextProperties(file, new Locale("test")).getProperty("try-help"))
+    assertThat(new XMLI18nProperties(file, new Locale("test")).getProperty("try-help"))
       .isEqualTo("..no one will ever see..");
-    assertThat(new TextProperties(file, new Locale("test", "tst")).getProperty("try-help")).isEqualTo("OVERRIDDEN");
-    assertThat(new TextProperties(file, new Locale("")).getProperty("try-help")).isNotEqualTo("OVERRIDDEN");
-    assertThat(new TextProperties(file, new Locale("")).getProperty("try-help"))
+    assertThat(new XMLI18nProperties(file, new Locale("test", "tst")).getProperty("try-help")).isEqualTo("OVERRIDDEN");
+    assertThat(new XMLI18nProperties(file, new Locale("")).getProperty("try-help")).isNotEqualTo("OVERRIDDEN");
+    assertThat(new XMLI18nProperties(file, new Locale("")).getProperty("try-help"))
       .isNotEqualTo("..no one will ever see..");
-    assertThat(new TextProperties(file, new Locale("pdf")).getProperty("try-help")).isNotEqualTo("OVERRIDDEN");
-    assertThat(new TextProperties(file, new Locale("pdf")).getProperty("try-help"))
+    assertThat(new XMLI18nProperties(file, new Locale("pdf")).getProperty("try-help")).isNotEqualTo("OVERRIDDEN");
+    assertThat(new XMLI18nProperties(file, new Locale("pdf")).getProperty("try-help"))
       .isNotEqualTo("..no one will ever see..");
   }
 }
