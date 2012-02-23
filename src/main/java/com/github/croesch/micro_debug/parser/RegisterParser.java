@@ -40,6 +40,10 @@ public final class RegisterParser implements IParser {
    *         or <code>null</code> if the input was invalid
    */
   public Register parse(final String toParse) {
+    if (toParse == null) {
+      return null;
+    }
+
     try {
       return Register.valueOf(toParse.toUpperCase(Locale.GERMAN));
     } catch (final IllegalArgumentException e) {

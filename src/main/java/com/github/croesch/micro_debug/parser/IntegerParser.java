@@ -36,6 +36,9 @@ public final class IntegerParser implements IParser {
    *         or <code>null</code> if the input was invalid
    */
   public Integer parse(final String toParse) {
+    if (toParse == null) {
+      return null;
+    }
 
     try {
       // try parsing and if this works, it was a valid number

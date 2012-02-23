@@ -66,11 +66,6 @@ public enum Parameter {
    *         or <code>null</code> if the given {@link String} is no valid representation for any value of the data type
    */
   public final Object getValue(final String str) {
-    if (str == null) {
-      // null is never valid
-      return null;
-    }
-
     final Object ret = this.parser.parse(str);
     if (ret == null) {
       Printer.printErrorln(this.errorText.text(str));

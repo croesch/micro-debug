@@ -357,7 +357,7 @@ public class UserInstructionTest extends DefaultTestCase {
     printlnMethodName();
     assertThat(out.toString()).isEmpty();
     assertThat(UserInstruction.LS_REG.execute(this.interpreter, new String[] { null })).isTrue();
-    assertThat(out.toString()).isEmpty();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_REGISTER.text("null")) + getLineSeparator());
   }
 
   @Test
