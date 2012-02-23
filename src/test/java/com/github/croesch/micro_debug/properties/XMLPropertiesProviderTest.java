@@ -23,6 +23,7 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Test;
 
 import com.github.croesch.micro_debug.DefaultTestCase;
+import com.github.croesch.micro_debug.i18n.Text;
 
 /**
  * Provides test cases for {@link XMLPropertiesProvider}.
@@ -133,9 +134,17 @@ public class XMLPropertiesProviderTest extends DefaultTestCase {
   @Test
   public void testGet_NullKey() {
     printlnMethodName();
-    final String file = "lange/text";
+    final String file = "lang/text";
     assertThat(this.propProvider.get(file, null)).isEqualTo(null);
     assertThat(this.propProvider.get(file, "")).isEqualTo("!!missing-key=!!");
     assertThat(this.propProvider.get(file, "asd")).isEqualTo("!!missing-key=asd!!");
+  }
+
+  @Test
+  public void testGet() {
+    printlnMethodName();
+    final String file = "lang/text";
+    assertThat(this.propProvider.get(file, Text.BORDER.name())).isEqualTo("b o r d e r");
+    assertThat(this.propProvider.get(file, Text.TRY_HELP.name())).isEqualTo("OVERRIDDEN");
   }
 }
