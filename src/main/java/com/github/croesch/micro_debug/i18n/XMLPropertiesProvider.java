@@ -49,9 +49,13 @@ public final class XMLPropertiesProvider {
    * @since Date: Feb 22, 2012
    * @param file the path of the file, <b>without</b> file extension!
    * @param key the key to fetch the value for
-   * @return the value read from the xml properties
+   * @return the value read from the xml properties,<br>
+   *         or <code>null</code> if the given file path or key is <code>null</code>.
    */
   public String get(final String file, final String key) {
+    if (file == null || key == null) {
+      return null;
+    }
     return getProperties(file).getProperty(key);
   }
 

@@ -111,8 +111,6 @@ final class TextProperties extends Properties {
       logException(e);
     } catch (final IOException e) {
       logException(e);
-    } catch (final SecurityException e) {
-      logException(e);
     } catch (final RuntimeException e) {
       logException(e);
     }

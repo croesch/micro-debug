@@ -35,6 +35,13 @@ import com.github.croesch.micro_debug.DefaultTestCase;
 public class TextPropertiesTest extends DefaultTestCase {
 
   @Test
+  public void testGetProperty_WrongFormat() {
+    printlnMethodName();
+    final String file = "lang/false-format";
+    assertThat(new TextProperties(file, Locale.getDefault()).getProperty("border")).isEqualTo("!!missing-key=border!!");
+  }
+
+  @Test
   public void testXyGetProperty() {
     printlnMethodName();
     final String file = "xy";
