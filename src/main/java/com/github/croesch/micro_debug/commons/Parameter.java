@@ -38,7 +38,7 @@ public enum Parameter {
   REGISTER (new RegisterParser(), Text.INVALID_REGISTER);
 
   /** the parser that is able to parse a given string and return the parsed object */
-  private final IParser parser;
+  private final transient IParser parser;
 
   /** the text to visualise that the given string cannot be parsed - is not valid */
   private final Text errorText;
