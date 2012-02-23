@@ -18,6 +18,8 @@
  */
 package com.github.croesch.micro_debug.i18n;
 
+import com.github.croesch.micro_debug.properties.XMLPropertiesProvider;
+
 /**
  * This class provides access to the internationalized text resources.
  * 

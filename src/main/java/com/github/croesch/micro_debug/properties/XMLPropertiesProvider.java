@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.croesch.micro_debug.i18n;
+package com.github.croesch.micro_debug.properties;
 
 import java.util.Locale;
 import java.util.Map;
