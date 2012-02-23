@@ -18,11 +18,8 @@
  */
 package com.github.croesch.micro_debug.commons;
 
-import java.io.IOException;
-import java.util.Locale;
-import java.util.Properties;
-
 import com.github.croesch.micro_debug.parser.IntegerParser;
+import com.github.croesch.micro_debug.properties.PropertiesProvider;
 
 /**
  * An enumeration of some settings that are made in a property-file.<br>
@@ -69,9 +66,6 @@ public enum Settings {
   /** the value set up in the properties file */
   private int value;
 
-  /** the properties loaded from the file */
-  private static Properties props = null;
-
   /**
    * Constructs this setting. Loads the properties from file, if not yet done and fetches the value for this setting.
    * The key is the name of the setting.
@@ -80,8 +74,7 @@ public enum Settings {
    * @param defaultValue value of the setting if the properties file doesn't contain a valid value
    */
   private Settings(final int defaultValue) {
-    final String key = name().toLowerCase(Locale.GERMAN).replaceAll("_", ".");
-    final String val = getProperties().getProperty(key);
+    final String val = PropertiesProvider.getInstance().get("micro-debug", name());
     final Integer number = new IntegerParser().parse(val);
 
     if (number == null) {
@@ -89,24 +82,6 @@ public enum Settings {
     } else {
       this.value = number.intValue();
     }
-  }
-
-  /**
-   * Returns the properties read from the properties file.
-   * 
-   * @since Date: Jan 15, 2012
-   * @return {@link Properties} read from the specific file.
-   */
-  private static synchronized Properties getProperties() {
-    if (props == null) {
-      props = new Properties();
-      try {
-        props.load(ClassLoader.getSystemResourceAsStream("micro-debug.properties"));
-      } catch (final IOException e) {
-        Utils.logThrownThrowable(e);
-      }
-    }
-    return props;
   }
 
   /**
@@ -118,5 +93,4 @@ public enum Settings {
   public int getValue() {
     return this.value;
   }
-
 }
