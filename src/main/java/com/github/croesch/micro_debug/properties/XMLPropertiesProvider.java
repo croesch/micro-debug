@@ -56,7 +56,8 @@ public final class XMLPropertiesProvider {
     if (file == null || key == null) {
       return null;
     }
-    return getProperties(file).getProperty(key);
+    final String preparedKey = key.toLowerCase(Locale.GERMAN).replace('_', '-');
+    return getProperties(file).getProperty(preparedKey);
   }
 
   /**

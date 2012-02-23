@@ -131,7 +131,7 @@ final class XMLI18nProperties extends Properties {
 
   @Override
   public String getProperty(final String key) {
-    final String ret = super.getProperty(key.toLowerCase(Locale.GERMAN).replace('_', '-'));
+    final String ret = super.getProperty(key);
     if (ret == null) {
       LOGGER.warning("missing key=" + key + " in file=" + this.file);
       return "!!missing-key=" + key + "!!";

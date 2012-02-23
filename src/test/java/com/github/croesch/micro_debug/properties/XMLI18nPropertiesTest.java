@@ -36,30 +36,33 @@ public class XMLI18nPropertiesTest extends DefaultTestCase {
 
   @Test
   public void testEqualsAndHashCode() {
-    assertThat(new XMLI18nProperties("asd", Locale.getDefault()))
-      .isEqualTo(new XMLI18nProperties("asd", Locale.getDefault()));
+    assertThat(new XMLI18nProperties("asd", Locale.getDefault())).isEqualTo(new XMLI18nProperties("asd", Locale
+                                                                              .getDefault()));
 
-    assertThat(new XMLI18nProperties("asd", Locale.getDefault())).isEqualTo(new XMLI18nProperties("", Locale.getDefault()));
+    assertThat(new XMLI18nProperties("asd", Locale.getDefault())).isEqualTo(new XMLI18nProperties("", Locale
+                                                                              .getDefault()));
 
-    assertThat(new XMLI18nProperties("asd", Locale.getDefault()).hashCode()).isEqualTo(new XMLI18nProperties("asd", Locale
-                                                                                      .getDefault()).hashCode());
+    assertThat(new XMLI18nProperties("asd", Locale.getDefault()).hashCode())
+      .isEqualTo(new XMLI18nProperties("asd", Locale.getDefault()).hashCode());
 
     assertThat(new XMLI18nProperties("asd", Locale.getDefault()).hashCode()).isEqualTo(new XMLI18nProperties("", Locale
-                                                                                      .getDefault()).hashCode());
+                                                                                         .getDefault()).hashCode());
   }
 
   @Test
   public void testGetProperty_WrongFormat() {
     printlnMethodName();
     final String file = "lang/false-format";
-    assertThat(new XMLI18nProperties(file, Locale.getDefault()).getProperty("border")).isEqualTo("!!missing-key=border!!");
+    assertThat(new XMLI18nProperties(file, Locale.getDefault()).getProperty("border"))
+      .isEqualTo("!!missing-key=border!!");
   }
 
   @Test
   public void testXyGetProperty() {
     printlnMethodName();
     final String file = "xy";
-    assertThat(new XMLI18nProperties(file, Locale.getDefault()).getProperty("border")).isEqualTo("!!missing-key=border!!");
+    assertThat(new XMLI18nProperties(file, Locale.getDefault()).getProperty("border"))
+      .isEqualTo("!!missing-key=border!!");
     assertThat(new XMLI18nProperties(file, Locale.getDefault()).propertyNames().hasMoreElements()).isFalse();
   }
 
@@ -70,7 +73,7 @@ public class XMLI18nPropertiesTest extends DefaultTestCase {
     assertThat(new XMLI18nProperties(file, new Locale("test", "tst", "asd")).getProperty("border"))
       .isEqualTo("b o r d e r");
     assertThat(new XMLI18nProperties(file, new Locale("test", "tst", "asd")).getProperty("BORDER"))
-      .isEqualTo("b o r d e r");
+      .isEqualTo("!!missing-key=BORDER!!");
     assertThat(new XMLI18nProperties(file, new Locale("test")).getProperty("try-help"))
       .isEqualTo("..no one will ever see..");
     assertThat(new XMLI18nProperties(file, new Locale("test", "tst")).getProperty("try-help")).isEqualTo("OVERRIDDEN");
