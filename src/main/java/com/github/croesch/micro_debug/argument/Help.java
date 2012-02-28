@@ -18,6 +18,7 @@
  */
 package com.github.croesch.micro_debug.argument;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -69,6 +70,11 @@ public final class Help extends AArgument {
   public boolean execute(final String ... params) {
     final InputStream fileStream = Utils.class.getClassLoader().getResourceAsStream(HELP_FILE);
     Printer.printReader(new InputStreamReader(fileStream));
+    try {
+      fileStream.close();
+    } catch (final IOException e) {
+      Utils.logThrownThrowable(e);
+    }
     return false;
   }
 
