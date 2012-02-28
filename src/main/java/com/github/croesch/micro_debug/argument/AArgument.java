@@ -40,13 +40,6 @@ public abstract class AArgument {
   /** the list of arguments that are available */
   private static final List<AArgument> VALUES = new ArrayList<AArgument>();
 
-  static {
-    VALUES.add(Help.getInstance());
-    VALUES.add(OutputFile.getInstance());
-    VALUES.add(UnbufferedOutput.getInstance());
-    VALUES.add(Version.getInstance());
-  }
-
   /**
    * Constructs a new argument with its name as long argument and its first letter as short argument. For example
    * ARGUMENT will result in:
@@ -247,6 +240,12 @@ public abstract class AArgument {
    * @return the list of arguments that are available.
    */
   public static List<AArgument> values() {
+    if (VALUES.isEmpty()) {
+      VALUES.add(Help.getInstance());
+      VALUES.add(OutputFile.getInstance());
+      VALUES.add(UnbufferedOutput.getInstance());
+      VALUES.add(Version.getInstance());
+    }
     return VALUES;
   }
 }
