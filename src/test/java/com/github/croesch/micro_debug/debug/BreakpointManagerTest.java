@@ -26,9 +26,9 @@ import java.util.regex.Pattern;
 import org.junit.Test;
 
 import com.github.croesch.micro_debug.DefaultTestCase;
-import com.github.croesch.micro_debug.commons.Settings;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.register.Register;
+import com.github.croesch.micro_debug.settings.Settings;
 
 /**
  * Contains test cases for {@link BreakpointManager}.

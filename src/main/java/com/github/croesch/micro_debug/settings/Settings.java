@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.croesch.micro_debug.commons;
+package com.github.croesch.micro_debug.settings;
 
 import com.github.croesch.micro_debug.parser.IntegerParser;
 import com.github.croesch.micro_debug.properties.PropertiesProvider;

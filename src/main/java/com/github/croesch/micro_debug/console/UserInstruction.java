@@ -24,10 +24,10 @@ import java.util.Locale;
 
 import com.github.croesch.micro_debug.commons.Parameter;
 import com.github.croesch.micro_debug.commons.Printer;
-import com.github.croesch.micro_debug.commons.Settings;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.register.Register;
+import com.github.croesch.micro_debug.settings.Settings;
 
 /**
  * Enumeration of all possible command line instructions for the debugger.

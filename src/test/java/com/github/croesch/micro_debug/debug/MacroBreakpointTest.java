@@ -23,8 +23,8 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Test;
 
 import com.github.croesch.micro_debug.DefaultTestCase;
-import com.github.croesch.micro_debug.commons.Settings;
 import com.github.croesch.micro_debug.i18n.Text;
+import com.github.croesch.micro_debug.settings.Settings;
 
 /**
  * Provides test cases for {@link MacroBreakpoint}.

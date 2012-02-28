@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.util.logging.Logger;
 
 import com.github.croesch.micro_debug.commons.Printer;
-import com.github.croesch.micro_debug.commons.Settings;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.error.FileFormatException;
 import com.github.croesch.micro_debug.i18n.Text;
@@ -41,6 +40,7 @@ import com.github.croesch.micro_debug.mic1.mem.Memory;
 import com.github.croesch.micro_debug.mic1.mpc.NextMPCCalculator;
 import com.github.croesch.micro_debug.mic1.register.Register;
 import com.github.croesch.micro_debug.mic1.shifter.Shifter;
+import com.github.croesch.micro_debug.settings.Settings;
 
 /**
  * This class represents the CISC-processor being debugged by this program.

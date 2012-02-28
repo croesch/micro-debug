@@ -24,13 +24,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.croesch.micro_debug.commons.Printer;
-import com.github.croesch.micro_debug.commons.Settings;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.api.IReadableMemory;
 import com.github.croesch.micro_debug.mic1.controlstore.MicroInstruction;
 import com.github.croesch.micro_debug.mic1.controlstore.MicroInstructionDecoder;
 import com.github.croesch.micro_debug.mic1.register.Register;
+import com.github.croesch.micro_debug.settings.Settings;
 
 /**
  * Console view for the {@link com.github.croesch.micro_debug.mic1.Mic1}.

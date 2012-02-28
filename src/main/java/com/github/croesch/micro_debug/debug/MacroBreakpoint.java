@@ -18,9 +18,9 @@
  */
 package com.github.croesch.micro_debug.debug;
 
-import com.github.croesch.micro_debug.commons.Settings;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.i18n.Text;
+import com.github.croesch.micro_debug.settings.Settings;
 
 /**
  * A breakpoint for a specific line in macro code.

@@ -24,7 +24,6 @@ import java.util.Map;
 
 import com.github.croesch.micro_debug.commons.AbstractCodeContainer;
 import com.github.croesch.micro_debug.commons.Printer;
-import com.github.croesch.micro_debug.commons.Settings;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.mem.IJVMCommand;
@@ -32,6 +31,7 @@ import com.github.croesch.micro_debug.mic1.mem.IJVMCommandArgument;
 import com.github.croesch.micro_debug.mic1.mem.IJVMConfigReader;
 import com.github.croesch.micro_debug.mic1.mem.Memory;
 import com.github.croesch.micro_debug.mic1.register.Register;
+import com.github.croesch.micro_debug.settings.Settings;
 
 /**
  * Interpreter of a memory, can print code and stack read from the memory.
