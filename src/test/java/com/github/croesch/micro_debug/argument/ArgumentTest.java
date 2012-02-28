@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.croesch.micro_debug;
+package com.github.croesch.micro_debug.argument;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -25,6 +25,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import com.github.croesch.micro_debug.DefaultTestCase;
+import com.github.croesch.micro_debug.argument.Argument;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.io.Output;
 

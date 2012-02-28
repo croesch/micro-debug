@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import com.github.croesch.micro_debug.argument.Argument;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.console.Debugger;
 import com.github.croesch.micro_debug.error.FileFormatException;

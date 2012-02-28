@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.croesch.micro_debug;
+package com.github.croesch.micro_debug.argument;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,7 +40,7 @@ import com.github.croesch.micro_debug.mic1.io.Output;
  * @author croesch
  * @since Date: Aug 13, 2011
  */
-enum Argument {
+public enum Argument {
 
   /** argument to view a help about usage of the debugger */
   HELP {
@@ -198,7 +198,7 @@ enum Argument {
    *         called with the given {@link String}.
    * @see Argument#matches(String)
    */
-  static Argument of(final String s) {
+  public static Argument of(final String s) {
     for (final Argument a : values()) {
       if (a.matches(s)) {
         return a;
@@ -216,7 +216,7 @@ enum Argument {
    * @return the {@link Map} that contains pairs of {@link Argument}s and arrays of strings that contain all parameters
    *         for that argument.
    */
-  static Map<Argument, String[]> createArgumentList(final String[] args) {
+  public static Map<Argument, String[]> createArgumentList(final String[] args) {
     // map that'll contain the parsed arguments
     final Map<Argument, String[]> map = new EnumMap<Argument, String[]>(Argument.class);
 
@@ -337,7 +337,7 @@ enum Argument {
    * 
    * @since Date: Feb 15, 2012
    */
-  static void releaseAllResources() {
+  public static void releaseAllResources() {
     for (final Argument arg : values()) {
       arg.releaseResources();
     }
