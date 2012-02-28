@@ -35,9 +35,6 @@ public final class Help extends AArgument {
   /** path to the file containing the help text */
   private static final String HELP_FILE = "help.txt";
 
-  /** the singleton instance of this argument */
-  private static final Help INSTANCE = new Help();
-
   /**
    * Hide constructor from being invoked.
    * 
@@ -48,13 +45,24 @@ public final class Help extends AArgument {
   }
 
   /**
+   * Class that holds the singleton of this argument.
+   * 
+   * @author croesch
+   * @since Date: Feb 28, 2012
+   */
+  private static class LazyHolder {
+    /** the single instance of the argument */
+    private static final Help INSTANCE = new Help();
+  }
+
+  /**
    * The singleton instance of this argument.
    * 
    * @since Date: Feb 28, 2012
    * @return the single instance of this argument.
    */
   public static Help getInstance() {
-    return INSTANCE;
+    return LazyHolder.INSTANCE;
   }
 
   @Override

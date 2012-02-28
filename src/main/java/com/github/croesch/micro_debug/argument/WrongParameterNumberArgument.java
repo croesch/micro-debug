@@ -28,9 +28,6 @@ import com.github.croesch.micro_debug.i18n.Text;
  */
 public final class WrongParameterNumberArgument extends AError {
 
-  /** the singleton instance of this argument */
-  private static final WrongParameterNumberArgument INSTANCE = new WrongParameterNumberArgument();
-
   /**
    * Hide constructor from being invoked.
    * 
@@ -41,13 +38,24 @@ public final class WrongParameterNumberArgument extends AError {
   }
 
   /**
+   * Class that holds the singleton of this argument.
+   * 
+   * @author croesch
+   * @since Date: Feb 28, 2012
+   */
+  private static class LazyHolder {
+    /** the single instance of the argument */
+    private static final WrongParameterNumberArgument INSTANCE = new WrongParameterNumberArgument();
+  }
+
+  /**
    * The singleton instance of this argument.
    * 
    * @since Date: Feb 28, 2012
    * @return the single instance of this argument.
    */
   public static WrongParameterNumberArgument getInstance() {
-    return INSTANCE;
+    return LazyHolder.INSTANCE;
   }
 
   @Override

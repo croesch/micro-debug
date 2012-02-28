@@ -37,9 +37,6 @@ public final class OutputFile extends AArgument {
   /** the stream that has been opened by this instance */
   private transient PrintStream stream = null;
 
-  /** the singleton instance of this argument */
-  private static final OutputFile INSTANCE = new OutputFile();
-
   /**
    * Hide constructor from being invoked.
    * 
@@ -50,13 +47,24 @@ public final class OutputFile extends AArgument {
   }
 
   /**
+   * Class that holds the singleton of this argument.
+   * 
+   * @author croesch
+   * @since Date: Feb 28, 2012
+   */
+  private static class LazyHolder {
+    /** the single instance of the argument */
+    private static final OutputFile INSTANCE = new OutputFile();
+  }
+
+  /**
    * The singleton instance of this argument.
    * 
    * @since Date: Feb 28, 2012
    * @return the single instance of this argument.
    */
   public static OutputFile getInstance() {
-    return INSTANCE;
+    return LazyHolder.INSTANCE;
   }
 
   @Override

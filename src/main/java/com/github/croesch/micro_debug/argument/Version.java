@@ -28,14 +28,6 @@ import com.github.croesch.micro_debug.i18n.Text;
  * @since Date: Feb 28, 2012
  */
 public final class Version extends AArgument {
-  @Override
-  public boolean execute(final String ... params) {
-    Printer.println(Text.VERSION);
-    return false;
-  }
-
-  /** the singleton instance of this argument */
-  private static final Version INSTANCE = new Version();
 
   /**
    * Hide constructor from being invoked.
@@ -47,13 +39,24 @@ public final class Version extends AArgument {
   }
 
   /**
+   * Class that holds the singleton of this argument.
+   * 
+   * @author croesch
+   * @since Date: Feb 28, 2012
+   */
+  private static class LazyHolder {
+    /** the single instance of the argument */
+    private static final Version INSTANCE = new Version();
+  }
+
+  /**
    * The singleton instance of this argument.
    * 
    * @since Date: Feb 28, 2012
    * @return the single instance of this argument.
    */
   public static Version getInstance() {
-    return INSTANCE;
+    return LazyHolder.INSTANCE;
   }
 
   @Override
@@ -61,4 +64,9 @@ public final class Version extends AArgument {
     return "version";
   }
 
+  @Override
+  public boolean execute(final String ... params) {
+    Printer.println(Text.VERSION);
+    return false;
+  }
 }

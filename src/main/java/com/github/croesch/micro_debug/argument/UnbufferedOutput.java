@@ -28,9 +28,6 @@ import com.github.croesch.micro_debug.mic1.io.Output;
  */
 public final class UnbufferedOutput extends AArgument {
 
-  /** the singleton instance of this argument */
-  private static final UnbufferedOutput INSTANCE = new UnbufferedOutput();
-
   /**
    * Hide constructor from being invoked.
    * 
@@ -41,13 +38,24 @@ public final class UnbufferedOutput extends AArgument {
   }
 
   /**
+   * Class that holds the singleton of this argument.
+   * 
+   * @author croesch
+   * @since Date: Feb 28, 2012
+   */
+  private static class LazyHolder {
+    /** the single instance of the argument */
+    private static final UnbufferedOutput INSTANCE = new UnbufferedOutput();
+  }
+
+  /**
    * The singleton instance of this argument.
    * 
    * @since Date: Feb 28, 2012
    * @return the single instance of this argument.
    */
   public static UnbufferedOutput getInstance() {
-    return INSTANCE;
+    return LazyHolder.INSTANCE;
   }
 
   @Override
