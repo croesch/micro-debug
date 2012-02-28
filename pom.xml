@@ -95,7 +95,8 @@
 				<configuration>
 					<excludes>
 						<exclude>lang/**</exclude>
-						<exclude>*.properties</exclude>
+						<exclude>logging.properties</exclude>
+						<exclude>micro-debug.properties</exclude>
 						<exclude>*.sh</exclude>
 						<exclude>*.bat</exclude>
 					</excludes>
