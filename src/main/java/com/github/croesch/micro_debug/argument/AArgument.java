@@ -88,8 +88,8 @@ public abstract class AArgument {
    * @return <code>true</code>, if this argument can be called with the given {@link String}.<br>
    *         For example <code>--argument</code> will return <code>true</code> for the argument <code>ARGUMENT</code>.
    */
-  private boolean matches(final String argStr) {
-    if (this instanceof WrongParameterNumberArgument || this instanceof UnknownArgument) {
+  protected final boolean matches(final String argStr) {
+    if (this instanceof AError) {
       // make sure we cannot call pseudo-arguments
       return false;
     }
