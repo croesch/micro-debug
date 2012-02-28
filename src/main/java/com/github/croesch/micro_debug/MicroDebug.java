@@ -24,7 +24,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-import com.github.croesch.micro_debug.argument.Argument;
+import com.github.croesch.micro_debug.argument.AArgument;
+import com.github.croesch.micro_debug.argument.Help;
+import com.github.croesch.micro_debug.argument.Version;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.console.Debugger;
 import com.github.croesch.micro_debug.error.FileFormatException;
@@ -96,7 +98,7 @@ public final class MicroDebug {
     System.arraycopy(args, 0, optionArgs, 0, optionArgs.length);
 
     // handle the arguments
-    final boolean startApplication = executeTheArguments(Argument.createArgumentList(optionArgs));
+    final boolean startApplication = executeTheArguments(AArgument.createArgumentList(optionArgs));
 
     // start the application itself, if the arguments where valid
     LOGGER.finer("starting application: " + startApplication);
@@ -120,21 +122,21 @@ public final class MicroDebug {
       }
     }
 
-    Argument.releaseAllResources();
+    AArgument.releaseAllResources();
   }
 
   /**
-   * Executes all {@link Argument}s in the given {@link Map} with the parameters stored in the map.
+   * Executes all {@link AArgument}s in the given {@link Map} with the parameters stored in the map.
    * 
    * @since Date: Dec 3, 2011
-   * @param map the map that contains the {@link Argument}s and the {@link String[]} as parameter for the argument.
+   * @param map the map that contains the {@link AArgument}s and the {@link String[]} as parameter for the argument.
    * @return <code>true</code> if the application can be started, <code>false</code> otherwise
    */
-  private static boolean executeTheArguments(final Map<Argument, String[]> map) {
+  private static boolean executeTheArguments(final Map<AArgument, String[]> map) {
     boolean startApplication = true;
 
-    for (final Entry<Argument, String[]> argumentEntry : map.entrySet()) {
-      final Argument arg = argumentEntry.getKey();
+    for (final Entry<AArgument, String[]> argumentEntry : map.entrySet()) {
+      final AArgument arg = argumentEntry.getKey();
       final String[] params = argumentEntry.getValue();
 
       LOGGER.fine("Executing argument: " + arg);
@@ -161,13 +163,13 @@ public final class MicroDebug {
   }
 
   /**
-   * Performs the handling of passing only one argument to the program.
+   * Performs the handling of passing only one {@link AArgument} to the program.
    * 
    * @since Date: Dec 3, 2011
-   * @param argument the argument passed to the program
+   * @param argument the {@link AArgument} passed to the program
    */
   private static void handleOneArgument(final String argument) {
-    final Argument arg = Argument.of(argument);
+    final AArgument arg = AArgument.of(argument);
 
     if (isValidAsOnlyArgument(arg)) {
       // if the help or version should be viewed it's okay to have only one argument
@@ -182,11 +184,11 @@ public final class MicroDebug {
    * Returns whether the given argument is valid to be the only argument given to the application.
    * 
    * @since Date: Jan 14, 2012
-   * @param arg the {@link Argument} to check
-   * @return <code>true</code>, whether it is okay to start the application with only the given argument
+   * @param arg the {@link AArgument} to check
+   * @return <code>true</code>, whether it is okay to start the application with only the given AArgument
    */
-  private static boolean isValidAsOnlyArgument(final Argument arg) {
-    return arg == Argument.HELP || arg == Argument.VERSION;
+  private static boolean isValidAsOnlyArgument(final AArgument arg) {
+    return arg instanceof Help || arg instanceof Version;
   }
 
   /**

@@ -18,21 +18,10 @@
  */
 package com.github.croesch.micro_debug.argument;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.util.EnumMap;
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
-
-import com.github.croesch.micro_debug.commons.Printer;
-import com.github.croesch.micro_debug.commons.Utils;
-import com.github.croesch.micro_debug.i18n.Text;
-import com.github.croesch.micro_debug.mic1.io.Output;
 
 /**
  * Enumeration of all possible command line arguments for the debugger.
@@ -40,88 +29,23 @@ import com.github.croesch.micro_debug.mic1.io.Output;
  * @author croesch
  * @since Date: Aug 13, 2011
  */
-public enum Argument {
-
-  /** argument to view a help about usage of the debugger */
-  HELP {
-    /** path to the file containing the help text */
-    private static final String HELP_FILE = "help.txt";
-
-    @Override
-    public boolean execute(final String ... params) {
-      final InputStream fileStream = Utils.class.getClassLoader().getResourceAsStream(HELP_FILE);
-      Printer.printReader(new InputStreamReader(fileStream));
-      return false;
-    }
-  },
-
-  /** argument that signalizes an unknown argument */
-  ERROR_UNKNOWN {
-    @Override
-    public boolean execute(final String ... params) {
-      return printError(params, Text.UNKNOWN_ARGUMENT, this);
-    }
-  },
-
-  /** argument that signalizes an argument with the wrong number of parameters */
-  ERROR_PARAM_NUMBER {
-    @Override
-    public boolean execute(final String ... params) {
-      return printError(params, Text.ARGUMENT_WITH_WRONG_PARAM_NUMBER, this);
-    }
-  },
-
-  /** argument to specify a file to append the output of the debugger to */
-  OUTPUT_FILE (1) {
-
-    /** the stream that has been opened by this instance */
-    private transient PrintStream stream = null;
-
-    @Override
-    public boolean execute(final String ... params) {
-      releaseResources();
-      try {
-        this.stream = new PrintStream(new FileOutputStream(new File(params[0]), true));
-        Output.setOut(this.stream);
-      } catch (final FileNotFoundException e) {
-        Utils.logThrownThrowable(e);
-      }
-      return true;
-    }
-
-    @Override
-    void releaseResources() {
-      if (this.stream != null) {
-        Output.setOut(System.out);
-        this.stream.close();
-        this.stream = null;
-      }
-    }
-  },
-
-  /** argument that makes the output to be unbuffered */
-  UNBUFFERED_OUTPUT {
-    @Override
-    public boolean execute(final String ... params) {
-      Output.setBuffered(false);
-      return true;
-    }
-  },
-
-  /** argument to view the version of the debugger */
-  VERSION {
-    @Override
-    public boolean execute(final String ... params) {
-      Printer.println(Text.VERSION);
-      return false;
-    }
-  };
+public abstract class AArgument {
 
   /** the different ways this argument can be called */
   private final String[] args = new String[2];
 
   /** the number of parameters that argument requires */
   private final int numOfParams;
+
+  /** the list of arguments that are available */
+  private static final List<AArgument> VALUES = new ArrayList<AArgument>();
+
+  static {
+    VALUES.add(Help.getInstance());
+    VALUES.add(OutputFile.getInstance());
+    VALUES.add(UnbufferedOutput.getInstance());
+    VALUES.add(Version.getInstance());
+  }
 
   /**
    * Constructs a new argument with its name as long argument and its first letter as short argument. For example
@@ -137,7 +61,7 @@ public enum Argument {
    * @since Date: Aug 13, 2011
    * @see #Argument(int)
    */
-  private Argument() {
+  protected AArgument() {
     this(0);
   }
 
@@ -156,9 +80,9 @@ public enum Argument {
    * @since Date: Aug 17, 2011
    * @see #Argument()
    */
-  private Argument(final int nop) {
-    this.args[0] = "--" + this.name().toLowerCase(Locale.getDefault()).replaceAll("_", "-");
-    this.args[1] = "-" + this.name().substring(0, 1).toLowerCase(Locale.getDefault());
+  protected AArgument(final int nop) {
+    this.args[0] = "--" + name();
+    this.args[1] = "-" + name().substring(0, 1);
     this.numOfParams = nop;
   }
 
@@ -172,7 +96,7 @@ public enum Argument {
    *         For example <code>--argument</code> will return <code>true</code> for the argument <code>ARGUMENT</code>.
    */
   private boolean matches(final String argStr) {
-    if (this == ERROR_PARAM_NUMBER || this == ERROR_UNKNOWN) {
+    if (this instanceof WrongParameterNumberArgument || this instanceof UnknownArgument) {
       // make sure we cannot call pseudo-arguments
       return false;
     }
@@ -198,8 +122,8 @@ public enum Argument {
    *         called with the given {@link String}.
    * @see Argument#matches(String)
    */
-  public static Argument of(final String s) {
-    for (final Argument a : values()) {
+  public static AArgument of(final String s) {
+    for (final AArgument a : values()) {
       if (a.matches(s)) {
         return a;
       }
@@ -216,21 +140,21 @@ public enum Argument {
    * @return the {@link Map} that contains pairs of {@link Argument}s and arrays of strings that contain all parameters
    *         for that argument.
    */
-  public static Map<Argument, String[]> createArgumentList(final String[] args) {
+  public static Map<AArgument, String[]> createArgumentList(final String[] args) {
     // map that'll contain the parsed arguments
-    final Map<Argument, String[]> map = new EnumMap<Argument, String[]>(Argument.class);
+    final Map<AArgument, String[]> map = new HashMap<AArgument, String[]>();
 
     if (args != null) {
       // arguments are a valid array, so start iterating
       for (int i = 0; i < args.length; ++i) {
 
-        // handle only non-null-values
+        // handle only non-null-VALUES
         if (args[i] != null) {
           // parse the current argument
-          final Argument arg = of(args[i]);
+          final AArgument arg = of(args[i]);
           if (arg == null) {
             // unknown argument, add it to the map as parameter to ERROR_UNKNOWN
-            addErrorArgument(map, ERROR_UNKNOWN, args[i]);
+            addErrorArgument(map, UnknownArgument.getInstance(), args[i]);
           } else {
             // known argument, check if the required parameters are given
             if (i + arg.getNumberOfParameters() < args.length) {
@@ -243,7 +167,7 @@ public enum Argument {
               map.put(arg, params);
             } else {
               // not enough parameters given, add argument as parameter to ERROR_PARAM_NUMBER
-              addErrorArgument(map, Argument.ERROR_PARAM_NUMBER, args[i]);
+              addErrorArgument(map, WrongParameterNumberArgument.getInstance(), args[i]);
             }
           }
         }
@@ -260,7 +184,7 @@ public enum Argument {
    * @param arg the argument that is the key in the given map
    * @param value the new value to append to the array, belonging to the key in the map.
    */
-  private static void addErrorArgument(final Map<Argument, String[]> map, final Argument arg, final String value) {
+  private static void addErrorArgument(final Map<AArgument, String[]> map, final AArgument arg, final String value) {
     if (!map.containsKey(arg)) {
       // key not in map -> create it
       map.put(arg, new String[] { value });
@@ -300,37 +224,12 @@ public enum Argument {
   public abstract boolean execute(String ... params);
 
   /**
-   * Prints the given array of arguments as an error. Returns whether the application can continue.
+   * Returns the name of this argument containing only lower case characters and -.
    * 
-   * @since Date: Jan 14, 2012
-   * @param params the arguments to be printed as an error
-   * @param errorText the {@link Text} that is used to print each argument
-   * @param errorArgument the type of error that the arguments are
-   * @return <code>true</code>, if the application can start,<br>
-   *         <code>false</code> otherwise
+   * @since Date: Feb 28, 2012
+   * @return the name of this argument.
    */
-  boolean printError(final String[] params, final Text errorText, final Argument errorArgument) {
-    if (params == null || params.length == 0) {
-      // if there are no arguments then calling this method might be a mistake
-      Logger.getLogger(getClass().getName()).warning("No parameters passed to execution of '" + errorArgument.name()
-                                                             + "'");
-      return true;
-    }
-
-    // flag, because we still might have a corrupt array
-    boolean argumentFound = false;
-    for (final String param : params) {
-      if (param != null) {
-        // we have the argument, so print it
-        Printer.printErrorln(errorText.text(param));
-        argumentFound = true;
-      }
-    }
-    if (argumentFound) {
-      HELP.execute();
-    }
-    return !argumentFound;
-  }
+  protected abstract String name();
 
   /**
    * Releases important references.
@@ -338,17 +237,16 @@ public enum Argument {
    * @since Date: Feb 15, 2012
    */
   public static void releaseAllResources() {
-    for (final Argument arg : values()) {
-      arg.releaseResources();
-    }
+    OutputFile.getInstance().releaseResources();
   }
 
   /**
-   * Releases important references.
+   * Returns the list of arguments that are available.
    * 
-   * @since Date: Feb 15, 2012
+   * @since Date: Feb 28, 2012
+   * @return the list of arguments that are available.
    */
-  void releaseResources() {
-    // to be overridden by the arguments that decide to release something
+  public static List<AArgument> values() {
+    return VALUES;
   }
 }
