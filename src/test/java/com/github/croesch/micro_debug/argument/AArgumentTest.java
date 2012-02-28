@@ -20,14 +20,9 @@ package com.github.croesch.micro_debug.argument;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.junit.Test;
 
 import com.github.croesch.micro_debug.DefaultTestCase;
-import com.github.croesch.micro_debug.i18n.Text;
-import com.github.croesch.micro_debug.mic1.io.Output;
 
 /**
  * Provides several test methods for {@link AArgument}.
@@ -83,69 +78,6 @@ public class AArgumentTest extends DefaultTestCase {
   }
 
   @Test
-  public final void testCreateArgumentList_UnknownArgument() {
-    printlnMethodName();
-    String[] args = new String[] { "" };
-    assertThat(AArgument.createArgumentList(args).keySet()).containsOnly(UnknownArgument.getInstance());
-    assertThat(AArgument.createArgumentList(args).get(UnknownArgument.getInstance())).containsOnly("");
-
-    args = new String[] { " " };
-    assertThat(AArgument.createArgumentList(args).keySet()).containsOnly(UnknownArgument.getInstance());
-    assertThat(AArgument.createArgumentList(args).get(UnknownArgument.getInstance())).containsOnly(" ");
-
-    args = new String[] { "-help" };
-    assertThat(AArgument.createArgumentList(args).keySet()).containsOnly(UnknownArgument.getInstance());
-    assertThat(AArgument.createArgumentList(args).get(UnknownArgument.getInstance())).containsOnly("-help");
-
-    args = new String[] { "-help", "asd" };
-    assertThat(AArgument.createArgumentList(args).keySet()).containsOnly(UnknownArgument.getInstance());
-    assertThat(AArgument.createArgumentList(args).get(UnknownArgument.getInstance())).containsOnly("asd", "-help");
-  }
-
-  @Test
-  public final void testCreateArgumentList_HelpInArray() {
-    printlnMethodName();
-    String[] args = new String[] { "-h" };
-
-    assertThat(AArgument.createArgumentList(args).keySet()).containsOnly(Help.getInstance());
-    assertThat(AArgument.createArgumentList(args).get(Help.getInstance())).isEmpty();
-
-    args = new String[] { "--help" };
-    assertThat(AArgument.createArgumentList(args).keySet()).containsOnly(Help.getInstance());
-    assertThat(AArgument.createArgumentList(args).get(Help.getInstance())).isEmpty();
-  }
-
-  @Test
-  public final void testCreateArgumentList_VersionInArray() {
-    printlnMethodName();
-    String[] args = new String[] { "-v" };
-
-    assertThat(AArgument.createArgumentList(args).keySet()).containsOnly(Version.getInstance());
-    assertThat(AArgument.createArgumentList(args).get(Version.getInstance())).isEmpty();
-
-    args = new String[] { "--version" };
-    assertThat(AArgument.createArgumentList(args).keySet()).containsOnly(Version.getInstance());
-    assertThat(AArgument.createArgumentList(args).get(Version.getInstance())).isEmpty();
-  }
-
-  @Test
-  public final void testCreateArgumentList_OutputFileInArray() {
-    printlnMethodName();
-    String[] args = new String[] { "-o" };
-
-    assertThat(AArgument.createArgumentList(args).keySet()).containsOnly(WrongParameterNumberArgument.getInstance());
-    assertThat(AArgument.createArgumentList(args).get(WrongParameterNumberArgument.getInstance())).containsOnly("-o");
-
-    args = new String[] { "-o", "2" };
-    assertThat(AArgument.createArgumentList(args).keySet()).containsOnly(OutputFile.getInstance());
-    assertThat(AArgument.createArgumentList(args).get(OutputFile.getInstance())).containsOnly("2");
-
-    args = new String[] { "--output-file", "2" };
-    assertThat(AArgument.createArgumentList(args).keySet()).containsOnly(OutputFile.getInstance());
-    assertThat(AArgument.createArgumentList(args).get(OutputFile.getInstance())).containsOnly("2");
-  }
-
-  @Test
   public final void testCreateArgumentList() {
     printlnMethodName();
     final String[] args = new String[] { "-h", "-v", null, "--help", "--xxno-argument", "null", "-o" };
@@ -179,98 +111,13 @@ public class AArgumentTest extends DefaultTestCase {
   }
 
   @Test
-  public final void testExecuteVersion() {
-    printlnMethodName();
-    assertThat(Version.getInstance().execute()).isFalse();
-    assertThat(out.toString()).isEqualTo(Text.VERSION.text() + getLineSeparator());
-  }
-
-  @Test
-  public final void testExecuteHelp() throws IOException {
-    printlnMethodName();
-    assertThat(Help.getInstance().execute()).isFalse();
-    assertThat(out.toString()).isEqualTo(getHelpFileText());
-  }
-
-  @Test
-  public final void testExecuteUnbufferedOutput() {
-    printlnMethodName();
-    assertThat(UnbufferedOutput.getInstance().execute()).isTrue();
-    assertThat(Output.isBuffered()).isFalse();
-
-    Output.setBuffered(true);
-    assertThat(Output.isBuffered()).isTrue();
-    assertThat(UnbufferedOutput.getInstance().execute()).isTrue();
-    assertThat(Output.isBuffered()).isFalse();
-
-    assertThat(UnbufferedOutput.getInstance().execute()).isTrue();
-    assertThat(Output.isBuffered()).isFalse();
-
-    Output.setBuffered(true);
-  }
-
-  @Test
-  public final void testExecuteUnknownArgument() throws IOException {
-    printlnMethodName();
-    assertThat(UnknownArgument.getInstance().execute()).isTrue();
-    assertThat(out.toString()).isEmpty();
-
-    assertThat(UnknownArgument.getInstance().execute(new String[] {})).isTrue();
-    assertThat(out.toString()).isEmpty();
-
-    assertThat(UnknownArgument.getInstance().execute(new String[] { null })).isTrue();
-    assertThat(out.toString()).isEmpty();
-
-    assertThat(UnknownArgument.getInstance().execute(new String[] { "bla" })).isFalse();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("bla")) + getLineSeparator()
-                                                 + getHelpFileText());
-
-    out.reset();
-
-    assertThat(UnknownArgument.getInstance().execute(new String[] { "bla", "--bla", "-wow" })).isFalse();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("bla")) + getLineSeparator()
-                                                 + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("--bla"))
-                                                 + getLineSeparator()
-                                                 + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("-wow"))
-                                                 + getLineSeparator() + getHelpFileText());
-  }
-
-  @Test
-  public final void testExecuteParameterNumber() throws IOException {
-    printlnMethodName();
-    assertThat(WrongParameterNumberArgument.getInstance().execute()).isTrue();
-    assertThat(out.toString()).isEmpty();
-
-    assertThat(WrongParameterNumberArgument.getInstance().execute((String[]) null)).isTrue();
-    assertThat(out.toString()).isEmpty();
-
-    assertThat(WrongParameterNumberArgument.getInstance().execute(new String[] {})).isTrue();
-    assertThat(out.toString()).isEmpty();
-
-    assertThat(WrongParameterNumberArgument.getInstance().execute(new String[] { null })).isTrue();
-    assertThat(out.toString()).isEmpty();
-
-    assertThat(WrongParameterNumberArgument.getInstance().execute(new String[] { "-o" })).isFalse();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.ARGUMENT_WITH_WRONG_PARAM_NUMBER.text("-o"))
-                                                 + getLineSeparator() + getHelpFileText());
-  }
-
-  @Test
   public void testErrorArgs() {
     printlnMethodName();
+    assertThat(AArgument.of("--ERROR")).isNull();
+    assertThat(AArgument.of("--error")).isNull();
     assertThat(AArgument.of("--error-unknown")).isNull();
     assertThat(AArgument.of("--error-param-number")).isNull();
     assertThat(AArgument.of("-e")).isNull();
-  }
-
-  @Test
-  public void testExecuteOutputFileAndReleaseResources() {
-    printlnMethodName();
-    AArgument.releaseAllResources();
-    OutputFile.getInstance().execute(System.getProperty("java.io.tmpdir") + "/asd");
-    AArgument.releaseAllResources();
-    assertThat(new File(System.getProperty("java.io.tmpdir") + "/asd").delete()).isTrue();
-    AArgument.releaseAllResources();
-    OutputFile.getInstance().releaseResources();
+    assertThat(AArgument.of("-E")).isNull();
   }
 }
