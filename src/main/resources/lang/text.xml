@@ -23,7 +23,7 @@
 
 <properties>
 
-	<entry key="version">${project.name}: Version ${version}</entry>
+	<entry key="version">${project.name}: Version {0}</entry>
 	
 	<entry key="border">----------------------------------------</entry>
 	

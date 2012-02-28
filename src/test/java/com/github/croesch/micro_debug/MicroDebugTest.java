@@ -33,6 +33,7 @@ import org.junit.Test;
 import com.github.croesch.micro_debug.commons.Reader;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.io.Output;
+import com.github.croesch.micro_debug.settings.InternalSettings;
 
 /**
  * Contains tests for {@link MicroDebug}.
@@ -129,18 +130,20 @@ public class MicroDebugTest extends DefaultTestCase {
   @Test
   public final void testMain_Version() {
     printlnMethodName();
+    final String versionInformation = Text.VERSION.text(InternalSettings.VERSION);
+
     MicroDebug.main(new String[] { "-v" });
-    assertThat(out.toString()).isEqualTo(this.GREETING + this.BORDER + Text.VERSION.text() + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.BORDER + versionInformation + getLineSeparator());
 
     out.reset();
 
     MicroDebug.main(new String[] { "--version" });
-    assertThat(out.toString()).isEqualTo(this.GREETING + this.BORDER + Text.VERSION.text() + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.BORDER + versionInformation + getLineSeparator());
 
     out.reset();
 
     MicroDebug.main(new String[] { "--version", "mic1", "ijvm" });
-    assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME + Text.VERSION.text() + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(this.GREETING + this.WELCOME + versionInformation + getLineSeparator());
 
     out.reset();
 
