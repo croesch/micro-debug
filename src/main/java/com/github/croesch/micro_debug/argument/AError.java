@@ -59,7 +59,7 @@ public abstract class AError extends AArgument {
       }
     }
     if (argumentFound) {
-      Help.getInstance().execute();
+      AArgument.of("-h").execute();
     }
     return !argumentFound;
   }
