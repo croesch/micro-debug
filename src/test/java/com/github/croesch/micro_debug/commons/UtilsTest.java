@@ -140,4 +140,14 @@ public class UtilsTest extends DefaultTestCase {
     assertThat(Utils.getNextHigherValue(110, 0, 1, 2, 5, 10, 15, 20, 33, 23, 13, 3, -3)).isEqualTo(Integer.MAX_VALUE);
     assertThat(Utils.getNextHigherValue(110)).isEqualTo(Integer.MAX_VALUE);
   }
+
+  @Test
+  public void testToString() {
+    assertThat(Utils.toString(null)).isEmpty();
+    assertThat(Utils.toString("")).isEmpty();
+    assertThat(Utils.toString(" ")).isEqualTo(" ");
+    assertThat(Utils.toString(12)).isEqualTo("12");
+    assertThat(Utils.toString(Integer.valueOf(13))).isEqualTo("13");
+    assertThat(Utils.toString(this)).isEqualTo(toString());
+  }
 }

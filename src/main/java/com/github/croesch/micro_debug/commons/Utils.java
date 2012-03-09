@@ -185,4 +185,20 @@ public final class Utils {
   public static String getLineSeparator() {
     return System.getProperty("line.separator", "\n");
   }
+
+  /**
+   * Returns the {@link #toString()} representation of the given object or an empty {@link String} if the object is
+   * <code>null</code>.
+   * 
+   * @since Date: Mar 3, 2012
+   * @param obj the object
+   * @return the {@link String} representation of the object or an empty {@link String} if the {@link Object} is
+   *         <code>null</code>.
+   */
+  public static String toString(final Object obj) {
+    if (obj == null) {
+      return "";
+    }
+    return obj.toString();
+  }
 }
