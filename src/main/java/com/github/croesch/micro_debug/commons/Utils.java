@@ -201,4 +201,17 @@ public final class Utils {
     }
     return obj.toString();
   }
+
+  /**
+   * Returns whether the given {@link String} is <code>null</code> or empty. A {@link String} containing only
+   * whitespaces is also considered to be empty.
+   * 
+   * @since Date: Mar 9, 2012
+   * @param str the {@link String} to check if it's <code>null</code> or empty.
+   * @return <code>true</code> if the given {@link String} is either <code>null</code> or empty,<br>
+   *         <code>false</code> otherwise
+   */
+  public static boolean isNullOrEmpty(final String str) {
+    return str == null || str.trim().equals("");
+  }
 }

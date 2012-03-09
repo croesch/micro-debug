@@ -150,4 +150,13 @@ public class UtilsTest extends DefaultTestCase {
     assertThat(Utils.toString(Integer.valueOf(13))).isEqualTo("13");
     assertThat(Utils.toString(this)).isEqualTo(toString());
   }
+
+  @Test
+  public void isNullOrEmpty() {
+    assertThat(Utils.isNullOrEmpty(null)).isTrue();
+    assertThat(Utils.isNullOrEmpty("")).isTrue();
+    assertThat(Utils.isNullOrEmpty("  \t   \n\t\t\t\n\n\t  \t   \n  \t\n")).isTrue();
+    assertThat(Utils.isNullOrEmpty("asd")).isFalse();
+    assertThat(Utils.isNullOrEmpty("     \t    a\t  \n ")).isFalse();
+  }
 }
