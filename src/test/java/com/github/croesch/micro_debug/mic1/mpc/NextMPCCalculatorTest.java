@@ -20,6 +20,8 @@ package com.github.croesch.micro_debug.mic1.mpc;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.io.IOException;
+
 import org.junit.Test;
 
 import com.github.croesch.micro_debug.DefaultTestCase;
@@ -474,5 +476,50 @@ public class NextMPCCalculatorTest extends DefaultTestCase {
       printLoopEnd();
     }
     printEndOfMethod();
+  }
+
+  @Test
+  public void testEquals() {
+    printlnMethodName();
+    final NextMPCCalculator one = new NextMPCCalculator();
+    final NextMPCCalculator two = new NextMPCCalculator();
+    one.setAddr(12);
+    two.setAddr(12);
+    two.setJmpN(true);
+    one.setJmpN(true);
+
+    assertThat(one).isEqualTo(one);
+    assertThat(two).isEqualTo(two);
+    assertThat(one).isEqualTo(two);
+    assertThat(one).isNotEqualTo(null);
+    assertThat(one).isNotEqualTo(one.toString());
+
+    one.calculate();
+
+    assertThat(one).isNotEqualTo(two);
+    assertThat(two).isNotEqualTo(one);
+
+    one.setN(true);
+    two.setN(true);
+    two.calculate();
+
+    assertThat(one).isNotEqualTo(two);
+    assertThat(two).isNotEqualTo(one);
+
+    one.calculate();
+
+    assertThat(one).isEqualTo(one);
+    assertThat(two).isEqualTo(two);
+  }
+
+  @Test
+  public void testHashCode() throws IOException {
+    printlnMethodName();
+    final NextMPCCalculator one = new NextMPCCalculator();
+    final NextMPCCalculator two = new NextMPCCalculator();
+
+    assertThat(one.hashCode()).isEqualTo(one.hashCode());
+    assertThat(two.hashCode()).isEqualTo(two.hashCode());
+    assertThat(one.hashCode()).isEqualTo(two.hashCode());
   }
 }

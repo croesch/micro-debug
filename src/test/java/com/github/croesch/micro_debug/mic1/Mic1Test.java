@@ -23,6 +23,7 @@ import static org.fest.assertions.Assertions.assertThat;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 
 import org.junit.Test;
@@ -586,5 +587,56 @@ public class Mic1Test extends DefaultTestCase {
                                                  + getLineSeparator());
     assertThat(micOut.toString()).isEqualTo(" 2\n+2\n========\n00000004\n");
     out.reset();
+  }
+
+  @Test
+  public void testEquals() throws IOException {
+    printlnMethodName();
+    InputStream micFile = getClass().getClassLoader().getResourceAsStream("mic1/mic1ijvm.mic1");
+    InputStream macFile = getClass().getClassLoader().getResourceAsStream("mic1/add.ijvm");
+    final Mic1 one = new Mic1(micFile, macFile);
+    new Mic1Interpreter(one);
+    micFile.close();
+    macFile.close();
+
+    micFile = getClass().getClassLoader().getResourceAsStream("mic1/mic1ijvm.mic1");
+    macFile = getClass().getClassLoader().getResourceAsStream("mic1/add.ijvm");
+    final Mic1 two = new Mic1(micFile, macFile);
+    new Mic1Interpreter(two);
+    micFile.close();
+    macFile.close();
+
+    assertThat(one).isEqualTo(one);
+    assertThat(two).isEqualTo(two);
+    assertThat(one).isEqualTo(two);
+    assertThat(one).isNotEqualTo(null);
+    assertThat(one).isNotEqualTo(one.toString());
+    assertThat(one).isNotEqualTo(this.processor);
+    assertThat(two).isNotEqualTo(this.processor);
+
+    one.step();
+
+    assertThat(one).isNotEqualTo(two);
+    assertThat(two).isNotEqualTo(one);
+
+    two.step(2);
+
+    assertThat(one).isNotEqualTo(two);
+    assertThat(two).isNotEqualTo(one);
+
+    one.step(1);
+
+    assertThat(one).isEqualTo(one);
+    assertThat(two).isEqualTo(two);
+
+    one.setMemoryValue(12, 3);
+
+    assertThat(one).isNotEqualTo(two);
+    assertThat(two).isNotEqualTo(one);
+
+    two.setMemoryValue(12, 3);
+
+    assertThat(one).isEqualTo(one);
+    assertThat(two).isEqualTo(two);
   }
 }

@@ -21,6 +21,7 @@ package com.github.croesch.micro_debug.mic1.mem;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import org.junit.Test;
 
@@ -540,5 +541,45 @@ public class MemoryTest extends DefaultTestCase {
       printStep();
     }
     printEndOfMethod();
+  }
+
+  @Test
+  public void testEquals() throws FileFormatException {
+    printlnMethodName();
+    final Memory one = new Memory(Byte.MAX_VALUE, ClassLoader.getSystemResourceAsStream("mic1/test.ijvm"));
+    final Memory two = new Memory(Byte.MAX_VALUE, ClassLoader.getSystemResourceAsStream("mic1/test.ijvm"));
+
+    assertThat(one).isEqualTo(one);
+    assertThat(two).isEqualTo(two);
+    assertThat(one).isEqualTo(two);
+    assertThat(one).isNotEqualTo(null);
+    assertThat(one).isNotEqualTo(one.toString());
+
+    one.setWord(13, 12);
+
+    assertThat(one).isNotEqualTo(two);
+    assertThat(two).isNotEqualTo(one);
+
+    two.setWord(13, 12);
+    two.setWord(14, 7);
+
+    assertThat(one).isNotEqualTo(two);
+    assertThat(two).isNotEqualTo(one);
+
+    one.setWord(14, 7);
+
+    assertThat(one).isEqualTo(one);
+    assertThat(two).isEqualTo(two);
+  }
+
+  @Test
+  public void testHashCode() throws IOException {
+    printlnMethodName();
+    final Memory one = new Memory(Byte.MAX_VALUE, ClassLoader.getSystemResourceAsStream("mic1/test.ijvm"));
+    final Memory two = new Memory(Byte.MAX_VALUE, ClassLoader.getSystemResourceAsStream("mic1/test.ijvm"));
+
+    assertThat(one.hashCode()).isEqualTo(one.hashCode());
+    assertThat(two.hashCode()).isEqualTo(two.hashCode());
+    assertThat(one.hashCode()).isEqualTo(two.hashCode());
   }
 }

@@ -130,19 +130,19 @@ public class MicroControlStoreTest extends DefaultTestCase {
     printlnMethodName();
 
     MicroInstruction expected = new MicroInstruction(2,
-                                                   new JMPSignalSet(),
-                                                   new ALUSignalSet(),
-                                                   new CBusSignalSet(),
-                                                   new MemorySignalSet(),
-                                                   Register.MDR);
+                                                     new JMPSignalSet(),
+                                                     new ALUSignalSet(),
+                                                     new CBusSignalSet(),
+                                                     new MemorySignalSet(),
+                                                     Register.MDR);
     assertThat(this.store.getInstruction(0)).isEqualTo(expected);
 
     expected = new MicroInstruction(0xFE,
-                                   new JMPSignalSet(),
-                                   new ALUSignalSet(),
-                                   new CBusSignalSet(),
-                                   new MemorySignalSet(),
-                                   Register.MDR);
+                                    new JMPSignalSet(),
+                                    new ALUSignalSet(),
+                                    new CBusSignalSet(),
+                                    new MemorySignalSet(),
+                                    Register.MDR);
     assertThat(this.store.getInstruction(511)).isEqualTo(expected);
 
     final ALUSignalSet aluSet = new ALUSignalSet();
@@ -151,12 +151,7 @@ public class MicroControlStoreTest extends DefaultTestCase {
     final CBusSignalSet cBusSet = new CBusSignalSet();
     cBusSet.setH(true);
     cBusSet.setOpc(true);
-    expected = new MicroInstruction(0x62,
-                                   new JMPSignalSet(),
-                                   aluSet,
-                                   cBusSet,
-                                   new MemorySignalSet(),
-                                   Register.MDR);
+    expected = new MicroInstruction(0x62, new JMPSignalSet(), aluSet, cBusSet, new MemorySignalSet(), Register.MDR);
     assertThat(this.store.getInstruction(0xFE)).isEqualTo(expected);
   }
 
@@ -316,5 +311,33 @@ public class MicroControlStoreTest extends DefaultTestCase {
 
     this.store.printCode();
     assertThat(out.toString()).isEqualTo(readFile("mic1/hi-with-null.mic1.dis").toString());
+  }
+
+  @Test
+  public void testEquals() throws IOException {
+    printlnMethodName();
+    final MicroControlStore one = new MicroControlStore(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"));
+    final MicroControlStore two = new MicroControlStore(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"));
+
+    assertThat(one).isEqualTo(one);
+    assertThat(two).isEqualTo(two);
+    assertThat(one).isEqualTo(two);
+    assertThat(one).isNotEqualTo(null);
+    assertThat(one).isNotEqualTo(one.toString());
+    assertThat(one).isNotEqualTo(this.store);
+    assertThat(this.store).isNotEqualTo(one);
+    assertThat(two).isNotEqualTo(this.store);
+    assertThat(this.store).isNotEqualTo(two);
+  }
+
+  @Test
+  public void testHashCode() throws IOException {
+    printlnMethodName();
+    final MicroControlStore one = new MicroControlStore(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"));
+    final MicroControlStore two = new MicroControlStore(ClassLoader.getSystemResourceAsStream("mic1/hi.mic1"));
+
+    assertThat(one.hashCode()).isEqualTo(one.hashCode());
+    assertThat(two.hashCode()).isEqualTo(two.hashCode());
+    assertThat(one.hashCode()).isEqualTo(two.hashCode());
   }
 }

@@ -571,4 +571,42 @@ public final class Mic1 {
   public MicroControlStore getControlStore() {
     return this.controlStore;
   }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + this.controlStore.hashCode();
+    result = prime * result + this.memory.hashCode();
+    result = prime * result + this.mpcCalculator.hashCode();
+    result = prime * result + this.oldMpc;
+    return result;
+  }
+
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final Mic1 other = (Mic1) obj;
+    if (!this.controlStore.equals(other.controlStore)) {
+      return false;
+    }
+    if (!this.memory.equals(other.memory)) {
+      return false;
+    }
+    if (!this.mpcCalculator.equals(other.mpcCalculator)) {
+      return false;
+    }
+    if (this.oldMpc != other.oldMpc) {
+      return false;
+    }
+    return true;
+  }
 }

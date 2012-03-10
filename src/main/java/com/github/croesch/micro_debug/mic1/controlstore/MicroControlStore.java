@@ -20,6 +20,7 @@ package com.github.croesch.micro_debug.mic1.controlstore;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import com.github.croesch.micro_debug.commons.AbstractCodeContainer;
 import com.github.croesch.micro_debug.commons.Printer;
@@ -43,8 +44,8 @@ public final class MicroControlStore extends AbstractCodeContainer {
   private final MicroInstruction[] store = new MicroInstruction[INSTRUCTIONS_PER_STORE];
 
   /**
-   * Constructs a {@link MicroControlStore} with the {@link MicroInstruction} fetched from the given stream. If the magic
-   * number is incorrect, or if there are too few or too many bytes to read, a {@link FileFormatException} will be
+   * Constructs a {@link MicroControlStore} with the {@link MicroInstruction} fetched from the given stream. If the
+   * magic number is incorrect, or if there are too few or too many bytes to read, a {@link FileFormatException} will be
    * thrown.
    * 
    * @since Date: Nov 19, 2011
@@ -120,5 +121,31 @@ public final class MicroControlStore extends AbstractCodeContainer {
     final String formattedAddress = formatIntToHex(i, Settings.MIC1_MEM_MICRO_ADDR_WIDTH.getValue());
     Printer.println(Text.MICRO_CODE_LINE.text(formattedAddress, MicroInstructionDecoder.decode(this.store[i])));
     return 0;
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + Arrays.hashCode(this.store);
+    return result;
+  }
+
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final MicroControlStore other = (MicroControlStore) obj;
+    if (!Arrays.equals(this.store, other.store)) {
+      return false;
+    }
+    return true;
   }
 }

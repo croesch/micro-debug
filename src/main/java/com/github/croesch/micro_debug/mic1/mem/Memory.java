@@ -20,6 +20,7 @@ package com.github.croesch.micro_debug.mic1.mem;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.commons.Utils;
@@ -414,5 +415,31 @@ public final class Memory implements IReadableMemory {
    */
   public int getSize() {
     return this.memory.length;
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + Arrays.hashCode(this.memory);
+    return result;
+  }
+
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final Memory other = (Memory) obj;
+    if (!Arrays.equals(this.memory, other.memory)) {
+      return false;
+    }
+    return true;
   }
 }
