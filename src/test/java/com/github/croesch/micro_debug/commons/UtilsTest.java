@@ -37,6 +37,7 @@ public class UtilsTest extends DefaultTestCase {
 
   @Test
   public void testIsOneValueMinusOne() {
+    printlnMethodName();
     assertThat(Utils.isOneValueMinusOne(null)).isFalse();
     assertThat(Utils.isOneValueMinusOne(new int[] {})).isFalse();
     assertThat(Utils.isOneValueMinusOne(new int[] { 1 })).isFalse();
@@ -93,6 +94,7 @@ public class UtilsTest extends DefaultTestCase {
 
   @Test
   public void testCheckMagicNumber_Correct() throws FileFormatException {
+    printlnMethodName();
     Utils.checkMagicNumber(new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x78 }), 0x12345678);
     Utils.checkMagicNumber(new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x78, 0 }), 0x12345678);
     Utils.checkMagicNumber(new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x78, -1 }), 0x12345678);
@@ -104,6 +106,7 @@ public class UtilsTest extends DefaultTestCase {
 
   @Test
   public void testBytesToInt() {
+    printlnMethodName();
     assertThat(Utils.bytesToInt((byte) 0, (byte) 0, (byte) 0, (byte) 0)).isEqualTo(0);
     assertThat(Utils.bytesToInt((byte) -1, (byte) -1, (byte) -1, (byte) -1)).isEqualTo(-1);
     assertThat(Utils.bytesToInt((byte) 0x12, (byte) 0x34, (byte) 0x56, (byte) 0x78)).isEqualTo(0x12345678);
@@ -117,6 +120,7 @@ public class UtilsTest extends DefaultTestCase {
 
   @Test
   public void testToHextString() {
+    printlnMethodName();
     assertThat(Utils.toHexString(12)).isEqualTo("0xC");
     assertThat(Utils.toHexString(-12)).isEqualTo("0xFFFFFFF4");
     assertThat(Utils.toHexString(0)).isEqualTo("0x0");
@@ -131,7 +135,20 @@ public class UtilsTest extends DefaultTestCase {
   }
 
   @Test
+  public void testToBinaryString() {
+    printlnMethodName();
+    assertThat(Utils.toBinaryString(0)).isEqualTo("0000 0000 0000 0000 0000 0000 0000 0000");
+    assertThat(Utils.toBinaryString(Integer.MIN_VALUE)).isEqualTo("1000 0000 0000 0000 0000 0000 0000 0000");
+    assertThat(Utils.toBinaryString(1)).isEqualTo("0000 0000 0000 0000 0000 0000 0000 0001");
+    assertThat(Utils.toBinaryString(2)).isEqualTo("0000 0000 0000 0000 0000 0000 0000 0010");
+    assertThat(Utils.toBinaryString(Integer.MAX_VALUE)).isEqualTo("0111 1111 1111 1111 1111 1111 1111 1111");
+    assertThat(Utils.toBinaryString(-1)).isEqualTo("1111 1111 1111 1111 1111 1111 1111 1111");
+    assertThat(Utils.toBinaryString(-2)).isEqualTo("1111 1111 1111 1111 1111 1111 1111 1110");
+  }
+
+  @Test
   public void testGetNextHigherValue() {
+    printlnMethodName();
     assertThat(Utils.getNextHigherValue(-20, 0, 200, 19, 4, 15, 16)).isEqualTo(0);
     assertThat(Utils.getNextHigherValue(0, 0, 200, 19, 4, 15, 16)).isEqualTo(4);
     assertThat(Utils.getNextHigherValue(12, 0, 200, 19, 4, 15, 16)).isEqualTo(15);
@@ -143,6 +160,7 @@ public class UtilsTest extends DefaultTestCase {
 
   @Test
   public void testToString() {
+    printlnMethodName();
     assertThat(Utils.toString(null)).isEmpty();
     assertThat(Utils.toString("")).isEmpty();
     assertThat(Utils.toString(" ")).isEqualTo(" ");
@@ -153,6 +171,7 @@ public class UtilsTest extends DefaultTestCase {
 
   @Test
   public void isNullOrEmpty() {
+    printlnMethodName();
     assertThat(Utils.isNullOrEmpty(null)).isTrue();
     assertThat(Utils.isNullOrEmpty("")).isTrue();
     assertThat(Utils.isNullOrEmpty("  \t   \n\t\t\t\n\n\t  \t   \n  \t\n")).isTrue();

@@ -157,6 +157,32 @@ public final class Utils {
   }
 
   /**
+   * Returns the binary string representation of the integer argument.<br>
+   * <br>
+   * For example: <code>6 &rarr; 0000 0000 0000 0000 0000 0000 0000 0110</code>
+   * 
+   * @since Date: Mar 14, 2012
+   * @param number the number to represent as binary string
+   * @return the string representation of the given number
+   */
+  public static String toBinaryString(final int number) {
+    final StringBuilder binaryRepresentation = new StringBuilder();
+    int mask = 1;
+    for (int i = 0; mask != 0; ++i) {
+      if (i % 4 == 0 && i != 0) {
+        binaryRepresentation.append(' ');
+      }
+      if ((mask & number) == 0) {
+        binaryRepresentation.append('0');
+      } else {
+        binaryRepresentation.append('1');
+      }
+      mask <<= 1;
+    }
+    return binaryRepresentation.reverse().toString();
+  }
+
+  /**
    * Giving a start value this iterates over all the other given values and returns the minimum of them that is higher
    * than the given start value. So to say the next higher value seen from the starting point.
    * 
