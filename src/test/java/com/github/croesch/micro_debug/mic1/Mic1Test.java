@@ -32,6 +32,7 @@ import com.github.croesch.micro_debug.DefaultTestCase;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.console.Mic1Interpreter;
 import com.github.croesch.micro_debug.error.FileFormatException;
+import com.github.croesch.micro_debug.error.MicroFileFormatException;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.io.Input;
 import com.github.croesch.micro_debug.mic1.io.Output;
@@ -372,35 +373,36 @@ public class Mic1Test extends DefaultTestCase {
     try {
       new Mic1(new ByteArrayInputStream(new byte[] {}), new ByteArrayInputStream(new byte[] {}));
       throw new AssertionError("should throw exception");
-    } catch (final FileFormatException e) {
+    } catch (final MicroFileFormatException e) {
       // expected
+    } catch (final FileFormatException e) {
+      throw new AssertionError("should throw other exception");
     }
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text()) + getLineSeparator()
-                                                 + Text.ERROR.text(Text.WRONG_FORMAT_IJVM.text()) + getLineSeparator());
-    out.reset();
+    assertThat(out.toString()).isEmpty();
 
     // wrong magic number
     try {
       new Mic1(new ByteArrayInputStream(new byte[] { 0x1d, (byte) 0xea, (byte) 0xdf, (byte) 0xad }),
                new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x78 }));
       throw new AssertionError("should throw exception");
-    } catch (final FileFormatException e) {
+    } catch (final MicroFileFormatException e) {
       // expected
+    } catch (final FileFormatException e) {
+      throw new AssertionError("should throw other exception");
     }
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text()) + getLineSeparator()
-                                                 + Text.ERROR.text(Text.WRONG_FORMAT_IJVM.text()) + getLineSeparator());
-    out.reset();
+    assertThat(out.toString()).isEmpty();
 
     // empty files
     try {
       new Mic1(new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x78 }),
                new ByteArrayInputStream(new byte[] { 0x1d, (byte) 0xea, (byte) 0xdf, (byte) 0xad }));
       throw new AssertionError("should throw exception");
-    } catch (final FileFormatException e) {
+    } catch (final MicroFileFormatException e) {
       // expected
+    } catch (final FileFormatException e) {
+      throw new AssertionError("should throw other exception");
     }
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text()) + getLineSeparator());
-    out.reset();
+    assertThat(out.toString()).isEmpty();
 
     // unexpected eof
     try {
@@ -447,11 +449,12 @@ public class Mic1Test extends DefaultTestCase {
                                                                                         (byte) 0xdf,
                                                                                         (byte) 0xad }));
       throw new AssertionError("should throw exception");
-    } catch (final FileFormatException e) {
+    } catch (final MicroFileFormatException e) {
       // expected
+    } catch (final FileFormatException e) {
+      throw new AssertionError("should throw other exception");
     }
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_MIC1.text()) + getLineSeparator());
-    out.reset();
+    assertThat(out.toString()).isEmpty();
   }
 
   @Test

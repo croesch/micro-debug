@@ -29,7 +29,7 @@ import java.io.InputStreamReader;
 import org.junit.Test;
 
 import com.github.croesch.micro_debug.DefaultTestCase;
-import com.github.croesch.micro_debug.error.FileFormatException;
+import com.github.croesch.micro_debug.error.MicroFileFormatException;
 import com.github.croesch.micro_debug.mic1.register.Register;
 
 /**
@@ -47,43 +47,43 @@ public class MicroControlStoreTest extends DefaultTestCase {
     this.store = new MicroControlStore(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.mic1"));
   }
 
-  @Test(expected = FileFormatException.class)
-  public void testConstructor_TooShortFile_Bytes0() throws FileFormatException {
+  @Test(expected = MicroFileFormatException.class)
+  public void testConstructor_TooShortFile_Bytes0() throws MicroFileFormatException {
     new MicroControlStore(new ByteArrayInputStream(new byte[] {}));
   }
 
-  @Test(expected = FileFormatException.class)
-  public void testConstructor_TooShortFile_Bytes1() throws FileFormatException {
+  @Test(expected = MicroFileFormatException.class)
+  public void testConstructor_TooShortFile_Bytes1() throws MicroFileFormatException {
     new MicroControlStore(new ByteArrayInputStream(new byte[] { 1 }));
   }
 
-  @Test(expected = FileFormatException.class)
-  public void testConstructor_TooShortFile_Bytes2() throws FileFormatException {
+  @Test(expected = MicroFileFormatException.class)
+  public void testConstructor_TooShortFile_Bytes2() throws MicroFileFormatException {
     new MicroControlStore(new ByteArrayInputStream(new byte[] { 1, 2 }));
   }
 
-  @Test(expected = FileFormatException.class)
-  public void testConstructor_TooShortFile_Bytes3() throws FileFormatException {
+  @Test(expected = MicroFileFormatException.class)
+  public void testConstructor_TooShortFile_Bytes3() throws MicroFileFormatException {
     new MicroControlStore(new ByteArrayInputStream(new byte[] { 1, 2, 3 }));
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testConstructor_Null() throws FileFormatException {
+  public void testConstructor_Null() throws MicroFileFormatException {
     new MicroControlStore(null);
   }
 
-  @Test(expected = FileFormatException.class)
-  public void testConstructor_FalseFormat() throws FileFormatException {
+  @Test(expected = MicroFileFormatException.class)
+  public void testConstructor_FalseFormat() throws MicroFileFormatException {
     new MicroControlStore(new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x77 }));
   }
 
-  @Test(expected = FileFormatException.class)
-  public void testConstructor_EmptyFile() throws FileFormatException {
+  @Test(expected = MicroFileFormatException.class)
+  public void testConstructor_EmptyFile() throws MicroFileFormatException {
     new MicroControlStore(new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x78 }));
   }
 
-  @Test(expected = FileFormatException.class)
-  public void testConstructor_IOException() throws FileFormatException {
+  @Test(expected = MicroFileFormatException.class)
+  public void testConstructor_IOException() throws MicroFileFormatException {
     new MicroControlStore(new InputStream() {
       private final byte[] bytes = new byte[] { 0x12, 0x34, 0x56, 0x78 };
 
@@ -99,8 +99,8 @@ public class MicroControlStoreTest extends DefaultTestCase {
     });
   }
 
-  @Test(expected = FileFormatException.class)
-  public void testConstructor_TooBigFile() throws FileFormatException {
+  @Test(expected = MicroFileFormatException.class)
+  public void testConstructor_TooBigFile() throws MicroFileFormatException {
     // magic number + 512 * 5 byte + 5 byte to have the first instruction and the file is too big.
     final byte[] bs = new byte[4 + 513 * 5];
     bs[0] = 0x12;

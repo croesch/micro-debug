@@ -26,6 +26,7 @@ import com.github.croesch.micro_debug.commons.AbstractCodeContainer;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.error.FileFormatException;
+import com.github.croesch.micro_debug.error.MicroFileFormatException;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.settings.Settings;
 
@@ -45,12 +46,12 @@ public final class MicroControlStore extends AbstractCodeContainer {
 
   /**
    * Constructs a {@link MicroControlStore} with the {@link MicroInstruction} fetched from the given stream. If the
-   * magic number is incorrect, or if there are too few or too many bytes to read, a {@link FileFormatException} will be
-   * thrown.
+   * magic number is incorrect, or if there are too few or too many bytes to read, a {@link MicroFileFormatException}
+   * will be thrown.
    * 
    * @since Date: Nov 19, 2011
    * @param in the stream to read the instructions from
-   * @throws FileFormatException if
+   * @throws MicroFileFormatException if
    *         <ul>
    *         <li>the stream does only contain less or equal than four bytes</li>
    *         <li>the magic number isn't correct</li>
@@ -58,8 +59,12 @@ public final class MicroControlStore extends AbstractCodeContainer {
    *         <li>an {@link IOException} occurs</li>
    *         </ul>
    */
-  public MicroControlStore(final InputStream in) throws FileFormatException {
-    Utils.checkMagicNumber(in, MicroInstructionReader.MIC1_MAGIC_NUMBER);
+  public MicroControlStore(final InputStream in) throws MicroFileFormatException {
+    try {
+      Utils.checkMagicNumber(in, MicroInstructionReader.MIC1_MAGIC_NUMBER);
+    } catch (final FileFormatException e) {
+      throw new MicroFileFormatException(e.getMessage(), e);
+    }
 
     boolean eof = false;
     // read the instructions from the stream
@@ -69,19 +74,19 @@ public final class MicroControlStore extends AbstractCodeContainer {
       try {
         instr = MicroInstructionReader.read(in);
       } catch (final IOException e) {
-        throw new FileFormatException(e);
+        throw new MicroFileFormatException(e);
       }
 
       if (instr == null) {
         // reached the end of input stream
         if (i == 0) {
           // only the magic number has been found
-          throw new FileFormatException("file has no content");
+          throw new MicroFileFormatException("file has no content");
         }
         eof = true;
       } else if (i >= this.store.length) {
         // more instructions to read than capacity in the store
-        throw new FileFormatException("file is too big to save in control store");
+        throw new MicroFileFormatException("file is too big to save in control store");
       } else {
         // save the instruction
         this.store[i] = instr;

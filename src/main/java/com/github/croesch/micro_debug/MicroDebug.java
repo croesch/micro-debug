@@ -30,6 +30,7 @@ import com.github.croesch.micro_debug.argument.Version;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.console.Debugger;
 import com.github.croesch.micro_debug.error.FileFormatException;
+import com.github.croesch.micro_debug.error.MicroFileFormatException;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.Mic1;
 
@@ -115,6 +116,9 @@ public final class MicroDebug {
       if (micAsm != null && asm != null) {
         try {
           new Debugger(new Mic1(micAsm, asm)).run();
+        } catch (final MicroFileFormatException e) {
+          LOGGER.severe(e.getMessage());
+          Printer.printErrorln(Text.WRONG_FORMAT_MIC1.text());
         } catch (final FileFormatException e) {
           // the input files were invalid, log this, user has already received information
           LOGGER.finest("started application with wrong file format");

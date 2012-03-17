@@ -93,10 +93,10 @@ public final class Mic1 {
    */
   public Mic1(final InputStream micAsm, final InputStream asm) throws FileFormatException {
 
-    this.controlStore = createMic1ControlStore(micAsm);
+    this.controlStore = new MicroControlStore(micAsm);
     this.memory = createMemory(asm, Settings.MIC1_MEM_MACRO_MAXSIZE.getValue());
 
-    if (this.controlStore == null || this.memory == null) {
+    if (this.memory == null) {
       // inform the caller about the problem
       throw new FileFormatException();
     }
@@ -158,24 +158,6 @@ public final class Mic1 {
     } catch (final FileFormatException e) {
       LOGGER.severe(e.getMessage());
       Printer.printErrorln(Text.WRONG_FORMAT_IJVM.text());
-      return null;
-    }
-  }
-
-  /**
-   * Tries to create the control store of the processor and prints an error if one occurred.
-   * 
-   * @since Date: Dec 3, 2011
-   * @param micAsm the input stream to pass to the {@link MicroControlStore#Mic1ControlStore(InputStream)}
-   * @return the constructed control store, or <code>null</code> if an error occurred
-   * @see MicroControlStore#Mic1ControlStore(InputStream)
-   */
-  private MicroControlStore createMic1ControlStore(final InputStream micAsm) {
-    try {
-      return new MicroControlStore(micAsm);
-    } catch (final FileFormatException e) {
-      LOGGER.severe(e.getMessage());
-      Printer.printErrorln(Text.WRONG_FORMAT_MIC1.text());
       return null;
     }
   }
