@@ -18,6 +18,7 @@ import org.junit.Ignore;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.i18n.Text;
+import com.github.croesch.micro_debug.mic1.io.Input;
 import com.github.croesch.micro_debug.mic1.io.Output;
 
 /*
@@ -64,6 +65,7 @@ public class DefaultTestCase {
     Printer.setPrintStream(new PrintStream(out));
     Output.setOut(new PrintStream(micOut));
     Output.setBuffered(true);
+    Input.setQuiet(false);
     micOut.reset();
     out.reset();
     setUpDetails();
@@ -89,7 +91,7 @@ public class DefaultTestCase {
         if (c == '\n') {
           sb.append(getLineSeparator());
         } else {
-          sb.append((char)c);
+          sb.append((char) c);
         }
       }
     } finally {

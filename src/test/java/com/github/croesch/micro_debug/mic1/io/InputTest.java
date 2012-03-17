@@ -27,6 +27,7 @@ import java.io.InputStream;
 import org.junit.Test;
 
 import com.github.croesch.micro_debug.DefaultTestCase;
+import com.github.croesch.micro_debug.i18n.Text;
 
 /**
  * Provides test cases for {@link Input}.
@@ -114,5 +115,27 @@ public class InputTest extends DefaultTestCase {
     assertThat(Input.read()).isEqualTo("H".getBytes()[0]);
     Input.reset();
     assertThat(Input.read()).isEqualTo((byte) -1);
+  }
+
+  @Test
+  public void testQuietness() throws IOException {
+    printlnMethodName();
+
+    Input.setIn(new ByteArrayInputStream("Test\n".getBytes()));
+    assertThat(out.toString()).isEmpty();
+    assertThat(Input.read()).isEqualTo("T".getBytes()[0]);
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text());
+    out.reset();
+    assertThat(Input.read()).isEqualTo("e".getBytes()[0]);
+
+    Input.setQuiet(true);
+    Input.setIn(new ByteArrayInputStream("Test\n".getBytes()));
+    assertThat(Input.read()).isEqualTo("T".getBytes()[0]);
+    assertThat(out.toString()).isEmpty();
+
+    Input.setQuiet(false);
+    Input.setIn(new ByteArrayInputStream("Test\n".getBytes()));
+    assertThat(Input.read()).isEqualTo("T".getBytes()[0]);
+    assertThat(out.toString()).isEqualTo(Text.INPUT_MIC1.text());
   }
 }

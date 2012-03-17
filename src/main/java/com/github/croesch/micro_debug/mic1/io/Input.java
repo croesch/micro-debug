@@ -40,6 +40,9 @@ public final class Input {
   /** the current line */
   private static String line = "";
 
+  /** <code>true</code> if this component shouldn't produce output */
+  private static boolean quiet = false;
+
   /**
    * Hides constructor from being invoked. This is a utility class and objects of it don't make sense.
    * 
@@ -102,7 +105,9 @@ public final class Input {
    * @since Date: Nov 27, 2011
    */
   private static void readLine() {
-    Printer.print(Text.INPUT_MIC1);
+    if (!quiet) {
+      Printer.print(Text.INPUT_MIC1);
+    }
     try {
       final StringBuilder sb = new StringBuilder();
 
@@ -126,4 +131,14 @@ public final class Input {
     }
   }
 
+  /**
+   * Sets the flag, whether this component should produce output or not.
+   * 
+   * @since Date: Mar 17, 2012
+   * @param q <code>true</code> if this component is not allowed to produce output,<br>
+   *        <code>false</code> if it is allowed to produce output
+   */
+  public static void setQuiet(final boolean q) {
+    quiet = q;
+  }
 }
