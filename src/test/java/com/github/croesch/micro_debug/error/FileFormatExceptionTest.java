@@ -31,17 +31,20 @@ import com.github.croesch.micro_debug.DefaultTestCase;
 public class FileFormatExceptionTest extends DefaultTestCase {
 
   @Test
-  public void testFileFormatExceptionStringThrowable() {
+  public void testFileFormatExceptionStringThrowable_Null() {
+    printlnMethodName();
     new FileFormatException(null, null);
   }
 
   @Test
-  public void testFileFormatExceptionString() {
+  public void testFileFormatExceptionString_Null() {
+    printlnMethodName();
     new FileFormatException((String) null);
   }
 
   @Test
-  public void testFileFormatExceptionThrowable() {
+  public void testFileFormatExceptionThrowable_Null() {
+    printlnMethodName();
     new FileFormatException((Throwable) null);
   }
 }
