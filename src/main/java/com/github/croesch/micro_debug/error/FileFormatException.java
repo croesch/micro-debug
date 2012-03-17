@@ -76,7 +76,23 @@ public class FileFormatException extends IOException {
    *        permitted, and indicates that the cause is nonexistent or unknown.)
    */
   public FileFormatException(final Throwable cause) {
-    super(cause.getMessage());
+    super(getMessageOrNull(cause));
     initCause(cause);
+  }
+
+  /**
+   * Returns the cause of the given {@link Throwable}, or <code>null</code> if the given {@link Throwable} is
+   * <code>null</code>.
+   * 
+   * @since Date: Mar 18, 2012
+   * @param cause the {@link Throwable} that caused this exception.
+   * @return the message {@link String} of the cause,<br>
+   *         or <code>null</code> if the given cause is <code>null</code>.
+   */
+  private static String getMessageOrNull(final Throwable cause) {
+    if (cause == null) {
+      return null;
+    }
+    return cause.getMessage();
   }
 }
