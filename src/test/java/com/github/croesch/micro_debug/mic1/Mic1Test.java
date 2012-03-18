@@ -32,6 +32,7 @@ import com.github.croesch.micro_debug.DefaultTestCase;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.console.Mic1Interpreter;
 import com.github.croesch.micro_debug.error.FileFormatException;
+import com.github.croesch.micro_debug.error.MacroFileFormatException;
 import com.github.croesch.micro_debug.error.MicroFileFormatException;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.io.Input;
@@ -375,7 +376,7 @@ public class Mic1Test extends DefaultTestCase {
       throw new AssertionError("should throw exception");
     } catch (final MicroFileFormatException e) {
       // expected
-    } catch (final FileFormatException e) {
+    } catch (final MacroFileFormatException e) {
       throw new AssertionError("should throw other exception");
     }
     assertThat(out.toString()).isEmpty();
@@ -387,7 +388,7 @@ public class Mic1Test extends DefaultTestCase {
       throw new AssertionError("should throw exception");
     } catch (final MicroFileFormatException e) {
       // expected
-    } catch (final FileFormatException e) {
+    } catch (final MacroFileFormatException e) {
       throw new AssertionError("should throw other exception");
     }
     assertThat(out.toString()).isEmpty();
@@ -399,7 +400,7 @@ public class Mic1Test extends DefaultTestCase {
       throw new AssertionError("should throw exception");
     } catch (final MicroFileFormatException e) {
       // expected
-    } catch (final FileFormatException e) {
+    } catch (final MacroFileFormatException e) {
       throw new AssertionError("should throw other exception");
     }
     assertThat(out.toString()).isEmpty();
@@ -409,11 +410,12 @@ public class Mic1Test extends DefaultTestCase {
       new Mic1(new ByteArrayInputStream(new byte[] { 0x12, 0x34, 0x56, 0x78, 0, 0, 0, 0, 0 }),
                new ByteArrayInputStream(new byte[] { 0x1d, (byte) 0xea, (byte) 0xdf, (byte) 0xad, 0 }));
       throw new AssertionError("should throw exception");
-    } catch (final FileFormatException e) {
+    } catch (final MicroFileFormatException e) {
+      throw new AssertionError("should throw other exception");
+    } catch (final MacroFileFormatException e) {
       // expected
     }
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_IJVM.text()) + getLineSeparator());
-    out.reset();
+    assertThat(out.toString()).isEmpty();
 
     // unexpected end of block
     try {
@@ -431,11 +433,12 @@ public class Mic1Test extends DefaultTestCase {
                                                     0,
                                                     12 }));
       throw new AssertionError("should throw exception");
-    } catch (final FileFormatException e) {
+    } catch (final MicroFileFormatException e) {
+      throw new AssertionError("should throw other exception");
+    } catch (final MacroFileFormatException e) {
       // expected
     }
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.WRONG_FORMAT_IJVM.text()) + getLineSeparator());
-    out.reset();
+    assertThat(out.toString()).isEmpty();
 
     // file too big
     final byte[] mic1File = new byte[5000];
@@ -451,7 +454,7 @@ public class Mic1Test extends DefaultTestCase {
       throw new AssertionError("should throw exception");
     } catch (final MicroFileFormatException e) {
       // expected
-    } catch (final FileFormatException e) {
+    } catch (final MacroFileFormatException e) {
       throw new AssertionError("should throw other exception");
     }
     assertThat(out.toString()).isEmpty();

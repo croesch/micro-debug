@@ -25,6 +25,7 @@ import java.util.Arrays;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.error.FileFormatException;
+import com.github.croesch.micro_debug.error.MacroFileFormatException;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.api.IReadableMemory;
 import com.github.croesch.micro_debug.mic1.io.Input;
@@ -85,9 +86,9 @@ public final class Memory implements IReadableMemory {
    * @since Date: Nov 23, 2011
    * @param maxSize the size of the memory in words (32-bit-values)
    * @param programStream the input stream
-   * @throws FileFormatException if the stream doesn't provide valid data.
+   * @throws MacroFileFormatException if the stream doesn't provide valid data.
    */
-  public Memory(final int maxSize, final InputStream programStream) throws FileFormatException {
+  public Memory(final int maxSize, final InputStream programStream) throws MacroFileFormatException {
     this.memory = new int[maxSize];
     this.initialMemory = new int[maxSize];
     initMemory(programStream);
@@ -117,7 +118,7 @@ public final class Memory implements IReadableMemory {
    * 
    * @since Date: Nov 26, 2011
    * @param stream the stream that provides the data to fill the memory with
-   * @throws FileFormatException if
+   * @throws MacroFileFormatException if
    *         <ul>
    *         <li>the stream does only contain less or equal than four bytes</li>
    *         <li>the magic number isn't correct</li>
@@ -125,8 +126,12 @@ public final class Memory implements IReadableMemory {
    *         <li>an {@link IOException} occurs</li>
    *         </ul>
    */
-  private void initMemory(final InputStream stream) throws FileFormatException {
-    Utils.checkMagicNumber(stream, IJVM_MAGIC_NUMBER);
+  private void initMemory(final InputStream stream) throws MacroFileFormatException {
+    try {
+      Utils.checkMagicNumber(stream, IJVM_MAGIC_NUMBER);
+    } catch (final FileFormatException e) {
+      throw new MacroFileFormatException(e.getMessage(), e);
+    }
 
     final byte[] bytes = new byte[4];
     try {
@@ -136,7 +141,7 @@ public final class Memory implements IReadableMemory {
 
         if (stream.read(bytes) == -1) {
           // file ends after start address
-          throw new FileFormatException("unexpected end of file");
+          throw new MacroFileFormatException("unexpected end of file");
         }
         final int blockLength = Utils.bytesToInt(bytes[0], bytes[1], bytes[2], bytes[3]);
 
@@ -144,7 +149,7 @@ public final class Memory implements IReadableMemory {
         readBlock(startAddress, blockLength, stream);
       }
     } catch (final IOException e) {
-      throw new FileFormatException(e.getMessage(), e);
+      throw new MacroFileFormatException(e.getMessage(), e);
     }
   }
 
@@ -155,23 +160,23 @@ public final class Memory implements IReadableMemory {
    * @param start a byte address in the memory where to start storing the data
    * @param length the number of bytes to read
    * @param stream the {@link InputStream} to read the data from
-   * @throws FileFormatException if an error occurs
+   * @throws MacroFileFormatException if an error occurs
    */
-  private void readBlock(final int start, final int length, final InputStream stream) throws FileFormatException {
+  private void readBlock(final int start, final int length, final InputStream stream) throws MacroFileFormatException {
     try {
       for (int i = 0; i < length; ++i) {
         final int val = stream.read();
 
         if (val == -1) {
           // block should contain more content but stream returned end of stream
-          throw new FileFormatException("unexpected end of block");
+          throw new MacroFileFormatException("unexpected end of block");
         }
 
         // store the value
         setByte(start + i, val);
       }
     } catch (final IOException e) {
-      throw new FileFormatException(e.getMessage(), e);
+      throw new MacroFileFormatException(e.getMessage(), e);
     }
   }
 

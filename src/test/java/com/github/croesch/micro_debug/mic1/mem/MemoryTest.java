@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import com.github.croesch.micro_debug.DefaultTestCase;
 import com.github.croesch.micro_debug.commons.Utils;
-import com.github.croesch.micro_debug.error.FileFormatException;
+import com.github.croesch.micro_debug.error.MacroFileFormatException;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.io.Input;
 import com.github.croesch.micro_debug.mic1.io.Output;
@@ -47,7 +47,7 @@ public class MemoryTest extends DefaultTestCase {
   private final byte[] bytes = new byte[Byte.MAX_VALUE];
 
   @Override
-  public void setUpDetails() throws FileFormatException {
+  public void setUpDetails() throws MacroFileFormatException {
     for (byte b = 0; b < Byte.MAX_VALUE; ++b) {
       this.bytes[b] = b;
     }
@@ -56,43 +56,43 @@ public class MemoryTest extends DefaultTestCase {
     Register.CPP.setValue(Settings.MIC1_REGISTER_CPP_DEFVAL.getValue());
   }
 
-  @Test(expected = FileFormatException.class)
-  public void testConstructor_WrongMagicNumber() throws FileFormatException {
+  @Test(expected = MacroFileFormatException.class)
+  public void testConstructor_WrongMagicNumber() throws MacroFileFormatException {
     this.mem = new Memory(4, ClassLoader.getSystemResourceAsStream("mic1/wrong-file-format-0.ijvm"));
   }
 
   @Test
-  public void testConstructor_EmptyData() throws FileFormatException {
+  public void testConstructor_EmptyData() throws MacroFileFormatException {
     printlnMethodName(); // file ends after magic number
     this.mem = new Memory(4, ClassLoader.getSystemResourceAsStream("mic1/wrong-file-format-1.ijvm"));
   }
 
-  @Test(expected = FileFormatException.class)
-  public void testConstructor_UnexpectedEOF_0() throws FileFormatException {
+  @Test(expected = MacroFileFormatException.class)
+  public void testConstructor_UnexpectedEOF_0() throws MacroFileFormatException {
     // file ends after reading block size (no data in block)
     this.mem = new Memory(4, ClassLoader.getSystemResourceAsStream("mic1/wrong-file-format-2.ijvm"));
   }
 
-  @Test(expected = FileFormatException.class)
-  public void testConstructor_UnexpectedEOF_1() throws FileFormatException {
+  @Test(expected = MacroFileFormatException.class)
+  public void testConstructor_UnexpectedEOF_1() throws MacroFileFormatException {
     // file ends while reading data of a block
     this.mem = new Memory(4, ClassLoader.getSystemResourceAsStream("mic1/wrong-file-format-3.ijvm"));
   }
 
   @Test
-  public void testConstructor_UnexpectedEOF_2() throws FileFormatException {
+  public void testConstructor_UnexpectedEOF_2() throws MacroFileFormatException {
     printlnMethodName(); // file ends while reading block size
     this.mem = new Memory(4, ClassLoader.getSystemResourceAsStream("mic1/wrong-file-format-4.ijvm"));
   }
 
-  @Test(expected = FileFormatException.class)
-  public void testConstructor_UnexpectedEOF_3() throws FileFormatException {
+  @Test(expected = MacroFileFormatException.class)
+  public void testConstructor_UnexpectedEOF_3() throws MacroFileFormatException {
     // file ends while reading start address for memory
     this.mem = new Memory(4, ClassLoader.getSystemResourceAsStream("mic1/wrong-file-format-5.ijvm"));
   }
 
   @Test
-  public void testConstructor_FileWith_OverlappingByte_0() throws FileFormatException {
+  public void testConstructor_FileWith_OverlappingByte_0() throws MacroFileFormatException {
     printlnMethodName();
     this.mem = new Memory(1, ClassLoader.getSystemResourceAsStream("mic1/ff-file-0.ijvm"));
 
@@ -105,7 +105,7 @@ public class MemoryTest extends DefaultTestCase {
   }
 
   @Test
-  public void testConstructor_FileWith_OverlappingByte_1() throws FileFormatException {
+  public void testConstructor_FileWith_OverlappingByte_1() throws MacroFileFormatException {
     printlnMethodName();
     this.mem = new Memory(1, ClassLoader.getSystemResourceAsStream("mic1/ff-file-1.ijvm"));
 
@@ -118,7 +118,7 @@ public class MemoryTest extends DefaultTestCase {
   }
 
   @Test
-  public void testConstructor_FileWith_OverlappingByte_2() throws FileFormatException {
+  public void testConstructor_FileWith_OverlappingByte_2() throws MacroFileFormatException {
     printlnMethodName();
     this.mem = new Memory(1, ClassLoader.getSystemResourceAsStream("mic1/ff-file-2.ijvm"));
 
@@ -131,7 +131,7 @@ public class MemoryTest extends DefaultTestCase {
   }
 
   @Test
-  public void testConstructor_FileWith_OverlappingByte_3() throws FileFormatException {
+  public void testConstructor_FileWith_OverlappingByte_3() throws MacroFileFormatException {
     printlnMethodName();
     this.mem = new Memory(1, ClassLoader.getSystemResourceAsStream("mic1/ff-file-3.ijvm"));
 
@@ -144,7 +144,7 @@ public class MemoryTest extends DefaultTestCase {
   }
 
   @Test
-  public void testConstructor_FileWithFFValues() throws FileFormatException {
+  public void testConstructor_FileWithFFValues() throws MacroFileFormatException {
     printMethodName();
     this.mem = new Memory(2, ClassLoader.getSystemResourceAsStream("mic1/ff-file.ijvm"));
 
@@ -234,7 +234,7 @@ public class MemoryTest extends DefaultTestCase {
   }
 
   @Test(expected = ArrayIndexOutOfBoundsException.class)
-  public void testPoke_WriteToOOM() throws FileFormatException {
+  public void testPoke_WriteToOOM() throws MacroFileFormatException {
     final ByteArrayInputStream programStream = new ByteArrayInputStream(new byte[] { 0x1d,
                                                                                     (byte) 0xea,
                                                                                     (byte) 0xdf,
@@ -246,7 +246,7 @@ public class MemoryTest extends DefaultTestCase {
   }
 
   @Test(expected = ArrayIndexOutOfBoundsException.class)
-  public void testPoke_ReadFromOOM() throws FileFormatException {
+  public void testPoke_ReadFromOOM() throws MacroFileFormatException {
     final ByteArrayInputStream programStream = new ByteArrayInputStream(new byte[] { 0x1d,
                                                                                     (byte) 0xea,
                                                                                     (byte) 0xdf,
@@ -258,7 +258,7 @@ public class MemoryTest extends DefaultTestCase {
   }
 
   @Test(expected = ArrayIndexOutOfBoundsException.class)
-  public void testPoke_FetchFromOOM() throws FileFormatException {
+  public void testPoke_FetchFromOOM() throws MacroFileFormatException {
     final ByteArrayInputStream programStream = new ByteArrayInputStream(new byte[] { 0x1d,
                                                                                     (byte) 0xea,
                                                                                     (byte) 0xdf,
@@ -533,7 +533,7 @@ public class MemoryTest extends DefaultTestCase {
   }
 
   @Test
-  public void testGetSize() throws FileFormatException {
+  public void testGetSize() throws MacroFileFormatException {
     printMethodName();
     for (int i = 100; i < Settings.MIC1_MEM_MACRO_MAXSIZE.getValue(); i += 1000) {
       this.mem = new Memory(i, ClassLoader.getSystemResourceAsStream("mic1/hi.ijvm"));
@@ -544,7 +544,7 @@ public class MemoryTest extends DefaultTestCase {
   }
 
   @Test
-  public void testEquals() throws FileFormatException {
+  public void testEquals() throws MacroFileFormatException {
     printlnMethodName();
     final Memory one = new Memory(Byte.MAX_VALUE, ClassLoader.getSystemResourceAsStream("mic1/test.ijvm"));
     final Memory two = new Memory(Byte.MAX_VALUE, ClassLoader.getSystemResourceAsStream("mic1/test.ijvm"));

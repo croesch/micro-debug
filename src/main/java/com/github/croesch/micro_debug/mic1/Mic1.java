@@ -23,7 +23,8 @@ import java.util.logging.Logger;
 
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.commons.Utils;
-import com.github.croesch.micro_debug.error.FileFormatException;
+import com.github.croesch.micro_debug.error.MacroFileFormatException;
+import com.github.croesch.micro_debug.error.MicroFileFormatException;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.alu.Alu;
 import com.github.croesch.micro_debug.mic1.api.IProcessorInterpreter;
@@ -89,17 +90,14 @@ public final class Mic1 {
    * @since Date: Nov 21, 2011
    * @param micAsm the micro-assembler-program
    * @param asm the assembler-program
-   * @throws FileFormatException if one of the streams contains a file with the wrong file format
+   * @throws MacroFileFormatException if the macro assembler program has invalid format
+   * @throws MicroFileFormatException if the micro assembler program has invalid format
    */
-  public Mic1(final InputStream micAsm, final InputStream asm) throws FileFormatException {
+  public Mic1(final InputStream micAsm, final InputStream asm) throws MacroFileFormatException,
+          MicroFileFormatException {
 
     this.controlStore = new MicroControlStore(micAsm);
-    this.memory = createMemory(asm, Settings.MIC1_MEM_MACRO_MAXSIZE.getValue());
-
-    if (this.memory == null) {
-      // inform the caller about the problem
-      throw new FileFormatException();
-    }
+    this.memory = new Memory(Settings.MIC1_MEM_MACRO_MAXSIZE.getValue(), asm);
 
     init();
   }
@@ -141,25 +139,6 @@ public final class Mic1 {
     this.memory.reset();
     Input.reset();
     Output.reset();
-  }
-
-  /**
-   * Tries to create the memory of the processor and prints an error if one occurred.
-   * 
-   * @since Date: Dec 3, 2011
-   * @param asm the input stream to pass to the {@link Memory#Memory(int, InputStream)}
-   * @param maxSize the maximum size of the memory
-   * @return the constructed memory, or <code>null</code> if an error occurred
-   * @see Memory#Memory(int, InputStream)
-   */
-  private Memory createMemory(final InputStream asm, final int maxSize) {
-    try {
-      return new Memory(maxSize, asm);
-    } catch (final FileFormatException e) {
-      LOGGER.severe(e.getMessage());
-      Printer.printErrorln(Text.WRONG_FORMAT_IJVM.text());
-      return null;
-    }
   }
 
   /**
