@@ -18,5 +18,8 @@
 # along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
 ###################
 
-java -Djava.util.logging.config.file=config/logging.properties \
-     -cp config:micro-debug-${version}.jar com.github.croesch.micro_debug.MicroDebug $@
+# directory of this script file
+DIR="$(dirname "${BASH_SOURCE[0]}")"
+
+java -Djava.util.logging.config.file=$DIR/config/logging.properties \
+     -cp .:$DIR/config:$DIR/micro-debug-${version}.jar com.github.croesch.micro_debug.MicroDebug $@
