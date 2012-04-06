@@ -38,15 +38,17 @@ public class MicroInstructionTest extends DefaultTestCase {
   @Override
   protected void setUpDetails() {
     this.instruction = new MicroInstruction(0,
-                                           new JMPSignalSet(),
-                                           new ALUSignalSet(),
-                                           new CBusSignalSet(),
-                                           new MemorySignalSet(),
-                                           null);
+                                            new JMPSignalSet(),
+                                            new ALUSignalSet(),
+                                            new CBusSignalSet(),
+                                            new MemorySignalSet(),
+                                            null);
   }
 
   @Test
   public void testHashCodeAndEqualsObject() {
+    printlnMethodName();
+
     assertThat(this.instruction).isNotEqualTo(null);
     assertThat(this.instruction).isNotEqualTo("...");
     assertThat(this.instruction).isEqualTo(this.instruction);
@@ -91,6 +93,8 @@ public class MicroInstructionTest extends DefaultTestCase {
 
   @Test
   public void testHashCodeAndEqualsObject_Memory() {
+    printlnMethodName();
+
     final int addr = 0;
     final Register b = null;
     final MemorySignalSet memSet = new MemorySignalSet();
@@ -115,6 +119,8 @@ public class MicroInstructionTest extends DefaultTestCase {
 
   @Test
   public void testHashCodeAndEqualsObject_JMP() {
+    printlnMethodName();
+
     final int addr = 0;
     final Register b = null;
     final MemorySignalSet memSet = new MemorySignalSet();
@@ -140,6 +146,8 @@ public class MicroInstructionTest extends DefaultTestCase {
 
   @Test
   public void testHashCodeAndEqualsObject_ALU() {
+    printlnMethodName();
+
     final int addr = 0;
     final Register b = null;
     final MemorySignalSet memSet = new MemorySignalSet();
@@ -185,6 +193,8 @@ public class MicroInstructionTest extends DefaultTestCase {
 
   @Test
   public void testHashCodeAndEqualsObject_CBus() {
+    printlnMethodName();
+
     final int addr = 0;
     final Register b = null;
     final MemorySignalSet memSet = new MemorySignalSet();
@@ -234,6 +244,8 @@ public class MicroInstructionTest extends DefaultTestCase {
 
   @Test
   public void testGetJmpSignals() {
+    printlnMethodName();
+
     final JMPSignalSet jmpSignals = this.instruction.getJmpSignals();
     assertThat(this.instruction.getJmpSignals().isJmpN()).isFalse();
 
@@ -243,6 +255,8 @@ public class MicroInstructionTest extends DefaultTestCase {
 
   @Test
   public void testGetAluSignals() {
+    printlnMethodName();
+
     final ALUSignalSet aluSignals = this.instruction.getAluSignals();
     assertThat(this.instruction.getAluSignals().isEnA()).isFalse();
 
@@ -251,7 +265,15 @@ public class MicroInstructionTest extends DefaultTestCase {
   }
 
   @Test
+  public void testGetBBusSelect() {
+    printlnMethodName();
+    assertThat(this.instruction.getbBusSelect()).isNull();
+  }
+
+  @Test
   public void testGetCBusSignals() {
+    printlnMethodName();
+
     final CBusSignalSet cBusSignals = this.instruction.getCBusSignals();
     assertThat(this.instruction.getCBusSignals().isCpp()).isFalse();
 
@@ -261,6 +283,8 @@ public class MicroInstructionTest extends DefaultTestCase {
 
   @Test
   public void testGetMemorySignals() {
+    printlnMethodName();
+
     final MemorySignalSet memSignals = this.instruction.getMemorySignals();
     assertThat(this.instruction.getMemorySignals().isFetch()).isFalse();
 
@@ -269,12 +293,12 @@ public class MicroInstructionTest extends DefaultTestCase {
   }
 
   private MicroInstruction compareInstructionToOther(final int addr,
-                                                    final Register b,
-                                                    final MemorySignalSet memSet,
-                                                    final CBusSignalSet cBusSet,
-                                                    final ALUSignalSet aluSet,
-                                                    final JMPSignalSet jmpSet,
-                                                    MicroInstruction other) {
+                                                     final Register b,
+                                                     final MemorySignalSet memSet,
+                                                     final CBusSignalSet cBusSet,
+                                                     final ALUSignalSet aluSet,
+                                                     final JMPSignalSet jmpSet,
+                                                     MicroInstruction other) {
     this.instruction = new MicroInstruction(addr, jmpSet, aluSet, cBusSet, memSet, b);
     assertThat(this.instruction).isNotEqualTo(other);
     assertThat(this.instruction.hashCode()).isNotEqualTo(other.hashCode());
@@ -284,6 +308,8 @@ public class MicroInstructionTest extends DefaultTestCase {
 
   @Test
   public void testToString() {
+    printlnMethodName();
+
     assertThat(this.instruction.toString()).isEqualTo("0_000_00000000_000000000_000_null");
 
     // set all bits..
@@ -305,6 +331,8 @@ public class MicroInstructionTest extends DefaultTestCase {
 
   @Test
   public void testIsNopOrHalt() {
+    printlnMethodName();
+
     final JMPSignalSet jmpSet = new JMPSignalSet();
     final ALUSignalSet aluSet = new ALUSignalSet();
     final CBusSignalSet cBusSet = new CBusSignalSet();
