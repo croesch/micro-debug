@@ -295,25 +295,14 @@ public final class Mic1Interpreter implements IProcessorInterpreter {
   }
 
   /**
-   * Returns whether the processor should halt now or if it can continue.
-   * 
-   * @since Date: Feb 13, 2012
-   * @param microLine the number of the line in micro code being executed next
-   * @param macroLine the number of the line in macro code being executed next
-   * @return <code>true</code> if the processor can continue executing instructions,<br>
-   *         <code>false</code> otherwise
+   * {@inheritDoc}
    */
   public boolean canContinue(final int microLine, final int macroLine) {
     return !this.bpm.isBreakpoint(microLine, macroLine);
   }
 
   /**
-   * Informs the interpreter that the processor has done one tick.
-   * 
-   * @since Date: Feb 13, 2012
-   * @param instruction the executed micro instruction
-   * @param macroCodeFetching <code>true</code> if the next macro code instruction has being fetched,<br>
-   *        <code>false</code> otherwise
+   * {@inheritDoc}
    */
   public void tickDone(final MicroInstruction instruction, final boolean macroCodeFetching) {
     if (macroCodeFetching) {

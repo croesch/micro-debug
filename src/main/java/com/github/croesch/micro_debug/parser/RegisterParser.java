@@ -31,13 +31,7 @@ import com.github.croesch.micro_debug.mic1.register.Register;
 public final class RegisterParser implements IParser {
 
   /**
-   * Parses the given {@link String} and returns an {@link Object} of the specific type. If the input cannot be parsed
-   * into a valid object, than it will return <code>null</code>.
-   * 
-   * @since Date: Feb 22, 2012
-   * @param toParse the {@link String} to convert to an {@link Object}.
-   * @return the {@link Object} read from the {@link String},<br>
-   *         or <code>null</code> if the input was invalid
+   * {@inheritDoc}
    */
   public Register parse(final String toParse) {
     if (toParse == null) {

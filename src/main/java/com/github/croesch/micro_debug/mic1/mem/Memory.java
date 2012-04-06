@@ -318,11 +318,7 @@ public final class Memory implements IReadableMemory {
   }
 
   /**
-   * Returns a single byte, unsigned, read from the address in the memory.
-   * 
-   * @since Date: Jan 22, 2012
-   * @param addr the byte address of the byte to read from the memory
-   * @return the byte from the memory at the given address.
+   * {@inheritDoc}
    */
   public int getByte(final int addr) {
     int word = this.memory[addr / 4];
@@ -370,11 +366,7 @@ public final class Memory implements IReadableMemory {
   }
 
   /**
-   * Returns the word value at the given address.
-   * 
-   * @since Date: Jan 21, 2012
-   * @param addr the address, from where to fetch the word
-   * @return the word value read from the memory
+   * {@inheritDoc}
    */
   public int getWord(final int addr) {
     if (isAddressValid(addr)) {
@@ -413,10 +405,7 @@ public final class Memory implements IReadableMemory {
   }
 
   /**
-   * Returns the size of the memory.
-   * 
-   * @since Date: Feb 9, 2012
-   * @return the size of the memory in <em>words</em>
+   * {@inheritDoc}
    */
   public int getSize() {
     return this.memory.length;
