@@ -18,4 +18,8 @@ REM # You should have received a copy of the GNU General Public License
 REM # along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
 REM ###################
 
-java -Djava.util.logging.config.file=config/logging.properties -cp config;micro-debug-${version}.jar com.github.croesch.micro_debug.MicroDebug %*
+REM # directory of this script file
+set DIR=%~dp0
+
+java -Djava.util.logging.config.file="%DIR%\config\logging.properties" ^
+     -cp .;"%DIR%\config";"%DIR%\micro-debug-${version}.jar" com.github.croesch.micro_debug.MicroDebug %*
