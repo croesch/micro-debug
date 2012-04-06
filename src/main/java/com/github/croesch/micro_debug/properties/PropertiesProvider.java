@@ -21,6 +21,8 @@ package com.github.croesch.micro_debug.properties;
 import java.io.IOException;
 import java.util.Properties;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+
 /**
  * Provides properties in properties format.
  * 
@@ -39,6 +41,7 @@ public final class PropertiesProvider extends APropertiesProvider {
   }
 
   @Override
+  @NotNull
   protected Properties createNewProperties(final String file) {
     final Properties props = new Properties();
     try {
@@ -55,6 +58,7 @@ public final class PropertiesProvider extends APropertiesProvider {
    * @since Date: Feb 23, 2012
    * @return the single instance of this class.
    */
+  @NotNull
   public static PropertiesProvider getInstance() {
     return LazyHolder.INSTANCE;
   }

@@ -18,6 +18,8 @@
  */
 package com.github.croesch.micro_debug.console;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+import com.github.croesch.micro_debug.annotation.Nullable;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.commons.Reader;
 import com.github.croesch.micro_debug.i18n.Text;
@@ -35,6 +37,7 @@ public final class Debugger implements Runnable {
   private static final String SEPARATING_STRING = " ";
 
   /** the interpreter to debug the processor with */
+  @NotNull
   private final Mic1Interpreter interpreter;
 
   /**
@@ -76,6 +79,7 @@ public final class Debugger implements Runnable {
    * @since Date: Dec 3, 2011
    * @return the line provided by the {@link Reader}.
    */
+  @Nullable
   private String askUserWhatToDo() {
     return Reader.readLine();
   }

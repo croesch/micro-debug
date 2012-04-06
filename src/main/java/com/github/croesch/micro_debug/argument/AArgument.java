@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+import com.github.croesch.micro_debug.annotation.Nullable;
+
 /**
  * Enumeration of all possible command line arguments for the debugger.
  * 
@@ -32,12 +35,14 @@ import java.util.Map;
 public abstract class AArgument {
 
   /** the different ways this argument can be called */
+  @NotNull
   private final String[] args = new String[2];
 
   /** the number of parameters that argument requires */
   private final int numOfParams;
 
   /** the list of arguments that are available */
+  @NotNull
   private static final List<AArgument> VALUES = new ArrayList<AArgument>();
 
   /**
@@ -115,6 +120,7 @@ public abstract class AArgument {
    *         called with the given {@link String}.
    * @see Argument#matches(String)
    */
+  @Nullable
   public static AArgument of(final String s) {
     for (final AArgument a : values()) {
       if (a.matches(s)) {
@@ -133,6 +139,7 @@ public abstract class AArgument {
    * @return the {@link Map} that contains pairs of {@link Argument}s and arrays of strings that contain all parameters
    *         for that argument.
    */
+  @NotNull
   public static Map<AArgument, String[]> createArgumentList(final String[] args) {
     // map that'll contain the parsed arguments
     final Map<AArgument, String[]> map = new HashMap<AArgument, String[]>();
@@ -196,6 +203,7 @@ public abstract class AArgument {
    * @param value the value to append
    * @return the new array, containing elements from the old array and the new value.
    */
+  @NotNull
   private static String[] appendValueToArray(final String[] old, final String value) {
     final String[] newArray = new String[old.length + 1];
     // copy array
@@ -222,6 +230,7 @@ public abstract class AArgument {
    * @since Date: Feb 28, 2012
    * @return the name of this argument.
    */
+  @NotNull
   protected abstract String name();
 
   /**
@@ -239,6 +248,7 @@ public abstract class AArgument {
    * @since Date: Feb 28, 2012
    * @return the list of arguments that are available.
    */
+  @NotNull
   public static List<AArgument> values() {
     if (VALUES.isEmpty()) {
       VALUES.add(Help.getInstance());

@@ -23,6 +23,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+import com.github.croesch.micro_debug.annotation.Nullable;
+
 /**
  * Provides properties for different files.
  * 
@@ -32,6 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class APropertiesProvider {
 
   /** contains the properties stored in the map with their base file names */
+  @NotNull
   private final Map<String, Properties> propertiesMap = new ConcurrentHashMap<String, Properties>();
 
   /**
@@ -42,6 +46,7 @@ public abstract class APropertiesProvider {
    * @param args the arguments
    * @return the string filled with arguments
    */
+  @NotNull
   public static String replacePlaceholdersInString(final String str, final Object ... args) {
     String text = str;
     if (args != null) {
@@ -61,6 +66,7 @@ public abstract class APropertiesProvider {
    * @return the value read from the xml properties,<br>
    *         or <code>null</code> if the given file path or key is <code>null</code>.
    */
+  @Nullable
   public final String get(final String file, final String key) {
     if (file == null || key == null) {
       return null;
@@ -76,6 +82,7 @@ public abstract class APropertiesProvider {
    * @param file the path to the file of the properties
    * @return the properties belonging to the given file path.
    */
+  @Nullable
   private Properties getProperties(final String file) {
     if (!this.propertiesMap.containsKey(file)) {
       this.propertiesMap.put(file, createNewProperties(file));
@@ -90,6 +97,7 @@ public abstract class APropertiesProvider {
    * @param file the path of the file, <b>without</b> file extension!
    * @return {@link Properties} that contain the content of the given file
    */
+  @NotNull
   protected abstract Properties createNewProperties(final String file);
 
   /**
@@ -101,6 +109,7 @@ public abstract class APropertiesProvider {
    * @param arg the argument
    * @return the string with the placeholder replaced
    */
+  @NotNull
   private static String replacePlaceholderInString(final int number, final String str, final Object arg) {
     final String preparedArgument = prepareArgument(arg);
     return str.replaceAll("(^|[^{])\\{" + number + "\\}", "$1" + preparedArgument);
@@ -113,6 +122,7 @@ public abstract class APropertiesProvider {
    * @param str the string, maybe contains escaped placeholders
    * @return string with unescaped placeholders.
    */
+  @NotNull
   private static String replaceEscapedPlaceholder(final String str) {
     return str.replaceAll("\\{\\{(\\d)\\}", "\\{$1\\}");
   }
@@ -124,6 +134,7 @@ public abstract class APropertiesProvider {
    * @param arg the argument to prepare
    * @return the prepared argument
    */
+  @NotNull
   private static String prepareArgument(final Object arg) {
     if (arg == null || arg.toString() == null) {
       return "null";

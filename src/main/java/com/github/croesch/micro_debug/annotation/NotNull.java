@@ -16,27 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with micro-debug.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.croesch.micro_debug.parser;
+package com.github.croesch.micro_debug.annotation;
 
-import com.github.croesch.micro_debug.annotation.Nullable;
+import java.lang.annotation.Documented;
 
 /**
- * Parses {@link String}s to {@link Object}s.
+ * The annotated element mustn't be <code>null</code>. Clients can be sure that it is ensured that the annotated element
+ * never becomes <code>null</code>.
  * 
  * @author croesch
- * @since Date: Feb 22, 2012
+ * @since Date: Apr 6, 2012
  */
-public interface IParser {
-
-  /**
-   * Parses the given {@link String} and returns an {@link Object} of the specific type. If the input cannot be parsed
-   * into a valid object, than it will return <code>null</code>.
-   * 
-   * @since Date: Feb 22, 2012
-   * @param toParse the {@link String} to convert to an {@link Object}.
-   * @return the {@link Object} read from the {@link String},<br>
-   *         or <code>null</code> if the input was invalid
-   */
-  @Nullable
-  Object parse(String toParse);
+@Documented
+public @interface NotNull {
 }

@@ -23,6 +23,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+import com.github.croesch.micro_debug.annotation.Nullable;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.mic1.io.Output;
 
@@ -35,6 +37,7 @@ import com.github.croesch.micro_debug.mic1.io.Output;
 public final class OutputFile extends AArgument {
 
   /** the stream that has been opened by this instance */
+  @Nullable
   private transient PrintStream stream = null;
 
   /**
@@ -63,6 +66,7 @@ public final class OutputFile extends AArgument {
    * @since Date: Feb 28, 2012
    * @return the single instance of this argument.
    */
+  @NotNull
   public static OutputFile getInstance() {
     return LazyHolder.INSTANCE;
   }
@@ -93,6 +97,7 @@ public final class OutputFile extends AArgument {
   }
 
   @Override
+  @NotNull
   protected String name() {
     return "output-file";
   }

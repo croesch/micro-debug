@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import com.github.croesch.micro_debug.annotation.Nullable;
 import com.github.croesch.micro_debug.argument.AArgument;
 import com.github.croesch.micro_debug.argument.Help;
 import com.github.croesch.micro_debug.argument.Version;
@@ -157,6 +158,7 @@ public final class MicroDebug {
    * @param mic1File the path to the file to create the stream from
    * @return the constructed {@link FileInputStream} or <code>null</code>, if the file couldn't be found
    */
+  @Nullable
   private static FileInputStream createFileInputStream(final String mic1File) {
     try {
       return new FileInputStream(mic1File);

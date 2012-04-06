@@ -21,6 +21,8 @@ package com.github.croesch.micro_debug.mic1;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+import com.github.croesch.micro_debug.annotation.Nullable;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.error.MacroFileFormatException;
@@ -55,24 +57,30 @@ public final class Mic1 {
   private static final Logger LOGGER = Logger.getLogger(Mic1.class.getName());
 
   /** the ALU of the processor */
+  @NotNull
   private final Alu alu = new Alu();
 
   /** the shifter belonging to the ALU of the processor */
+  @NotNull
   private final Shifter shifter = new Shifter();
 
   /** calculator for next MPC value */
+  @NotNull
   private NextMPCCalculator mpcCalculator;
 
   /** store of the micro program */
+  @NotNull
   private final MicroControlStore controlStore;
 
   /** current instruction */
+  @Nullable
   private MicroInstruction instruction;
 
   /** current value of mpc */
   private int oldMpc;
 
   /** the main memory of the processor */
+  @NotNull
   private final Memory memory;
 
   /** counter for ticks that have been executed */
@@ -82,6 +90,7 @@ public final class Mic1 {
   private int lastMacroAddress;
 
   /** interpreter of this processor */
+  @Nullable
   private IProcessorInterpreter interpreter = null;
 
   /**
@@ -499,6 +508,7 @@ public final class Mic1 {
    * @since Date: Feb 13, 2012
    * @return the {@link Memory} of this processor.
    */
+  @NotNull
   public Memory getMemory() {
     return this.memory;
   }
@@ -529,6 +539,7 @@ public final class Mic1 {
    * @since Date: Feb 14, 2012
    * @return {@link MicroControlStore} storing the micro code of the processor
    */
+  @NotNull
   public MicroControlStore getControlStore() {
     return this.controlStore;
   }

@@ -18,6 +18,7 @@
  */
 package com.github.croesch.micro_debug.debug;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.register.Register;
@@ -31,6 +32,7 @@ import com.github.croesch.micro_debug.mic1.register.Register;
 final class RegisterBreakpoint extends Breakpoint {
 
   /** the register that is checked for the value */
+  @NotNull
   private final Register register;
 
   /** the value that is the condition for this breakpoint */
@@ -57,6 +59,7 @@ final class RegisterBreakpoint extends Breakpoint {
   }
 
   @Override
+  @NotNull
   public String toString() {
     return Text.BREAKPOINT_REGISTER.text(getId(), this.register, Utils.toHexString(this.val));
   }
@@ -67,6 +70,7 @@ final class RegisterBreakpoint extends Breakpoint {
    * @since Date: Jan 30, 2012
    * @return the {@link Register} to check for the condition value.
    */
+  @NotNull
   Register getRegister() {
     return this.register;
   }

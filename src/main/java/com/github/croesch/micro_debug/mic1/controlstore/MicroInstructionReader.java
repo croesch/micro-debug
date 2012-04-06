@@ -22,6 +22,7 @@ package com.github.croesch.micro_debug.mic1.controlstore;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.github.croesch.micro_debug.annotation.Nullable;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.mic1.register.Register;
 
@@ -101,6 +102,7 @@ public final class MicroInstructionReader {
    *         bytes to read from the inputstream.
    * @throws IOException if something went wrong reading the given {@link InputStream}.
    */
+  @Nullable
   public static MicroInstruction read(final InputStream in) throws IOException {
     final int b0 = in.read();
     final int b1 = in.read();
@@ -162,6 +164,7 @@ public final class MicroInstructionReader {
    * @param b the four-bit-value to decode, must be greater than zero
    * @return the {@link Mic1BBusRegister} that should be written on the B-Bus.
    */
+  @Nullable
   private static Register decodeBBusBits(final int b) {
     if (b >= B_BUS_REGISTER.length) {
       return null;

@@ -25,6 +25,9 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+import com.github.croesch.micro_debug.annotation.Nullable;
+
 /**
  * Properties that are filled with the properties fetched from the lang/testX.xml files, where X is defined by the
  * attributes of the {@link Locale}.
@@ -41,6 +44,7 @@ final class XMLI18nProperties extends Properties {
   private static final Logger LOGGER = Logger.getLogger(XMLI18nProperties.class.getName());
 
   /** the path to the file to read the properties from, doesn't contain APPENDIX nor file extension */
+  @Nullable
   private String file;
 
   /**
@@ -89,6 +93,7 @@ final class XMLI18nProperties extends Properties {
    * @param appendix the APPENDIX in the code above, or simply the string to append to the base file name
    * @return the full resource name
    */
+  @NotNull
   private String buildResourceName(final StringBuilder appendix) {
     return this.file + appendix.toString() + ".xml";
   }
@@ -117,6 +122,7 @@ final class XMLI18nProperties extends Properties {
   }
 
   @Override
+  @NotNull
   public String getProperty(final String key) {
     final String ret = super.getProperty(key);
     if (ret == null) {

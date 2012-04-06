@@ -18,6 +18,7 @@
  */
 package com.github.croesch.micro_debug.argument;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.i18n.Text;
 
 /**
@@ -54,11 +55,13 @@ public final class WrongParameterNumberArgument extends AError {
    * @since Date: Feb 28, 2012
    * @return the single instance of this argument.
    */
+  @NotNull
   public static WrongParameterNumberArgument getInstance() {
     return LazyHolder.INSTANCE;
   }
 
   @Override
+  @NotNull
   protected Text getErrorText() {
     return Text.ARGUMENT_WITH_WRONG_PARAM_NUMBER;
   }

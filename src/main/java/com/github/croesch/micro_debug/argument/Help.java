@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.commons.Utils;
 
@@ -62,6 +63,7 @@ public final class Help extends AArgument {
    * @since Date: Feb 28, 2012
    * @return the single instance of this argument.
    */
+  @NotNull
   public static Help getInstance() {
     return LazyHolder.INSTANCE;
   }
@@ -79,6 +81,7 @@ public final class Help extends AArgument {
   }
 
   @Override
+  @NotNull
   protected String name() {
     return "help";
   }

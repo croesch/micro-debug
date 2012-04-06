@@ -20,6 +20,7 @@ package com.github.croesch.micro_debug.parser;
 
 import java.util.Locale;
 
+import com.github.croesch.micro_debug.annotation.Nullable;
 import com.github.croesch.micro_debug.mic1.register.Register;
 
 /**
@@ -33,6 +34,7 @@ public final class RegisterParser implements IParser {
   /**
    * {@inheritDoc}
    */
+  @Nullable
   public Register parse(final String toParse) {
     if (toParse == null) {
       return null;
@@ -44,5 +46,4 @@ public final class RegisterParser implements IParser {
       return null;
     }
   }
-
 }

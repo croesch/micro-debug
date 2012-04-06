@@ -18,6 +18,8 @@
  */
 package com.github.croesch.micro_debug.mic1.controlstore;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+
 /**
  * Represents a set of signals: <code>H</code> , <code>CPP</code> , <code>MAR</code> , <code>MDR</code> ,
  * <code>OPC</code> , <code>PC</code> , <code>SP</code> , <code>TOS</code> and <code>LV</code>.<br />
@@ -76,6 +78,7 @@ public final class CBusSignalSet extends SignalSet {
    * @param value the new value for the signal <code>H</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public CBusSignalSet setH(final boolean value) {
     set(SIGNAL_NUMBER_OF_H, value);
     return this;
@@ -98,6 +101,7 @@ public final class CBusSignalSet extends SignalSet {
    * @param value the new value for the signal <code>OPC</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public CBusSignalSet setOpc(final boolean value) {
     set(SIGNAL_NUMBER_OF_OPC, value);
     return this;
@@ -120,6 +124,7 @@ public final class CBusSignalSet extends SignalSet {
    * @param value the new value for the signal <code>TOS</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public CBusSignalSet setTos(final boolean value) {
     set(SIGNAL_NUMBER_OF_TOS, value);
     return this;
@@ -142,6 +147,7 @@ public final class CBusSignalSet extends SignalSet {
    * @param value the new value for the signal <code>CPP</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public CBusSignalSet setCpp(final boolean value) {
     set(SIGNAL_NUMBER_OF_CPP, value);
     return this;
@@ -164,6 +170,7 @@ public final class CBusSignalSet extends SignalSet {
    * @param value the new value for the signal <code>LV</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public CBusSignalSet setLv(final boolean value) {
     set(SIGNAL_NUMBER_OF_LV, value);
     return this;
@@ -186,6 +193,7 @@ public final class CBusSignalSet extends SignalSet {
    * @param value the new value for the signal <code>SP</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public CBusSignalSet setSp(final boolean value) {
     set(SIGNAL_NUMBER_OF_SP, value);
     return this;
@@ -208,6 +216,7 @@ public final class CBusSignalSet extends SignalSet {
    * @param value the new value for the signal <code>PC</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public CBusSignalSet setPc(final boolean value) {
     set(SIGNAL_NUMBER_OF_PC, value);
     return this;
@@ -230,6 +239,7 @@ public final class CBusSignalSet extends SignalSet {
    * @param value the new value for the signal <code>MDR</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public CBusSignalSet setMdr(final boolean value) {
     set(SIGNAL_NUMBER_OF_MDR, value);
     return this;
@@ -252,6 +262,7 @@ public final class CBusSignalSet extends SignalSet {
    * @param value the new value for the signal <code>MAR</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public CBusSignalSet setMar(final boolean value) {
     set(SIGNAL_NUMBER_OF_MAR, value);
     return this;

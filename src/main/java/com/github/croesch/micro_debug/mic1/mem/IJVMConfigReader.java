@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.parser.IntegerParser;
 
@@ -55,6 +56,7 @@ public final class IJVMConfigReader {
   private static final Pattern ARGUMENTS_PATTERN = Pattern.compile("([\\S&&[^/]]+)\\s*");
 
   /** the parser to parse an {@link Integer} from a {@link String} */
+  @NotNull
   private final IntegerParser integerParser = new IntegerParser();
 
   /**
@@ -67,6 +69,7 @@ public final class IJVMConfigReader {
    *         from the configuration file<br>
    *         in case of error this map might be empty
    */
+  @NotNull
   public Map<Integer, IJVMCommand> readConfig(final InputStream in) {
     final Map<Integer, IJVMCommand> map = new HashMap<Integer, IJVMCommand>();
     try {
@@ -122,6 +125,7 @@ public final class IJVMConfigReader {
    * @param ln the line to remove the comment from
    * @return the line without the comment
    */
+  @NotNull
   private String removeComment(final String ln) {
     return ln.replaceFirst(COMMENT_REGEX, "");
   }
@@ -133,6 +137,7 @@ public final class IJVMConfigReader {
    * @param args the string representing the arguments
    * @return an array containing the {@link IJVMCommandArgument}s that were represented by the given string.
    */
+  @NotNull
   private IJVMCommandArgument[] parseArguments(final String args) {
     final List<IJVMCommandArgument> list = new ArrayList<IJVMCommandArgument>();
     final Matcher m = ARGUMENTS_PATTERN.matcher(args);

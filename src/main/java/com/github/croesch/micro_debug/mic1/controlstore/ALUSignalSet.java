@@ -18,6 +18,8 @@
  */
 package com.github.croesch.micro_debug.mic1.controlstore;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+
 /**
  * Represents a set of signals: <code>SLL8</code>, <code>SRA1</code>, <code>F0</code>, <code>F1</code>, <code>ENA</code>
  * , <code>ENB</code>, <code>INVA</code> and <code>INC</code>.<br />
@@ -73,6 +75,7 @@ public final class ALUSignalSet extends SignalSet {
    * @param value the new value for the signal <code>SLL8</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public ALUSignalSet setSLL8(final boolean value) {
     set(SIGNAL_NUMBER_OF_SLL8, value);
     return this;
@@ -95,6 +98,7 @@ public final class ALUSignalSet extends SignalSet {
    * @param value the new value for the signal <code>SRA1</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public ALUSignalSet setSRA1(final boolean value) {
     set(SIGNAL_NUMBER_OF_SRA1, value);
     return this;
@@ -117,6 +121,7 @@ public final class ALUSignalSet extends SignalSet {
    * @param value the new value for the signal <code>F0</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public ALUSignalSet setF0(final boolean value) {
     set(SIGNAL_NUMBER_OF_F0, value);
     return this;
@@ -139,6 +144,7 @@ public final class ALUSignalSet extends SignalSet {
    * @param value the new value for the signal <code>F1</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public ALUSignalSet setF1(final boolean value) {
     set(SIGNAL_NUMBER_OF_F1, value);
     return this;
@@ -161,6 +167,7 @@ public final class ALUSignalSet extends SignalSet {
    * @param value the new value for the signal <code>ENA</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public ALUSignalSet setEnA(final boolean value) {
     set(SIGNAL_NUMBER_OF_ENA, value);
     return this;
@@ -183,6 +190,7 @@ public final class ALUSignalSet extends SignalSet {
    * @param value the new value for the signal <code>ENB</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public ALUSignalSet setEnB(final boolean value) {
     set(SIGNAL_NUMBER_OF_ENB, value);
     return this;
@@ -205,6 +213,7 @@ public final class ALUSignalSet extends SignalSet {
    * @param value the new value for the signal <code>INVA</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public ALUSignalSet setInvA(final boolean value) {
     set(SIGNAL_NUMBER_OF_INVA, value);
     return this;
@@ -227,6 +236,7 @@ public final class ALUSignalSet extends SignalSet {
    * @param value the new value for the signal <code>INC</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public ALUSignalSet setInc(final boolean value) {
     set(SIGNAL_NUMBER_OF_INC, value);
     return this;

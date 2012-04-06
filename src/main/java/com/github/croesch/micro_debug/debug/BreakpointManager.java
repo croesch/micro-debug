@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.register.Register;
@@ -38,6 +39,7 @@ public final class BreakpointManager {
   private static final Logger LOGGER = Logger.getLogger(Text.class.getName());
 
   /** contains a list of values for each register that are set to be a breakpoint */
+  @NotNull
   private final List<Breakpoint> breakPoints = new ArrayList<Breakpoint>();
 
   /**

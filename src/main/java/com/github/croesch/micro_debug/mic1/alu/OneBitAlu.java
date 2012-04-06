@@ -18,6 +18,8 @@
  */
 package com.github.croesch.micro_debug.mic1.alu;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+
 /**
  * This class represents an ALU for one bit values. It is based on the circuit diagram for '1-Bit-ALU' in the script of
  * the lecture 'Rechnertechnik' of Karl Stroetmann.
@@ -93,6 +95,7 @@ class OneBitAlu {
    * @param setA <code>true</code>, if the signal should be set, <code>false</code> otherwise.
    * @return instance of the {@link OneBitAlu} to allow a fluent API.
    */
+  @NotNull
   OneBitAlu setA(final boolean setA) {
     this.a = setA;
     return this;
@@ -105,6 +108,7 @@ class OneBitAlu {
    * @param setB <code>true</code>, if the signal should be set, <code>false</code> otherwise.
    * @return instance of the {@link OneBitAlu} to allow a fluent API.
    */
+  @NotNull
   OneBitAlu setB(final boolean setB) {
     this.b = setB;
     return this;
@@ -117,6 +121,7 @@ class OneBitAlu {
    * @param setF0 <code>true</code>, if the signal should be set, <code>false</code> otherwise.
    * @return instance of the {@link OneBitAlu} to allow a fluent API.
    */
+  @NotNull
   OneBitAlu setF0(final boolean setF0) {
     this.f0 = setF0;
     return this;
@@ -129,6 +134,7 @@ class OneBitAlu {
    * @param setF1 <code>true</code>, if the signal should be set, <code>false</code> otherwise.
    * @return instance of the {@link OneBitAlu} to allow a fluent API.
    */
+  @NotNull
   OneBitAlu setF1(final boolean setF1) {
     this.f1 = setF1;
     return this;
@@ -141,6 +147,7 @@ class OneBitAlu {
    * @param setEnA <code>true</code>, if the signal should be set, <code>false</code> otherwise.
    * @return instance of the {@link OneBitAlu} to allow a fluent API.
    */
+  @NotNull
   OneBitAlu setEnA(final boolean setEnA) {
     this.enA = setEnA;
     return this;
@@ -153,6 +160,7 @@ class OneBitAlu {
    * @param setEnB <code>true</code>, if the signal should be set, <code>false</code> otherwise.
    * @return instance of the {@link OneBitAlu} to allow a fluent API.
    */
+  @NotNull
   OneBitAlu setEnB(final boolean setEnB) {
     this.enB = setEnB;
     return this;
@@ -165,6 +173,7 @@ class OneBitAlu {
    * @param setInvA <code>true</code>, if the signal should be set, <code>false</code> otherwise.
    * @return instance of the {@link OneBitAlu} to allow a fluent API.
    */
+  @NotNull
   OneBitAlu setInvA(final boolean setInvA) {
     this.invA = setInvA;
     return this;
@@ -177,6 +186,7 @@ class OneBitAlu {
    * @param setCarryIn <code>true</code>, if the signal should be set, <code>false</code> otherwise.
    * @return instance of the {@link OneBitAlu} to allow a fluent API.
    */
+  @NotNull
   OneBitAlu setCarryIn(final boolean setCarryIn) {
     this.carryIn = setCarryIn;
     return this;
@@ -248,6 +258,7 @@ class OneBitAlu {
    * @param s1 binary signal two (F1)
    * @return {@link MODE} the calculation mode to perform with the ALU.
    */
+  @NotNull
   private MODE decode(final boolean s0, final boolean s1) {
     if (s0 && s1) {
       return MODE.SUM;

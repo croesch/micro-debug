@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.i18n.Text;
 
 /**
@@ -34,6 +35,7 @@ import com.github.croesch.micro_debug.i18n.Text;
 public final class Printer {
 
   /** the current {@link PrintStream} to write the output to */
+  @NotNull
   private static PrintStream out = System.out;
 
   /**

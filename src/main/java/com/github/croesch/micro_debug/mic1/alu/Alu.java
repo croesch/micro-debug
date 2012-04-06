@@ -18,6 +18,8 @@
  */
 package com.github.croesch.micro_debug.mic1.alu;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+
 /**
  * This class represents an ALU for 32 bit values. It is based on the verilog code for 'interconnection of 1-Bit-ALUs to
  * one 32-bit-ALU' in the script of the lecture 'Rechnertechnik' of Karl Stroetmann.
@@ -31,6 +33,7 @@ public final class Alu {
   private static final int SIZE = 32;
 
   /** field of one-bit-ALUs that will be set into one row */
+  @NotNull
   private final OneBitAlu[] oneBitAlus = new OneBitAlu[SIZE];
 
   // input signals
@@ -122,6 +125,7 @@ public final class Alu {
    * @param a the value of A, to calculate with
    * @return instance of the {@link Alu} to allow a fluent API.
    */
+  @NotNull
   public Alu setA(final int a) {
     this.valueA = a;
     return this;
@@ -134,6 +138,7 @@ public final class Alu {
    * @param b the value of B, to calculate with
    * @return instance of the {@link Alu} to allow a fluent API.
    */
+  @NotNull
   public Alu setB(final int b) {
     this.valueB = b;
     return this;
@@ -146,6 +151,7 @@ public final class Alu {
    * @param f0 <code>true</code>, if the signal should be set, <code>false</code> otherwise.
    * @return instance of the {@link Alu} to allow a fluent API.
    */
+  @NotNull
   public Alu setF0(final boolean f0) {
     this.flag0 = f0;
     return this;
@@ -158,6 +164,7 @@ public final class Alu {
    * @param f1 <code>true</code>, if the signal should be set, <code>false</code> otherwise.
    * @return instance of the {@link Alu} to allow a fluent API.
    */
+  @NotNull
   public Alu setF1(final boolean f1) {
     this.flag1 = f1;
     return this;
@@ -170,6 +177,7 @@ public final class Alu {
    * @param enA <code>true</code>, if the signal should be set, <code>false</code> otherwise.
    * @return instance of the {@link Alu} to allow a fluent API.
    */
+  @NotNull
   public Alu setEnA(final boolean enA) {
     this.enableA = enA;
     return this;
@@ -182,6 +190,7 @@ public final class Alu {
    * @param enB <code>true</code>, if the signal should be set, <code>false</code> otherwise.
    * @return instance of the {@link Alu} to allow a fluent API.
    */
+  @NotNull
   public Alu setEnB(final boolean enB) {
     this.enableB = enB;
     return this;
@@ -194,6 +203,7 @@ public final class Alu {
    * @param invA <code>true</code>, if the signal should be set, <code>false</code> otherwise.
    * @return instance of the {@link Alu} to allow a fluent API.
    */
+  @NotNull
   public Alu setInvA(final boolean invA) {
     this.invertA = invA;
     return this;
@@ -206,6 +216,7 @@ public final class Alu {
    * @param inC <code>true</code>, if the signal should be set, <code>false</code> otherwise.
    * @return instance of the {@link Alu} to allow a fluent API.
    */
+  @NotNull
   public Alu setInc(final boolean inC) {
     this.inCarry = inC;
     return this;

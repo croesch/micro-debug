@@ -18,6 +18,8 @@
  */
 package com.github.croesch.micro_debug.mic1.controlstore;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+
 /**
  * Represents a set of signals: <code>JMPN</code>, <code>JMPZ</code> and <code>JMPC</code>.<br />
  * The signals determine the behavior of calculation of next address in micro-program to execute.<br />
@@ -56,6 +58,7 @@ public final class JMPSignalSet extends SignalSet {
    * @param value the new value for the signal <code>JMPC</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public JMPSignalSet setJmpC(final boolean value) {
     set(SIGNAL_NUMBER_OF_JMPC, value);
     return this;
@@ -78,6 +81,7 @@ public final class JMPSignalSet extends SignalSet {
    * @param value the new value for the signal <code>JMPN</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public JMPSignalSet setJmpN(final boolean value) {
     set(SIGNAL_NUMBER_OF_JMPN, value);
     return this;
@@ -100,6 +104,7 @@ public final class JMPSignalSet extends SignalSet {
    * @param value the new value for the signal <code>JMPZ</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public JMPSignalSet setJmpZ(final boolean value) {
     set(SIGNAL_NUMBER_OF_JMPZ, value);
     return this;

@@ -22,6 +22,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+import com.github.croesch.micro_debug.annotation.Nullable;
 import com.github.croesch.micro_debug.i18n.Text;
 
 /**
@@ -33,6 +35,7 @@ import com.github.croesch.micro_debug.i18n.Text;
 public final class Reader {
 
   /** the {@link java.io.Reader} to read the information from */
+  @NotNull
   private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
   /**
@@ -65,6 +68,7 @@ public final class Reader {
    * @return the line read from the {@link java.io.Reader} or<br>
    *         <code>null</code>, if an {@link IOException} occurred.
    */
+  @Nullable
   public static String readLine() {
     Printer.print(Text.INPUT_DEBUGGER);
     try {
@@ -74,5 +78,4 @@ public final class Reader {
       return null;
     }
   }
-
 }

@@ -21,6 +21,8 @@ package com.github.croesch.micro_debug.mic1.io;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+import com.github.croesch.micro_debug.annotation.Nullable;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.i18n.Text;
@@ -35,9 +37,11 @@ import com.github.croesch.micro_debug.i18n.Text;
 public final class Input {
 
   /** the input stream to read data from */
+  @NotNull
   private static InputStream in = System.in;
 
   /** the current line */
+  @Nullable
   private static String line = "";
 
   /** <code>true</code> if this component shouldn't produce output */

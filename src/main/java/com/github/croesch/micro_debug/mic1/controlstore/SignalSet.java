@@ -18,6 +18,8 @@
  */
 package com.github.croesch.micro_debug.mic1.controlstore;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+
 /**
  * Represents a set of signals: write, read and fetch.
  * 
@@ -137,6 +139,7 @@ class SignalSet {
   }
 
   @Override
+  @NotNull
   public String toString() {
     final StringBuilder s = new StringBuilder();
     for (final boolean b : this.signals) {

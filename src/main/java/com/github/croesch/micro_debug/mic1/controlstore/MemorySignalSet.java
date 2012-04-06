@@ -18,6 +18,8 @@
  */
 package com.github.croesch.micro_debug.mic1.controlstore;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+
 /**
  * Represents a set of signals: <code>write</code>, <code>read</code> and <code>fetch</code>.<br />
  * The signal <code>write</code> determines whether the content of the register MDR should be written to the memory to
@@ -62,6 +64,7 @@ public final class MemorySignalSet extends SignalSet {
    * @param write the new value for the signal <code>write</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public MemorySignalSet setWrite(final boolean write) {
     set(0, write);
     return this;
@@ -84,6 +87,7 @@ public final class MemorySignalSet extends SignalSet {
    * @param read the new value for the signal <code>read</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public MemorySignalSet setRead(final boolean read) {
     set(1, read);
     return this;
@@ -106,6 +110,7 @@ public final class MemorySignalSet extends SignalSet {
    * @param fetch the new value for the signal <code>fetch</code>.
    * @return instance of this object for fluent API.
    */
+  @NotNull
   public MemorySignalSet setFetch(final boolean fetch) {
     set(2, fetch);
     return this;

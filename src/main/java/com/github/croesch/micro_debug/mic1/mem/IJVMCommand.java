@@ -21,6 +21,8 @@ package com.github.croesch.micro_debug.mic1.mem;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+
 /**
  * Wrapper class for a ijvm command and its arguments.
  * 
@@ -30,9 +32,11 @@ import java.util.List;
 public final class IJVMCommand {
 
   /** the name of this command */
+  @NotNull
   private final String name;
 
   /** the list of arguments */
+  @NotNull
   private final List<IJVMCommandArgument> args = new ArrayList<IJVMCommandArgument>();
 
   /**
@@ -62,6 +66,7 @@ public final class IJVMCommand {
   }
 
   @Override
+  @NotNull
   public String toString() {
     final StringBuilder sb = new StringBuilder(this.name);
     for (final IJVMCommandArgument arg : this.args) {
@@ -106,6 +111,7 @@ public final class IJVMCommand {
    * @since Date: Jan 22, 2012
    * @return the {@link String} representing the name of this command.
    */
+  @NotNull
   public String getName() {
     return this.name;
   }
@@ -117,6 +123,7 @@ public final class IJVMCommand {
    * @return a {@link List} containing the required {@link IJVMCommandArgument}s for this command. Ensured to be not
    *         <code>null</code> and to contain no <code>null</code>-values.
    */
+  @NotNull
   public List<IJVMCommandArgument> getArgs() {
     return new ArrayList<IJVMCommandArgument>(this.args);
   }

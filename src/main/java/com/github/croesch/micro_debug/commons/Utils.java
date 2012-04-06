@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.util.Locale;
 import java.util.logging.Logger;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+import com.github.croesch.micro_debug.annotation.Nullable;
 import com.github.croesch.micro_debug.error.FileFormatException;
 
 /**
@@ -152,6 +154,7 @@ public final class Utils {
    * @param number the number to represent as hexadecimal string
    * @return the string representation of the given number in upper case and with leading <code>0x</code>
    */
+  @NotNull
   public static String toHexString(final int number) {
     return "0x" + Integer.toHexString(number).toUpperCase(Locale.GERMAN);
   }
@@ -165,6 +168,7 @@ public final class Utils {
    * @param number the number to represent as binary string
    * @return the string representation of the given number
    */
+  @NotNull
   public static String toBinaryString(final int number) {
     final StringBuilder binaryRepresentation = new StringBuilder();
     int mask = 1;
@@ -208,6 +212,7 @@ public final class Utils {
    * @since Date: Jan 24, 2012
    * @return {@link String} that represents the line separator
    */
+  @NotNull
   public static String getLineSeparator() {
     return System.getProperty("line.separator", "\n");
   }
@@ -221,6 +226,7 @@ public final class Utils {
    * @return the {@link String} representation of the object or an empty {@link String} if the {@link Object} is
    *         <code>null</code>.
    */
+  @Nullable
   public static String toString(final Object obj) {
     if (obj == null) {
       return "";

@@ -21,6 +21,8 @@ package com.github.croesch.micro_debug.properties;
 import java.util.Locale;
 import java.util.Properties;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+
 /**
  * Provides properties read from xml files.
  * 
@@ -39,6 +41,7 @@ public final class XMLPropertiesProvider extends APropertiesProvider {
   }
 
   @Override
+  @NotNull
   protected Properties createNewProperties(final String file) {
     return new XMLI18nProperties(file, Locale.getDefault());
   }
@@ -49,6 +52,7 @@ public final class XMLPropertiesProvider extends APropertiesProvider {
    * @since Date: Feb 22, 2012
    * @return the single instance of this class.
    */
+  @NotNull
   public static XMLPropertiesProvider getInstance() {
     return LazyHolder.INSTANCE;
   }

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.commons.AbstractCodeContainer;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.commons.Utils;
@@ -42,6 +43,7 @@ public final class MicroControlStore extends AbstractCodeContainer {
   private static final int INSTRUCTIONS_PER_STORE = 512;
 
   /** the store of 512 micro code instructions */
+  @NotNull
   private final MicroInstruction[] store = new MicroInstruction[INSTRUCTIONS_PER_STORE];
 
   /**

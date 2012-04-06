@@ -18,6 +18,7 @@
  */
 package com.github.croesch.micro_debug.commons;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
 
 /**
  * Represents a code container that is e.g. able to print the code.
@@ -99,6 +100,7 @@ public abstract class AbstractCodeContainer {
    * @return the formatted string containing the hexadecimal value of the given number and at least <i>width</i>
    *         characters.
    */
+  @NotNull
   protected final String formatIntToHex(final int number, final int width) {
     return String.format("%" + width + "s", Utils.toHexString(number));
   }

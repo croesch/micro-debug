@@ -20,6 +20,7 @@ package com.github.croesch.micro_debug.argument;
 
 import java.util.logging.Logger;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.i18n.Text;
 
@@ -70,6 +71,7 @@ public abstract class AError extends AArgument {
   }
 
   @Override
+  @NotNull
   protected final String name() {
     return "ERROR";
   }
@@ -80,5 +82,6 @@ public abstract class AError extends AArgument {
    * @since Date: Feb 28, 2012
    * @return the {@link Text} that describes why the argument is invalid.
    */
+  @NotNull
   protected abstract Text getErrorText();
 }

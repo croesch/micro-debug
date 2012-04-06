@@ -19,6 +19,7 @@
  */
 package com.github.croesch.micro_debug.mic1.controlstore;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.mic1.register.Register;
 
@@ -59,6 +60,7 @@ public final class MicroInstructionDecoder {
    * @param instruction the instruction to decode and represent as {@link String}
    * @return the {@link String} representing the function of the given instruction
    */
+  @NotNull
   public static String decode(final MicroInstruction instruction) {
     StringBuilder decodedInstruction = new StringBuilder();
     final String aBusValue = Register.H.name();
@@ -161,10 +163,7 @@ public final class MicroInstructionDecoder {
    * @param a the decoded text that describes the value written in the input A of the ALU
    * @param b the decoded text that describes the value written in the input B of the ALU
    */
-  static void decodeALUOperation(final ALUSignalSet aluSignals,
-                                 final StringBuilder s,
-                                 final String a,
-                                 final String b) {
+  static void decodeALUOperation(final ALUSignalSet aluSignals, final StringBuilder s, final String a, final String b) {
     // decode the ALU operation
     if (!aluSignals.isF0() && !aluSignals.isF1()) { // a AND b
       decodeALUAnd(aluSignals, s, a, b);
@@ -348,6 +347,7 @@ public final class MicroInstructionDecoder {
    * @param bBusSelect the signal to decode
    * @return the generated text
    */
+  @NotNull
   static String decodeBBusBits(final Register bBusSelect) {
     final String unknown = "???";
     if (bBusSelect == null) {
@@ -394,5 +394,4 @@ public final class MicroInstructionDecoder {
       s.append(Register.MAR.name()).append("=");
     }
   }
-
 }

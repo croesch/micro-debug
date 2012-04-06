@@ -18,6 +18,7 @@
  */
 package com.github.croesch.micro_debug.mic1.mem;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.mic1.register.Register;
 
@@ -119,6 +120,7 @@ public enum IJVMCommandArgument {
    * @param mem the memory to fetch values from
    * @return the {@link String} representing the given value for this argument.
    */
+  @NotNull
   public final String getRepresentationOfArgument(final int addr, final int value, final Memory mem) {
     return represent(addr, maskValue(value), mem);
   }
@@ -151,6 +153,7 @@ public enum IJVMCommandArgument {
    * @param mem the memory to fetch values from
    * @return the string representation of the given value for that argument.
    */
+  @NotNull
   public String represent(final int addr, final int value, final Memory mem) {
     return Utils.toHexString(value);
   }

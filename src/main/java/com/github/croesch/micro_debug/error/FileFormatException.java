@@ -20,6 +20,8 @@ package com.github.croesch.micro_debug.error;
 
 import java.io.IOException;
 
+import com.github.croesch.micro_debug.annotation.Nullable;
+
 /**
  * Signals that a file being read has another format than expected.
  * 
@@ -89,6 +91,7 @@ public class FileFormatException extends IOException {
    * @return the message {@link String} of the cause,<br>
    *         or <code>null</code> if the given cause is <code>null</code>.
    */
+  @Nullable
   private static String getMessageOrNull(final Throwable cause) {
     if (cause == null) {
       return null;

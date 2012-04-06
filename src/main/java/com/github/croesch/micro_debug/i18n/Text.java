@@ -18,6 +18,7 @@
  */
 package com.github.croesch.micro_debug.i18n;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.properties.XMLPropertiesProvider;
 
 /**
@@ -121,6 +122,7 @@ public enum Text {
   TRY_HELP;
 
   /** the value of this instance */
+  @NotNull
   private final String string;
 
   /**
@@ -136,6 +138,7 @@ public enum Text {
   }
 
   @Override
+  @NotNull
   public String toString() {
     return text();
   }
@@ -146,6 +149,7 @@ public enum Text {
    * @since Date: Dec 2, 2011
    * @return the String that represents the object
    */
+  @NotNull
   public String text() {
     return this.string;
   }
@@ -158,6 +162,7 @@ public enum Text {
    * @return the String that represents the object with replaced placeholders
    * @see XMLPropertiesProvider#replacePlaceholdersInString(String, Object...)
    */
+  @NotNull
   public String text(final Object ... s) {
     return XMLPropertiesProvider.replacePlaceholdersInString(this.string, s);
   }

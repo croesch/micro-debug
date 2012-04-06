@@ -19,6 +19,8 @@
  */
 package com.github.croesch.micro_debug.mic1.controlstore;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+import com.github.croesch.micro_debug.annotation.Nullable;
 import com.github.croesch.micro_debug.mic1.register.Register;
 
 /**
@@ -37,18 +39,23 @@ public final class MicroInstruction {
   private final int nextAddress;
 
   /** MIR[26:24]: set of bits that are basic for calculation of next MPC */
+  @NotNull
   private final JMPSignalSet jmpSignals = new JMPSignalSet();
 
   /** MIR[23:16]: set of bits that are responsible for the behavior of the ALU and the shifter */
+  @NotNull
   private final ALUSignalSet aluSignals = new ALUSignalSet();
 
   /** MIR[15:7]: set of bits that are responsible for the registers that are filled with the C-Bus value */
+  @NotNull
   private final CBusSignalSet cBusSignals = new CBusSignalSet();
 
   /** MIR[6:4]: set of bits that are responsible for communication with external memory (main memory and program memory) */
+  @NotNull
   private final MemorySignalSet memorySignals = new MemorySignalSet();
 
   /** responsible which register's value is written on the B-Bus */
+  @Nullable
   private final Register bBusSelect;
 
   /**
@@ -81,6 +88,7 @@ public final class MicroInstruction {
   }
 
   @Override
+  @NotNull
   public String toString() {
     return Integer.toBinaryString(this.nextAddress) + "_" + this.jmpSignals + "_" + this.aluSignals + "_"
            + this.cBusSignals + "_" + this.memorySignals + "_" + this.bBusSelect;
@@ -138,6 +146,7 @@ public final class MicroInstruction {
    * @since Date: Nov 13, 2011
    * @return a copy of the {@link JMPSignalSet} of this instruction.
    */
+  @NotNull
   public JMPSignalSet getJmpSignals() {
     final JMPSignalSet set = new JMPSignalSet();
     set.copyOf(this.jmpSignals);
@@ -150,6 +159,7 @@ public final class MicroInstruction {
    * @since Date: Nov 13, 2011
    * @return a copy of the {@link ALUSignalSet} of this instruction.
    */
+  @NotNull
   public ALUSignalSet getAluSignals() {
     final ALUSignalSet set = new ALUSignalSet();
     set.copyOf(this.aluSignals);
@@ -162,6 +172,7 @@ public final class MicroInstruction {
    * @since Date: Nov 13, 2011
    * @return a copy of the {@link CBusSignalSet} of this instruction.
    */
+  @NotNull
   public CBusSignalSet getCBusSignals() {
     final CBusSignalSet set = new CBusSignalSet();
     set.copyOf(this.cBusSignals);
@@ -174,6 +185,7 @@ public final class MicroInstruction {
    * @since Date: Nov 13, 2011
    * @return a copy of the {@link MemorySignalSet} of this instruction.
    */
+  @NotNull
   public MemorySignalSet getMemorySignals() {
     final MemorySignalSet set = new MemorySignalSet();
     set.copyOf(this.memorySignals);
@@ -196,6 +208,7 @@ public final class MicroInstruction {
    * @since Date: Nov 13, 2011
    * @return the {@link Register} that defines the register being written on the B-Bus.
    */
+  @Nullable
   public Register getbBusSelect() {
     return this.bBusSelect;
   }

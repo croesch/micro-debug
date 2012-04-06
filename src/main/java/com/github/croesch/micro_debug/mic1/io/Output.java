@@ -22,6 +22,8 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+
 /**
  * This class represents the connection to the output of the mic1-processor. It can buffer the output until it prints it
  * to its {@link PrintStream} or put each single byte to its {@link PrintStream}.
@@ -38,9 +40,10 @@ public final class Output {
   private static boolean buffered = true;
 
   /** contains the buffered bytes */
-  private static List<Byte> buffer = new ArrayList<Byte>();
+  private static final List<Byte> BUFFER = new ArrayList<Byte>();
 
   /** the print stream to write the output to */
+  @NotNull
   private static PrintStream out = System.out;
 
   /**
@@ -87,7 +90,7 @@ public final class Output {
    */
   public static void print(final byte val) {
     if (buffered) {
-      buffer.add(Byte.valueOf(val));
+      BUFFER.add(Byte.valueOf(val));
       if (val == LINE_FEED) {
         flush();
       }
@@ -102,8 +105,8 @@ public final class Output {
    * @since Date: Nov 26, 2011
    */
   public static void flush() {
-    while (!buffer.isEmpty()) {
-      out.print((char) buffer.remove(0).byteValue());
+    while (!BUFFER.isEmpty()) {
+      out.print((char) BUFFER.remove(0).byteValue());
     }
   }
 
@@ -113,7 +116,7 @@ public final class Output {
    * @since Date: Feb 10, 2012
    */
   public static void reset() {
-    buffer.clear();
+    BUFFER.clear();
   }
 
   /**
@@ -127,5 +130,4 @@ public final class Output {
       out = newOut;
     }
   }
-
 }

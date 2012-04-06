@@ -18,6 +18,7 @@
  */
 package com.github.croesch.micro_debug.console;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.debug.BreakpointManager;
 import com.github.croesch.micro_debug.mic1.Mic1;
 import com.github.croesch.micro_debug.mic1.api.IProcessorInterpreter;
@@ -34,18 +35,23 @@ import com.github.croesch.micro_debug.mic1.register.Register;
 public final class Mic1Interpreter implements IProcessorInterpreter {
 
   /** the view that is able to present details of this processor to the user */
+  @NotNull
   private final TraceManager view;
 
   /** the processor to interprete */
+  @NotNull
   private final Mic1 mic1;
 
   /** the manager for break points */
+  @NotNull
   private final BreakpointManager bpm = new BreakpointManager();
 
   /** the interpreter for the memory of the processor */
+  @NotNull
   private final MemoryInterpreter memInterpreter;
 
   /** the store of micro instructions */
+  @NotNull
   private final MicroControlStore controlStore;
 
   /**
@@ -318,6 +324,7 @@ public final class Mic1Interpreter implements IProcessorInterpreter {
    * @since Date: Feb 13, 2012
    * @return the instance of the processor this is interpreting.
    */
+  @NotNull
   public Mic1 getProcessor() {
     return this.mic1;
   }

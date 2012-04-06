@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+import com.github.croesch.micro_debug.annotation.Nullable;
 import com.github.croesch.micro_debug.commons.AbstractCodeContainer;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.commons.Utils;
@@ -42,9 +44,11 @@ import com.github.croesch.micro_debug.settings.Settings;
 public final class MemoryInterpreter extends AbstractCodeContainer {
 
   /** the map that contains the configuration with addresses in micro code and the belonging command */
+  @Nullable
   private Map<Integer, IJVMCommand> commands = null;
 
   /** the memory to interprete */
+  @Nullable
   private final Memory memory;
 
   /**
@@ -119,6 +123,7 @@ public final class MemoryInterpreter extends AbstractCodeContainer {
    * @param line the number of line to fetch.
    * @return the {@link String} representing the given line number
    */
+  @Nullable
   public String getFormattedLine(final int line) {
     if (line < 0) {
       return null;
@@ -161,6 +166,7 @@ public final class MemoryInterpreter extends AbstractCodeContainer {
    * @return the {@link IJVMCommand} describing the command at the given address<br>
    *         or <code>null</code> if no command is configured for this address
    */
+  @Nullable
   private IJVMCommand lookupCommand(final int addr) {
     if (this.commands == null) {
       // read configuration file the first time
@@ -179,6 +185,7 @@ public final class MemoryInterpreter extends AbstractCodeContainer {
    *         or an text to indicate, that the command is unknown, if the given command is <code>null</code>
    * @see IJVMCommand#getName()
    */
+  @NotNull
   private String buildNameForCommand(final IJVMCommand cmd) {
     if (cmd == null) {
       return Text.UNKNOWN_IJVM_INSTRUCTION.text();
@@ -253,5 +260,4 @@ public final class MemoryInterpreter extends AbstractCodeContainer {
     }
     return refEnd;
   }
-
 }

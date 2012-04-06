@@ -18,6 +18,8 @@
  */
 package com.github.croesch.micro_debug.commons;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+import com.github.croesch.micro_debug.annotation.Nullable;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.parser.IParser;
 import com.github.croesch.micro_debug.parser.IntegerParser;
@@ -38,9 +40,11 @@ public enum Parameter {
   REGISTER (new RegisterParser(), Text.INVALID_REGISTER);
 
   /** the parser that is able to parse a given string and return the parsed object */
+  @NotNull
   private final transient IParser parser;
 
   /** the text to visualise that the given string cannot be parsed - is not valid */
+  @NotNull
   private final Text errorText;
 
   /**
@@ -65,6 +69,7 @@ public enum Parameter {
    * @return an {@link Object} with the logical type of the enumeration that has the value given by the given string,<br>
    *         or <code>null</code> if the given {@link String} is no valid representation for any value of the data type
    */
+  @Nullable
   public final Object getValue(final String str) {
     final Object ret = this.parser.parse(str);
     if (ret == null) {

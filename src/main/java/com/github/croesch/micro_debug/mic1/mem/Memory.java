@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.error.FileFormatException;
@@ -50,9 +51,11 @@ public final class Memory implements IReadableMemory {
   public static final int MEMORY_MAPPED_IO_ADDRESS = 0xFFFFFFFD;
 
   /** the representation of the memory */
+  @NotNull
   private final int[] memory;
 
   /** stores the initial state of the memory for reset purpose */
+  @NotNull
   private final int[] initialMemory;
 
   /** the input signal that enforces the memory to read a word */

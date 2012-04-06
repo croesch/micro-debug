@@ -18,6 +18,9 @@
  */
 package com.github.croesch.micro_debug.parser;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
+import com.github.croesch.micro_debug.annotation.Nullable;
+
 /**
  * Parses {@link Integer}s from {@link String}s.
  * 
@@ -29,6 +32,7 @@ public final class IntegerParser implements IParser {
   /**
    * {@inheritDoc}
    */
+  @Nullable
   public Integer parse(final String toParse) {
     if (toParse == null) {
       return null;
@@ -64,6 +68,7 @@ public final class IntegerParser implements IParser {
    * @param num the number that might contain aliases
    * @return the number with aliases converted to notation
    */
+  @NotNull
   private String convertAliases(final String num) {
     if (num.length() > 1 && num.charAt(0) == '0') {
       switch (Character.toLowerCase(num.charAt(1))) {

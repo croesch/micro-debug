@@ -18,6 +18,7 @@
  */
 package com.github.croesch.micro_debug.debug;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.i18n.Text;
 
@@ -45,6 +46,7 @@ final class MicroBreakpoint extends AbstractLineBreakpoint {
   }
 
   @Override
+  @NotNull
   public String toString() {
     return Text.BREAKPOINT_MICRO.text(getId(), Utils.toHexString(getLine()));
   }

@@ -23,6 +23,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.i18n.Text;
@@ -41,12 +42,15 @@ import com.github.croesch.micro_debug.settings.Settings;
 public final class TraceManager {
 
   /** contains which registers are traced and which aren't */
+  @NotNull
   private final Map<Register, Boolean> tracingRegisters = new EnumMap<Register, Boolean>(Register.class);
 
   /** contains the old/current values of the registers */
+  @NotNull
   private final Map<Register, Integer> tracingRegistersValues = new EnumMap<Register, Integer>(Register.class);
 
   /** contains the variables that are currently traced */
+  @NotNull
   private final List<MacroVariable> tracingVariables = new ArrayList<MacroVariable>();
 
   /** determines whether the micro code is currently traced */
@@ -56,6 +60,7 @@ public final class TraceManager {
   private boolean macroTracing = false;
 
   /** the main memory of the processor being traced */
+  @NotNull
   private final IReadableMemory memory;
 
   /**
