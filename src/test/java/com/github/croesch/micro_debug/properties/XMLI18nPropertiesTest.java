@@ -67,6 +67,14 @@ public class XMLI18nPropertiesTest extends DefaultTestCase {
   }
 
   @Test
+  public void testNullGetProperty() {
+    printlnMethodName();
+    assertThat(new XMLI18nProperties(null, Locale.getDefault()).getProperty("border"))
+      .isEqualTo("!!missing-key=border!!");
+    assertThat(new XMLI18nProperties(null, Locale.getDefault()).propertyNames().hasMoreElements()).isFalse();
+  }
+
+  @Test
   public void testLangTextGetProperty() {
     printlnMethodName();
     final String file = "lang/text";
