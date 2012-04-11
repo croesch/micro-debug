@@ -84,6 +84,17 @@ public final class Mic1Interpreter implements IProcessorInterpreter {
   }
 
   /**
+   * Adds a breakpoint for the given {@link Register}. Debugger will break, if the given {@link Register} will be set by
+   * the next {@link MicroInstruction}.
+   * 
+   * @since Date: Apr 11, 2012
+   * @param r the {@link Register} to watch for write access.
+   */
+  public void addRegisterBreakpoint(final Register r) {
+    this.bpm.addRegisterBreakpoint(r);
+  }
+
+  /**
    * Adds a breakpoint for the given line number in the micro code.
    * 
    * @since Date: Feb 4, 2012

@@ -43,12 +43,18 @@ enum UserInstruction {
   BREAK {
     @Override
     public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
-      if (getSize(params) == 2) {
-        final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
-        final Integer i = (Integer) Parameter.NUMBER.getValue(params[1]);
-        interpreter.addRegisterBreakpoint(r, i);
-      } else {
-        Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(2, getSize(params)));
+      switch (getSize(params)) {
+        case 1:
+          interpreter.addRegisterBreakpoint((Register) Parameter.REGISTER.getValue(params[0]));
+          break;
+        case 2:
+          final Register r = (Register) Parameter.REGISTER.getValue(params[0]);
+          final Integer i = (Integer) Parameter.NUMBER.getValue(params[1]);
+          interpreter.addRegisterBreakpoint(r, i);
+          break;
+        default:
+          Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(2, getSize(params)));
+          break;
       }
       return true;
     }

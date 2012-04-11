@@ -85,6 +85,23 @@ public final class BreakpointManager {
   }
 
   /**
+   * Adds a breakpoint for the given {@link Register} on write access.
+   * 
+   * @since Date: Apr 11, 2012
+   * @param r the {@link Register} to watch for being written
+   */
+  public void addRegisterBreakpoint(final Register r) {
+    if (r != null) {
+      final Breakpoint bp = new RegisterWriteBreakpoint(r);
+      if (this.breakPoints.contains(bp)) {
+        LOGGER.fine("adding '" + Text.BREAKPOINT_WRITE_REGISTER.text("", r) + "' that already exists..");
+      } else {
+        this.breakPoints.add(bp);
+      }
+    }
+  }
+
+  /**
    * Adds a breakpoint for the given line number in the micro code.
    * 
    * @since Date: Feb 4, 2012

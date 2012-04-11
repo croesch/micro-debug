@@ -20,6 +20,8 @@ package com.github.croesch.micro_debug.debug;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +29,8 @@ import org.junit.Test;
 
 import com.github.croesch.micro_debug.DefaultTestCase;
 import com.github.croesch.micro_debug.i18n.Text;
+import com.github.croesch.micro_debug.mic1.controlstore.MicroInstruction;
+import com.github.croesch.micro_debug.mic1.controlstore.MicroInstructionReader;
 import com.github.croesch.micro_debug.mic1.register.Register;
 import com.github.croesch.micro_debug.settings.Settings;
 
@@ -52,12 +56,14 @@ public class BreakpointManagerTest extends DefaultTestCase {
     // shouldn't throw any exception
     this.bpm.addRegisterBreakpoint(null, Integer.valueOf(0));
     this.bpm.addRegisterBreakpoint(Register.CPP, null);
+    this.bpm.addRegisterBreakpoint(null, null);
+    this.bpm.addRegisterBreakpoint(null);
     this.bpm.addMicroBreakpoint(null);
     this.bpm.addMacroBreakpoint(null);
   }
 
   @Test
-  public void testIsBreakpoint() {
+  public void testIsBreakpoint() throws IOException {
     printMethodName();
 
     for (final Register r : Register.values()) {
@@ -84,6 +90,22 @@ public class BreakpointManagerTest extends DefaultTestCase {
       printStep();
     }
     printLoopEnd();
+
+    assertThat(this.bpm.isBreakpoint(0, 0, null, null)).isFalse();
+    for (final Register r : Register.values()) {
+      this.bpm.addRegisterBreakpoint(r);
+      assertThat(this.bpm.isBreakpoint(0, 0, null, null)).isFalse();
+      // instruction writes all registers
+      final MicroInstruction in = MicroInstructionReader.read(new ByteArrayInputStream(new byte[] { 0,
+                                                                                                   0,
+                                                                                                   (byte) 0xFF,
+                                                                                                   (byte) 0xFF,
+                                                                                                   0 }));
+      assertThat(this.bpm.isBreakpoint(Integer.MAX_VALUE, Integer.MIN_VALUE, in, in)).isTrue();
+      printStep();
+    }
+    printLoopEnd();
+
     for (int i = -17; i < 43; ++i) {
       this.bpm.addMicroBreakpoint(i);
       assertThat(this.bpm.isBreakpoint(i + 1, 0, null, null)).isFalse();
@@ -111,18 +133,28 @@ public class BreakpointManagerTest extends DefaultTestCase {
 
     this.bpm.addMicroBreakpoint(37);
 
+    this.bpm.addRegisterBreakpoint(Register.MBR);
+    this.bpm.addRegisterBreakpoint(Register.MDR);
+
     this.bpm.addRegisterBreakpoint(Register.CPP, Integer.valueOf(-1));
     this.bpm.addRegisterBreakpoint(Register.CPP, Integer.valueOf(Integer.MAX_VALUE));
     this.bpm.addRegisterBreakpoint(Register.CPP, Integer.valueOf(Integer.MIN_VALUE));
 
     this.bpm.addMicroBreakpoint(42);
+    this.bpm.addRegisterBreakpoint(Register.H);
+    this.bpm.addRegisterBreakpoint(Register.OPC);
     this.bpm.addMicroBreakpoint(42);
+    this.bpm.addMicroBreakpoint(37);
 
     this.bpm.addRegisterBreakpoint(Register.H, Integer.valueOf(2));
     this.bpm.addRegisterBreakpoint(Register.H, Integer.valueOf(2));
     this.bpm.addRegisterBreakpoint(Register.H, Integer.valueOf(3));
     this.bpm.addRegisterBreakpoint(Register.H, Integer.valueOf(1));
 
+    this.bpm.addMacroBreakpoint(37);
+
+    this.bpm.addRegisterBreakpoint(Register.OPC);
+    this.bpm.addRegisterBreakpoint(Register.H, Integer.valueOf(1));
     this.bpm.addMacroBreakpoint(37);
 
     assertThat(out.toString()).isEmpty();
@@ -132,12 +164,20 @@ public class BreakpointManagerTest extends DefaultTestCase {
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.MBRU, "0xFFFFFFD0")
                                                + getLineSeparator() + Text.BREAKPOINT_MICRO.text("[0-9]+", "0x25")
                                                + getLineSeparator()
+                                               + Text.BREAKPOINT_WRITE_REGISTER.text("[0-9]+", Register.MBR)
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_WRITE_REGISTER.text("[0-9]+", Register.MDR)
+                                               + getLineSeparator()
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.CPP, "0xFFFFFFFF")
                                                + getLineSeparator()
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.CPP, "0x7FFFFFFF")
                                                + getLineSeparator()
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.CPP, "0x80000000")
                                                + getLineSeparator() + Text.BREAKPOINT_MICRO.text("[0-9]+", "0x2A")
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_WRITE_REGISTER.text("[0-9]+", Register.H)
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_WRITE_REGISTER.text("[0-9]+", Register.OPC)
                                                + getLineSeparator()
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.H, "0x2")
                                                + getLineSeparator()
@@ -156,7 +196,9 @@ public class BreakpointManagerTest extends DefaultTestCase {
     this.bpm.addRegisterBreakpoint(Register.MBR, Integer.valueOf(-48));
     this.bpm.addMicroBreakpoint(12);
     this.bpm.addMacroBreakpoint(13);
+    this.bpm.addRegisterBreakpoint(Register.MAR);
     this.bpm.addMacroBreakpoint(13);
+    this.bpm.addRegisterBreakpoint(Register.LV);
     this.bpm.addMacroBreakpoint(13);
 
     assertThat(out.toString()).isEmpty();
@@ -166,6 +208,10 @@ public class BreakpointManagerTest extends DefaultTestCase {
                                               + Text.BREAKPOINT_REGISTER.text("([0-9]+)", Register.MBR, "0xFFFFFFD0")
                                               + getLineSeparator() + Text.BREAKPOINT_MICRO.text("([0-9]+)", "0xC")
                                               + getLineSeparator() + Text.BREAKPOINT_MACRO.text("[0-9]+", "0xD")
+                                              + getLineSeparator()
+                                              + Text.BREAKPOINT_WRITE_REGISTER.text("([0-9]+)", Register.MAR)
+                                              + getLineSeparator()
+                                              + Text.BREAKPOINT_WRITE_REGISTER.text("[0-9]+", Register.LV)
                                               + getLineSeparator()).matcher(out.toString());
     assertThat(m.matches()).isTrue();
     this.bpm.removeBreakpoint(Integer.parseInt(m.group(1)));
@@ -176,6 +222,10 @@ public class BreakpointManagerTest extends DefaultTestCase {
     assertThat(out.toString()).matches(Text.BREAKPOINT_REGISTER.text("([0-9]+)", Register.MBR, "0xFFFFFFD0")
                                                + getLineSeparator() + Text.BREAKPOINT_MICRO.text("[0-9]+", "0xC")
                                                + getLineSeparator() + Text.BREAKPOINT_MACRO.text("[0-9]+", "0xD")
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_WRITE_REGISTER.text("([0-9]+)", Register.MAR)
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_WRITE_REGISTER.text("([0-9]+)", Register.LV)
                                                + getLineSeparator());
 
     this.bpm.removeBreakpoint(-11);
@@ -186,6 +236,10 @@ public class BreakpointManagerTest extends DefaultTestCase {
     assertThat(out.toString()).matches(Text.BREAKPOINT_REGISTER.text("([0-9]+)", Register.MBR, "0xFFFFFFD0")
                                                + getLineSeparator() + Text.BREAKPOINT_MICRO.text("[0-9]+", "0xC")
                                                + getLineSeparator() + Text.BREAKPOINT_MACRO.text("[0-9]+", "0xD")
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_WRITE_REGISTER.text("([0-9]+)", Register.MAR)
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_WRITE_REGISTER.text("([0-9]+)", Register.LV)
                                                + getLineSeparator());
 
     this.bpm.removeBreakpoint(Integer.parseInt(m.group(3)));
@@ -193,6 +247,19 @@ public class BreakpointManagerTest extends DefaultTestCase {
     this.bpm.listBreakpoints();
     assertThat(out.toString()).matches(Text.BREAKPOINT_REGISTER.text("([0-9]+)", Register.MBR, "0xFFFFFFD0")
                                                + getLineSeparator() + Text.BREAKPOINT_MACRO.text("[0-9]+", "0xD")
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_WRITE_REGISTER.text("([0-9]+)", Register.MAR)
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_WRITE_REGISTER.text("([0-9]+)", Register.LV)
+                                               + getLineSeparator());
+
+    this.bpm.removeBreakpoint(Integer.parseInt(m.group(4)));
+    out.reset();
+    this.bpm.listBreakpoints();
+    assertThat(out.toString()).matches(Text.BREAKPOINT_REGISTER.text("([0-9]+)", Register.MBR, "0xFFFFFFD0")
+                                               + getLineSeparator() + Text.BREAKPOINT_MACRO.text("[0-9]+", "0xD")
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_WRITE_REGISTER.text("([0-9]+)", Register.LV)
                                                + getLineSeparator());
   }
 }

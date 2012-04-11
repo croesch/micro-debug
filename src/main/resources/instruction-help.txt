@@ -1,9 +1,11 @@
 DESCRIPTION
 	Possible instructions are:
 
-	break REG VAL
-		Constructs a break point: The debugger will stop if the register REG has the
-		value VAL.
+	break REG [VAL]
+		Constructs a break point for the given register REG. If the value VAL is given,
+		the debugger will stop if the register REG has the value VAL.
+		If the value VAL is omitted, the debugger will stop, if the register's value will
+		be set by the next instruction the processor would execute.
 
 	exit
 		exits the debugger.

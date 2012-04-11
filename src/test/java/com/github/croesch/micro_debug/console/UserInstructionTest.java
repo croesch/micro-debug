@@ -821,6 +821,31 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
+  public void testExecuteBreak_Write() {
+    printlnMethodName();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, Register.MAR.name())).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3) + getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter, "2")).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+    assertThat(UserInstruction.MICRO_STEP.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+  }
+
+  @Test
   public void testExecuteMicroBreak() {
     printlnMethodName();
     assertThat(UserInstruction.MICRO_BREAK.execute(this.interpreter, "0x2")).isTrue();
@@ -884,7 +909,6 @@ public class UserInstructionTest extends DefaultTestCase {
   public final void testExecuteBreak_WrongNumberOfParameters() {
     printlnMethodName();
     assertThatNoParameterIsWrong(UserInstruction.BREAK, 2);
-    assertThatOneParameterIsWrong(UserInstruction.BREAK);
     assertThatThreeParametersAreWrong(UserInstruction.BREAK, 2);
   }
 
@@ -915,6 +939,32 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
     assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
+    out.reset();
+
+    assertThat(UserInstruction.LS_BREAK.execute(this.interpreter)).isTrue();
+    final Matcher m = Pattern.compile(".*#([0-9]+).*" + getLineSeparator()).matcher(out.toString());
+
+    assertThat(m.matches()).isTrue();
+    assertThat(UserInstruction.RM_BREAK.execute(this.interpreter, m.group(1))).isTrue();
+    out.reset();
+
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + getLineSeparator());
+    out.reset();
+  }
+
+  @Test
+  public void testExecuteRmBreak_Write() {
+    printlnMethodName();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, Register.H.name())).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+    out.reset();
+
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
     out.reset();
 
     assertThat(UserInstruction.LS_BREAK.execute(this.interpreter)).isTrue();
@@ -1042,6 +1092,10 @@ public class UserInstructionTest extends DefaultTestCase {
     assertThat(UserInstruction.BREAK.execute(this.interpreter, "H", "11_2")).isTrue();
     assertThat(UserInstruction.BREAK.execute(this.interpreter, "H", "1")).isTrue();
 
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, "TOS")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, "MBR")).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, "MBR")).isTrue();
+
     assertThat(out.toString()).isEmpty();
     assertThat(UserInstruction.LS_BREAK.execute(this.interpreter)).isTrue();
     assertThat(out.toString()).matches(Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.MBRU, "0x10")
@@ -1059,6 +1113,10 @@ public class UserInstructionTest extends DefaultTestCase {
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.H, "0x3")
                                                + getLineSeparator()
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.H, "0x1")
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_WRITE_REGISTER.text("[0-9]+", Register.TOS)
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_WRITE_REGISTER.text("[0-9]+", Register.MBR)
                                                + getLineSeparator());
   }
 

@@ -83,6 +83,104 @@ public class Mic1InterpreterTest extends DefaultTestCase {
   }
 
   @Test
+  public void testAddRegisterWriteBreakPoint_MAR() {
+    printlnMethodName();
+    this.interpreter.addRegisterBreakpoint(Register.MAR);
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3) + getLineSeparator());
+
+    out.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+    this.processor.microStep(10);
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
+
+    out.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
+
+    out.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3) + getLineSeparator());
+
+    // reset and check if by step per step stops also
+
+    out.reset();
+    this.processor.reset();
+    this.processor.microStep(2);
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(2) + getLineSeparator());
+
+    out.reset();
+    this.processor.microStep();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+    this.processor.microStep();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+    this.processor.microStep();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+    this.processor.microStep();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+  }
+
+  @Test
+  public void testAddRegisterWriteBreakPoint_MDR() {
+    printlnMethodName();
+    this.interpreter.addRegisterBreakpoint(Register.MDR);
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(4) + getLineSeparator());
+
+    out.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3) + getLineSeparator());
+
+    out.reset();
+    this.processor.microStep(10);
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3) + getLineSeparator());
+
+    out.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3) + getLineSeparator());
+
+    // reset and check if by step per step stops also
+
+    out.reset();
+    this.processor.reset();
+    this.processor.microStep();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+    this.processor.microStep();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+    this.processor.microStep();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+  }
+
+  @Test
   public void testAddMicroBreakPoint() {
     printlnMethodName();
     this.interpreter.addMicroBreakpoint(Integer.valueOf(2));
@@ -170,6 +268,32 @@ public class Mic1InterpreterTest extends DefaultTestCase {
   }
 
   @Test
+  public void testRemoveRegisterWriteBreakPoint() {
+    printlnMethodName();
+    this.interpreter.addRegisterBreakpoint(Register.PC);
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(4) + getLineSeparator());
+    out.reset();
+
+    this.processor.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(4) + getLineSeparator());
+    out.reset();
+
+    this.interpreter.listBreakpoints();
+    final Matcher m = Pattern.compile(".*#([0-9]+).*" + getLineSeparator()).matcher(out.toString());
+
+    assertThat(m.matches()).isTrue();
+    this.interpreter.removeBreakpoint(Integer.parseInt(m.group(1)));
+    out.reset();
+
+    this.processor.reset();
+    this.processor.run();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + getLineSeparator());
+    out.reset();
+  }
+
+  @Test
   public void testListBreakpoints() {
     printMethodName();
 
@@ -179,6 +303,10 @@ public class Mic1InterpreterTest extends DefaultTestCase {
     this.interpreter.addRegisterBreakpoint(Register.CPP, Integer.valueOf(-1));
     this.interpreter.addRegisterBreakpoint(Register.CPP, Integer.valueOf(Integer.MAX_VALUE));
     this.interpreter.addRegisterBreakpoint(Register.CPP, Integer.valueOf(Integer.MIN_VALUE));
+
+    this.interpreter.addRegisterBreakpoint(Register.CPP);
+    this.interpreter.addRegisterBreakpoint(Register.OPC);
+    this.interpreter.addRegisterBreakpoint(Register.MBR);
 
     this.interpreter.addRegisterBreakpoint(Register.H, Integer.valueOf(2));
     this.interpreter.addRegisterBreakpoint(Register.H, Integer.valueOf(2));
@@ -196,6 +324,12 @@ public class Mic1InterpreterTest extends DefaultTestCase {
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.CPP, "0x7FFFFFFF")
                                                + getLineSeparator()
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.CPP, "0x80000000")
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_WRITE_REGISTER.text("[0-9]+", Register.CPP)
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_WRITE_REGISTER.text("[0-9]+", Register.OPC)
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_WRITE_REGISTER.text("[0-9]+", Register.MBR)
                                                + getLineSeparator()
                                                + Text.BREAKPOINT_REGISTER.text("[0-9]+", Register.H, "0x2")
                                                + getLineSeparator()
