@@ -102,6 +102,19 @@ public final class BreakpointManager {
   }
 
   /**
+   * Removes the breakpoint for the given {@link Register} on write access. If the breakpoint has been set or not, after
+   * calling this method, the breakpoint is definitely <em>not</em> set.
+   * 
+   * @since Date: Apr 11, 2012
+   * @param r the {@link Register} to <em>not</em> watch anymore for being written
+   */
+  public void removeRegisterBreakpoint(final Register r) {
+    if (r != null) {
+      this.breakPoints.remove(new RegisterWriteBreakpoint(r));
+    }
+  }
+
+  /**
    * Adds a breakpoint for the given line number in the micro code.
    * 
    * @since Date: Feb 4, 2012

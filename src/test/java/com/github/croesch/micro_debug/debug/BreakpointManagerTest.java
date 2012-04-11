@@ -261,5 +261,30 @@ public class BreakpointManagerTest extends DefaultTestCase {
                                                + getLineSeparator()
                                                + Text.BREAKPOINT_WRITE_REGISTER.text("([0-9]+)", Register.LV)
                                                + getLineSeparator());
+
+    this.bpm.removeRegisterBreakpoint(null);
+    out.reset();
+    this.bpm.listBreakpoints();
+    assertThat(out.toString()).matches(Text.BREAKPOINT_REGISTER.text("([0-9]+)", Register.MBR, "0xFFFFFFD0")
+                                               + getLineSeparator() + Text.BREAKPOINT_MACRO.text("[0-9]+", "0xD")
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_WRITE_REGISTER.text("([0-9]+)", Register.LV)
+                                               + getLineSeparator());
+
+    this.bpm.removeRegisterBreakpoint(Register.TOS);
+    out.reset();
+    this.bpm.listBreakpoints();
+    assertThat(out.toString()).matches(Text.BREAKPOINT_REGISTER.text("([0-9]+)", Register.MBR, "0xFFFFFFD0")
+                                               + getLineSeparator() + Text.BREAKPOINT_MACRO.text("[0-9]+", "0xD")
+                                               + getLineSeparator()
+                                               + Text.BREAKPOINT_WRITE_REGISTER.text("([0-9]+)", Register.LV)
+                                               + getLineSeparator());
+
+    this.bpm.removeRegisterBreakpoint(Register.LV);
+    out.reset();
+    this.bpm.listBreakpoints();
+    assertThat(out.toString()).matches(Text.BREAKPOINT_REGISTER.text("([0-9]+)", Register.MBR, "0xFFFFFFD0")
+                                               + getLineSeparator() + Text.BREAKPOINT_MACRO.text("[0-9]+", "0xD")
+                                               + getLineSeparator());
   }
 }
