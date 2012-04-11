@@ -48,33 +48,62 @@ final class RegisterWriteBreakpoint extends AbstractRegisterBreakpoint {
                          final int macroLine,
                          final MicroInstruction currentInstruction,
                          final MicroInstruction nextInstruction) {
+    return (nextInstruction != null && isRegisterWrittenByNextInstruction(nextInstruction))
+           || (currentInstruction != null && isRegisterWrittenByCurrentInstruction(currentInstruction));
+  }
+
+  /**
+   * Returns whether the next instruction to be executed by the processor will set a value for the {@link Register} this
+   * breakpoint watches.
+   * 
+   * @since Date: Apr 11, 2012
+   * @param instruction the instruction to check, if it'll set a value for the watched {@link Register}.
+   * @return <code>true</code> if the given instruction will set a value for the watched {@link Register},<br>
+   *         or <code>false</code> otherwise
+   */
+  private boolean isRegisterWrittenByNextInstruction(final MicroInstruction instruction) {
     switch (getRegister()) {
       case CPP:
-        return nextInstruction != null && nextInstruction.getCBusSignals().isCpp();
+        return instruction.getCBusSignals().isCpp();
       case H:
-        return nextInstruction != null && nextInstruction.getCBusSignals().isH();
+        return instruction.getCBusSignals().isH();
       case LV:
-        return nextInstruction != null && nextInstruction.getCBusSignals().isLv();
+        return instruction.getCBusSignals().isLv();
       case MAR:
-        return nextInstruction != null && nextInstruction.getCBusSignals().isMar();
-      case MBR:
-        return currentInstruction != null && currentInstruction.getMemorySignals().isFetch();
-      case MBRU:
-        return currentInstruction != null && currentInstruction.getMemorySignals().isFetch();
+        return instruction.getCBusSignals().isMar();
       case MDR:
-        return (currentInstruction != null && currentInstruction.getMemorySignals().isRead())
-               || (nextInstruction != null && nextInstruction.getCBusSignals().isMdr());
+        return instruction.getCBusSignals().isMdr();
       case OPC:
-        return nextInstruction != null && nextInstruction.getCBusSignals().isOpc();
+        return instruction.getCBusSignals().isOpc();
       case PC:
-        return nextInstruction != null && nextInstruction.getCBusSignals().isPc();
+        return instruction.getCBusSignals().isPc();
       case SP:
-        return nextInstruction != null && nextInstruction.getCBusSignals().isSp();
+        return instruction.getCBusSignals().isSp();
       case TOS:
-        return nextInstruction != null && nextInstruction.getCBusSignals().isTos();
+        return instruction.getCBusSignals().isTos();
       default:
-        throw new IllegalStateException("Unknown register: " + getRegister());
+        return false;
     }
+  }
+
+  /**
+   * Returns whether the instruction that has been executed last by the processor will set a value for the
+   * {@link Register} this breakpoint watches.
+   * 
+   * @since Date: Apr 11, 2012
+   * @param instruction the instruction to check, if it'll set a value for the watched {@link Register}, when the next
+   *        tick'll be done by the processor.
+   * @return <code>true</code> if the given instruction will set a value for the watched {@link Register},<br>
+   *         or <code>false</code> otherwise
+   */
+  private boolean isRegisterWrittenByCurrentInstruction(final MicroInstruction instruction) {
+    if (getRegister() == Register.MBR || getRegister() == Register.MBRU) {
+      return instruction.getMemorySignals().isFetch();
+    }
+    if (getRegister() == Register.MDR) {
+      return instruction.getMemorySignals().isRead();
+    }
+    return false;
   }
 
   @Override

@@ -77,7 +77,7 @@ public final class BreakpointManager {
     if (r != null && val != null) {
       final Breakpoint bp = new RegisterBreakpoint(r, val);
       if (this.breakPoints.contains(bp)) {
-        LOGGER.fine("adding '" + Text.BREAKPOINT_REGISTER.text("", r, val) + "' that already exists..");
+        logAlreadyExistingBreakpoint(Text.BREAKPOINT_REGISTER.text("", r, val));
       } else {
         this.breakPoints.add(bp);
       }
@@ -94,7 +94,7 @@ public final class BreakpointManager {
     if (r != null) {
       final Breakpoint bp = new RegisterWriteBreakpoint(r);
       if (this.breakPoints.contains(bp)) {
-        LOGGER.fine("adding '" + Text.BREAKPOINT_WRITE_REGISTER.text("", r) + "' that already exists..");
+        logAlreadyExistingBreakpoint(Text.BREAKPOINT_WRITE_REGISTER.text("", r));
       } else {
         this.breakPoints.add(bp);
       }
@@ -111,7 +111,7 @@ public final class BreakpointManager {
     if (line != null) {
       final Breakpoint bp = new MicroBreakpoint(line.intValue());
       if (this.breakPoints.contains(bp)) {
-        LOGGER.fine("adding '" + Text.BREAKPOINT_MICRO.text("", line) + "' that already exists..");
+        logAlreadyExistingBreakpoint(Text.BREAKPOINT_MICRO.text("", line));
       } else {
         this.breakPoints.add(bp);
       }
@@ -128,11 +128,22 @@ public final class BreakpointManager {
     if (line != null) {
       final Breakpoint bp = new MacroBreakpoint(line.intValue());
       if (this.breakPoints.contains(bp)) {
-        LOGGER.fine("adding '" + Text.BREAKPOINT_MACRO.text("", line) + "' that already exists..");
+        logAlreadyExistingBreakpoint(Text.BREAKPOINT_MACRO.text("", line));
       } else {
         this.breakPoints.add(bp);
       }
     }
+  }
+
+  /**
+   * Logs that a breakpoint is being added that already existed. The duplicate breakpoint is described by the given
+   * {@link String}.
+   * 
+   * @since Date: Apr 11, 2012
+   * @param description the {@link String} that describes the duplicate breakpoint
+   */
+  private void logAlreadyExistingBreakpoint(final String description) {
+    LOGGER.fine("adding '" + description + "' that already exists..");
   }
 
   /**
