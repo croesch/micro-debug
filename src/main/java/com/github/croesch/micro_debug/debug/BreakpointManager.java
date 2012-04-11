@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.i18n.Text;
+import com.github.croesch.micro_debug.mic1.controlstore.MicroInstruction;
 import com.github.croesch.micro_debug.mic1.register.Register;
 
 /**
@@ -48,12 +49,17 @@ public final class BreakpointManager {
    * @since Date: Jan 27, 2012
    * @param microLine the number of the line in micro code being executed next
    * @param macroLine the number of the line in macro code being executed next
+   * @param currentInstruction the current (last executed) {@link MicroInstruction}
+   * @param nextInstruction the next (to be executed) {@link MicroInstruction}
    * @return <code>true</code> if a break point is met,<br>
    *         <code>false</code> otherwise
    */
-  public boolean isBreakpoint(final int microLine, final int macroLine) {
+  public boolean isBreakpoint(final int microLine,
+                              final int macroLine,
+                              final MicroInstruction currentInstruction,
+                              final MicroInstruction nextInstruction) {
     for (final Breakpoint bp : this.breakPoints) {
-      if (bp.isConditionMet(microLine, macroLine)) {
+      if (bp.isConditionMet(microLine, macroLine, currentInstruction, nextInstruction)) {
         return true;
       }
     }

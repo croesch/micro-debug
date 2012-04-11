@@ -34,10 +34,15 @@ public interface IProcessorInterpreter {
    * @since Date: Feb 13, 2012
    * @param microLine the number of the line in micro code being executed next
    * @param macroLine the number of the line in macro code being executed next
+   * @param currentInstruction the current (last executed) {@link MicroInstruction}
+   * @param nextInstruction the next (to be executed) {@link MicroInstruction}
    * @return <code>true</code> if the processor can continue executing instructions,<br>
    *         <code>false</code> otherwise
    */
-  boolean canContinue(final int microLine, final int macroLine);
+  boolean canContinue(final int microLine,
+                      final int macroLine,
+                      MicroInstruction currentInstruction,
+                      MicroInstruction nextInstruction);
 
   /**
    * Informs the interpreter that the processor has done one tick.

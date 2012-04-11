@@ -21,6 +21,7 @@ package com.github.croesch.micro_debug.debug;
 import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.i18n.Text;
+import com.github.croesch.micro_debug.mic1.controlstore.MicroInstruction;
 import com.github.croesch.micro_debug.settings.Settings;
 
 /**
@@ -42,7 +43,10 @@ final class MacroBreakpoint extends AbstractLineBreakpoint {
   }
 
   @Override
-  public boolean isConditionMet(final int microLine, final int macroLine) {
+  public boolean isConditionMet(final int microLine,
+                                final int macroLine,
+                                final MicroInstruction currentInstruction,
+                                final MicroInstruction nextInstruction) {
     return microLine == Settings.MIC1_MICRO_ADDRESS_IJVM.getValue() && macroLine == getLine();
   }
 

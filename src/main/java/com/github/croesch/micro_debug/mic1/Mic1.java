@@ -276,8 +276,9 @@ public final class Mic1 {
    */
   private boolean canContinue() {
     return !isHaltInstruction()
-           && (isFirstTick() || this.interpreter == null || this.interpreter.canContinue(this.mpcCalculator.getMpc(),
-                                                                                         Register.PC.getValue()));
+           && (isFirstTick() || this.interpreter == null || this.interpreter
+             .canContinue(this.mpcCalculator.getMpc(), Register.PC.getValue(), this.instruction,
+                          this.controlStore.getInstruction(this.mpcCalculator.getMpc())));
   }
 
   /**

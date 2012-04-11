@@ -77,11 +77,11 @@ public class MicroBreakpointTest extends DefaultTestCase {
   public void testIsConditionMet() {
     final MicroBreakpoint mbp = new MicroBreakpoint(12);
 
-    assertThat(mbp.isConditionMet(12, 0)).isTrue();
-    assertThat(mbp.isConditionMet(12, 12)).isTrue();
-    assertThat(mbp.isConditionMet(0, 12)).isFalse();
-    assertThat(mbp.isConditionMet(0, 0)).isFalse();
-    assertThat(mbp.isConditionMet(-12, 0)).isFalse();
+    assertThat(mbp.isConditionMet(12, 0, null, null)).isTrue();
+    assertThat(mbp.isConditionMet(12, 12, null, null)).isTrue();
+    assertThat(mbp.isConditionMet(0, 12, null, null)).isFalse();
+    assertThat(mbp.isConditionMet(0, 0, null, null)).isFalse();
+    assertThat(mbp.isConditionMet(-12, 0, null, null)).isFalse();
   }
 
   /**

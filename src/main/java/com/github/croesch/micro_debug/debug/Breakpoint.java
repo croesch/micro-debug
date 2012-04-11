@@ -18,6 +18,8 @@
  */
 package com.github.croesch.micro_debug.debug;
 
+import com.github.croesch.micro_debug.mic1.controlstore.MicroInstruction;
+
 /**
  * Represents a breakpoint in the debugger.
  * 
@@ -57,7 +59,12 @@ abstract class Breakpoint {
    * @since Date: Jan 30, 2012
    * @param microLine the number of the line in micro code being executed next
    * @param macroLine the number of the line in macro code being executed next
+   * @param currentInstruction the current (last executed) {@link MicroInstruction}
+   * @param nextInstruction the next (to be executed) {@link MicroInstruction}
    * @return <code>true</code>, if the condition of this breakpoint is met and the debugger should stop.
    */
-  abstract boolean isConditionMet(int microLine, int macroLine);
+  abstract boolean isConditionMet(int microLine,
+                                  int macroLine,
+                                  MicroInstruction currentInstruction,
+                                  MicroInstruction nextInstruction);
 }

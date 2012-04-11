@@ -78,11 +78,11 @@ public class MacroBreakpointTest extends DefaultTestCase {
   public void testIsConditionMet() {
     final MacroBreakpoint mbp = new MacroBreakpoint(12);
 
-    assertThat(mbp.isConditionMet(Settings.MIC1_MICRO_ADDRESS_IJVM.getValue(), 12)).isTrue();
-    assertThat(mbp.isConditionMet(Settings.MIC1_MICRO_ADDRESS_IJVM.getValue() - 1, 12)).isFalse();
-    assertThat(mbp.isConditionMet(Settings.MIC1_MICRO_ADDRESS_IJVM.getValue() + 1, 12)).isFalse();
-    assertThat(mbp.isConditionMet(Settings.MIC1_MICRO_ADDRESS_IJVM.getValue(), 0)).isFalse();
-    assertThat(mbp.isConditionMet(Settings.MIC1_MICRO_ADDRESS_IJVM.getValue(), -12)).isFalse();
+    assertThat(mbp.isConditionMet(Settings.MIC1_MICRO_ADDRESS_IJVM.getValue(), 12, null, null)).isTrue();
+    assertThat(mbp.isConditionMet(Settings.MIC1_MICRO_ADDRESS_IJVM.getValue() - 1, 12, null, null)).isFalse();
+    assertThat(mbp.isConditionMet(Settings.MIC1_MICRO_ADDRESS_IJVM.getValue() + 1, 12, null, null)).isFalse();
+    assertThat(mbp.isConditionMet(Settings.MIC1_MICRO_ADDRESS_IJVM.getValue(), 0, null, null)).isFalse();
+    assertThat(mbp.isConditionMet(Settings.MIC1_MICRO_ADDRESS_IJVM.getValue(), -12, null, null)).isFalse();
   }
 
   /**

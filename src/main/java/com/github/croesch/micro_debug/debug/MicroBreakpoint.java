@@ -21,6 +21,7 @@ package com.github.croesch.micro_debug.debug;
 import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.i18n.Text;
+import com.github.croesch.micro_debug.mic1.controlstore.MicroInstruction;
 
 /**
  * A breakpoint for a specific line in micro code.
@@ -41,7 +42,10 @@ final class MicroBreakpoint extends AbstractLineBreakpoint {
   }
 
   @Override
-  public boolean isConditionMet(final int microLine, final int macroLine) {
+  public boolean isConditionMet(final int microLine,
+                                final int macroLine,
+                                final MicroInstruction currentInstruction,
+                                final MicroInstruction nextInstruction) {
     return microLine == getLine();
   }
 

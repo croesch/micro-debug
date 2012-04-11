@@ -63,40 +63,40 @@ public class BreakpointManagerTest extends DefaultTestCase {
     for (final Register r : Register.values()) {
       r.setValue(0);
     }
-    assertThat(this.bpm.isBreakpoint(0, 0)).isFalse();
+    assertThat(this.bpm.isBreakpoint(0, 0, null, null)).isFalse();
     for (final Register r : Register.values()) {
       this.bpm.addRegisterBreakpoint(r, Integer.valueOf(1));
-      assertThat(this.bpm.isBreakpoint(0, 0)).isFalse();
+      assertThat(this.bpm.isBreakpoint(0, 0, null, null)).isFalse();
       r.setValue(1);
-      assertThat(this.bpm.isBreakpoint(0, 0)).isTrue();
+      assertThat(this.bpm.isBreakpoint(0, 0, null, null)).isTrue();
       r.setValue(0);
       printStep();
     }
     printLoopEnd();
     for (final Register r : Register.values()) {
       this.bpm.addRegisterBreakpoint(r, Integer.valueOf(2));
-      assertThat(this.bpm.isBreakpoint(0, 0)).isFalse();
+      assertThat(this.bpm.isBreakpoint(0, 0, null, null)).isFalse();
       r.setValue(1);
-      assertThat(this.bpm.isBreakpoint(0, 0)).isTrue();
+      assertThat(this.bpm.isBreakpoint(0, 0, null, null)).isTrue();
       r.setValue(2);
-      assertThat(this.bpm.isBreakpoint(0, 0)).isTrue();
+      assertThat(this.bpm.isBreakpoint(0, 0, null, null)).isTrue();
       r.setValue(0);
       printStep();
     }
     printLoopEnd();
     for (int i = -17; i < 43; ++i) {
       this.bpm.addMicroBreakpoint(i);
-      assertThat(this.bpm.isBreakpoint(i + 1, 0)).isFalse();
-      assertThat(this.bpm.isBreakpoint(i, 0)).isTrue();
-      assertThat(this.bpm.isBreakpoint(i, i)).isTrue();
+      assertThat(this.bpm.isBreakpoint(i + 1, 0, null, null)).isFalse();
+      assertThat(this.bpm.isBreakpoint(i, 0, null, null)).isTrue();
+      assertThat(this.bpm.isBreakpoint(i, i, null, null)).isTrue();
       printStep();
     }
     printLoopEnd();
     for (int i = -17; i < 43; ++i) {
       this.bpm.addMacroBreakpoint(i);
-      assertThat(this.bpm.isBreakpoint(370, i)).isFalse();
-      assertThat(this.bpm.isBreakpoint(-41, i)).isFalse();
-      assertThat(this.bpm.isBreakpoint(Settings.MIC1_MICRO_ADDRESS_IJVM.getValue(), i)).isTrue();
+      assertThat(this.bpm.isBreakpoint(370, i, null, null)).isFalse();
+      assertThat(this.bpm.isBreakpoint(-41, i, null, null)).isFalse();
+      assertThat(this.bpm.isBreakpoint(Settings.MIC1_MICRO_ADDRESS_IJVM.getValue(), i, null, null)).isTrue();
       printStep();
     }
     printEndOfMethod();

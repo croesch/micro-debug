@@ -303,8 +303,11 @@ public final class Mic1Interpreter implements IProcessorInterpreter {
   /**
    * {@inheritDoc}
    */
-  public boolean canContinue(final int microLine, final int macroLine) {
-    return !this.bpm.isBreakpoint(microLine, macroLine);
+  public boolean canContinue(final int microLine,
+                             final int macroLine,
+                             final MicroInstruction currentInstruction,
+                             final MicroInstruction nextInstruction) {
+    return !this.bpm.isBreakpoint(microLine, macroLine, currentInstruction, nextInstruction);
   }
 
   /**
