@@ -30,11 +30,7 @@ import com.github.croesch.micro_debug.mic1.register.Register;
  * @author croesch
  * @since Date: Jan 30, 2012
  */
-final class RegisterBreakpoint extends Breakpoint {
-
-  /** the register that is checked for the value */
-  @NotNull
-  private final Register register;
+final class RegisterBreakpoint extends AbstractRegisterBreakpoint {
 
   /** the value that is the condition for this breakpoint */
   private final int val;
@@ -47,10 +43,7 @@ final class RegisterBreakpoint extends Breakpoint {
    * @param v the value that the given {@link Register} should have, that is the breakpoint condition
    */
   RegisterBreakpoint(final Register r, final int v) {
-    if (r == null) {
-      throw new IllegalArgumentException();
-    }
-    this.register = r;
+    super(r);
     this.val = v;
   }
 
@@ -59,24 +52,13 @@ final class RegisterBreakpoint extends Breakpoint {
                                 final int macroLine,
                                 final MicroInstruction currentInstruction,
                                 final MicroInstruction nextInstruction) {
-    return this.register.getValue() == this.val;
+    return getRegister().getValue() == this.val;
   }
 
   @Override
   @NotNull
   public String toString() {
-    return Text.BREAKPOINT_REGISTER.text(getId(), this.register, Utils.toHexString(this.val));
-  }
-
-  /**
-   * Returns the {@link Register} that is part of the condition.
-   * 
-   * @since Date: Jan 30, 2012
-   * @return the {@link Register} to check for the condition value.
-   */
-  @NotNull
-  Register getRegister() {
-    return this.register;
+    return Text.BREAKPOINT_REGISTER.text(getId(), getRegister(), Utils.toHexString(this.val));
   }
 
   /**
@@ -93,7 +75,7 @@ final class RegisterBreakpoint extends Breakpoint {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + this.register.hashCode();
+    result = prime * result + getRegister().hashCode();
     result = prime * result + this.val;
     return result;
   }
@@ -110,7 +92,7 @@ final class RegisterBreakpoint extends Breakpoint {
       return false;
     }
     final RegisterBreakpoint other = (RegisterBreakpoint) obj;
-    if (this.register != other.register) {
+    if (getRegister() != other.getRegister()) {
       return false;
     }
     if (this.val != other.val) {
