@@ -37,7 +37,7 @@ public final class XMLPropertiesProvider extends APropertiesProvider {
    * @since Date: Feb 22, 2012
    */
   private XMLPropertiesProvider() {
-    // private constructor
+    super('-');
   }
 
   @Override

@@ -37,7 +37,7 @@ public final class PropertiesProvider extends APropertiesProvider {
    * @since Date: Feb 23, 2012
    */
   private PropertiesProvider() {
-    // private constructor
+    super('.');
   }
 
   @Override

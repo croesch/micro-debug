@@ -38,6 +38,19 @@ public abstract class APropertiesProvider {
   @NotNull
   private final Map<String, Properties> propertiesMap = new ConcurrentHashMap<String, Properties>();
 
+  /** the character that is used to replace _ in the key */
+  private final char separatingChar;
+
+  /**
+   * Constructs a new properties provider that can manage different files.
+   * 
+   * @since Date: Apr 14, 2012
+   * @param separator the character to separate different parts in the key.
+   */
+  public APropertiesProvider(final char separator) {
+    this.separatingChar = separator;
+  }
+
   /**
    * Replaces all placeholders in the given string, with the given arguments.
    * 
@@ -71,7 +84,7 @@ public abstract class APropertiesProvider {
     if (file == null || key == null) {
       return null;
     }
-    final String preparedKey = key.toLowerCase(Locale.GERMAN).replace('_', '-');
+    final String preparedKey = key.toLowerCase(Locale.GERMAN).replace('_', this.separatingChar);
     return getProperties(file).getProperty(preparedKey);
   }
 
