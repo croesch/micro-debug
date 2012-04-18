@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 import com.github.croesch.micro_debug.annotation.NotNull;
+import com.github.croesch.micro_debug.annotation.Nullable;
 import com.github.croesch.micro_debug.commons.AbstractCodeContainer;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.commons.Utils;
@@ -104,9 +105,20 @@ public final class MicroControlStore extends AbstractCodeContainer {
    * @return the {@link MicroInstruction} that is stored at the given address, or <code>null</code> if there is no
    *         instruction at the given address.
    */
+  @Nullable
   public MicroInstruction getInstruction(final int mpc) {
     final int nineBitMask = 0x1FF;
     return this.store[mpc & nineBitMask];
+  }
+
+  /**
+   * Returns the size of this store - the number of instructions that this store contains.
+   * 
+   * @since Date: Apr 18, 2012
+   * @return the number of {@link MicroInstruction}s this store can contain
+   */
+  public int getSize() {
+    return INSTRUCTIONS_PER_STORE;
   }
 
   @Override

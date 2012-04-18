@@ -40,6 +40,8 @@ import com.github.croesch.micro_debug.mic1.register.Register;
  */
 public class MicroControlStoreTest extends DefaultTestCase {
 
+  private static final int STORE_SIZE = 512;
+
   private MicroControlStore store;
 
   @Override
@@ -101,8 +103,8 @@ public class MicroControlStoreTest extends DefaultTestCase {
 
   @Test(expected = MicroFileFormatException.class)
   public void testConstructor_TooBigFile() throws MicroFileFormatException {
-    // magic number + 512 * 5 byte + 5 byte to have the first instruction and the file is too big.
-    final byte[] bs = new byte[4 + 513 * 5];
+    // magic number + STORE_SIZE * 5 byte + 5 byte to have the first instruction and the file is too big.
+    final byte[] bs = new byte[4 + (STORE_SIZE + 1) * 5];
     bs[0] = 0x12;
     bs[1] = 0x34;
     bs[2] = 0x56;
@@ -112,12 +114,18 @@ public class MicroControlStoreTest extends DefaultTestCase {
   }
 
   @Test
+  public void testSize() {
+    printlnMethodName();
+    assertThat(this.store.getSize()).isEqualTo(STORE_SIZE);
+  }
+
+  @Test
   public void testDecodingOfBinaryFile() throws IOException {
     printMethodName();
 
     final BufferedReader expectedFile = new BufferedReader(new InputStreamReader(ClassLoader.getSystemResourceAsStream("mic1/mic1ijvm.txt")));
 
-    for (int i = 0; i < 512; ++i) {
+    for (int i = 0; i < STORE_SIZE; ++i) {
       assertThat(MicroInstructionDecoder.decode(this.store.getInstruction(i))).isEqualTo(expectedFile.readLine());
       printStep();
     }
