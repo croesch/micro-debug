@@ -132,6 +132,31 @@ public final class BreakpointManager {
   }
 
   /**
+   * Returns whether there is a breakpoint for the given line number in the micro code.
+   * 
+   * @since Date: Apr 18, 2012
+   * @param line the line number in micro code to check for a breakpoint
+   * @return <code>true</code> if the manager contains a breakpoint for the micro code in the given line,<or>
+   *         <code>false</code> otherwise
+   */
+  public boolean isMicroBreakpoint(final Integer line) {
+    return line != null && this.breakPoints.contains(new MicroBreakpoint(line.intValue()));
+  }
+
+  /**
+   * Removes a breakpoint for the given line number in the micro code.
+   * 
+   * @since Date: Apr 18, 2012
+   * @param line the line number in micro code the debugger shouldn't break at anymore,<br>
+   *        if there has been a breakpoint or not, the debugger won't stop at the given line after calling this
+   */
+  public void removeMicroBreakpoint(final Integer line) {
+    if (line != null) {
+      this.breakPoints.remove(new MicroBreakpoint(line.intValue()));
+    }
+  }
+
+  /**
    * Adds a breakpoint for the given line number in the macro code.
    * 
    * @since Date: Feb 4, 2012
@@ -145,6 +170,31 @@ public final class BreakpointManager {
       } else {
         this.breakPoints.add(bp);
       }
+    }
+  }
+
+  /**
+   * Returns whether there is a breakpoint for the given line number in the macro code.
+   * 
+   * @since Date: Apr 18, 2012
+   * @param line the line number in macro code to check for a breakpoint
+   * @return <code>true</code> if the manager contains a breakpoint for the macro code in the given line,<or>
+   *         <code>false</code> otherwise
+   */
+  public boolean isMacroBreakpoint(final Integer line) {
+    return line != null && this.breakPoints.contains(new MacroBreakpoint(line.intValue()));
+  }
+
+  /**
+   * Removes a breakpoint for the given line number in the macro code.
+   * 
+   * @since Date: Apr 18, 2012
+   * @param line the line number in macro code the debugger shouldn't break at anymore,<br>
+   *        if there has been a breakpoint or not, the debugger won't stop at the given line after calling this
+   */
+  public void removeMacroBreakpoint(final Integer line) {
+    if (line != null) {
+      this.breakPoints.remove(new MacroBreakpoint(line.intValue()));
     }
   }
 

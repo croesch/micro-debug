@@ -287,4 +287,58 @@ public class BreakpointManagerTest extends DefaultTestCase {
                                                + getLineSeparator() + Text.BREAKPOINT_MACRO.text("[0-9]+", "0xD")
                                                + getLineSeparator());
   }
+
+  @Test
+  public void testMicroBreakpoints() {
+    printMethodName();
+
+    this.bpm.addMicroBreakpoint(null);
+    assertThat(this.bpm.isMicroBreakpoint(null)).isFalse();
+    this.bpm.removeMicroBreakpoint(null);
+
+    for (int i = -50; i < 100; ++i) {
+      this.bpm.addMicroBreakpoint(i);
+      assertThat(this.bpm.isMicroBreakpoint(Integer.valueOf(i + 1))).isFalse();
+      assertThat(this.bpm.isMicroBreakpoint(Integer.valueOf(i))).isTrue();
+      printStep();
+    }
+
+    printLoopEnd();
+
+    for (int i = -50; i < 100; ++i) {
+      assertThat(this.bpm.isMicroBreakpoint(Integer.valueOf(i))).isTrue();
+      this.bpm.removeMicroBreakpoint(i);
+      assertThat(this.bpm.isMicroBreakpoint(Integer.valueOf(i))).isFalse();
+      printStep();
+    }
+
+    printEndOfMethod();
+  }
+
+  @Test
+  public void testMacroBreakpoints() {
+    printMethodName();
+
+    this.bpm.addMacroBreakpoint(null);
+    assertThat(this.bpm.isMacroBreakpoint(null)).isFalse();
+    this.bpm.removeMacroBreakpoint(null);
+
+    for (int i = -50; i < 100; ++i) {
+      this.bpm.addMacroBreakpoint(i);
+      assertThat(this.bpm.isMacroBreakpoint(Integer.valueOf(i + 1))).isFalse();
+      assertThat(this.bpm.isMacroBreakpoint(Integer.valueOf(i))).isTrue();
+      printStep();
+    }
+
+    printLoopEnd();
+
+    for (int i = -50; i < 100; ++i) {
+      assertThat(this.bpm.isMacroBreakpoint(Integer.valueOf(i))).isTrue();
+      this.bpm.removeMacroBreakpoint(i);
+      assertThat(this.bpm.isMacroBreakpoint(Integer.valueOf(i))).isFalse();
+      printStep();
+    }
+
+    printEndOfMethod();
+  }
 }
