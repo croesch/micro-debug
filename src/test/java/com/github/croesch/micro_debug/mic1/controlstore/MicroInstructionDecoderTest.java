@@ -42,12 +42,19 @@ public class MicroInstructionDecoderTest extends DefaultTestCase {
   @Override
   protected void setUpDetails() {
     this.instruction = new MicroInstruction(0,
-                                           new JMPSignalSet(),
-                                           new ALUSignalSet(),
-                                           new CBusSignalSet(),
-                                           new MemorySignalSet(),
-                                           null);
+                                            new JMPSignalSet(),
+                                            new ALUSignalSet(),
+                                            new CBusSignalSet(),
+                                            new MemorySignalSet(),
+                                            null);
     this.stringBuilder = new StringBuilder("[...]");
+  }
+
+  @Test
+  public void testNullInstruction() {
+    printlnMethodName();
+
+    assertThat(MicroInstructionDecoder.decode(null)).isEqualTo("nop");
   }
 
   @Test
@@ -55,19 +62,19 @@ public class MicroInstructionDecoderTest extends DefaultTestCase {
     printMethodName();
 
     this.instruction = new MicroInstruction(0,
-                                           new JMPSignalSet(),
-                                           new ALUSignalSet(),
-                                           new CBusSignalSet(),
-                                           new MemorySignalSet(),
-                                           Register.MDR);
+                                            new JMPSignalSet(),
+                                            new ALUSignalSet(),
+                                            new CBusSignalSet(),
+                                            new MemorySignalSet(),
+                                            Register.MDR);
     assertThat(MicroInstructionDecoder.decode(this.instruction)).isEqualTo("goto 0x0");
 
     this.instruction = new MicroInstruction(144,
-                                           new JMPSignalSet(),
-                                           new ALUSignalSet(),
-                                           new CBusSignalSet(),
-                                           new MemorySignalSet(),
-                                           Register.SP);
+                                            new JMPSignalSet(),
+                                            new ALUSignalSet(),
+                                            new CBusSignalSet(),
+                                            new MemorySignalSet(),
+                                            Register.SP);
     assertThat(MicroInstructionDecoder.decode(this.instruction)).isEqualTo("goto 0x90");
 
     final JMPSignalSet jmpSet = new JMPSignalSet();

@@ -62,6 +62,10 @@ public final class MicroInstructionDecoder {
    */
   @NotNull
   public static String decode(final MicroInstruction instruction) {
+    if (instruction == null) {
+      return "nop";
+    }
+
     StringBuilder decodedInstruction = new StringBuilder();
     final String aBusValue = Register.H.name();
     final String bBusValue = decodeBBusBits(instruction.getbBusSelect());
@@ -72,10 +76,6 @@ public final class MicroInstructionDecoder {
     decodeMemoryBits(instruction.getMemorySignals(), decodedInstruction);
     decodeJMPAndAddress(instruction.getJmpSignals(), instruction.getNextAddress(), decodedInstruction);
 
-    // TODO decide when to write 'nop'
-    //    if (s.toString().equals("0")) {
-    //      s = new StringBuilder("nop");
-    //    } else 
     if (decodedInstruction.toString().startsWith("0;")) {
       decodedInstruction = new StringBuilder(decodedInstruction.toString().substring(2));
     }
