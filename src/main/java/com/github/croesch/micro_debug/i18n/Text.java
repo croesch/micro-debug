@@ -63,6 +63,8 @@ public enum Text {
   /** the text to display the user an empty stack */
   STACK_EMPTY,
 
+  /** the text to print only a line of macro code - without line number */
+  MACRO_CODE_PLAIN,
   /** the text to print a single line of macro code */
   MACRO_CODE_LINE,
   /** the text to print a single line of micro code */

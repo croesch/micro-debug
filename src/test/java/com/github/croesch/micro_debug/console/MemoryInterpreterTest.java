@@ -21,10 +21,15 @@ package com.github.croesch.micro_debug.console;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 
 import com.github.croesch.micro_debug.DefaultTestCase;
+import com.github.croesch.micro_debug.commons.Utils;
 import com.github.croesch.micro_debug.error.FileFormatException;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.mem.Memory;
@@ -253,5 +258,31 @@ public class MemoryInterpreterTest extends DefaultTestCase {
 
     this.interpreter.printStack(1);
     assertThat(out.toString()).isEqualTo(Text.STACK_EMPTY.text() + getLineSeparator());
+  }
+
+  @Test
+  public void testFillWidthCode_NullLineNumbers() throws IOException {
+    printlnMethodName();
+    final Map<Integer, String> codeMap = this.interpreter.getCodeMap();
+
+    final List<Integer> lines = new ArrayList<Integer>();
+    for (final Integer line : codeMap.keySet()) {
+      lines.add(line);
+    }
+    Collections.sort(lines);
+
+    final StringBuilder sb = new StringBuilder();
+    for (final Integer line : lines) {
+      final String hexString = Utils.toHexString(line.intValue());
+      sb.append(String.format("%" + Settings.MIC1_MEM_MACRO_ADDR_WIDTH.getValue() + "s", hexString));
+      sb.append(": ").append(codeMap.get(line)).append(getLineSeparator());
+    }
+
+    assertThat(sb.toString()).isEqualTo(readFile("mic1/add.ijvm.dis").toString());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testNullMemory() {
+    new MemoryInterpreter(null);
   }
 }

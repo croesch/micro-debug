@@ -19,6 +19,7 @@
 package com.github.croesch.micro_debug.console;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +49,7 @@ public final class MemoryInterpreter extends AbstractCodeContainer {
   private Map<Integer, IJVMCommand> commands = null;
 
   /** the memory to interprete */
-  @Nullable
+  @NotNull
   private final Memory memory;
 
   /**
@@ -58,6 +59,10 @@ public final class MemoryInterpreter extends AbstractCodeContainer {
    * @param mem the memory to interprete
    */
   public MemoryInterpreter(final Memory mem) {
+    if (mem == null) {
+      throw new IllegalArgumentException();
+    }
+
     this.memory = mem;
   }
 
@@ -259,5 +264,46 @@ public final class MemoryInterpreter extends AbstractCodeContainer {
       --refEnd;
     }
     return refEnd;
+  }
+
+  /**
+   * Returns a {@link Map} containing for each line number in the macro code a {@link String} representing the code
+   * line.
+   * 
+   * @since Date: Apr 19, 2012
+   * @return a {@link Map} containing the line numbers of macro code and the string representation of that lines.
+   */
+  @NotNull
+  public Map<Integer, String> getCodeMap() {
+    final Map<Integer, String> map = new HashMap<Integer, String>();
+
+    for (int line = getFirstPossibleCodeAddress(); line <= getLastPossibleCodeAddress(); ++line) {
+      line += addLineToMap(map, line);
+    }
+
+    return map;
+  }
+
+  /**
+   * Creates the string representation of the given line and adds it to the given code {@link Map}.
+   * 
+   * @since Date: Apr 19, 2012
+   * @param codeMap the map that contains line numbers and string representations of the lines
+   * @param line the number of the line to add to the map
+   * @return the number of bytes read as arguments of the command in the given line
+   */
+  private int addLineToMap(final Map<Integer, String> codeMap, final int line) {
+    final StringBuilder formattedArgs = new StringBuilder();
+
+    final int cmdCode = this.memory.getByte(line);
+    final IJVMCommand cmd = lookupCommand(cmdCode);
+
+    final String name = buildNameForCommand(cmd);
+    final int bytesRead = readArgumentsIfAny(line, cmd, formattedArgs);
+
+    final String formattedCmdCode = formatIntToHex(cmdCode, Settings.MIC1_MEM_MICRO_ADDR_WIDTH.getValue());
+
+    codeMap.put(Integer.valueOf(line), Text.MACRO_CODE_PLAIN.text(formattedCmdCode, name, formattedArgs.toString()));
+    return bytesRead;
   }
 }

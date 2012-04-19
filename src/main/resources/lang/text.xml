@@ -43,6 +43,7 @@
 	<entry key="stack-content">Stack value #{0} [{1}]: {2}</entry>
 	<entry key="stack-empty">Stack doesn't contain any elements, nothing to display.</entry>
 
+	<entry key="macro-code-plain">[{0}] {1} {2}</entry>
 	<entry key="macro-code-line">{0}: [{1}] {2} {3}</entry>
 	<entry key="micro-code-line">{0}: {1}</entry>
 	
