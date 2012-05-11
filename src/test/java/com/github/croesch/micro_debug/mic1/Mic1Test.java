@@ -121,7 +121,9 @@ public class Mic1Test extends DefaultTestCase {
   public void testMicroStepOne() {
     printMethodName();
     for (int i = 0; i < 14; ++i) {
+      assertThat(this.processor.getNextMpc()).isEqualTo(i);
       this.processor.microStep();
+      assertThat(this.processor.getOldMpc()).isEqualTo(i);
       assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
       out.reset();
       printStep();
@@ -644,5 +646,111 @@ public class Mic1Test extends DefaultTestCase {
 
     assertThat(one).isEqualTo(one);
     assertThat(two).isEqualTo(two);
+  }
+
+  @Test
+  public void testMpc() throws FileFormatException {
+    printlnMethodName();
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
+
+    assertThat(this.processor.getNextMpc()).isEqualTo(0);
+    assertThat(this.processor.getOldMpc()).isEqualTo(-1);
+    this.processor.microStep();
+
+    assertThat(this.processor.getNextMpc()).isEqualTo(2);
+    assertThat(this.processor.getOldMpc()).isEqualTo(0);
+    this.processor.microStep();
+
+    assertThat(this.processor.getNextMpc()).isEqualTo(0);
+    assertThat(this.processor.getOldMpc()).isEqualTo(2);
+    this.processor.microStep();
+
+    assertThat(this.processor.getNextMpc()).isEqualTo(2);
+    assertThat(this.processor.getOldMpc()).isEqualTo(0);
+    this.processor.microStep();
+
+    assertThat(this.processor.getNextMpc()).isEqualTo(16);
+    assertThat(this.processor.getOldMpc()).isEqualTo(2);
+    this.processor.microStep();
+
+    assertThat(this.processor.getNextMpc()).isEqualTo(22);
+    assertThat(this.processor.getOldMpc()).isEqualTo(16);
+    this.processor.microStep();
+
+    assertThat(this.processor.getNextMpc()).isEqualTo(23);
+    assertThat(this.processor.getOldMpc()).isEqualTo(22);
+    this.processor.microStep();
+
+    assertThat(this.processor.getNextMpc()).isEqualTo(2);
+    assertThat(this.processor.getOldMpc()).isEqualTo(23);
+    this.processor.microStep();
+
+    assertThat(this.processor.getNextMpc()).isEqualTo(89);
+    assertThat(this.processor.getOldMpc()).isEqualTo(2);
+    this.processor.microStep();
+  }
+
+  @Test
+  public void testMacroAddress() throws FileFormatException {
+    printlnMethodName();
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
+
+    assertThat(this.processor.getNextMacroAddress()).isEqualTo(-1);
+    assertThat(this.processor.getLastMacroAddress()).isEqualTo(-1);
+    this.processor.microStep();
+
+    assertThat(this.processor.getNextMacroAddress()).isEqualTo(-1);
+    assertThat(this.processor.getLastMacroAddress()).isEqualTo(-1);
+    this.processor.microStep();
+
+    assertThat(this.processor.getNextMacroAddress()).isEqualTo(0);
+    assertThat(this.processor.getLastMacroAddress()).isEqualTo(-1);
+    this.processor.microStep();
+
+    assertThat(this.processor.getNextMacroAddress()).isEqualTo(0);
+    assertThat(this.processor.getLastMacroAddress()).isEqualTo(-1);
+    this.processor.microStep();
+
+    assertThat(this.processor.getNextMacroAddress()).isEqualTo(1);
+    assertThat(this.processor.getLastMacroAddress()).isEqualTo(0);
+    this.processor.microStep();
+
+    assertThat(this.processor.getNextMacroAddress()).isEqualTo(1);
+    assertThat(this.processor.getLastMacroAddress()).isEqualTo(0);
+    this.processor.microStep();
+
+    assertThat(this.processor.getNextMacroAddress()).isEqualTo(2);
+    assertThat(this.processor.getLastMacroAddress()).isEqualTo(0);
+    this.processor.microStep();
+
+    assertThat(this.processor.getNextMacroAddress()).isEqualTo(2);
+    assertThat(this.processor.getLastMacroAddress()).isEqualTo(0);
+    this.processor.microStep();
+
+    assertThat(this.processor.getNextMacroAddress()).isEqualTo(3);
+    assertThat(this.processor.getLastMacroAddress()).isEqualTo(2);
+    this.processor.microStep();
+
+    assertThat(this.processor.getNextMacroAddress()).isEqualTo(3);
+    assertThat(this.processor.getLastMacroAddress()).isEqualTo(2);
+    this.processor.step();
+
+    assertThat(this.processor.getNextMacroAddress()).isEqualTo(3);
+    assertThat(this.processor.getLastMacroAddress()).isEqualTo(2);
+    this.processor.step();
+
+    assertThat(this.processor.getNextMacroAddress()).isEqualTo(5);
+    assertThat(this.processor.getLastMacroAddress()).isEqualTo(3);
+    this.processor.step();
+
+    assertThat(this.processor.getNextMacroAddress()).isEqualTo(7);
+    assertThat(this.processor.getLastMacroAddress()).isEqualTo(5);
+    this.processor.step();
+
+    assertThat(this.processor.getNextMacroAddress()).isEqualTo(9);
+    assertThat(this.processor.getLastMacroAddress()).isEqualTo(7);
+    this.processor.microStep();
+    assertThat(this.processor.getNextMacroAddress()).isEqualTo(10);
+    assertThat(this.processor.getLastMacroAddress()).isEqualTo(9);
   }
 }

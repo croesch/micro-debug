@@ -103,7 +103,7 @@ public final class Mic1 {
    * @throws MicroFileFormatException if the micro assembler program has invalid format
    */
   public Mic1(final InputStream micAsm, final InputStream asm) throws MacroFileFormatException,
-          MicroFileFormatException {
+                                                              MicroFileFormatException {
 
     this.controlStore = new MicroControlStore(micAsm);
     this.memory = new Memory(Settings.MIC1_MEM_MACRO_MAXSIZE.getValue(), asm);
@@ -176,7 +176,7 @@ public final class Mic1 {
   void doTick() {
     final boolean assemblerCodeFetchingInstruction = isAssemblerCodeFetchingInstruction();
     if (assemblerCodeFetchingInstruction) {
-      this.lastMacroAddress = Register.PC.getValue();
+      this.lastMacroAddress = getNextMacroAddress();
     }
 
     doClock1();
@@ -195,9 +195,9 @@ public final class Mic1 {
    *         method.
    */
   private boolean isAssemblerCodeFetchingInstruction() {
-    return this.mpcCalculator.getMpc() == Settings.MIC1_MICRO_ADDRESS_IJVM.getValue()
+    return getNextMpc() == Settings.MIC1_MICRO_ADDRESS_IJVM.getValue()
     // Going to first instruction needs two invocations of this instruction so check if it's the first one
-           && Register.PC.getValue() != Settings.MIC1_REGISTER_PC_DEFVAL.getValue();
+           && getNextMacroAddress() != Settings.MIC1_REGISTER_PC_DEFVAL.getValue();
   }
 
   /**
@@ -276,9 +276,10 @@ public final class Mic1 {
    */
   private boolean canContinue() {
     return !isHaltInstruction()
-           && (isFirstTick() || this.interpreter == null || this.interpreter
-             .canContinue(this.mpcCalculator.getMpc(), Register.PC.getValue(), this.instruction,
-                          this.controlStore.getInstruction(this.mpcCalculator.getMpc())));
+           && (isFirstTick() || this.interpreter == null || this.interpreter.canContinue(getNextMpc(),
+                                                                                         getNextMacroAddress(),
+                                                                                         this.instruction,
+                                                                                         this.controlStore.getInstruction(getNextMpc())));
   }
 
   /**
@@ -316,8 +317,8 @@ public final class Mic1 {
    * @since Date: Jan 14, 2012
    */
   private void fetchNextInstruction() {
-    this.instruction = this.controlStore.getInstruction(this.mpcCalculator.getMpc());
-    this.oldMpc = this.mpcCalculator.getMpc();
+    this.instruction = this.controlStore.getInstruction(getNextMpc());
+    this.oldMpc = getNextMpc();
   }
 
   /**
@@ -453,14 +454,14 @@ public final class Mic1 {
     boolean halt = false;
 
     // instruction should be >null< only at the beginning of the program
-    if (this.instruction != null && this.instruction.isNopOrHalt() && this.mpcCalculator.getMpc() == this.oldMpc) {
+    if (this.instruction != null && this.instruction.isNopOrHalt() && getNextMpc() == this.oldMpc) {
       // regular halt condition
       halt = true;
-    } else if (this.controlStore.getInstruction(this.mpcCalculator.getMpc()) == null) {
+    } else if (this.controlStore.getInstruction(getNextMpc()) == null) {
       // instruction points to an undefined position
       LOGGER.warning("instruction at " + Utils.toHexString(this.oldMpc) + " ["
                      + MicroInstructionDecoder.decode(this.instruction) + "] points to an undefined address: "
-                     + Utils.toHexString(this.mpcCalculator.getMpc()));
+                     + Utils.toHexString(getNextMpc()));
       halt = true;
     }
 
@@ -525,6 +526,16 @@ public final class Mic1 {
   }
 
   /**
+   * Returns the address of the code line that'll be executed next.
+   * 
+   * @since Date: May 11, 2012
+   * @return the address of the code line that'll be executed next.
+   */
+  public int getNextMacroAddress() {
+    return Register.PC.getValue();
+  }
+
+  /**
    * Returns the address of the last executed micro code line.
    * 
    * @since Date: Feb 14, 2012
@@ -532,6 +543,16 @@ public final class Mic1 {
    */
   public int getOldMpc() {
     return this.oldMpc;
+  }
+
+  /**
+   * Returns the address of the micro code line that'll be executed by the next tick.
+   * 
+   * @since Date: May 11, 2012
+   * @return the address of the micro code line that'll be executed by the next tick.
+   */
+  public int getNextMpc() {
+    return this.mpcCalculator.getMpc();
   }
 
   /**
