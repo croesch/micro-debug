@@ -1,7 +1,7 @@
 Usage
 =====
 
-micro-debug is a debugger for the Mic-1 processor invented by *Andrew S. Tannenbaum*, [Structured Computer Organization, Fourth Edition](http://cw.prenhall.com/bookbind/pubbooks/tanenbaum2/) ([Prentice-Hall](http://www.prenhall.com/), 1998) and described by *Prof. Dr. Karl Stroetmann*. You can debug the assembler code and the micro assembler code, too.
+micro-debug is a debugger for the Mic-1 processor invented by *Andrew S. Tannenbaum*, [Structured Computer Organization, Fourth Edition](http://cw.prenhall.com/bookbind/pubbooks/tanenbaum2/) ([Prentice-Hall](http://www.prenhall.com/), 1998). You can debug the assembler code and the micro assembler code, too.
 
 This debugger has been developed for a seminar paper. The seminar paper is stored in [croesch/micro-debug-doc](https://github.com/croesch/micro-debug-doc).
 
