@@ -753,4 +753,63 @@ public class Mic1Test extends DefaultTestCase {
     assertThat(this.processor.getNextMacroAddress()).isEqualTo(10);
     assertThat(this.processor.getLastMacroAddress()).isEqualTo(9);
   }
+
+  @Test
+  public void testInterrupted() throws FileFormatException, InterruptedException {
+    printlnMethodName();
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
+
+    assertThat(this.processor.isInterrupted()).isFalse();
+    this.processor.interrupt();
+    assertThat(this.processor.isInterrupted()).isTrue();
+
+    this.processor.microStep();
+    assertThat(this.processor.isInterrupted()).isFalse();
+    this.processor.interrupt();
+    assertThat(this.processor.isInterrupted()).isTrue();
+
+    this.processor.microStep(2);
+    assertThat(this.processor.isInterrupted()).isFalse();
+    this.processor.interrupt();
+    assertThat(this.processor.isInterrupted()).isTrue();
+
+    this.processor.step();
+    assertThat(this.processor.isInterrupted()).isFalse();
+    this.processor.interrupt();
+    assertThat(this.processor.isInterrupted()).isTrue();
+
+    this.processor.step(2);
+    assertThat(this.processor.isInterrupted()).isFalse();
+    this.processor.interrupt();
+    assertThat(this.processor.isInterrupted()).isTrue();
+
+    new Thread(new Runnable() {
+      public void run() {
+        Mic1Test.this.processor.run();
+      }
+    }).start();
+    Thread.sleep(10);
+    assertThat(this.processor.isInterrupted()).isFalse();
+    this.processor.interrupt();
+    assertThat(this.processor.isInterrupted()).isTrue();
+  }
+
+  int ticks = Integer.MAX_VALUE;
+
+  @Test
+  public void testInterrupt() throws InterruptedException, FileFormatException {
+    printlnMethodName();
+
+    init("mic1/mic1ijvm2.mic1", "mic1/divtest.ijvm");
+
+    new Thread(new Runnable() {
+      public void run() {
+        Mic1Test.this.ticks = Mic1Test.this.processor.run();
+      }
+    }).start();
+    Thread.sleep(100);
+    this.processor.interrupt();
+    Thread.sleep(100);
+    assertThat(this.ticks).isLessThan(3965);
+  }
 }

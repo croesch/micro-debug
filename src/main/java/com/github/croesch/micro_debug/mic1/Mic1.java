@@ -93,6 +93,9 @@ public final class Mic1 {
   @Nullable
   private IProcessorInterpreter interpreter = null;
 
+  /** stores if the processor has been interrupted while executing ticks */
+  private boolean interrupted = false;
+
   /**
    * Constructs a new Mic1-processor, reading the given inputstreams as micro-program and assembler-program.
    * 
@@ -219,7 +222,7 @@ public final class Mic1 {
    * @param number micro instructions to execute, if possible.
    */
   public void microStep(final int number) {
-    resetTicks();
+    softReset();
     while (this.ticks < number && canContinue()) {
       doTick();
     }
@@ -247,7 +250,7 @@ public final class Mic1 {
   public void step(final int steps) {
     int step = 0;
 
-    resetTicks();
+    softReset();
     while (step < steps && canContinue()) {
       doTick();
       if (!isFirstTick() && isAssemblerCodeFetchingInstruction()) {
@@ -275,11 +278,21 @@ public final class Mic1 {
    *         <code>false</code> otherwise
    */
   private boolean canContinue() {
-    return !isHaltInstruction()
-           && (isFirstTick() || this.interpreter == null || this.interpreter.canContinue(getNextMpc(),
-                                                                                         getNextMacroAddress(),
-                                                                                         this.instruction,
-                                                                                         this.controlStore.getInstruction(getNextMpc())));
+    return !isInterrupted() && !isHaltInstruction() && doesInterpreterAllowToContinue();
+  }
+
+  /**
+   * Returns whether the interpreter allows to continue.
+   * 
+   * @since Date: May 26, 2012
+   * @return <code>true</code>, if it's the first tick or the interpreter allows to continue,<br>
+   *         or <code>false</code> if it's not the first tick and the interpreter doesn't allow to continue.
+   */
+  private boolean doesInterpreterAllowToContinue() {
+    return isFirstTick()
+           || this.interpreter == null
+           || this.interpreter.canContinue(getNextMpc(), getNextMacroAddress(), this.instruction,
+                                           this.controlStore.getInstruction(getNextMpc()));
   }
 
   /**
@@ -412,7 +425,7 @@ public final class Mic1 {
    * @return the number of ticks that this method executed.
    */
   public int run() {
-    resetTicks();
+    softReset();
     while (canContinue()) {
       doTick();
     }
@@ -433,12 +446,13 @@ public final class Mic1 {
   }
 
   /**
-   * Resets the counter of executed ticks to zero.
+   * Resets the counter of executed ticks to zero and resets the interrupted flag.
    * 
    * @since Date: Jan 16, 2012
    */
-  private void resetTicks() {
+  private void softReset() {
     this.ticks = 0;
+    this.interrupted = false;
   }
 
   /**
@@ -602,5 +616,25 @@ public final class Mic1 {
       return false;
     }
     return true;
+  }
+
+  /**
+   * Interrupts the processor.
+   * 
+   * @since Date: May 26, 2012
+   */
+  public void interrupt() {
+    this.interrupted = true;
+  }
+
+  /**
+   * Returns whether the processor is interrupted.
+   * 
+   * @since Date: May 26, 2012
+   * @return <code>true</code>, if the processor has been interrupted while executing ticks,<br>
+   *         or <code>false</code> if the processor hasn't been interrupted while executing the last ticks.
+   */
+  public boolean isInterrupted() {
+    return this.interrupted;
   }
 }
