@@ -25,6 +25,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.junit.Test;
 
@@ -802,14 +804,30 @@ public class Mic1Test extends DefaultTestCase {
 
     init("mic1/mic1ijvm2.mic1", "mic1/divtest.ijvm");
 
+    final ReentrantLock lock = new ReentrantLock();
+    final Condition condition = lock.newCondition();
+    lock.lock();
+
     new Thread(new Runnable() {
       public void run() {
+        lock.lock();
+        try {
+          condition.signal();
+        } finally {
+          lock.unlock();
+        }
         Mic1Test.this.ticks = Mic1Test.this.processor.run();
       }
     }).start();
-    Thread.sleep(100);
+
+    try {
+      condition.await();
+    } finally {
+      lock.unlock();
+    }
+
     this.processor.interrupt();
-    Thread.sleep(100);
+    Thread.sleep(10);
     assertThat(this.ticks).isLessThan(3965);
   }
 }
