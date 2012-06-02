@@ -102,6 +102,18 @@ public final class BreakpointManager {
   }
 
   /**
+   * Returns whether there is a breakpoint for the given {@link Register} on write access.
+   * 
+   * @since Date: Jun 2, 2012
+   * @param r the {@link Register} to check if it's currently being watched
+   * @return <code>true</code> if the manager contains a breakpoint for the register on write access,<or>
+   *         <code>false</code> otherwise
+   */
+  public boolean isRegisterBreakpoint(final Register r) {
+    return r != null && this.breakPoints.contains(new RegisterWriteBreakpoint(r));
+  }
+
+  /**
    * Removes the breakpoint for the given {@link Register} on write access. If the breakpoint has been set or not, after
    * calling this method, the breakpoint is definitely <em>not</em> set.
    * 

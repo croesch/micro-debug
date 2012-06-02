@@ -316,6 +316,23 @@ public class BreakpointManagerTest extends DefaultTestCase {
   }
 
   @Test
+  public void testRegisterBreakpoints() {
+    printlnMethodName();
+
+    this.bpm.addRegisterBreakpoint(null);
+    assertThat(this.bpm.isRegisterBreakpoint(null)).isFalse();
+    this.bpm.removeRegisterBreakpoint(null);
+
+    for (final Register r : Register.values()) {
+      this.bpm.addRegisterBreakpoint(r);
+      assertThat(this.bpm.isRegisterBreakpoint(r)).isTrue();
+
+      this.bpm.removeRegisterBreakpoint(r);
+      assertThat(this.bpm.isRegisterBreakpoint(r)).isFalse();
+    }
+  }
+
+  @Test
   public void testMacroBreakpoints() {
     printMethodName();
 
