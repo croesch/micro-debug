@@ -57,7 +57,7 @@ public abstract class AArgument {
    * This argument will require no parameters.
    * 
    * @since Date: Aug 13, 2011
-   * @see #Argument(int)
+   * @see #AArgument(int)
    */
   protected AArgument() {
     this(0);
@@ -76,7 +76,7 @@ public abstract class AArgument {
    * 
    * @param nop the number of parameters this argument requires
    * @since Date: Aug 17, 2011
-   * @see #Argument()
+   * @see #AArgument()
    */
   protected AArgument(final int nop) {
     this.args[0] = "--" + name();
@@ -86,7 +86,7 @@ public abstract class AArgument {
 
   /**
    * Returns whether this argument can be called with the given {@link String}. Will return <code>false</code>, if the
-   * given {@link String} is <code>null</code> or if the {@link Argument} is a pseudo-argument that cannot be called.
+   * given {@link String} is <code>null</code> or if the {@link AArgument} is a pseudo-argument that cannot be called.
    * 
    * @since Date: Aug 13, 2011
    * @param argStr the {@link String} to test if it's a possible call for this argument
@@ -112,13 +112,13 @@ public abstract class AArgument {
   }
 
   /**
-   * Returns the {@link Argument} that matches with the given {@link String}.
+   * Returns the {@link AArgument} that matches with the given {@link String}.
    * 
    * @since Date: Aug 13, 2011
-   * @param s the {@link String} that is able to call the returned {@link Argument}.
-   * @return the {@link Argument} that matches the given {@link String}, or <code>null</code> if no argument can be
+   * @param s the {@link String} that is able to call the returned {@link AArgument}.
+   * @return the {@link AArgument} that matches the given {@link String}, or <code>null</code> if no argument can be
    *         called with the given {@link String}.
-   * @see Argument#matches(String)
+   * @see AArgument#matches(String)
    */
   @Nullable
   public static AArgument of(final String s) {
@@ -131,12 +131,12 @@ public abstract class AArgument {
   }
 
   /**
-   * Converts a given array of {@link String}s into a {@link Map} that contains an entry for each valid {@link Argument}
-   * and the possible parameters belonging to it.
+   * Converts a given array of {@link String}s into a {@link Map} that contains an entry for each valid
+   * {@link AArgument} and the possible parameters belonging to it.
    * 
    * @since Date: Aug 17, 2011
    * @param args the array of {@link String}s
-   * @return the {@link Map} that contains pairs of {@link Argument}s and arrays of strings that contain all parameters
+   * @return the {@link Map} that contains pairs of {@link AArgument}s and arrays of strings that contain all parameters
    *         for that argument.
    */
   @NotNull
