@@ -20,9 +20,12 @@ package com.github.croesch.micro_debug.mic1.mem;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.io.IOException;
+
 import org.junit.Test;
 
 import com.github.croesch.micro_debug.DefaultTestCase;
+import com.github.croesch.micro_debug.console.MemoryInterpreter;
 import com.github.croesch.micro_debug.error.FileFormatException;
 import com.github.croesch.micro_debug.mic1.register.Register;
 import com.github.croesch.micro_debug.settings.Settings;
@@ -41,6 +44,16 @@ public class IJVMCommandArgumentTest extends DefaultTestCase {
   protected void setUpDetails() throws FileFormatException {
     this.mem = new Memory(Settings.MIC1_MEM_MACRO_MAXSIZE.getValue(),
                           ClassLoader.getSystemResourceAsStream("mic1/test.ijvm"));
+  }
+
+  @Test
+  public void testItem37() throws IOException {
+    this.mem = new Memory(Settings.MIC1_MEM_MACRO_MAXSIZE.getValue(),
+                          ClassLoader.getSystemResourceAsStream("mic1/binary-read.ijvm"));
+
+    assertThat(IJVMCommandArgument.CONST.getRepresentationOfArgument(0xe, -48, this.mem)).isEqualTo("0xD0");
+    new MemoryInterpreter(this.mem).printCode();
+    assertThat(out.toString()).isEqualTo(readFile("mic1/binary-read.ijvm.dis").toString());
   }
 
   @Test

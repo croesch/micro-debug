@@ -228,7 +228,7 @@ public final class MemoryInterpreter extends AbstractCodeContainer {
     for (final IJVMCommandArgument arg : args) {
       int value = 0;
       for (int i = 1; i <= arg.getNumberOfBytes(); ++i) {
-        value |= this.memory.getByte(addr + i) << (Byte.SIZE * (arg.getNumberOfBytes() - i));
+        value |= this.memory.getByte(addr + bytesRead + 1) << (Byte.SIZE * (arg.getNumberOfBytes() - i));
         ++bytesRead;
       }
       sb.append(" ").append(arg.getRepresentationOfArgument(addr, value, this.memory));
