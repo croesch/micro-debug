@@ -18,6 +18,8 @@
  */
 package com.github.croesch.micro_debug.error;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import org.junit.Test;
 
 import com.github.croesch.micro_debug.DefaultTestCase;
@@ -33,18 +35,72 @@ public class MacroFileFormatExceptionTest extends DefaultTestCase {
   @Test
   public void testMacroFileFormatExceptionStringThrowable_Null() {
     printlnMethodName();
-    new MacroFileFormatException(null, null);
+
+    final MacroFileFormatException exception = new MacroFileFormatException(null, null);
+
+    assertThat(exception.getMessage()).isNull();
+    assertThat(exception.getCause()).isNull();
   }
 
   @Test
   public void testMacroFileFormatExceptionString_Null() {
     printlnMethodName();
-    new MacroFileFormatException((String) null);
+
+    final MacroFileFormatException exception = new MacroFileFormatException((String) null);
+
+    assertThat(exception.getMessage()).isNull();
+    assertThat(exception.getCause()).isNull();
   }
 
   @Test
   public void testMacroFileFormatExceptionThrowable_Null() {
     printlnMethodName();
-    new MacroFileFormatException((Throwable) null);
+
+    final MacroFileFormatException exception = new MacroFileFormatException((Throwable) null);
+
+    assertThat(exception.getMessage()).isNull();
+    assertThat(exception.getCause()).isNull();
+  }
+
+  @Test
+  public void testMacroFileFormatExceptionStringThrowable() {
+    printlnMethodName();
+
+    final ArrayIndexOutOfBoundsException cause = new ArrayIndexOutOfBoundsException();
+    final MacroFileFormatException exception = new MacroFileFormatException("special message", cause);
+
+    assertThat(exception.getMessage()).isEqualTo("special message");
+    assertThat(exception.getCause()).isSameAs(cause);
+  }
+
+  @Test
+  public void testMacroFileFormatExceptionString() {
+    printlnMethodName();
+
+    final MacroFileFormatException exception = new MacroFileFormatException(" -> message <- ");
+
+    assertThat(exception.getMessage()).isEqualTo(" -> message <- ");
+    assertThat(exception.getCause()).isNull();
+  }
+
+  @Test
+  public void testMacroFileFormatExceptionThrowable() {
+    printlnMethodName();
+
+    final OutOfMemoryError cause = new OutOfMemoryError();
+    final MacroFileFormatException exception = new MacroFileFormatException(cause);
+
+    assertThat(exception.getMessage()).isNull();
+    assertThat(exception.getCause()).isSameAs(cause);
+  }
+
+  @Test
+  public void testMacroFileFormatException() {
+    printlnMethodName();
+
+    final MacroFileFormatException exception = new MacroFileFormatException();
+
+    assertThat(exception.getMessage()).isNull();
+    assertThat(exception.getCause()).isNull();
   }
 }
