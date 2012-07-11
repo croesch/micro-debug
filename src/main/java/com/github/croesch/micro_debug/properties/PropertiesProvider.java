@@ -19,6 +19,7 @@
 package com.github.croesch.micro_debug.properties;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import com.github.croesch.micro_debug.annotation.NotNull;
@@ -45,7 +46,10 @@ public final class PropertiesProvider extends APropertiesProvider {
   protected Properties createNewProperties(final String file) {
     final Properties props = new Properties();
     try {
-      props.load(ClassLoader.getSystemResourceAsStream(file + ".properties"));
+      final InputStream inputStream = ClassLoader.getSystemResourceAsStream(file + ".properties");
+      if (inputStream != null) {
+        props.load(inputStream);
+      }
     } catch (final IOException e) {
       ExceptionLogger.logException(e);
     }
