@@ -260,15 +260,21 @@ class OneBitAlu {
    */
   @NotNull
   private MODE decode(final boolean s0, final boolean s1) {
-    if (s0 && s1) {
-      return MODE.SUM;
-    }
-    if (s0 && !s1) {
+    if (s0) {
+      if (s1) {
+        // we know that: s0 && s1
+        return MODE.SUM;
+      }
+
+      // we know that: s0 && !s1
       return MODE.NOT;
     }
-    if (!s0 && s1) {
+
+    if (s1) {
+      // we know that: !s0 && s1
       return MODE.OR;
     }
+    // we know that: !s0 && !s1
     return MODE.AND;
   }
 }
