@@ -40,7 +40,17 @@ abstract class Breakpoint {
    * @since Date: Jan 30, 2012
    */
   Breakpoint() {
-    this.id = ++highestId;
+    incrementHighestId();
+    this.id = highestId;
+  }
+
+  /**
+   * Increments the highest id of the breakpoint by one.
+   * 
+   * @since Date: Jul 11, 2012
+   */
+  private static void incrementHighestId() {
+    ++highestId;
   }
 
   /**
