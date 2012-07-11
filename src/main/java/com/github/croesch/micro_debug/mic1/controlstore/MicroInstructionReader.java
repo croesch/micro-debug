@@ -122,35 +122,35 @@ public final class MicroInstructionReader {
     final int nextAddress = (b0 << 1) | ((b1 & BIT1) >> bitNumberOfSecondByte);
 
     final JMPSignalSet jmpSet = new JMPSignalSet();
-    jmpSet.setJmpC((b1 & BIT2) > 0);
-    jmpSet.setJmpN((b1 & BIT3) > 0);
-    jmpSet.setJmpZ((b1 & BIT4) > 0);
+    jmpSet.setJmpC((b1 & BIT2) != 0);
+    jmpSet.setJmpN((b1 & BIT3) != 0);
+    jmpSet.setJmpZ((b1 & BIT4) != 0);
 
     final ALUSignalSet aluSet = new ALUSignalSet();
-    aluSet.setSLL8((b1 & BIT5) > 0);
-    aluSet.setSRA1((b1 & BIT6) > 0);
-    aluSet.setF0((b1 & BIT7) > 0);
-    aluSet.setF1((b1 & BIT8) > 0);
-    aluSet.setEnA((b2 & BIT1) > 0);
-    aluSet.setEnB((b2 & BIT2) > 0);
-    aluSet.setInvA((b2 & BIT3) > 0);
-    aluSet.setInc((b2 & BIT4) > 0);
+    aluSet.setSLL8((b1 & BIT5) != 0);
+    aluSet.setSRA1((b1 & BIT6) != 0);
+    aluSet.setF0((b1 & BIT7) != 0);
+    aluSet.setF1((b1 & BIT8) != 0);
+    aluSet.setEnA((b2 & BIT1) != 0);
+    aluSet.setEnB((b2 & BIT2) != 0);
+    aluSet.setInvA((b2 & BIT3) != 0);
+    aluSet.setInc((b2 & BIT4) != 0);
 
     final CBusSignalSet cBusSet = new CBusSignalSet();
-    cBusSet.setH((b2 & BIT5) > 0);
-    cBusSet.setOpc((b2 & BIT6) > 0);
-    cBusSet.setTos((b2 & BIT7) > 0);
-    cBusSet.setCpp((b2 & BIT8) > 0);
-    cBusSet.setLv((b3 & BIT1) > 0);
-    cBusSet.setSp((b3 & BIT2) > 0);
-    cBusSet.setPc((b3 & BIT3) > 0);
-    cBusSet.setMdr((b3 & BIT4) > 0);
-    cBusSet.setMar((b3 & BIT5) > 0);
+    cBusSet.setH((b2 & BIT5) != 0);
+    cBusSet.setOpc((b2 & BIT6) != 0);
+    cBusSet.setTos((b2 & BIT7) != 0);
+    cBusSet.setCpp((b2 & BIT8) != 0);
+    cBusSet.setLv((b3 & BIT1) != 0);
+    cBusSet.setSp((b3 & BIT2) != 0);
+    cBusSet.setPc((b3 & BIT3) != 0);
+    cBusSet.setMdr((b3 & BIT4) != 0);
+    cBusSet.setMar((b3 & BIT5) != 0);
 
     final MemorySignalSet memSet = new MemorySignalSet();
-    memSet.setWrite((b3 & BIT6) > 0);
-    memSet.setRead((b3 & BIT7) > 0);
-    memSet.setFetch((b3 & BIT8) > 0);
+    memSet.setWrite((b3 & BIT6) != 0);
+    memSet.setRead((b3 & BIT7) != 0);
+    memSet.setFetch((b3 & BIT8) != 0);
 
     final int b = (b4 >> 4) & BIT5678;
 

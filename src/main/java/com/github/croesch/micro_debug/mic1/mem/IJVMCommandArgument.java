@@ -47,7 +47,7 @@ public enum IJVMCommandArgument {
      * @return the sign extended number
      */
     private int signExtend(final int num) {
-      if ((num & (SIGN_MASK_2)) > 0) {
+      if ((num & (SIGN_MASK_2)) != 0) {
         return num | ~BYTE_MASK_2;
       }
       return num;
