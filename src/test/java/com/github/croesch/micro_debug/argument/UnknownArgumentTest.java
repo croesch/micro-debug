@@ -80,4 +80,17 @@ public class UnknownArgumentTest extends DefaultTestCase {
                                                  + Text.ERROR.text(Text.UNKNOWN_ARGUMENT.text("-wow"))
                                                  + getLineSeparator() + getHelpFileText());
   }
+
+  @Test
+  public void testName() {
+    assertThat(UnknownArgument.getInstance().name()).isEqualTo("ERROR");
+  }
+
+  @Test
+  public void testMatches() {
+    assertThat(UnknownArgument.getInstance().matches("-E")).isFalse();
+    assertThat(UnknownArgument.getInstance().matches("-e")).isFalse();
+    assertThat(UnknownArgument.getInstance().matches("--ERROR")).isFalse();
+    assertThat(UnknownArgument.getInstance().matches("--error")).isFalse();
+  }
 }

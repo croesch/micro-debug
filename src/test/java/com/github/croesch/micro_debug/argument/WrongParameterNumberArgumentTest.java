@@ -54,4 +54,17 @@ public class WrongParameterNumberArgumentTest extends DefaultTestCase {
     assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.ARGUMENT_WITH_WRONG_PARAM_NUMBER.text("-o"))
                                                  + getLineSeparator() + getHelpFileText());
   }
+
+  @Test
+  public void testName() {
+    assertThat(WrongParameterNumberArgument.getInstance().name()).isEqualTo("ERROR");
+  }
+
+  @Test
+  public void testMatches() {
+    assertThat(WrongParameterNumberArgument.getInstance().matches("-E")).isFalse();
+    assertThat(WrongParameterNumberArgument.getInstance().matches("-e")).isFalse();
+    assertThat(WrongParameterNumberArgument.getInstance().matches("--ERROR")).isFalse();
+    assertThat(WrongParameterNumberArgument.getInstance().matches("--error")).isFalse();
+  }
 }
