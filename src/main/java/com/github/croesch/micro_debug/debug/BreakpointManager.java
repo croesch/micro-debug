@@ -75,9 +75,9 @@ public final class BreakpointManager {
    */
   public void addRegisterBreakpoint(final Register r, final Integer val) {
     if (r != null && val != null) {
-      final Breakpoint bp = new RegisterBreakpoint(r, val);
+      final Breakpoint bp = new RegisterBreakpoint(r, val.intValue());
       if (this.breakPoints.contains(bp)) {
-        logAlreadyExistingBreakpoint(Text.BREAKPOINT_REGISTER.text("", r, val));
+        logAlreadyExistingBreakpoint(Text.BREAKPOINT_REGISTER.text("", r, val.intValue()));
       } else {
         this.breakPoints.add(bp);
       }
@@ -114,6 +114,19 @@ public final class BreakpointManager {
   }
 
   /**
+   * Returns whether there is a breakpoint for the given {@link Register} and the given value.
+   * 
+   * @since Date: Jul 14, 2012
+   * @param r the {@link Register} to check if it's currently being watched
+   * @param val the value to check, if the debugger would break if the given {@link Register} has it.
+   * @return <code>true</code> if the manager contains a breakpoint for the register and the given value,<or>
+   *         <code>false</code> otherwise
+   */
+  public boolean isRegisterBreakpoint(final Register r, final Integer val) {
+    return r != null && val != null && this.breakPoints.contains(new RegisterBreakpoint(r, val.intValue()));
+  }
+
+  /**
    * Removes the breakpoint for the given {@link Register} on write access. If the breakpoint has been set or not, after
    * calling this method, the breakpoint is definitely <em>not</em> set.
    * 
@@ -123,6 +136,20 @@ public final class BreakpointManager {
   public void removeRegisterBreakpoint(final Register r) {
     if (r != null) {
       this.breakPoints.remove(new RegisterWriteBreakpoint(r));
+    }
+  }
+
+  /**
+   * Removes the breakpoint for the given {@link Register} and the given value. If the breakpoint has been set or not,
+   * after calling this method, the breakpoint is definitely <em>not</em> set.
+   * 
+   * @since Date: Jul 14, 2012
+   * @param r the {@link Register} to <em>not</em> watch anymore for being written
+   * @param val the value the debugger should <em>not</em> break anymore if the given {@link Register} has it.
+   */
+  public void removeRegisterBreakpoint(final Register r, final Integer val) {
+    if (r != null && val != null) {
+      this.breakPoints.remove(new RegisterBreakpoint(r, val.intValue()));
     }
   }
 
