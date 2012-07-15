@@ -27,7 +27,7 @@
 	
 	<entry key="border">----------------------------------------</entry>
 	
-	<entry key="greeting">MicroDebug - Copyright (C) 2011-2012 Christian Rösch AND 1999 Prentice-Hall, Inc.</entry>
+	<entry key="greeting">${project.name} - Copyright (C) 2011-2012 Christian Rösch AND 1999 Prentice-Hall, Inc.</entry>
 	<entry key="welcome">Welcome! Please type 'help' for a list of valid commands</entry>
 
 	<entry key="input-debugger">micro-debug> </entry>
