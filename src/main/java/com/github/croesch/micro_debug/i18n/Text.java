@@ -37,7 +37,7 @@ public enum Text {
 
   /** the text that is printed when the program is started, before any error message */
   GREETING,
-  /** the text that is printed, when the program is starting. Only if no error occured */
+  /** the text that is printed, when the program is starting. Only if no error occurred */
   WELCOME,
 
   /** the text that should be printed before user input is requested from debugger */
@@ -60,7 +60,7 @@ public enum Text {
   MEMORY_CONTENT,
   /** the text to print an entry of the stack */
   STACK_CONTENT,
-  /** the text to display the user an empty stack */
+  /** the text to display an empty stack */
   STACK_EMPTY,
 
   /** the text to print only a line of macro code - without line number */
@@ -89,28 +89,23 @@ public enum Text {
 
   /** describes an invalid memory address */
   INVALID_MEM_ADDR,
-
   /** describes an invalid number */
   INVALID_NUMBER,
-
   /** describes an invalid register */
   INVALID_REGISTER,
 
   /** describes an unknown instruction */
   UNKNOWN_INSTRUCTION,
-
   /** the text to describe an unknown argument */
   UNKNOWN_ARGUMENT,
-
   /** the text to describe that the argument has the wrong number of parameters */
   ARGUMENT_WITH_WRONG_PARAM_NUMBER,
 
-  /** the text to describe that there where to few parameters */
+  /** the text to describe that there were to few parameters */
   WRONG_PARAM_NUMBER,
 
   /** the text to describe that the argument for the ijvm-file is missing */
   MISSING_IJVM_FILE,
-
   /** the text to describe that the argument for the mic1-file is missing */
   MISSING_MIC1_FILE,
 
@@ -122,7 +117,7 @@ public enum Text {
   /** describes that the specific file couldn't be found */
   FILE_NOT_FOUND,
 
-  /** the text to give a hint to the user that he should try to read the help */
+  /** the text to give a hint the user should try to read the help */
   TRY_HELP;
 
   /** the value of this instance */
