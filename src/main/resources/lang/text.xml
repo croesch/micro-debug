@@ -23,56 +23,133 @@
 
 <properties>
 
+	<!-- the text for the version of the program -->
+	<!-- parameter {0}: the version of the debugger -->
 	<entry key="version">${project.name}: Version {0}</entry>
 	
+	<!-- the text to visualize a border -->
 	<entry key="border">----------------------------------------</entry>
 	
+	<!-- the text that is printed when the program is started, before any error message -->
 	<entry key="greeting">${project.name} - Copyright (C) 2011-2012 Christian Rösch AND 1999 Prentice-Hall, Inc.</entry>
+	<!-- the text that is printed, when the program is starting. Only if no error occurred -->
 	<entry key="welcome">Welcome! Please type 'help' for a list of valid commands</entry>
 
+	<!-- the text that should be printed before user input is requested from debugger -->
 	<entry key="input-debugger">micro-debug> </entry>
+	<!-- the text that should be printed before user input is requested from the mic1-processor -->
 	<entry key="input-mic1">mic1> </entry>
 
+	<!-- the text to view how many ticks have been executed by the processor -->
+	<!-- parameter {0}: the number of ticks executed -->
 	<entry key="ticks">Processor executed {0} ticks.</entry>
 	
+	<!-- the text to print the value of a register -->
+	<!-- parameter {0}: the name of the register -->
+	<!-- parameter {1}: the value of the register -->
 	<entry key="register-value">Register {0}: {1}</entry>
+	<!-- the text to print the value of a local variable -->
+	<!-- parameter {0}: the number of the local variable -->
+	<!-- parameter {1}: the value of the local variable -->
 	<entry key="local-variable-value">Local variable {0}: {1}</entry>
+
+	<!-- the text to print the executed code -->
+	<!-- parameter {0}: the formated code line -->
 	<entry key="executed-code">Executed: {0}</entry>
 
+	<!-- the text to print the content of the memory -->
+	<!-- parameter {0}: the memory address -->
+	<!-- parameter {1}: the word value at the memory address -->
 	<entry key="memory-content">Value of memory at {0} = {1}</entry>
+	<!-- the text to print an entry of the stack -->
+	<!-- parameter {0}: the relative number of the stack element -->
+	<!-- parameter {1}: the memory address of this element -->
+	<!-- parameter {2}: the value of the stack element -->
 	<entry key="stack-content">Stack value #{0} [{1}]: {2}</entry>
+	<!-- the text to display an empty stack -->
 	<entry key="stack-empty">Stack doesn't contain any elements, nothing to display.</entry>
 
+	<!-- the text to print only a line of macro code - without line number -->
+	<!-- parameter {0}: the command code -->
+	<!-- parameter {1}: the name of the command -->
+	<!-- parameter {2}: the arguments-->
 	<entry key="macro-code-plain">[{0}] {1} {2}</entry>
+	<!-- the text to print a single line of macro code -->
+	<!-- parameter {0}: the address of the code line -->
+	<!-- parameter {1}: the command code -->
+	<!-- parameter {2}: the name of the command -->
+	<!-- parameter {3}: the arguments-->
 	<entry key="macro-code-line">{0}: [{1}] {2} {3}</entry>
+	<!-- the text to print a single line of micro code -->
+	<!-- parameter {0}: the address of the code line -->
+	<!-- parameter {1}: the disassembled instruction -->
 	<entry key="micro-code-line">{0}: {1}</entry>
-	
+
+	<!-- the text to print the breakpoint for a specific register and value -->	
+	<!-- parameter {0}: the id of the breakpoint -->
+	<!-- parameter {1}: the name of the register -->
+	<!-- parameter {2}: the value the register must have -->
 	<entry key="breakpoint-register">Breakpoint #{0}: when Register {1} == {2}</entry>
+	<!-- the text to print the breakpoint for a specific register -->
+	<!-- parameter {0}: the id of the breakpoint -->
+	<!-- parameter {1}: the name of the register -->
 	<entry key="breakpoint-write-register">Breakpoint #{0}: when Register {1} is written</entry>
+	<!-- the text to print the breakpoint for a specific line in macro code -->
+	<!-- parameter {0}: the id of the breakpoint -->
+	<!-- parameter {1}: the line number -->
 	<entry key="breakpoint-macro">Breakpoint #{0}: at macro code line {1}</entry>
+	<!-- the text to print the breakpoint for a specific line in micro code -->
+	<!-- parameter {0}: the id of the breakpoint -->
+	<!-- parameter {1}: the line number -->
 	<entry key="breakpoint-micro">Breakpoint #{0}: at micro code line {1}</entry>
 
+	<!-- the text that describes an unknown ijvm instruction -->
 	<entry key="unknown-ijvm-instruction">---</entry>
 
+	<!-- the text to format an error line output -->
+	<!-- parameter {0}: the error message -->
 	<entry key="error">ERROR: {0}</entry>
 
+	<!-- describes an invalid memory address -->
+	<!-- parameter {0}: the invalid address -->
 	<entry key="invalid-mem-addr">'{0}' is not a valid memory address</entry>
+	<!-- describes an invalid number -->
+	<!-- parameter {0}: the invalid number -->
 	<entry key="invalid-number">'{0}' is not a valid number</entry>
+	<!-- describes an invalid register -->
+	<!-- parameter {0}: the invalid register -->
 	<entry key="invalid-register">'{0}' is not a valid register</entry>
 
-	<entry key="unknown-argument">Unknown argument: {0}</entry>
+	<!-- describes an unknown instruction -->
+	<!-- parameter {0}: the unknown instruction -->
 	<entry key="unknown-instruction">Unknown instruction: {0}</entry>
+	<!-- the text to describe an unknown argument -->
+	<!-- parameter {0}: the unknown argument -->
+	<entry key="unknown-argument">Unknown argument: {0}</entry>
+	<!-- the text to describe that the argument has the wrong number of parameters -->
+	<!-- parameter {0}: the argument that hasn't enough parameters -->
 	<entry key="argument-with-wrong-param-number">Argument with wrong number of parameters: {0}</entry>
 
+	<!-- the text to describe that there were to few parameters -->
+	<!-- parameter {0}: the expected number of parameters -->
+	<!-- parameter {1}: the actual number of parameters -->
 	<entry key="wrong-param-number">Wrong number of parameters, expected {0} but got {1}</entry>
 
+	<!-- the text to describe that the argument for the ijvm-file is missing -->
+	<entry key="missing-ijvm-file">argument for .ijvm-file is missing</entry>
+	<!-- the text to describe that the argument for the mic1-file is missing -->
+	<entry key="missing-mic1-file">argument for .mic1-file is missing</entry>
+
+	<!-- describes that the mic1-file has a wrong file format -->
 	<entry key="wrong-format-mic1">wrong format of .mic1-file, did you assemble it? See log for details.</entry>
+	<!-- describes that the ijvm-file has a wrong file format -->
 	<entry key="wrong-format-ijvm">wrong format of .ijvm-file, did you assemble it? See log for details.</entry>
 
+	<!-- describes that the specific file couldn't be found -->
+	<!-- parameter {0}: the file -->
 	<entry key="file-not-found">file not found {0}</entry>
 
-	<entry key="missing-ijvm-file">argument for .ijvm-file is missing</entry>
-	<entry key="missing-mic1-file">argument for .mic1-file is missing</entry>
+	<!-- the text to give a hint the user should try to read the help -->
 	<entry key="try-help">Try '--help' for more information.</entry>
 
 </properties>
