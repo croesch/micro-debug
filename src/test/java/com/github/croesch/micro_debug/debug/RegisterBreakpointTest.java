@@ -140,4 +140,17 @@ public class RegisterBreakpointTest extends DefaultTestCase {
     assertThat(rbp2.getId()).isNotEqualTo(rbp3.getId());
   }
 
+  @Test
+  public void testIsMacroBreakpoint() {
+    assertThat(new RegisterBreakpoint(Register.H, 12).isMacroBreakpoint()).isFalse();
+    assertThat(new RegisterBreakpoint(Register.LV, 1).isMacroBreakpoint()).isFalse();
+    assertThat(new RegisterBreakpoint(Register.MBR, 2).isMacroBreakpoint()).isFalse();
+  }
+
+  @Test
+  public void testIsMicroBreakpoint() {
+    assertThat(new RegisterBreakpoint(Register.H, 12).isMicroBreakpoint()).isTrue();
+    assertThat(new RegisterBreakpoint(Register.LV, 1).isMicroBreakpoint()).isTrue();
+    assertThat(new RegisterBreakpoint(Register.MBR, 2).isMicroBreakpoint()).isTrue();
+  }
 }

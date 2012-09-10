@@ -54,4 +54,14 @@ final class MicroBreakpoint extends AbstractLineBreakpoint {
   public String toString() {
     return Text.BREAKPOINT_MICRO.text(getId(), Utils.toHexString(getLine()));
   }
+
+  @Override
+  boolean isMacroBreakpoint() {
+    return false;
+  }
+
+  @Override
+  boolean isMicroBreakpoint() {
+    return true;
+  }
 }

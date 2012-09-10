@@ -133,4 +133,17 @@ public class MicroBreakpointTest extends DefaultTestCase {
     assertThat(mbp2.getId()).isNotEqualTo(mbp3.getId());
   }
 
+  @Test
+  public void testIsMacroBreakpoint() {
+    assertThat(new MicroBreakpoint(12).isMacroBreakpoint()).isFalse();
+    assertThat(new MicroBreakpoint(5).isMacroBreakpoint()).isFalse();
+    assertThat(new MicroBreakpoint(-12).isMacroBreakpoint()).isFalse();
+  }
+
+  @Test
+  public void testIsMicroBreakpoint() {
+    assertThat(new MicroBreakpoint(12).isMicroBreakpoint()).isTrue();
+    assertThat(new MicroBreakpoint(5).isMicroBreakpoint()).isTrue();
+    assertThat(new MicroBreakpoint(-12).isMicroBreakpoint()).isTrue();
+  }
 }

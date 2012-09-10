@@ -58,4 +58,14 @@ abstract class AbstractRegisterBreakpoint extends Breakpoint {
   Register getRegister() {
     return this.register;
   }
+
+  @Override
+  boolean isMacroBreakpoint() {
+    return false;
+  }
+
+  @Override
+  boolean isMicroBreakpoint() {
+    return true;
+  }
 }

@@ -77,4 +77,20 @@ abstract class Breakpoint {
                                   int macroLine,
                                   MicroInstruction currentInstruction,
                                   MicroInstruction nextInstruction);
+
+  /**
+   * Returns whether this breakpoint is for micro code debugging.
+   * 
+   * @since Date: Sep 10, 2012
+   * @return <code>true</code> if this breakpoint is used to debug micro code.
+   */
+  abstract boolean isMicroBreakpoint();
+
+  /**
+   * Returns whether this breakpoint is for macro code debugging.
+   * 
+   * @since Date: Sep 10, 2012
+   * @return <code>true</code> if this breakpoint is used to debug macro code.
+   */
+  abstract boolean isMacroBreakpoint();
 }
