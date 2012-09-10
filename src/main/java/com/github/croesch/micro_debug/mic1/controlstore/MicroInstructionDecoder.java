@@ -165,14 +165,18 @@ public final class MicroInstructionDecoder {
    */
   static void decodeALUOperation(final ALUSignalSet aluSignals, final StringBuilder s, final String a, final String b) {
     // decode the ALU operation
-    if (!aluSignals.isF0() && !aluSignals.isF1()) { // a AND b
-      decodeALUAnd(aluSignals, s, a, b);
-    } else if (!aluSignals.isF0() && aluSignals.isF1()) { // a OR b
-      decodeALUOr(aluSignals, s, a, b);
-    } else if (aluSignals.isF0() && !aluSignals.isF1()) { // NOT b
-      decodeALUNotB(aluSignals, s, b);
-    } else if (aluSignals.isF0() && aluSignals.isF1()) { // a + b
+    if (aluSignals.isF0() && aluSignals.isF1()) { // a + b
+      // f0 & f1
       decodeALUPlus(aluSignals, s, a, b);
+    } else if (aluSignals.isF0()) { // NOT b
+      // f0 & !f1
+      decodeALUNotB(aluSignals, s, b);
+    } else if (aluSignals.isF1()) { // a OR b
+      // !f0 & f1
+      decodeALUOr(aluSignals, s, a, b);
+    } else { // a AND b
+      // !f0 & !f1
+      decodeALUAnd(aluSignals, s, a, b);
     }
   }
 
