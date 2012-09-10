@@ -57,6 +57,11 @@ public class Mic1InterpreterTest extends DefaultTestCase {
     this.interpreter = new Mic1Interpreter(this.processor);
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testCstr_IAE() {
+    new Mic1Interpreter(null);
+  }
+
   @Test
   public void testAddRegisterBreakPoint() {
     printlnMethodName();

@@ -68,6 +68,11 @@ public class PrinterTest extends DefaultTestCase {
     Printer.println("Dies ist eine neue Zeile" + getLineSeparator() + "und hier noch eine");
     assertThat(out.toString()).isEqualTo("Dies ist eine neue Zeile" + getLineSeparator() + "und hier noch eine"
                                                  + getLineSeparator());
+
+    out.reset();
+
+    Printer.println(null);
+    assertThat(out.toString()).isEmpty();
   }
 
   @Test
@@ -95,6 +100,11 @@ public class PrinterTest extends DefaultTestCase {
 
     Printer.println(123);
     assertThat(out.toString()).isEqualTo("123" + getLineSeparator());
+
+    out.reset();
+
+    Printer.println((Object) null);
+    assertThat(out.toString()).isEmpty();
   }
 
   @Test
@@ -112,6 +122,11 @@ public class PrinterTest extends DefaultTestCase {
 
     Printer.print(this);
     assertThat(out.toString()).isEqualTo(this.toString());
+
+    out.reset();
+
+    Printer.print(null);
+    assertThat(out.toString()).isEmpty();
   }
 
   @Test
