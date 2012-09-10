@@ -21,25 +21,25 @@ package com.github.croesch.micro_debug.parser;
 import java.util.Locale;
 
 import com.github.croesch.micro_debug.annotation.Nullable;
-import com.github.croesch.micro_debug.datatypes.MicMac;
+import com.github.croesch.micro_debug.datatypes.DebugMode;
 
 /**
- * Parses keyword micro/macro from {@link String}s.
+ * Parses debugging mode from {@link String}s.
  * 
  * @author croesch
  * @since Date: Sep 10, 2012
  */
-public final class MicMacParser implements IParser {
+public final class DebugModeParser implements IParser {
 
   /** {@inheritDoc} */
   @Nullable
-  public MicMac parse(final String toParse) {
+  public DebugMode parse(final String toParse) {
     if (toParse == null) {
       return null;
     }
 
     try {
-      return MicMac.valueOf(toParse.toUpperCase(Locale.GERMAN));
+      return DebugMode.valueOf(toParse.toUpperCase(Locale.GERMAN));
     } catch (final IllegalArgumentException e) {
       return null;
     }

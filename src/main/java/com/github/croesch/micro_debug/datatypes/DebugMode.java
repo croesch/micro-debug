@@ -24,7 +24,7 @@ package com.github.croesch.micro_debug.datatypes;
  * @author croesch
  * @since Date: Sep 10, 2012
  */
-public enum MicMac {
+public enum DebugMode {
   /** micro code debugging */
   MICRO,
   /** macro code debugging */

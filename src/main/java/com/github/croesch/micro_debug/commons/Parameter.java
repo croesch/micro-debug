@@ -23,7 +23,7 @@ import com.github.croesch.micro_debug.annotation.Nullable;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.parser.IParser;
 import com.github.croesch.micro_debug.parser.IntegerParser;
-import com.github.croesch.micro_debug.parser.MicMacParser;
+import com.github.croesch.micro_debug.parser.DebugModeParser;
 import com.github.croesch.micro_debug.parser.RegisterParser;
 
 /**
@@ -40,8 +40,8 @@ public enum Parameter {
   /** a {@link com.github.croesch.micro_debug.mic1.register.Register} as argument */
   REGISTER (new RegisterParser(), Text.INVALID_REGISTER),
 
-  /** a {@link com.github.croesch.micro_debug.datatypes.MicMac} as argument */
-  MIC_MAC (new MicMacParser(), Text.INVALID_MIC_MAC);
+  /** a {@link com.github.croesch.micro_debug.datatypes.DebugMode} as argument */
+  DEBUG_MODE (new DebugModeParser(), Text.INVALID_DEBUG_MODE);
 
   /** the parser that is able to parse a given string and return the parsed object */
   @NotNull

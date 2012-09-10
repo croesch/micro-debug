@@ -93,8 +93,8 @@ public enum Text {
   INVALID_NUMBER,
   /** describes an invalid register */
   INVALID_REGISTER,
-  /** describes an invalid micro/macro/both keyword */
-  INVALID_MIC_MAC,
+  /** describes an invalid debug mode */
+  INVALID_DEBUG_MODE,
 
   /** describes an unknown instruction */
   UNKNOWN_INSTRUCTION,

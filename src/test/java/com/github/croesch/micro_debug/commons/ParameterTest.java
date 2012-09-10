@@ -25,7 +25,7 @@ import java.io.ByteArrayOutputStream;
 import org.junit.Test;
 
 import com.github.croesch.micro_debug.DefaultTestCase;
-import com.github.croesch.micro_debug.datatypes.MicMac;
+import com.github.croesch.micro_debug.datatypes.DebugMode;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.register.Register;
 
@@ -90,31 +90,31 @@ public class ParameterTest extends DefaultTestCase {
   }
 
   @Test
-  public void testMicMac_Valid() {
-    assertThat(Parameter.MIC_MAC.getValue("MICRO")).isSameAs(MicMac.MICRO);
-    assertThat(Parameter.MIC_MAC.getValue("MACRO")).isSameAs(MicMac.MACRO);
-    assertThat(Parameter.MIC_MAC.getValue("BOTH")).isSameAs(MicMac.BOTH);
-    assertThat(Parameter.MIC_MAC.getValue("micro")).isSameAs(MicMac.MICRO);
-    assertThat(Parameter.MIC_MAC.getValue("macro")).isSameAs(MicMac.MACRO);
-    assertThat(Parameter.MIC_MAC.getValue("both")).isSameAs(MicMac.BOTH);
-    assertThat(Parameter.MIC_MAC.getValue("Micro")).isSameAs(MicMac.MICRO);
-    assertThat(Parameter.MIC_MAC.getValue("Macro")).isSameAs(MicMac.MACRO);
-    assertThat(Parameter.MIC_MAC.getValue("Both")).isSameAs(MicMac.BOTH);
-    assertThat(Parameter.MIC_MAC.getValue("BoTh")).isSameAs(MicMac.BOTH);
+  public void testDebugMode_Valid() {
+    assertThat(Parameter.DEBUG_MODE.getValue("MICRO")).isSameAs(DebugMode.MICRO);
+    assertThat(Parameter.DEBUG_MODE.getValue("MACRO")).isSameAs(DebugMode.MACRO);
+    assertThat(Parameter.DEBUG_MODE.getValue("BOTH")).isSameAs(DebugMode.BOTH);
+    assertThat(Parameter.DEBUG_MODE.getValue("micro")).isSameAs(DebugMode.MICRO);
+    assertThat(Parameter.DEBUG_MODE.getValue("macro")).isSameAs(DebugMode.MACRO);
+    assertThat(Parameter.DEBUG_MODE.getValue("both")).isSameAs(DebugMode.BOTH);
+    assertThat(Parameter.DEBUG_MODE.getValue("Micro")).isSameAs(DebugMode.MICRO);
+    assertThat(Parameter.DEBUG_MODE.getValue("Macro")).isSameAs(DebugMode.MACRO);
+    assertThat(Parameter.DEBUG_MODE.getValue("Both")).isSameAs(DebugMode.BOTH);
+    assertThat(Parameter.DEBUG_MODE.getValue("BoTh")).isSameAs(DebugMode.BOTH);
 
     assertThat(out.toString()).isEmpty();
   }
 
   @Test
-  public void testMicMac_Invalid() {
-    testInvalidMicMac("a", out);
-    testInvalidMicMac("bot", out);
-    testInvalidMicMac("", out);
-    testInvalidMicMac("mic", out);
-    testInvalidMicMac("mac", out);
-    testInvalidMicMac("micro-code", out);
-    testInvalidMicMac(" macro", out);
-    assertThat(Parameter.MIC_MAC.getValue(null)).isNull();
+  public void testDebugMode_Invalid() {
+    testInvalidDebugMode("a", out);
+    testInvalidDebugMode("bot", out);
+    testInvalidDebugMode("", out);
+    testInvalidDebugMode("mic", out);
+    testInvalidDebugMode("mac", out);
+    testInvalidDebugMode("micro-code", out);
+    testInvalidDebugMode(" macro", out);
+    assertThat(Parameter.DEBUG_MODE.getValue(null)).isNull();
   }
 
   @Test
@@ -167,9 +167,9 @@ public class ParameterTest extends DefaultTestCase {
     out.reset();
   }
 
-  private void testInvalidMicMac(final String str, final ByteArrayOutputStream out) {
-    assertThat(Parameter.MIC_MAC.getValue(str)).isNull();
-    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_MIC_MAC.text(str)) + getLineSeparator());
+  private void testInvalidDebugMode(final String str, final ByteArrayOutputStream out) {
+    assertThat(Parameter.DEBUG_MODE.getValue(str)).isNull();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_DEBUG_MODE.text(str)) + getLineSeparator());
     out.reset();
   }
 }
