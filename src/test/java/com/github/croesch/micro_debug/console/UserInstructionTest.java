@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 import org.junit.Test;
 
 import com.github.croesch.micro_debug.DefaultTestCase;
+import com.github.croesch.micro_debug.datatypes.DebugMode;
 import com.github.croesch.micro_debug.error.FileFormatException;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.Mic1;
@@ -119,7 +120,7 @@ public class UserInstructionTest extends DefaultTestCase {
     BufferedReader reader = null;
     try {
       reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader()
-        .getResourceAsStream("instruction-help.txt")));
+                                                                  .getResourceAsStream("instruction-help.txt")));
       String line;
       while ((line = reader.readLine()) != null) {
         sb.append(line).append(getLineSeparator());
@@ -796,6 +797,125 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
+  public void testExecuteDebug_Both() throws FileFormatException {
+    printlnMethodName();
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
+    assertThat(UserInstruction.DEBUG.execute(this.interpreter, DebugMode.BOTH.name())).isTrue();
+
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, Register.MBR.name(), "16")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3) + getLineSeparator());
+
+    out.reset();
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
+    Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
+    assertThat(UserInstruction.DEBUG.execute(this.interpreter, DebugMode.BOTH.name())).isTrue();
+
+    assertThat(UserInstruction.MACRO_BREAK.execute(this.interpreter, "0x2")).isTrue();
+    assertThat(UserInstruction.MICRO_BREAK.execute(this.interpreter, "0x5C")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(7) + getLineSeparator());
+
+    out.reset();
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
+    assertThat(UserInstruction.DEBUG.execute(this.interpreter, DebugMode.BOTH.name())).isTrue();
+
+    assertThat(UserInstruction.MICRO_BREAK.execute(this.interpreter, "0x2")).isTrue();
+    assertThat(UserInstruction.MACRO_BREAK.execute(this.interpreter, "0x3")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+  }
+
+  @Test
+  public void testExecuteDebug_Micro() throws FileFormatException {
+    printlnMethodName();
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
+    assertThat(UserInstruction.DEBUG.execute(this.interpreter, DebugMode.MICRO.name())).isTrue();
+
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, Register.MBR.name(), "16")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(3) + getLineSeparator());
+
+    out.reset();
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
+    Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
+    assertThat(UserInstruction.DEBUG.execute(this.interpreter, DebugMode.MICRO.name())).isTrue();
+
+    assertThat(UserInstruction.MACRO_BREAK.execute(this.interpreter, "0x2")).isTrue();
+    assertThat(UserInstruction.MICRO_BREAK.execute(this.interpreter, "0x59")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(8) + getLineSeparator());
+
+    out.reset();
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
+    assertThat(UserInstruction.DEBUG.execute(this.interpreter, DebugMode.MICRO.name())).isTrue();
+
+    assertThat(UserInstruction.MICRO_BREAK.execute(this.interpreter, "0x2")).isTrue();
+    assertThat(UserInstruction.MACRO_BREAK.execute(this.interpreter, "0x3")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+  }
+
+  @Test
+  public void testExecuteDebug_Invalid() throws FileFormatException {
+    printlnMethodName();
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
+    assertThat(UserInstruction.DEBUG.execute(this.interpreter, DebugMode.MICRO.name())).isTrue();
+    assertThat(UserInstruction.DEBUG.execute(this.interpreter, "mein Modus")).isTrue();
+
+    assertThat(UserInstruction.MICRO_BREAK.execute(this.interpreter, "0x2")).isTrue();
+    assertThat(UserInstruction.MACRO_BREAK.execute(this.interpreter, "0x3")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_DEBUG_MODE.text("mein Modus"))
+                                                 + getLineSeparator() + Text.TICKS.text(1) + getLineSeparator());
+
+    out.reset();
+  }
+
+  @Test
+  public final void testExecuteDebug_WrongNumberOfParameters() {
+    printlnMethodName();
+    assertThatNoParameterIsWrong(UserInstruction.DEBUG, 1);
+    assertThatTwoParametersAreWrong(UserInstruction.DEBUG, 1);
+    assertThatThreeParametersAreWrong(UserInstruction.DEBUG, 1);
+  }
+
+  @Test
+  public void testExecuteDebug_Macro() throws FileFormatException {
+    printlnMethodName();
+    assertThat(UserInstruction.DEBUG.execute(this.interpreter, DebugMode.MACRO.name())).isTrue();
+
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, Register.MBR.name(), "16")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + getLineSeparator());
+
+    out.reset();
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
+    assertThat(UserInstruction.DEBUG.execute(this.interpreter, DebugMode.MACRO.name())).isTrue();
+
+    assertThat(UserInstruction.MACRO_BREAK.execute(this.interpreter, "0x2")).isTrue();
+    assertThat(UserInstruction.MICRO_BREAK.execute(this.interpreter, "0x5C")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(7) + getLineSeparator());
+
+    out.reset();
+    init("mic1/mic1ijvm.mic1", "mic1/add.ijvm");
+    Input.setIn(new ByteArrayInputStream("2\n2\n".getBytes()));
+    assertThat(UserInstruction.DEBUG.execute(this.interpreter, DebugMode.MACRO.name())).isTrue();
+
+    assertThat(UserInstruction.MICRO_BREAK.execute(this.interpreter, "0x2")).isTrue();
+    assertThat(UserInstruction.MACRO_BREAK.execute(this.interpreter, "0x3")).isTrue();
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(10) + getLineSeparator());
+
+    out.reset();
+  }
+
+  @Test
   public void testExecuteBreak() {
     printlnMethodName();
     assertThat(UserInstruction.BREAK.execute(this.interpreter, Register.H.name(), "-1")).isTrue();
@@ -1057,9 +1177,8 @@ public class UserInstructionTest extends DefaultTestCase {
   public void testExecuteLsMacroCode_Two_InvalidBoth() {
     printlnMethodName();
     assertThat(UserInstruction.LS_MACRO_CODE.execute(this.interpreter, "1x", "0x")).isTrue();
-    assertThat(out.toString())
-      .isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator()
-                         + Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator()
+                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
   }
 
   @Test
@@ -1185,9 +1304,8 @@ public class UserInstructionTest extends DefaultTestCase {
     out.reset();
 
     assertThat(UserInstruction.LS_MEM.execute(this.interpreter, "1x", "0x")).isTrue();
-    assertThat(out.toString())
-      .isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator()
-                         + Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator()
+                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
     out.reset();
   }
 
@@ -1324,9 +1442,8 @@ public class UserInstructionTest extends DefaultTestCase {
   public void testExecuteLsMicroCode_Two_InvalidBoth() {
     printlnMethodName();
     assertThat(UserInstruction.LS_MICRO_CODE.execute(this.interpreter, "1x", "0x")).isTrue();
-    assertThat(out.toString())
-      .isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator()
-                         + Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
+    assertThat(out.toString()).isEqualTo(Text.ERROR.text(Text.INVALID_NUMBER.text("1x")) + getLineSeparator()
+                                                 + Text.ERROR.text(Text.INVALID_NUMBER.text("0x")) + getLineSeparator());
   }
 
   @Test

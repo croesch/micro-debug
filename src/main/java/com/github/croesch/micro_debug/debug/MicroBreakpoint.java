@@ -20,6 +20,7 @@ package com.github.croesch.micro_debug.debug;
 
 import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.commons.Utils;
+import com.github.croesch.micro_debug.datatypes.DebugMode;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.controlstore.MicroInstruction;
 
@@ -56,12 +57,7 @@ final class MicroBreakpoint extends AbstractLineBreakpoint {
   }
 
   @Override
-  boolean isMacroBreakpoint() {
-    return false;
-  }
-
-  @Override
-  boolean isMicroBreakpoint() {
-    return true;
+  boolean isBreakpointForMode(final DebugMode mode) {
+    return mode != DebugMode.MACRO;
   }
 }

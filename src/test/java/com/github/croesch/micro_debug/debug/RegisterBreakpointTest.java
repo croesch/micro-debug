@@ -23,6 +23,7 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Test;
 
 import com.github.croesch.micro_debug.DefaultTestCase;
+import com.github.croesch.micro_debug.datatypes.DebugMode;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.register.Register;
 
@@ -69,6 +70,24 @@ public class RegisterBreakpointTest extends DefaultTestCase {
     assertThat(rbp2.hashCode()).isNotEqualTo(rbp1.hashCode());
     assertThat(rbp3.hashCode()).isNotEqualTo(rbp1.hashCode());
     assertThat(rbp4.hashCode()).isNotEqualTo(rbp1.hashCode());
+  }
+
+  @Test
+  public void testShouldBreak() {
+    final RegisterBreakpoint rbp = new RegisterBreakpoint(Register.H, 12);
+
+    Register.H.setValue(12);
+    assertThat(rbp.shouldBreak(DebugMode.BOTH, 0, 0, null, null)).isTrue();
+    Register.H.setValue(13);
+    assertThat(rbp.shouldBreak(DebugMode.BOTH, 0, 0, null, null)).isFalse();
+    Register.H.setValue(12);
+    assertThat(rbp.shouldBreak(DebugMode.MICRO, 0, 0, null, null)).isTrue();
+    Register.H.setValue(13);
+    assertThat(rbp.shouldBreak(DebugMode.MICRO, 0, 0, null, null)).isFalse();
+    Register.H.setValue(12);
+    assertThat(rbp.shouldBreak(DebugMode.MACRO, 0, 0, null, null)).isFalse();
+    Register.H.setValue(13);
+    assertThat(rbp.shouldBreak(DebugMode.MACRO, 0, 0, null, null)).isFalse();
   }
 
   /**
@@ -141,16 +160,13 @@ public class RegisterBreakpointTest extends DefaultTestCase {
   }
 
   @Test
-  public void testIsMacroBreakpoint() {
-    assertThat(new RegisterBreakpoint(Register.H, 12).isMacroBreakpoint()).isFalse();
-    assertThat(new RegisterBreakpoint(Register.LV, 1).isMacroBreakpoint()).isFalse();
-    assertThat(new RegisterBreakpoint(Register.MBR, 2).isMacroBreakpoint()).isFalse();
-  }
+  public void testIsBreakpointForMode() {
+    assertThat(new RegisterBreakpoint(Register.H, 12).isBreakpointForMode(DebugMode.MACRO)).isFalse();
+    assertThat(new RegisterBreakpoint(Register.LV, 1).isBreakpointForMode(DebugMode.MACRO)).isFalse();
+    assertThat(new RegisterBreakpoint(Register.MBR, 2).isBreakpointForMode(DebugMode.MACRO)).isFalse();
 
-  @Test
-  public void testIsMicroBreakpoint() {
-    assertThat(new RegisterBreakpoint(Register.H, 12).isMicroBreakpoint()).isTrue();
-    assertThat(new RegisterBreakpoint(Register.LV, 1).isMicroBreakpoint()).isTrue();
-    assertThat(new RegisterBreakpoint(Register.MBR, 2).isMicroBreakpoint()).isTrue();
+    assertThat(new RegisterBreakpoint(Register.H, 12).isBreakpointForMode(DebugMode.MICRO)).isTrue();
+    assertThat(new RegisterBreakpoint(Register.LV, 1).isBreakpointForMode(DebugMode.MICRO)).isTrue();
+    assertThat(new RegisterBreakpoint(Register.MBR, 2).isBreakpointForMode(DebugMode.BOTH)).isTrue();
   }
 }

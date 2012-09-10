@@ -23,6 +23,7 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Test;
 
 import com.github.croesch.micro_debug.DefaultTestCase;
+import com.github.croesch.micro_debug.datatypes.DebugMode;
 import com.github.croesch.micro_debug.i18n.Text;
 
 /**
@@ -68,6 +69,18 @@ public class MicroBreakpointTest extends DefaultTestCase {
     assertThat(mbp2.hashCode()).isNotEqualTo(mbp1.hashCode());
     assertThat(mbp3.hashCode()).isNotEqualTo(mbp1.hashCode());
     assertThat(mbp4.hashCode()).isNotEqualTo(mbp1.hashCode());
+  }
+
+  @Test
+  public void testShouldBreak() {
+    final MicroBreakpoint mbp = new MicroBreakpoint(12);
+
+    assertThat(mbp.shouldBreak(DebugMode.BOTH, 12, 0, null, null)).isTrue();
+    assertThat(mbp.shouldBreak(DebugMode.BOTH, 0, 12, null, null)).isFalse();
+    assertThat(mbp.shouldBreak(DebugMode.MICRO, 12, 0, null, null)).isTrue();
+    assertThat(mbp.shouldBreak(DebugMode.MICRO, 0, 12, null, null)).isFalse();
+    assertThat(mbp.shouldBreak(DebugMode.MACRO, 12, 0, null, null)).isFalse();
+    assertThat(mbp.shouldBreak(DebugMode.MACRO, 0, 12, null, null)).isFalse();
   }
 
   /**
@@ -134,16 +147,13 @@ public class MicroBreakpointTest extends DefaultTestCase {
   }
 
   @Test
-  public void testIsMacroBreakpoint() {
-    assertThat(new MicroBreakpoint(12).isMacroBreakpoint()).isFalse();
-    assertThat(new MicroBreakpoint(5).isMacroBreakpoint()).isFalse();
-    assertThat(new MicroBreakpoint(-12).isMacroBreakpoint()).isFalse();
-  }
+  public void testIsBreakpointForMode() {
+    assertThat(new MicroBreakpoint(12).isBreakpointForMode(DebugMode.MACRO)).isFalse();
+    assertThat(new MicroBreakpoint(5).isBreakpointForMode(DebugMode.MACRO)).isFalse();
+    assertThat(new MicroBreakpoint(-12).isBreakpointForMode(DebugMode.MACRO)).isFalse();
 
-  @Test
-  public void testIsMicroBreakpoint() {
-    assertThat(new MicroBreakpoint(12).isMicroBreakpoint()).isTrue();
-    assertThat(new MicroBreakpoint(5).isMicroBreakpoint()).isTrue();
-    assertThat(new MicroBreakpoint(-12).isMicroBreakpoint()).isTrue();
+    assertThat(new MicroBreakpoint(12).isBreakpointForMode(DebugMode.BOTH)).isTrue();
+    assertThat(new MicroBreakpoint(5).isBreakpointForMode(DebugMode.MICRO)).isTrue();
+    assertThat(new MicroBreakpoint(-12).isBreakpointForMode(DebugMode.MICRO)).isTrue();
   }
 }

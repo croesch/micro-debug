@@ -19,6 +19,7 @@
 package com.github.croesch.micro_debug.debug;
 
 import com.github.croesch.micro_debug.annotation.NotNull;
+import com.github.croesch.micro_debug.datatypes.DebugMode;
 import com.github.croesch.micro_debug.mic1.register.Register;
 
 /**
@@ -60,12 +61,7 @@ abstract class AbstractRegisterBreakpoint extends Breakpoint {
   }
 
   @Override
-  boolean isMacroBreakpoint() {
-    return false;
-  }
-
-  @Override
-  boolean isMicroBreakpoint() {
-    return true;
+  boolean isBreakpointForMode(final DebugMode mode) {
+    return mode != DebugMode.MACRO;
   }
 }

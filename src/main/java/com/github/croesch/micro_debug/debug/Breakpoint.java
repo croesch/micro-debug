@@ -18,6 +18,7 @@
  */
 package com.github.croesch.micro_debug.debug;
 
+import com.github.croesch.micro_debug.datatypes.DebugMode;
 import com.github.croesch.micro_debug.mic1.controlstore.MicroInstruction;
 
 /**
@@ -66,12 +67,33 @@ abstract class Breakpoint {
   /**
    * Returns whether the condition of this breakpoint is met and the debugger should stop now.
    * 
-   * @since Date: Jan 30, 2012
+   * @param debuggingMode
+   * @since Date: Sep 10, 2012
+   * @param mode the current mode of debugging
    * @param microLine the number of the line in micro code being executed next
    * @param macroLine the number of the line in macro code being executed next
    * @param currentInstruction the current (last executed) {@link MicroInstruction}
    * @param nextInstruction the next (to be executed) {@link MicroInstruction}
    * @return <code>true</code>, if the condition of this breakpoint is met and the debugger should stop.
+   */
+  boolean shouldBreak(final DebugMode mode,
+                      final int microLine,
+                      final int macroLine,
+                      final MicroInstruction currentInstruction,
+                      final MicroInstruction nextInstruction) {
+    return isBreakpointForMode(mode) && isConditionMet(microLine, macroLine, currentInstruction, nextInstruction);
+  }
+
+  /**
+   * Returns whether the condition of this breakpoint is met.
+   * 
+   * @param debuggingMode
+   * @since Date: Jan 30, 2012
+   * @param microLine the number of the line in micro code being executed next
+   * @param macroLine the number of the line in macro code being executed next
+   * @param currentInstruction the current (last executed) {@link MicroInstruction}
+   * @param nextInstruction the next (to be executed) {@link MicroInstruction}
+   * @return <code>true</code>, if the condition of this breakpoint is met.
    */
   abstract boolean isConditionMet(int microLine,
                                   int macroLine,
@@ -79,18 +101,11 @@ abstract class Breakpoint {
                                   MicroInstruction nextInstruction);
 
   /**
-   * Returns whether this breakpoint is for micro code debugging.
+   * Returns whether this breakpoint is a breakpoint for the given debugging mode.
    * 
    * @since Date: Sep 10, 2012
-   * @return <code>true</code> if this breakpoint is used to debug micro code.
+   * @param mode the current debugging mode
+   * @return <code>true</code> if this breakpoint is a breakpoint for the given debugging mode.
    */
-  abstract boolean isMicroBreakpoint();
-
-  /**
-   * Returns whether this breakpoint is for macro code debugging.
-   * 
-   * @since Date: Sep 10, 2012
-   * @return <code>true</code> if this breakpoint is used to debug macro code.
-   */
-  abstract boolean isMacroBreakpoint();
+  abstract boolean isBreakpointForMode(DebugMode mode);
 }

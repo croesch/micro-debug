@@ -27,6 +27,7 @@ import com.github.croesch.micro_debug.annotation.Nullable;
 import com.github.croesch.micro_debug.commons.Parameter;
 import com.github.croesch.micro_debug.commons.Printer;
 import com.github.croesch.micro_debug.commons.Utils;
+import com.github.croesch.micro_debug.datatypes.DebugMode;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.register.Register;
 import com.github.croesch.micro_debug.settings.Settings;
@@ -55,6 +56,22 @@ enum UserInstruction {
         default:
           Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(2, getSize(params)));
           break;
+      }
+      return true;
+    }
+  },
+
+  /** switches the debugging mode - to skip breakpoints not belonging to the current mode */
+  DEBUG {
+    @Override
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
+      if (getSize(params) == 1) {
+        final DebugMode mode = (DebugMode) Parameter.DEBUG_MODE.getValue(params[0]);
+        if (mode != null) {
+          interpreter.setDebuggingMode(mode);
+        }
+      } else {
+        Printer.printErrorln(Text.WRONG_PARAM_NUMBER.text(1, getSize(params)));
       }
       return true;
     }

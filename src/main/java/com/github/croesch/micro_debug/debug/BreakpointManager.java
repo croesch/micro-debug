@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 
 import com.github.croesch.micro_debug.annotation.NotNull;
 import com.github.croesch.micro_debug.commons.Printer;
+import com.github.croesch.micro_debug.datatypes.DebugMode;
 import com.github.croesch.micro_debug.i18n.Text;
 import com.github.croesch.micro_debug.mic1.controlstore.MicroInstruction;
 import com.github.croesch.micro_debug.mic1.register.Register;
@@ -43,6 +44,10 @@ public final class BreakpointManager {
   @NotNull
   private final List<Breakpoint> breakPoints = new ArrayList<Breakpoint>();
 
+  /** the mode of debugging - micro, macro code or both */
+  @NotNull
+  private DebugMode debugMode = DebugMode.BOTH;
+
   /**
    * Returns whether any break point condition is met.
    * 
@@ -59,7 +64,7 @@ public final class BreakpointManager {
                               final MicroInstruction currentInstruction,
                               final MicroInstruction nextInstruction) {
     for (final Breakpoint bp : this.breakPoints) {
-      if (bp.isConditionMet(microLine, macroLine, currentInstruction, nextInstruction)) {
+      if (bp.shouldBreak(this.debugMode, microLine, macroLine, currentInstruction, nextInstruction)) {
         return true;
       }
     }
@@ -277,5 +282,15 @@ public final class BreakpointManager {
     for (final Breakpoint bp : this.breakPoints) {
       Printer.println(bp);
     }
+  }
+
+  /**
+   * Sets the new {@link DebugMode}.
+   * 
+   * @since Date: Sep 10, 2012
+   * @param mode the new {@link DebugMode}.
+   */
+  public void setDebuggingMode(final DebugMode mode) {
+    this.debugMode = mode;
   }
 }

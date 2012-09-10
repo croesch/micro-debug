@@ -7,6 +7,12 @@ DESCRIPTION
 		If the value VAL is omitted, the debugger will stop, if the register's value will
 		be set by the next instruction the processor would execute.
 
+	debug MODE
+		Sets the new debugging mode. MODE is either 'micro', 'macro' or 'both'. In case of
+		micro or macro, the debugger will only stop at breakpoints of the specific mode.
+		If the mode is set to both, the debugger will stop at all breakpoints. The default
+		mode is both.
+
 	exit
 		exits the debugger.
 

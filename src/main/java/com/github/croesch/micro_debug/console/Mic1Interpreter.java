@@ -19,6 +19,7 @@
 package com.github.croesch.micro_debug.console;
 
 import com.github.croesch.micro_debug.annotation.NotNull;
+import com.github.croesch.micro_debug.datatypes.DebugMode;
 import com.github.croesch.micro_debug.debug.BreakpointManager;
 import com.github.croesch.micro_debug.mic1.Mic1;
 import com.github.croesch.micro_debug.mic1.api.IProcessorInterpreter;
@@ -371,5 +372,15 @@ public final class Mic1Interpreter implements IProcessorInterpreter {
    */
   public void printMicroCode(final int from, final int to) {
     this.controlStore.printCode(from, to);
+  }
+
+  /**
+   * Sets the new {@link DebugMode}.
+   * 
+   * @since Date: Sep 10, 2012
+   * @param mode the new {@link DebugMode}.
+   */
+  public void setDebuggingMode(final DebugMode mode) {
+    this.bpm.setDebuggingMode(mode);
   }
 }
