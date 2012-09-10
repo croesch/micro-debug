@@ -274,6 +274,15 @@ public final class BreakpointManager {
   }
 
   /**
+   * Removes all breakpoints that are available. After calling this operation no breakpoint is set.
+   * 
+   * @since Date: Sep 10, 2012
+   */
+  public void removeAllBreakpoints() {
+    this.breakPoints.clear();
+  }
+
+  /**
    * Lists all breakpoints.
    * 
    * @since Date: Jan 28, 2012

@@ -289,6 +289,25 @@ public class BreakpointManagerTest extends DefaultTestCase {
   }
 
   @Test
+  public void testRemoveAllBreakpoints() {
+    printlnMethodName();
+
+    this.bpm.addRegisterBreakpoint(Register.MBR, Integer.valueOf(16));
+    this.bpm.addRegisterBreakpoint(Register.MBR, Integer.valueOf(-48));
+    this.bpm.addMicroBreakpoint(12);
+    this.bpm.addMacroBreakpoint(13);
+    this.bpm.addRegisterBreakpoint(Register.MAR);
+    this.bpm.addMacroBreakpoint(13);
+    this.bpm.addRegisterBreakpoint(Register.LV);
+    this.bpm.addMacroBreakpoint(13);
+
+    assertThat(out.toString()).isEmpty();
+    this.bpm.removeAllBreakpoints();
+
+    this.bpm.listBreakpoints();
+  }
+
+  @Test
   public void testMicroBreakpoints() {
     printMethodName();
 
