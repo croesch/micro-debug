@@ -1049,6 +1049,30 @@ public class UserInstructionTest extends DefaultTestCase {
   }
 
   @Test
+  public void testRmAllBreakpoints() {
+    printlnMethodName();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, Register.H.name())).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, Register.SP.name())).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, Register.TOS.name())).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, Register.MDR.name())).isTrue();
+    assertThat(UserInstruction.BREAK.execute(this.interpreter, Register.MAR.name())).isTrue();
+    assertThat(UserInstruction.MICRO_BREAK.execute(this.interpreter, "1")).isTrue();
+    assertThat(UserInstruction.MICRO_BREAK.execute(this.interpreter, "3")).isTrue();
+
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(1) + getLineSeparator());
+    out.reset();
+
+    assertThat(UserInstruction.RESET.execute(this.interpreter)).isTrue();
+    assertThat(UserInstruction.RM_ALL_BREAKPOINTS.execute(this.interpreter)).isTrue();
+    out.reset();
+
+    assertThat(UserInstruction.RUN.execute(this.interpreter)).isTrue();
+    assertThat(out.toString()).isEqualTo(Text.TICKS.text(14) + getLineSeparator());
+    out.reset();
+  }
+
+  @Test
   public void testExecuteRmBreak() {
     printlnMethodName();
     assertThat(UserInstruction.BREAK.execute(this.interpreter, Register.H.name(), "-1")).isTrue();

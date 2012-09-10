@@ -383,4 +383,13 @@ public final class Mic1Interpreter implements IProcessorInterpreter {
   public void setDebuggingMode(final DebugMode mode) {
     this.bpm.setDebuggingMode(mode);
   }
+
+  /**
+   * Removes all breakpoints that are available. After calling this operation no breakpoint is set.
+   * 
+   * @since Date: Sep 10, 2012
+   */
+  public void removeAllBreakpoints() {
+    this.bpm.removeAllBreakpoints();
+  }
 }

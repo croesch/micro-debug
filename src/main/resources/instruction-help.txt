@@ -70,6 +70,9 @@ DESCRIPTION
 		in code will be set to the initial state.
 		Also the buffers of input and output of the processor will be reset.
 
+	rm-all-breakpoints
+		Removes all breakpoints.
+
 	rm-break NUM
 		Removes the breakpoint with the id NUM. The NUM can be fetched with the
 		'ls-break' command.

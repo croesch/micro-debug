@@ -272,6 +272,15 @@ enum UserInstruction {
     }
   },
 
+  /** Removes all breakpoints */
+  RM_ALL_BREAKPOINTS {
+    @Override
+    public boolean execute(final Mic1Interpreter interpreter, final String ... params) {
+      interpreter.removeAllBreakpoints();
+      return true;
+    }
+  },
+
   /** Removes the breakpoint with the given number */
   RM_BREAK {
     @Override
