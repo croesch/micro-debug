@@ -119,6 +119,9 @@
 	<!-- describes an invalid register -->
 	<!-- parameter {0}: the invalid register -->
 	<entry key="invalid-register">'{0}' is not a valid register</entry>
+	<!-- describes an invalid micro/macro/both keyword -->
+	<!-- parameter {0}: the invalid keyword -->
+	<entry key="invalid-mic-mac">'{0}' is neither 'macro', 'micro' nor 'both'</entry>
 
 	<!-- describes an unknown instruction -->
 	<!-- parameter {0}: the unknown instruction -->
