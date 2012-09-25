@@ -19,7 +19,7 @@
 package com.github.croesch.micro_debug.settings;
 
 import com.github.croesch.micro_debug.annotation.NotNull;
-import com.github.croesch.micro_debug.properties.PropertiesProvider;
+import com.github.croesch.properties.PropertiesProvider;
 
 /**
  * Provides some internal settings, that shouldn't be modified by the user.

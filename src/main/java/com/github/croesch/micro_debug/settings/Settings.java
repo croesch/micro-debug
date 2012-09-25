@@ -19,7 +19,7 @@
 package com.github.croesch.micro_debug.settings;
 
 import com.github.croesch.micro_debug.parser.IntegerParser;
-import com.github.croesch.micro_debug.properties.PropertiesProvider;
+import com.github.croesch.properties.PropertiesProvider;
 
 /**
  * An enumeration of some settings that are made in a property-file.<br>
